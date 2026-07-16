@@ -113,6 +113,30 @@ Design tokeny v `tokens.css` přejmenovány na sémantickou vrstvu. **Vypočten�
 
 Alternativně přetáhnout celý root (pak funguje kořenový `index.html` → `dist/`). Nic nebylo publikováno — čeká na potvrzení uživatelky.
 
+### 2026-07-16 — Fáze 1 (Rodič: omluvenka a náhrady)
+
+Implementovány Flow 2 (omluvenka) a Flow 3 (náhrady) v rodičovské appce dle `docs/plan-faze-1.md`. Zafixovaná rozhodnutí z plánu dodržena; níže jen odchylky, doplňky a nálezy. Objekty **Omluvenka** a **Náhrada** popsány v `docs/objekty-systemu.md`.
+
+**Datový model (`data.js`).** `nahrady: 3` (číslo) nahrazeno polem `nahrady: [...]` a přidáno pole `omluvenky: [...]`. Zůstatek se všude odvozuje přes `dostupne(child)` (počítá jen `stav==='dostupna'`), nikde není natvrdo. Simulovaný čas `NOW={d:3,h:10}`, deadline `beforeDeadline(d)` (do 8:00 dne absence). Náhrady se generují helperem `nahFrom(origin,stav,extra)` (expirace = origin + 60 dní). Seed: Eliška pokrývá všech 5 stavů náhrad (3× dostupná, naplánovaná, využitá, expirovaná, nevznikla) + 2 omluvenky (budoucí `vcas` 11. 6. a minulá `po-deadlinu` 2. 6.); Matěj 1 dostupná. Seed omluvenky jsou provázané s náhradami přes `omId`/`nahradaIds` a se seed docházkou přes `att` (Eliška má 2. 6. a 11. 6. `OM`), aby šlo testovat i zrušení budoucí omluvenky včetně návratu kalendáře a odečtu náhrady.
+
+**Umístění náhrad.** Sekce `dochazka` přejmenována v `SECTIONS` na **„Docházka a náhrady"** (titulek v draweru i topbaru se odvozuje z `SECTIONS`, `TITLES` = `Object.fromEntries`, takže se změnil automaticky). Náhrady + omluvenky jsou bloky nad existujícím kalendářem docházky; nová top-level sekce se nezakládala. Hlavní akce (Omluvit) je první prvek sekce = 1 klik ze vstupu.
+
+**Omluvenka jako overlay.** Přidán nový typ overlaye `omluvenka` do rodičovského `overlay` patternu (`modals.js`), vč. větvení v `core.js` `render()` (titulek + obsah). Stav formuláře drží `let omDraft` v `modals.js`. Jeden formulář (výběr od–do přes dva měsíční gridy, chip důvodu, poznámka, box „Než odešleš" s vysvětlením deadlinu a dopadem na náhradu) → po odeslání `step:'done'` potvrzovací obrazovka (co se stalo, kolik náhrad vzniklo, co dál). Deadline se vysvětluje **před** odesláním i **po** něm.
+
+**Odchylky / dorozhodnutí:**
+
+- **Stav omluvenky u smíšeného rozsahu.** Rozsah může mísit dny po deadlinu a včasné (jediný takový případ při `NOW=3.6` je rozsah začínající dnes). `omluvenka.stav` se určuje podle **prvního dne** (`od`): `beforeDeadline(od) ? 'vcas' : 'po-deadlinu'`. Náhrady se ale počítají **per den** — za včasné dny vznikne `dostupna`, za pozdní `nevznikla`. Potvrzovací obrazovka i box před odesláním případ smíšeného rozsahu explicitně popisují (kolik náhrad vznikne + které dny jsou po deadlinu).
+- **`nevznikla` jako záznam náhrady.** Aby byl v seznamu vidět důvod, proč za pozdní omluvu nepřibyla náhrada, zakládá se náhrada se stavem `nevznikla` (`exp:'—'`, do zůstatku se nepočítá). Odpovídá stavu z briefu „Nevznikla kvůli pozdní omluvě".
+- **Vybratelnost dní v omluvence.** Vybratelné jsou dnešek a budoucí všední dny v červnu; minulé dny a víkendy nevybratelné (dnešek jde omluvit — jen po deadlinu). Default = zítřek (`NOW.d+1`, přeskočí víkend).
+- **Zrušení.** Tlačítko „Zrušit" jen u omluvenek s `od > NOW.d` a stavem ≠ `zrusena`. Zrušení smaže `OM` z `att` daných dní (návrat na `base`) a odebere z `nahrady` položky uvedené v `nahradaIds`.
+
+**Otevřená otázka (mimo rozsah fáze 1):**
+
+- **Potvrzování omluvenky průvodcem/vedením.** Stav „čeká na potvrzení" z briefu se nezavedl — rodičovský prototyp potvrzuje okamžitě. Až bude flow průvodce/vedení, je třeba rozhodnout, zda omluvenka (a tím vznik náhrady) prochází schválením, a doplnit odpovídající stav.
+- **Plánování/čerpání náhrady** (výběr náhradního dne) není implementováno — stav `naplanovana` je jen v seed datech (dle plánu, „Co NEdělat").
+
+**Nedotčeno.** Průvodcovská appka a sdílené soubory (`components.css` — využita jen existující třída `.bdg`, žádná změna; `shared.js`) beze změny; nové CSS třídy jen v `screens-rodic.css`. `git diff` na `dist/prototyp_pruvodce.html` je prázdný.
+
 ## Nálezy
 
 _(Zjištěné bugy / nekonzistence — v této fázi se NEOPRAVUJÍ, jen zaznamenávají.)_
