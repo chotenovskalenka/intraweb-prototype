@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rodičovská appka (prototyp)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/screens-rodic.css">
+</head>
+<body>
+<div class="phone"><div class="screen">
+  <div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer"></div>
+  <div class="scroll">
+    <div class="topbar"><button class="burger" onclick="openDrawer()">☰</button><span class="ttl" id="ttl">Přehled</span><div class="kidsel" id="kidsel"></div></div>
+    <div id="content"></div>
+    <div id="toastbox"></div>
+  </div>
+</div></div>
+
+<script src="scripts/shared.js"></script>
+<script src="scripts/rodic/data.js"></script>
+<script src="scripts/rodic/screens/prehled.js"></script>
+<script src="scripts/rodic/screens/aktuality.js"></script>
+<script src="scripts/rodic/screens/dochazka.js"></script>
+<script src="scripts/rodic/screens/profil.js"></script>
+<script src="scripts/rodic/screens/platby.js"></script>
+<script src="scripts/rodic/screens/kalendar.js"></script>
+<script src="scripts/rodic/screens/plan.js"></script>
+<script src="scripts/rodic/screens/fotky.js"></script>
+<script src="scripts/rodic/screens/kontakty.js"></script>
+<script src="scripts/rodic/modals.js"></script>
+<script src="scripts/rodic/core.js"></script>
+</body>
+</html>
