@@ -33,6 +33,10 @@ Each file is one HTML document with three parts: a large `<style>` block, static
 - **The "current day" is hardcoded** to June 3, 2026 (`TODAYD`/`TODAY`); the prototype operates within June 2026 only. Past days are read-only ("locked"); future days are editable.
 - **Cultural fund** (`fond`) is tracked **per child**, not per class; paid events deduct only from children who attended and joined the event (see `renderOdecet`/`presentIdx` in the guide app).
 
+## Commity
+
+Pokud v tomto repozitáři vytváříš git commity, drž je **atomické** — jeden commit = jedna logická změna. Neslučuj nesouvisející úpravy (např. změnu v `prototyp_pruvodce.html` a v `prototyp_rodic.html`) do jednoho commitu, pokud spolu věcně nesouvisí.
+
 ## Styling
 
 A shared design-token palette is defined in `:root` CSS variables (`--paper`, `--forest`, `--ochre`, `--ink`, etc.) using a warm/forest theme; fonts are Fraunces (serif, `--serif`) for headings and Hanken Grotesk (sans, `--sans`) for body. Reuse existing utility classes (`.tile`, `.row`, `.pchips`, `.btn-primary`, `.modal`, …) rather than adding new ones. The two files each carry their own copy of the styles — a change to shared look-and-feel must be made in both.
