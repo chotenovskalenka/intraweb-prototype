@@ -2,7 +2,7 @@
 function renderFond(){
   const c=cur(), f=c.fond, zb=f.rocni-f.cerpano;
   let h=`<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">Kulturní fond</div><div class="pfull">${c.n}</div>`;
-  h+=`<div class="tile"><div class="np"><span>Roční příspěvek</span><b>${kc(f.rocni)} Kč</b></div><div class="np"><span>Vyčerpáno</span><b>${kc(f.cerpano)} Kč</b></div><div class="np" style="border-top:1px solid var(--line);margin-top:4px;padding-top:8px"><span>Zbývá</span><b style="color:var(--forest)">${kc(zb)} Kč</b></div></div>`;
+  h+=`<div class="tile"><div class="np"><span>Roční příspěvek</span><b>${kc(f.rocni)} Kč</b></div><div class="np"><span>Vyčerpáno</span><b>${kc(f.cerpano)} Kč</b></div><div class="np" style="border-top:1px solid var(--color-border);margin-top:4px;padding-top:8px"><span>Zbývá</span><b style="color:var(--color-primary)">${kc(zb)} Kč</b></div></div>`;
   h+=`<div class="tile"><div class="tlab">Z čeho se čerpalo</div>`+FONDLOG.map(x=>`<div class="frow"><div class="fL"><div class="fo">${x[0]}</div><div class="fv">${x[1]}</div></div><div class="fa">${kc(x[2])} Kč</div></div>`).join('')+`</div>`;
   h+=`<div class="note2">Kulturní fond pokrývá divadla, výlety, výtvarný materiál apod. Položky jsou demo.</div>`;
   return h;

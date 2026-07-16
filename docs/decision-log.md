@@ -67,6 +67,36 @@ Tyto třídy mají v průvodci (`components.css`/`layout.css`) a rodiči (`scree
 
 Navíc **kolize jmen tříd** (stejný název, jiný účel v každé appce, nikdy se nenačítají spolu — ponecháno per-app v příslušném `screens-*.css`): `.frow` (průvodce = řádek historie fondu / rodič = řádek platby), `.gchips`/`.gchip` (průvodce = tag v tématickém plánu / rodič = průvodce-chip na dashboardu). Nejsou to sdílené komponenty, jen shodná jména.
 
+### 2026-07-16 — Fáze 0.4 (Sémantické tokeny)
+
+Design tokeny v `tokens.css` přejmenovány na sémantickou vrstvu. **Vypočtené hodnoty se nezměnily** — jen názvy. Staré aliasy odstraněny (žádná kompatibilní vrstva, jeden zdroj pravdy). Náhrada proběhla přes přesné `var(--old)` → `var(--new)` ve všech `src/styles/*.css` i `src/scripts/**/*.js` (inline styly v template stringách). Ověřeno: `grep` na staré názvy v `src/` i `dist/` vrací 0; všechny tokeny se v prohlížeči rozřešují na původní hex/rgba; obě appky (src i dist) projdou všemi sekcemi bez chyb v konzoli, `.ttl` = rgb(33,64,47) = `--color-primary-strong`, zaplacená badge = rgb(60,122,78) = `--color-success`.
+
+**Mapování starý → nový:**
+
+| Starý | Nový | Hodnota |
+|---|---|---|
+| `--paper` | `--color-bg` | #EFE9DB |
+| `--card` | `--color-surface` | #FBF8F0 |
+| `--card2` | `--color-surface-2` | #F4EEDF |
+| `--ink` | `--color-text` | #2B2A26 |
+| `--muted` | `--color-text-muted` | #736E61 |
+| `--hint` | `--color-text-hint` | #9A9384 |
+| `--forest` | `--color-primary` | #2E5E43 |
+| `--forest-dk` | `--color-primary-strong` | #21402F |
+| `--sage` | `--color-accent-soft` | #8FA48C |
+| `--ochre` | `--color-accent` | #B07D3A |
+| `--sleep` | `--color-info` | #5B7C99 |
+| `--line` | `--color-border` | rgba(43,42,38,.10) |
+| `--line2` | `--color-border-strong` | rgba(43,42,38,.16) |
+| `--danger` | `--color-danger` | #B0492F |
+| `--green` | `--color-success` | #3C7A4E |
+| `--r` | `--radius-md` | 14px |
+| `--serif` | `--font-serif` | Fraunces… |
+| `--sans` | `--font-sans` | Hanken Grotesk… |
+
+- **Nad rámec explicitního seznamu v plánu** dostaly sémantický název i dva tokeny, které plán bod 1 nejmenoval (musely, protože staré aliasy se mažou): `--sage` → `--color-accent-soft` (tlumená zelená pro sekundární stavové tečky `.newsdot.q` a rámeček `.zitra`), `--green` → `--color-success` (zaplaceno, `.ubadge.ano`).
+- **Spacing škála** `--space-xs/sm/md/lg` (4/8/12/16px) přidána do `tokens.css` **zatím bez použití** — jen definice pro budoucí fáze (dle plánu bod 1).
+
 ## Nálezy
 
 _(Zjištěné bugy / nekonzistence — v této fázi se NEOPRAVUJÍ, jen zaznamenávají.)_

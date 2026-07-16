@@ -22,13 +22,13 @@ function temaBlock(){
   if(temaMonth==='kveten'){
     let h=`<div class="temanav"><button class="on" onclick="temaShow('kveten')">Květen</button><button onclick="temaShow('cerven')">Červen</button></div>`;
     h+=`<div class="tile"><div class="tlab">Hodnota měsíce</div><div class="tval">${TEMA_KVETEN.hodnota}</div></div>`;
-    TEMA_KVETEN.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">—</div>`:'')+`</div>`;});
+    TEMA_KVETEN.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">—</div>`:'')+`</div>`;});
     h+=`<button class="btn-primary" style="width:100%" onclick="temaCopy()">Zkopírovat květen do června</button>`;
     return h;
   }
   let h=`<div class="temanav"><button onclick="temaShow('kveten')">Květen</button><button class="on" onclick="temaShow('cerven')">Červen</button></div>`;
   h+=`<div class="tile"><div class="tlab">Tématický plán v designu</div>`+
-    (TEMA.file?`<div class="np"><span>${TEMA.file}</span><b style="color:var(--forest)">nahráno</b></div>`:`<div class="note2" style="margin:0 0 9px">Zatím nenahráno.</div>`)+
+    (TEMA.file?`<div class="np"><span>${TEMA.file}</span><b style="color:var(--color-primary)">nahráno</b></div>`:`<div class="note2" style="margin:0 0 9px">Zatím nenahráno.</div>`)+
     `<label class="addbtn" style="display:block;text-align:center;margin-top:0">+ Nahrát plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label></div>`;
   h+=`<div class="tile"><label class="pl">Hodnota měsíce</label><input class="pin" value="${esc(TEMA.hodnota)}" oninput="setTemaH(this.value)" placeholder="např. nadšení"></div>`;
   TEMA.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div><label class="pl">Básnička</label><textarea class="pta" oninput="setTemaB(${i},this.value)" placeholder="text básničky…">${escTa(w.b)}</textarea><label class="pl">Odkaz (básnička)</label><input class="pin" value="${esc(w.byt||'')}" oninput="setTemaByt(${i},this.value)" placeholder="https://…"><label class="pl">Písnička</label><textarea class="pta" oninput="setTemaP(${i},this.value)" placeholder="text písničky…">${escTa(w.p)}</textarea><label class="pl">Odkaz (písnička)</label><input class="pin" value="${esc(w.yt)}" oninput="setTemaYt(${i},this.value)" placeholder="https://youtu.be/…"></div>`;});

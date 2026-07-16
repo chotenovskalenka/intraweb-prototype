@@ -1,4 +1,26 @@
-:root{--paper:#EFE9DB;--card:#FBF8F0;--card2:#F4EEDF;--ink:#2B2A26;--muted:#736E61;--hint:#9A9384;
-    --forest:#2E5E43;--forest-dk:#21402F;--sage:#8FA48C;--ochre:#B07D3A;--sleep:#5B7C99;
-    --line:rgba(43,42,38,.10);--line2:rgba(43,42,38,.16);--danger:#B0492F;--green:#3C7A4E;
-    --r:14px;--serif:"Fraunces",Georgia,serif;--sans:"Hanken Grotesk","Segoe UI",sans-serif;}
+/* Design tokens — sémantická vrstva (fáze 0.4). Hodnoty se oproti původním názvům NEMĚNÍ. */
+:root{
+  --color-bg:#EFE9DB;
+  --color-surface:#FBF8F0;
+  --color-surface-2:#F4EEDF;
+  --color-text:#2B2A26;
+  --color-text-muted:#736E61;
+  --color-text-hint:#9A9384;
+  --color-primary:#2E5E43;
+  --color-primary-strong:#21402F;
+  --color-accent-soft:#8FA48C;
+  --color-accent:#B07D3A;
+  --color-info:#5B7C99;
+  --color-border:rgba(43,42,38,.10);
+  --color-border-strong:rgba(43,42,38,.16);
+  --color-danger:#B0492F;
+  --color-success:#3C7A4E;
+  --radius-md:14px;
+  --font-serif:"Fraunces",Georgia,serif;
+  --font-sans:"Hanken Grotesk","Segoe UI",sans-serif;
+  /* spacing škála — zatím bez použití, připravená pro budoucí fáze */
+  --space-xs:4px;
+  --space-sm:8px;
+  --space-md:12px;
+  --space-lg:16px;
+}

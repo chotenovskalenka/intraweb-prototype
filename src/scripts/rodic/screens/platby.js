@@ -16,7 +16,7 @@ function renderPlatby(){
   }else{
     h+=`<div class="tile"><div class="tlab">Platby</div><div class="tval">Vše uhrazeno. Děkujeme 🌿</div></div>`;
   }
-  h+=`<button class="tile fondbtn" onclick="openFond()"><div class="ftop"><span class="tlab" style="margin:0">Kulturní fond</span><span class="more">Detail ›</span></div><div class="np" style="margin-top:6px"><span>Zbývá</span><b style="color:var(--forest)">${kc(zb)} Kč</b></div></button>`;
+  h+=`<button class="tile fondbtn" onclick="openFond()"><div class="ftop"><span class="tlab" style="margin:0">Kulturní fond</span><span class="more">Detail ›</span></div><div class="np" style="margin-top:6px"><span>Zbývá</span><b style="color:var(--color-primary)">${kc(zb)} Kč</b></div></button>`;
   h+=`<div class="tile"><div class="tlab">Faktury</div>`+c.faktury.map(x=>`<div class="frow"><div class="fL"><div class="fo">Školné · ${x.obdobi}</div><div class="fv">Vystaveno ${x.vystaveno}</div></div><div class="fa">${kc(x.cena-x.sleva)} Kč</div><span class="ubadge ${x.paid?'ano':'ne'}">${x.paid?'Uhrazeno':'Neuhrazeno'}</span><span class="pdf">PDF</span></div>`).join('')+`</div>`;
   return h;
 }
