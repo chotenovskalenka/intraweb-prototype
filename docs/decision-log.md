@@ -97,6 +97,22 @@ Design tokeny v `tokens.css` přejmenovány na sémantickou vrstvu. **Vypočten�
 - **Nad rámec explicitního seznamu v plánu** dostaly sémantický název i dva tokeny, které plán bod 1 nejmenoval (musely, protože staré aliasy se mažou): `--sage` → `--color-accent-soft` (tlumená zelená pro sekundární stavové tečky `.newsdot.q` a rámeček `.zitra`), `--green` → `--color-success` (zaplaceno, `.ubadge.ano`).
 - **Spacing škála** `--space-xs/sm/md/lg` (4/8/12/16px) přidána do `tokens.css` **zatím bez použití** — jen definice pro budoucí fáze (dle plánu bod 1).
 
+### 2026-07-16 — Fáze 0.5 (Úklid, dokumentace, publikace)
+
+- **Smazány původní monolity** `prototyp_pruvodce.html` a `prototyp_rodic.html` z rootu (git rm). Jejich roli přebírá `src/` (editace) + `dist/` (build k odeslání).
+- **`CLAUDE.md` přepsán** na novou strukturu: popis `src/`/`dist/`/`docs/`, build přes `./build.sh`, pravidlo „needituj `dist/`, edituj `src/` a spusť build", pravidlo pořadí `<script>`/`<link>` tagů, odkazy na `docs/plan-faze-0.md` a `docs/decision-log.md`. Zachovány sekce o doménovém modelu (docházkové kódy vč. rodičovského `NE`, hardcoded den, kulturní fond), stylingu (teď sémantické tokeny) a atomických commitech.
+- **Rozcestník `index.html` v rootu** — jednoduchý on-brand landing (Fraunces/Hanken, forest paleta) se dvěma kartami: Rodič → `dist/prototyp_rodic.html`, Průvodce → `dist/prototyp_pruvodce.html`. Vstupní bod pro hosting servírující root.
+- **`build.sh` navíc generuje `dist/index.html`** — kopie root rozcestníku s přepsanými odkazy na relativní (`dist/prototyp_x.html` → `prototyp_x.html`), aby šla sdílet i samotná složka `dist/` (Netlify Drop). Ověřeno: relativní odkazy se řeší na sousední soubory.
+- **Commity rozděleny** dle plánu: úklid + dokumentace (git rm + CLAUDE.md) zvlášť od rozcestníku (index.html + build.sh + tento zápis).
+
+**Publikace odkazem.** Repo **nemá git remote** → GitHub Pages teď nelze nastavit. Až remote přibude: v nastavení repozitáře zapnout **Pages** a servírovat z rootu (`index.html` odkáže na `dist/`). Bez remotu je nejrychlejší cesta **Netlify Drop**:
+
+1. Spusť `./build.sh` (aktualizuje `dist/` vč. `dist/index.html`).
+2. Otevři <https://app.netlify.com/drop>.
+3. Přetáhni tam **složku `dist/`** (obsahuje `index.html` + oba `prototyp_*.html`). Netlify vrátí veřejnou URL.
+
+Alternativně přetáhnout celý root (pak funguje kořenový `index.html` → `dist/`). Nic nebylo publikováno — čeká na potvrzení uživatelky.
+
 ## Nálezy
 
 _(Zjištěné bugy / nekonzistence — v této fázi se NEOPRAVUJÍ, jen zaznamenávají.)_

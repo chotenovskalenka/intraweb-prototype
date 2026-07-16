@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vhaaji — prototyp appky</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EFE9DB;--surface:#FBF8F0;--primary:#2E5E43;--primary-dk:#21402F;
+    --accent:#B07D3A;--text:#2B2A26;--muted:#736E61;--line:rgba(43,42,38,.10);
+    --serif:"Fraunces",Georgia,serif;--sans:"Hanken Grotesk","Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:32px 20px;gap:6px}
+  .brand{font-family:var(--serif);font-size:34px;font-weight:600;color:var(--primary-dk);letter-spacing:.01em}
+  .sub{font-size:14px;color:var(--muted);margin-bottom:26px;text-align:center}
+  .cards{display:flex;flex-direction:column;gap:14px;width:100%;max-width:380px}
+  .card{display:flex;align-items:center;gap:16px;background:var(--surface);
+    border:1px solid var(--line);border-radius:16px;padding:18px 20px;text-decoration:none;
+    color:inherit;box-shadow:0 2px 10px rgba(33,64,47,.05);transition:transform .12s,box-shadow .12s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(33,64,47,.12)}
+  .ic{width:46px;height:46px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;
+    justify-content:center;font-size:24px;background:rgba(46,94,67,.10)}
+  .txt{display:flex;flex-direction:column;gap:2px}
+  .tt{font-family:var(--serif);font-size:19px;color:var(--primary-dk)}
+  .dd{font-size:12.5px;color:var(--muted)}
+  .arr{margin-left:auto;font-size:20px;color:var(--primary)}
+  .foot{margin-top:28px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="brand">Vhaaji</div>
+  <div class="sub">Lesní školka · prototyp mobilní appky</div>
+  <div class="cards">
+    <a class="card" href="dist/prototyp_rodic.html">
+      <span class="ic">☺</span>
+      <span class="txt"><span class="tt">Rodič</span><span class="dd">Přehled, docházka, platby, fotky…</span></span>
+      <span class="arr">›</span>
+    </a>
+    <a class="card" href="dist/prototyp_pruvodce.html">
+      <span class="ic">✎</span>
+      <span class="txt"><span class="tt">Průvodce</span><span class="dd">Docházka, plán, služby, fond…</span></span>
+      <span class="arr">›</span>
+    </a>
+  </div>
+  <div class="foot">Ukázková data · prototyp neukládá změny</div>
+</body>
+</html>

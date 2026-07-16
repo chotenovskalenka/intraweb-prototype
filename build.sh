@@ -54,3 +54,10 @@ for f in "$SRC"/*.html; do
   base="$(basename "$f" .html)"
   build_one "$f" "$base"
 done
+
+# Rozcestník do dist/: kopie root index.html, ale s relativními odkazy
+# (dist/prototyp_x.html → prototyp_x.html), aby šla sdílet samotná složka dist/.
+if [ -f "$ROOT/index.html" ]; then
+  sed 's#href="dist/prototyp_#href="prototyp_#g' "$ROOT/index.html" > "$DIST/index.html"
+  echo "built: dist/index.html"
+fi
