@@ -4,7 +4,6 @@
 .scroll{padding:14px 16px 22px}
 .burger{border:none;background:none;font-size:20px;line-height:1;color:var(--forest-dk);cursor:pointer;padding:2px 4px}
 .ttl{font-family:var(--serif);font-size:18px;color:var(--forest-dk);flex:1}
-.role{font-size:11.5px;font-weight:500;color:var(--forest);background:rgba(46,94,67,.10);border:1px solid rgba(46,94,67,.18);padding:5px 10px;border-radius:999px}
 .kids{display:flex;gap:7px;margin-bottom:13px}
 .kids button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line2);background:var(--card);font-family:var(--serif);font-size:15px;font-weight:500;color:var(--muted);padding:9px 6px;border-radius:12px;cursor:pointer}
 .kids button.on{background:var(--forest);border-color:var(--forest);color:#F4EEDF}
@@ -75,8 +74,6 @@
 .rozhov{font-size:13px;padding:8px 0;border-top:1px solid var(--line)}
 .rozhov:first-of-type{border-top:none}
 .rozhov .rd{font-size:11.5px;color:var(--muted);margin-bottom:2px}
-.works{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
-.work{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(43,42,38,.4)}
 .addbtn{margin-top:10px;width:100%;border:1px dashed var(--line2);background:transparent;color:var(--muted);font-family:var(--sans);font-size:12.5px;padding:9px;border-radius:10px;cursor:pointer}
 
 /* kalendář / agenda */

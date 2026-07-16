@@ -89,8 +89,6 @@ const FONDROK=2000;
 data.forEach(c=>{c.fondLog=SEEDFOND.map(x=>({name:x[0],date:x[1],amt:x[2]}));c.fond=FONDROK-SEEDFOND.reduce((s,x)=>s+x[2],0);});
 
 const DAYS=['Po','Út','St','Čt','Pá'], TODAY=2;
-const DOW=['Po','Út','St','Čt','Pá','So','Ne'];
-const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
 
 const here=c=>c.status==='pritomen';
 const staysPM=c=>here(c)&&c.plan!=='dopolední';

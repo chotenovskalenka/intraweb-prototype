@@ -71,12 +71,11 @@ const EVMAP={
 const TYPELAB={akce:'akce',naro:'narozeniny',rozvrh:'rozvrh',org:'organizace'};
 const FONDLOG=[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]];
 
-const DOW=['Po','Út','St','Čt','Pá','So','Ne'], TODAY=3;
+const TODAY=3;
 const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 const daysInMonth=(y,m)=>new Date(y,m+1,0).getDate();
 const firstOffset=(y,m)=>(new Date(y,m,1).getDay()+6)%7;
 const wdLocal=(y,m,d)=>(new Date(y,m,d).getDay()+6)%7;
-const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
 const editable=d=>d>TODAY;
 const dayLabel=d=>d===TODAY?'Dnes · St 3. 6.':DOW[wd(d)]+' '+d+'. 6.';
 

@@ -55,6 +55,8 @@ footer{margin-top:16px;padding-top:13px;border-top:1px solid var(--line);display
 .pwa{font-size:11.5px;color:var(--hint)}
 .hint{font-size:12.5px;color:var(--hint);text-align:center;margin-top:14px;line-height:1.45}
 .av{display:inline-flex;border-radius:50%;overflow:hidden;flex-shrink:0;line-height:0}.av svg{display:block}
+.works{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.work{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(43,42,38,.4)}
 .weekbox{max-height:430px;overflow-y:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
 table.wt{width:100%;border-collapse:collapse;table-layout:fixed}
 table.wt th,table.wt td{padding:6px 2px;text-align:center;font-size:12.5px}

@@ -3,6 +3,8 @@ const norm=s=>s.toLowerCase();
 const esc=s=>(s||'').replace(/"/g,'&quot;');
 const escTa=s=>(s||'').replace(/</g,'&lt;');
 const fmt=t=>t?t.replace(/^0(\d:)/,'$1'):t;
+const DOW=['Po','Út','St','Čt','Pá','So','Ne'];
+const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
 
 function avHash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function avatar(c,size){

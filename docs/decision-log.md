@@ -27,6 +27,46 @@ Průběžný zápis rozhodnutí a nálezů během restrukturalizace prototypu (v
 - **`body{…padding:0}`** rodiče je oproti sdílenému `base.css` navíc jen o `padding:0`, což už vynucuje `*{padding:0}` → vizuálně shodné, rodičovské `body` se do `screens-rodic.css` nekopíruje. Ověřeno: všech 258 ostatních rodičovských CSS pravidel je v poskládaném CSS přítomno.
 - **`.role`** v rodiči se liší (chybí `white-space:nowrap`), ale v rodičovském markupu žádný `.role` prvek není → rozdíl je bez vizuálního dopadu.
 
+### 2026-07-16 — Fáze 0.3 (Deduplikace sdíleného kódu)
+
+Sjednoceno jen to, co je **vizuálně/funkčně nerozlišitelné** (Neměnné pravidlo č. 1 — vzhled se nesmí změnit). Viditelné rozdíly zůstávají v obou variantách a čekají na rozhodnutí uživatelky (viz „Otevřená rozhodnutí").
+
+**Sjednoceno (bez dopadu na vzhled/chování):**
+
+- **JS `DOW`, `wd`, `isWE`** byly byte-identické v obou `data.js` → přesunuty do `shared.js` (načítá se první, před oběma `data.js`) a z obou `data.js` odstraněny. `TODAY` (rodič 3 / průvodce 2) a `DAYS` (jen průvodce) zůstávají per-app. Ověřeno v prohlížeči: `DOW`/`wd(3)`/`isWE(6)` fungují v obou appkách, žádná chyba „already been declared".
+- **CSS `.works` / `.work`** byly byte-identické v `screens-pruvodce.css` i `screens-rodic.css` → přesunuty do `components.css` (dětské „práce" / portfolio, používá je průvodce v Dětech i rodič v Profilu). Z obou screens souborů odstraněny. Ověřeno: `.works` = 3 sloupce, `.work` aspect-ratio 1/1 v obou appkách.
+- **Mrtvý CSS `.role` v `screens-rodic.css`** odstraněn — rodičovský markup žádný `.role` prvek nemá (topbar používá `.kidsel`), pravidlo bylo bez efektu. Sdílená verze zůstává v `layout.css`.
+
+**Ponecháno vědomě (různý mechanismus / chování — sjednocení by změnilo chování):**
+
+- **Toast.** Průvodce: pevný `#toast` + třída `.on` s CSS transition (`shared.js` `showToast`). Rodič: `#toastbox`, do kterého se vloží `<div class="toast">` a po 1,8 s odstraní (`rodic/core.js` `window.showToast`, přebíjí sdílenou verzi). CSS `.toast` se proto taky liší (layout.css s `.on`/opacity/transform vs. screens-rodic.css statický). Sjednocení = viditelná změna animace u jedné z appek → neprovedeno.
+- **Docházkové kódy.** Obě appky používají shodná písmena `C/D/O/OM`. Rodič má navíc `NE` (Neomluveno; průvodce pro tentýž stav používá prázdný řetězec) a vlastní centrální mapu `CODES`/`ORDER`/`chip`/`mark`; průvodce centrální mapu nemá (popisky inline v obrazovkách). Vytvoření sdílené `CODES` mapy a přepojení průvodcových inline popisků je refaktor s rizikem změny chování → odloženo na fázi 1 (sjednocení stavů), viz plán 0.3 bod 4.
+
+**Otevřená rozhodnutí — viditelně odlišné varianty sdílených tříd (ponechány obě, rozhodne uživatelka):**
+
+Tyto třídy mají v průvodci (`components.css`/`layout.css`) a rodiči (`screens-rodic.css`) odlišnou vizuální hodnotu. Sjednocení na jednu variantu by změnilo vzhled jedné appky, proto zatím ponechány obě. Pokud uživatelka bude chtít jednotnou typografickou škálu, půjde o vědomou vizuální úpravu (fáze 1 / UI), ne o mechanickou dedup.
+
+| Třída | Průvodce | Rodič | Rozdíl |
+|---|---|---|---|
+| `.scroll` | spodní padding 30 | 22 | 8 px spodní mezera |
+| `.burger` | 21 px | 20 px | 1 px |
+| `.ttl` | 19 px | 18 px | 1 px |
+| `.ditem` | 15 px | 14,5 px | 0,5 px |
+| `.tlab` | 12 px, barva `#605B4F` | 11 px, `--muted` (#736E61) | velikost + barva |
+| `.tval` | 14,5 px, line-height 1.5 | 13,5 px, bez line-height | velikost + řádkování |
+| `.np` | 14 px, padding 5px | 13,5 px, padding 4px | drobný |
+| `.switch button` | 13,5 px | 13 px | 0,5 px |
+| `.vhead` | margin 4/2/9 | 2/2/8 | drobný |
+| `.pav` | margin 6/0/10 | 4/0/10 | drobný |
+| `.pfull` | 13 px | 12,5 px | 0,5 px |
+| `.cbtn` | 13 px | 12,5 px | 0,5 px |
+| `.addbtn` | 13 px, padding 10 | 12,5 px, padding 9 | drobný |
+| `.hint` | 12,5 px | 11,5 px | 1 px |
+| `.note2` | 12 px, line-height 1.5 | 11,5 px, line-height 1.45 | drobný |
+| `.note` | 13,5 px, min-height 54 | 13 px, min-height 48, margin-top 9 | drobný |
+
+Navíc **kolize jmen tříd** (stejný název, jiný účel v každé appce, nikdy se nenačítají spolu — ponecháno per-app v příslušném `screens-*.css`): `.frow` (průvodce = řádek historie fondu / rodič = řádek platby), `.gchips`/`.gchip` (průvodce = tag v tématickém plánu / rodič = průvodce-chip na dashboardu). Nejsou to sdílené komponenty, jen shodná jména.
+
 ## Nálezy
 
 _(Zjištěné bugy / nekonzistence — v této fázi se NEOPRAVUJÍ, jen zaznamenávají.)_
