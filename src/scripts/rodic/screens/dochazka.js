@@ -42,8 +42,36 @@ function renderMesic(){let h=`<div class="vhead">Červen ${cur().dat}</div>`+bul
   if(!bulk&&sel>0&&!isWE(sel))h+=`<div class="daycard" style="margin-top:12px"><div class="dt"><span class="wd">${DOW[wd(sel)]} ${sel}. června</span></div><div class="editbox">${editor(sel)}</div></div>`;
   return h;}
 const HINTS={den:'Vyberte docházku na dnešek. Změny na další dny v Týdnu nebo Měsíci.',tyden:'Klepněte na den a vyberte docházku. Pro více dní naráz „Nastavit více dní“.',mesic:'Klepněte na den a vyberte docházku. Pro více dní „Nastavit více dní“. Víkendy školka nemá.'};
+function nahRow(n){
+  let sub;
+  if(n.stav==='nevznikla')sub=`omluva ${n.vznik} · po deadlinu`;
+  else{sub=`vznik ${n.vznik}`;if(isFinite(n.expT))sub+=` · expirace ${n.exp}`;
+    if(n.stav==='naplanovana'&&n.plan)sub+=` · ${n.plan}`;
+    if(n.stav==='vyuzita'&&n.pouzita)sub+=` · využita ${n.pouzita}`;}
+  return `<div class="nahrow"><div class="nahL"><div class="naho">${n.puvod}</div><div class="nahv">${sub}</div></div><span class="bdg n-${n.stav}">${NAHLAB[n.stav]}</span></div>`;
+}
+function renderNahrady(c){
+  const av=dostupne(c), ne=nextExp(c);
+  let h=`<div class="tile"><div class="ftop"><div><div class="tlab" style="margin:0">Dostupné náhrady</div><div class="nahbig">${av}</div></div><div class="nahexp">${ne?'nejbližší expirace<br>'+ne:''}</div></div>`;
+  h+=`<div class="nahsub2">Náhradu lze vyčerpat i na příměstský tábor. Vzniká za každý včas omluvený den.</div>`;
+  h+=c.nahrady.map(nahRow).join('');
+  return h+`</div>`;
+}
+function renderOmluvenky(c){
+  if(!c.omluvenky.length)return '';
+  let h=`<div class="tile"><div class="tlab">Omluvenky</div>`;
+  c.omluvenky.forEach(o=>{
+    const canCancel=o.od>NOW.d&&o.stav!=='zrusena';
+    h+=`<div class="omrow"><div class="omL"><div class="omo">${fmtRange(o.od,o.do)}</div><div class="omv">${DUVODLAB[o.duvod]||o.duvod}${o.pozn?' · '+escTa(o.pozn):''}</div></div><span class="bdg om-${o.stav}">${OMLAB[o.stav]}</span>${canCancel?`<button class="omx" onclick="omCancel('${o.id}')">Zrušit</button>`:''}</div>`;
+  });
+  return h+`</div>`;
+}
 function renderDochazka(){
-  let h=`<div class="nahline">Náhrady: <b>${cur().nahrady}</b><span class="nahsub">· lze vyčerpat i na příměstský tábor</span></div>`;
+  const c=cur();
+  let h=`<button class="omluvbtn" onclick="openOmluvenka()">Omluvit ${c.ak}</button>`;
+  h+=renderNahrady(c);
+  h+=renderOmluvenky(c);
+  h+=`<div class="vhead" style="margin-top:18px">Kalendář docházky</div>`;
   h+='<div class="switch">'+[['den','Den'],['tyden','Týden'],['mesic','Měsíc']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setView('${v[0]}')">${v[1]}</button>`).join('')+'</div>';
   h+=view==='den'?renderDen():view==='tyden'?renderTyden():renderMesic();
   h+=`<div class="hint">${HINTS[view]}</div>`;

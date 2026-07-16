@@ -6,6 +6,10 @@ function renderDashboard(){
   h+=`<div class="hero"><button class="hkid" onclick="go('profil')">${avatar(c,34)}<span class="hname">${c.n} ve školce</span><span class="harr">›</span></button><div class="hrow"><span class="hchip">${CODES[td][0]}</span>`;
   h+= editable(dashDay)?`<button class="ed" onclick="toggleDashEdit()">${dashEdit?'Zavřít':'Upravit'}</button>`:(dashDay===TODAY?`<button class="ed" onclick="toggleDashEdit()">${dashEdit?'Zavřít':'Nahlásit absenci'}</button>`:`<span class="edlock">uzavřeno</span>`);
   h+=`</div></div>`;
+  // Hlavní akce rodiče: omluvit dítě (Flow 2) + zůstatek náhrad (Flow 3)
+  h+=`<button class="omluvbtn" onclick="openOmluvenka()">Omluvit ${c.ak}</button>`;
+  {const av=dostupne(c), ne=nextExp(c);
+   h+=`<button class="tile nahdash" onclick="go('dochazka')"><div class="ftop"><div><div class="tlab" style="margin:0">Náhrady</div><div class="nahdashn">${av} ${nplural(av)}</div></div><div class="nahdashx">${ne?'nejbližší expirace '+ne+' ›':'›'}</div></div></button>`;}
   if(dashEdit&&(editable(dashDay)||dashDay===TODAY))h+=`<div class="tile dashedit">${editor(dashDay)}</div>`;
   if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0">Neuhrazeno · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
   // K úhradě přesunuto úplně dolů
