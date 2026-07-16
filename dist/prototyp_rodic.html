@@ -284,6 +284,44 @@ table.wt td.pastc{opacity:.45}
 .nahline{display:flex;align-items:baseline;gap:6px;font-size:13px;color:var(--color-text-muted);margin:0 2px 10px}
 .nahline b{font-family:var(--font-serif);font-size:17px;color:var(--color-primary-strong)}
 .nahsub{font-size:11.5px;color:var(--color-text-hint)}
+
+/* --- Omluvenka + náhrady (fáze 1) --- */
+.omluvbtn{display:block;width:100%;border:none;background:var(--color-primary);color:#F4EEDF;font-family:var(--font-sans);font-size:15px;font-weight:600;padding:14px;border-radius:12px;cursor:pointer;margin-bottom:11px;text-align:center}
+.omdonebtn{display:block;width:100%;border:1px solid var(--color-border-strong);background:transparent;color:var(--color-text-muted);font-family:var(--font-sans);font-size:14px;padding:12px;border-radius:11px;cursor:pointer}
+.nahdash .ftop{align-items:flex-start}
+.nahdashn{font-family:var(--font-serif);font-size:22px;font-weight:600;color:var(--color-primary-strong);margin-top:2px}
+.nahdashx{font-size:11.5px;color:var(--color-primary);font-weight:600;text-align:right;line-height:1.35}
+.nahbig{font-family:var(--font-serif);font-size:24px;font-weight:600;color:var(--color-primary-strong);margin-top:2px}
+.nahexp{font-size:11px;color:var(--color-text-muted);text-align:right;line-height:1.35}
+.nahsub2{font-size:11.5px;color:var(--color-text-hint);margin:8px 0 10px;line-height:1.45}
+.nahrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-top:1px solid var(--color-border)}
+.nahL{flex:1;min-width:0}
+.naho{font-size:13px;font-weight:500;color:var(--color-text)}
+.nahv{font-size:11.5px;color:var(--color-text-muted);margin-top:2px}
+.omrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-top:1px solid var(--color-border)}
+.omrow:first-of-type{border-top:none}
+.omL{flex:1;min-width:0}
+.omo{font-size:13.5px;font-weight:500;color:var(--color-text)}
+.omv{font-size:11.5px;color:var(--color-text-muted);margin-top:2px}
+.omx{border:1px solid var(--color-danger);background:transparent;color:var(--color-danger);font-family:var(--font-sans);font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:8px;cursor:pointer;flex-shrink:0}
+.bdg.n-dostupna,.bdg.om-vcas{color:var(--color-success);background:rgba(60,122,78,.12)}
+.bdg.n-naplanovana{color:var(--color-info);background:rgba(91,124,153,.14)}
+.bdg.n-vyuzita{color:var(--color-text-muted);background:rgba(115,110,97,.14)}
+.bdg.n-expirovana,.bdg.om-zrusena{color:var(--color-text-hint);background:rgba(115,110,97,.10)}
+.bdg.n-nevznikla{color:var(--color-danger);background:rgba(176,73,47,.12)}
+.bdg.om-po-deadlinu{color:var(--color-accent);background:rgba(176,125,58,.14)}
+.dpcell.rng{background:rgba(46,94,67,.12);color:var(--color-primary-strong)}
+.omdrow{font-size:12.5px;color:var(--color-text);line-height:1.5;margin-top:4px}
+.omdrow.ok{color:var(--color-primary)}
+.omdrow.bad{color:var(--color-accent)}
+.omdone{text-align:center}
+.omcheck{width:46px;height:46px;margin:2px auto 8px;border-radius:50%;background:var(--color-primary);color:#F4EEDF;font-size:24px;display:flex;align-items:center;justify-content:center}
+.omdt{font-family:var(--font-serif);font-size:18px;color:var(--color-primary-strong)}
+.omsub{font-size:12.5px;color:var(--color-text-muted);margin:3px 0 10px}
+.omres{font-size:13px;line-height:1.5;padding:9px 11px;border-radius:9px;margin-top:8px;text-align:left}
+.omres.ok{color:var(--color-primary);background:rgba(46,94,67,.08)}
+.omres.bad{color:var(--color-accent);background:rgba(176,125,58,.10)}
+.omnext{font-size:12px;color:var(--color-text-muted);margin-top:11px;line-height:1.5;text-align:left}
 .wx{padding:11px 15px}
 .wxrow{display:flex;align-items:center;gap:10px}
 .wxic{font-size:22px;line-height:1}
@@ -471,15 +509,51 @@ function showToast(m){const t=document.getElementById('toast');t.textContent=m;t
 const CODES={D:['Dopolední','#B07D3A','rgba(176,125,58,.16)'],O:['Odpolední','#3f5d72','rgba(91,124,153,.18)'],
   C:['Celodenní','#2E5E43','rgba(46,94,67,.14)'],OM:['Omluveno','#736E61','rgba(115,110,97,.14)'],NE:['Neomluveno','#B0492F','rgba(176,73,47,.14)']};
 const ORDER=['D','O','C','OM','NE'];
+
+/* --- Simulovaný čas + omluvenka/náhrada model (fáze 1) --- */
+const NOW={d:3,h:10};                 // „teď" = St 3. 6. 2026, 10:00 (žádné Date.now())
+const beforeDeadline=d=>d>NOW.d||(d===NOW.d&&NOW.h<8);  // omluvit lze do 8:00 dne absence
+let _uid=1000; const uid=()=>'x'+(++_uid);
+const fmtD=dt=>dt.getDate()+'. '+(dt.getMonth()+1)+'. '+dt.getFullYear();
+const juneDate=day=>new Date(2026,5,day);
+// Náhrada z data vzniku (origin); expirace = +60 dní. extra může přepsat id/den/exp/expT ap.
+function nahFrom(origin,stav,extra){
+  const exp=new Date(origin);exp.setDate(exp.getDate()+60);
+  return Object.assign({id:uid(),stav,den:null,vznik:fmtD(origin),vznikT:+origin,
+    exp:fmtD(exp),expT:+exp,puvod:'omluva '+origin.getDate()+'. '+(origin.getMonth()+1)+'.'},extra||{});
+}
+const NAHLAB={dostupna:'Dostupná',naplanovana:'Naplánovaná',vyuzita:'Využitá',expirovana:'Expirovaná',nevznikla:'Nevznikla'};
+const OMLAB={vcas:'Včas',['po-deadlinu']:'Po deadlinu',zrusena:'Zrušena'};
+const DUVODLAB={nemoc:'Nemoc',['rodinné důvody']:'Rodinné důvody',['jiné']:'Jiné'};
+const dostupne=c=>c.nahrady.filter(n=>n.stav==='dostupna').length;     // počet se všude odvozuje z pole
+function nextExp(c){const a=c.nahrady.filter(n=>n.stav==='dostupna'&&isFinite(n.expT)).sort((x,y)=>x.expT-y.expT);return a[0]?a[0].exp:null;}
+const nplural=n=>n===1?'náhrada':(n>=2&&n<=4?'náhrady':'náhrad');
+const fmtRange=(a,b)=>a===b?`${DOW[wd(a)]} ${a}. 6.`:`${a}. 6. – ${b}. 6.`;
+
 const children=[
-  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',nahrady:3,att:{},notes:{},fond:{rocni:2000,cerpano:800},
+  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',att:{2:'OM',11:'OM'},notes:{11:'rodinná oslava'},fond:{rocni:2000,cerpano:800},
     faktury:[{obdobi:'Březen 2026',cena:7983,sleva:1996,vystaveno:'9. 3. 2026',paid:false},
              {obdobi:'Únor 2026',cena:7983,sleva:1996,vystaveno:'1. 2. 2026',paid:true},
-             {obdobi:'Leden 2026',cena:7983,sleva:1996,vystaveno:'7. 1. 2026',paid:true}]},
-  {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',nahrady:1,att:{},notes:{},fond:{rocni:2000,cerpano:1500},
+             {obdobi:'Leden 2026',cena:7983,sleva:1996,vystaveno:'7. 1. 2026',paid:true}],
+    nahrady:[
+      nahFrom(new Date(2026,4,12),'dostupna'),
+      nahFrom(new Date(2026,4,20),'dostupna'),
+      nahFrom(juneDate(11),'dostupna',{id:'nE-fut',den:11,omId:'omE-fut'}),
+      nahFrom(new Date(2026,4,26),'naplanovana',{plan:'Příměstský tábor · 21. 7.'}),
+      nahFrom(new Date(2026,3,8),'vyuzita',{pouzita:'15. 5. 2026'}),
+      nahFrom(new Date(2026,1,20),'expirovana'),
+      nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'—',expT:Infinity}),
+    ],
+    omluvenky:[
+      {id:'omE-fut',od:11,do:11,duvod:'rodinné důvody',pozn:'rodinná oslava',stav:'vcas',nahradaIds:['nE-fut']},
+      {id:'omE-2',od:2,do:2,duvod:'nemoc',pozn:'',stav:'po-deadlinu',nahradaIds:['nE-nev']},
+    ]},
+  {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',att:{},notes:{},fond:{rocni:2000,cerpano:1500},
     faktury:[{obdobi:'Březen 2026',cena:9100,sleva:0,vystaveno:'9. 3. 2026',paid:true},
              {obdobi:'Únor 2026',cena:9100,sleva:0,vystaveno:'1. 2. 2026',paid:true},
-             {obdobi:'Leden 2026',cena:9100,sleva:0,vystaveno:'7. 1. 2026',paid:true}]},
+             {obdobi:'Leden 2026',cena:9100,sleva:0,vystaveno:'7. 1. 2026',paid:true}],
+    nahrady:[ nahFrom(new Date(2026,4,15),'dostupna') ],
+    omluvenky:[]},
 ];
 const NEWS=[
   {t:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',from:'Táňa',date:'2. 6.',until:5,urgent:true},
@@ -565,6 +639,10 @@ function renderDashboard(){
   h+=`<div class="hero"><button class="hkid" onclick="go('profil')">${avatar(c,34)}<span class="hname">${c.n} ve školce</span><span class="harr">›</span></button><div class="hrow"><span class="hchip">${CODES[td][0]}</span>`;
   h+= editable(dashDay)?`<button class="ed" onclick="toggleDashEdit()">${dashEdit?'Zavřít':'Upravit'}</button>`:(dashDay===TODAY?`<button class="ed" onclick="toggleDashEdit()">${dashEdit?'Zavřít':'Nahlásit absenci'}</button>`:`<span class="edlock">uzavřeno</span>`);
   h+=`</div></div>`;
+  // Hlavní akce rodiče: omluvit dítě (Flow 2) + zůstatek náhrad (Flow 3)
+  h+=`<button class="omluvbtn" onclick="openOmluvenka()">Omluvit ${c.ak}</button>`;
+  {const av=dostupne(c), ne=nextExp(c);
+   h+=`<button class="tile nahdash" onclick="go('dochazka')"><div class="ftop"><div><div class="tlab" style="margin:0">Náhrady</div><div class="nahdashn">${av} ${nplural(av)}</div></div><div class="nahdashx">${ne?'nejbližší expirace '+ne+' ›':'›'}</div></div></button>`;}
   if(dashEdit&&(editable(dashDay)||dashDay===TODAY))h+=`<div class="tile dashedit">${editor(dashDay)}</div>`;
   if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0">Neuhrazeno · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
   // K úhradě přesunuto úplně dolů
@@ -647,8 +725,36 @@ function renderMesic(){let h=`<div class="vhead">Červen ${cur().dat}</div>`+bul
   if(!bulk&&sel>0&&!isWE(sel))h+=`<div class="daycard" style="margin-top:12px"><div class="dt"><span class="wd">${DOW[wd(sel)]} ${sel}. června</span></div><div class="editbox">${editor(sel)}</div></div>`;
   return h;}
 const HINTS={den:'Vyberte docházku na dnešek. Změny na další dny v Týdnu nebo Měsíci.',tyden:'Klepněte na den a vyberte docházku. Pro více dní naráz „Nastavit více dní“.',mesic:'Klepněte na den a vyberte docházku. Pro více dní „Nastavit více dní“. Víkendy školka nemá.'};
+function nahRow(n){
+  let sub;
+  if(n.stav==='nevznikla')sub=`omluva ${n.vznik} · po deadlinu`;
+  else{sub=`vznik ${n.vznik}`;if(isFinite(n.expT))sub+=` · expirace ${n.exp}`;
+    if(n.stav==='naplanovana'&&n.plan)sub+=` · ${n.plan}`;
+    if(n.stav==='vyuzita'&&n.pouzita)sub+=` · využita ${n.pouzita}`;}
+  return `<div class="nahrow"><div class="nahL"><div class="naho">${n.puvod}</div><div class="nahv">${sub}</div></div><span class="bdg n-${n.stav}">${NAHLAB[n.stav]}</span></div>`;
+}
+function renderNahrady(c){
+  const av=dostupne(c), ne=nextExp(c);
+  let h=`<div class="tile"><div class="ftop"><div><div class="tlab" style="margin:0">Dostupné náhrady</div><div class="nahbig">${av}</div></div><div class="nahexp">${ne?'nejbližší expirace<br>'+ne:''}</div></div>`;
+  h+=`<div class="nahsub2">Náhradu lze vyčerpat i na příměstský tábor. Vzniká za každý včas omluvený den.</div>`;
+  h+=c.nahrady.map(nahRow).join('');
+  return h+`</div>`;
+}
+function renderOmluvenky(c){
+  if(!c.omluvenky.length)return '';
+  let h=`<div class="tile"><div class="tlab">Omluvenky</div>`;
+  c.omluvenky.forEach(o=>{
+    const canCancel=o.od>NOW.d&&o.stav!=='zrusena';
+    h+=`<div class="omrow"><div class="omL"><div class="omo">${fmtRange(o.od,o.do)}</div><div class="omv">${DUVODLAB[o.duvod]||o.duvod}${o.pozn?' · '+escTa(o.pozn):''}</div></div><span class="bdg om-${o.stav}">${OMLAB[o.stav]}</span>${canCancel?`<button class="omx" onclick="omCancel('${o.id}')">Zrušit</button>`:''}</div>`;
+  });
+  return h+`</div>`;
+}
 function renderDochazka(){
-  let h=`<div class="nahline">Náhrady: <b>${cur().nahrady}</b><span class="nahsub">· lze vyčerpat i na příměstský tábor</span></div>`;
+  const c=cur();
+  let h=`<button class="omluvbtn" onclick="openOmluvenka()">Omluvit ${c.ak}</button>`;
+  h+=renderNahrady(c);
+  h+=renderOmluvenky(c);
+  h+=`<div class="vhead" style="margin-top:18px">Kalendář docházky</div>`;
   h+='<div class="switch">'+[['den','Den'],['tyden','Týden'],['mesic','Měsíc']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setView('${v[0]}')">${v[1]}</button>`).join('')+'</div>';
   h+=view==='den'?renderDen():view==='tyden'?renderTyden():renderMesic();
   h+=`<div class="hint">${HINTS[view]}</div>`;
@@ -796,10 +902,77 @@ window.openAkce=i=>{overlay={type:'akce',idx:i};render();};
 window.openFond=()=>{overlay={type:'fond'};render();};
 window.openMenu=()=>{overlay={type:'menu'};render();};
 window.closeOverlay=()=>{overlay=null;render();};
+
+/* --- OMLUVENKA (Flow 2) --- overlay řízený stavem omDraft */
+let omDraft=null;
+const omDays=()=>{const a=[];for(let d=omDraft.od;d<=omDraft.do;d++)if(!isWE(d))a.push(d);return a;};
+function omGrid(which){
+  let h=`<div class="dpcal">`;['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);
+  for(let d=1;d<=30;d++){
+    if(isWE(d)||d<NOW.d){h+=`<div class="dpcell we">${d}</div>`;continue;}
+    const sel=omDraft[which]===d, rng=d>=omDraft.od&&d<=omDraft.do;
+    h+=`<div class="dpcell${sel?' sel':rng?' rng':''}${d===TODAY?' today':''}" onclick="omPick('${which}',${d})">${d}</div>`;
+  }
+  return h+`</div>`;
+}
+function omDeadline(){
+  const days=omDays(), timely=days.filter(beforeDeadline), late=days.filter(d=>!beforeDeadline(d));
+  let h=`<div class="tile note-info"><div class="tlab" style="color:var(--color-primary);margin-bottom:5px">Než odešleš</div>`;
+  h+=`<div class="omdrow">Omluvit lze do <b>8:00</b> v den absence.</div>`;
+  if(timely.length)h+=`<div class="omdrow ok">✓ Vznikne <b>${timely.length} ${nplural(timely.length)}</b> (za ${timely.length} včas omluvený ${plural(timely.length)}).</div>`;
+  if(late.length)h+=`<div class="omdrow bad">⚠ Omluva na ${late.map(d=>d+'. 6.').join(', ')} je po deadlinu — <b>náhrada nevznikne</b>. Dítě je omluvené.</div>`;
+  return h+`</div>`;
+}
+function renderOmluvenka(){
+  const c=cur();
+  let h=`<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">Omluvit ${c.ak}</div>`;
+  if(omDraft.step==='done')return h+renderOmluvenkaDone(c);
+  h+=`<div class="pfull">Vyber dny, kdy ${c.n} nebude ve školce</div>`;
+  h+=`<div class="tile"><div class="tlab">Od</div>${omGrid('od')}</div>`;
+  h+=`<div class="tile"><div class="tlab">Do</div>${omGrid('do')}</div>`;
+  h+=`<div class="tile"><div class="tlab">Důvod</div><div class="pchips">`+[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['jiné','Jiné']].map(([k,l])=>`<button class="${omDraft.duvod===k?'on':''}" onclick="omReason('${k}')">${l}</button>`).join('')+`</div>`;
+  h+=`<textarea class="note" placeholder="Poznámka pro průvodce (nepovinné)" oninput="omNote(this.value)">${escTa(omDraft.pozn)}</textarea></div>`;
+  h+=omDeadline();
+  h+=`<button class="omluvbtn" onclick="omSubmit()">Odeslat omluvenku</button>`;
+  return h;
+}
+function renderOmluvenkaDone(c){
+  const r=omDraft.result;
+  let h=`<div class="tile omdone"><div class="omcheck">✓</div><div class="omdt">Omluvenka odeslána</div><div class="omsub">${c.n} · ${fmtRange(omDraft.od,omDraft.do)} · ${DUVODLAB[omDraft.duvod]}</div>`;
+  if(r.timely)h+=`<div class="omres ok">Vznikl${r.timely===1?'a':'y'} <b>${r.timely} ${nplural(r.timely)}</b> — najdeš ${r.timely===1?'ji':'je'} níže v Docházce a náhradách.</div>`;
+  if(r.late)h+=`<div class="omres bad">Za ${r.late} ${plural(r.late)} po deadlinu <b>náhrada nevznikla</b>.</div>`;
+  h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce. Docházku v těchto dnech jsme označili jako omluvenou (OM).</div></div>`;
+  h+=`<button class="omluvbtn" onclick="go('dochazka')">Zobrazit náhrady</button>`;
+  h+=`<button class="omdonebtn" onclick="closeOverlay()">Hotovo</button>`;
+  return h;
+}
+window.openOmluvenka=()=>{let t=NOW.d+1;while(t<=30&&isWE(t))t++;omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
+window.omPick=(which,d)=>{omDraft[which]=d;if(which==='od'&&omDraft.do<d)omDraft.do=d;if(which==='do'&&d<omDraft.od)omDraft.od=d;render();};
+window.omReason=k=>{omDraft.duvod=k;render();};
+window.omNote=v=>{omDraft.pozn=v;};
+window.omSubmit=()=>{
+  const c=cur(), days=omDays(); if(!days.length)return;
+  const timely=days.filter(beforeDeadline), late=days.filter(d=>!beforeDeadline(d));
+  const om={id:uid(),od:omDraft.od,do:omDraft.do,duvod:omDraft.duvod,pozn:omDraft.pozn,
+    stav:beforeDeadline(omDraft.od)?'vcas':'po-deadlinu',nahradaIds:[]};
+  days.forEach(d=>{c.att[d]='OM';if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
+  timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'—',expT:Infinity});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  c.omluvenky.unshift(om);
+  omDraft.step='done';omDraft.result={timely:timely.length,late:late.length};
+  render();
+};
+window.omCancel=id=>{
+  const c=cur(), om=c.omluvenky.find(o=>o.id===id); if(!om)return;
+  om.stav='zrusena';
+  for(let d=om.od;d<=om.do;d++){if(c.att[d]==='OM')delete c.att[d];}
+  c.nahrady=c.nahrady.filter(n=>!(om.nahradaIds||[]).includes(n.id));
+  render();showToast('Omluvenka zrušena, náhrady odečteny');
+};
 </script>
 <script>
 /* CORE: RODIC — stav, sekce, drawer/hlavička, render(), go(), toast, úvodní spuštění */
-const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Aktuality','▲'],['dochazka','Docházka','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
+const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Aktuality','▲'],['dochazka','Docházka a náhrady','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
   ['kalendar','Kalendář','▦'],['plan','Tématický plán','✎'],['fotky','Fotky','▢'],['kontakty','Kontakty','✆']];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 const PERCHILD=['prehled','dochazka','profil','platby','fotky'];
@@ -830,10 +1003,10 @@ function renderHead(){
   el.innerHTML=h;
 }
 function render(){
-  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':'Akce'):TITLES[section];
+  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):TITLES[section];
   renderHead();renderDrawer();
   document.getElementById('toastbox').innerHTML = toast?`<div class="toast">${toast}</div>`:'';
-  document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():renderAkceDetail(overlay.idx)):RENDER[section]();
+  document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;if(!PERCHILD.includes(s)){} render();};
 window.openDrawer=()=>{drawerOpen=true;render();};
