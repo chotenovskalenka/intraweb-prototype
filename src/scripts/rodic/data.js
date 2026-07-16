@@ -2,15 +2,51 @@
 const CODES={D:['Dopolední','#B07D3A','rgba(176,125,58,.16)'],O:['Odpolední','#3f5d72','rgba(91,124,153,.18)'],
   C:['Celodenní','#2E5E43','rgba(46,94,67,.14)'],OM:['Omluveno','#736E61','rgba(115,110,97,.14)'],NE:['Neomluveno','#B0492F','rgba(176,73,47,.14)']};
 const ORDER=['D','O','C','OM','NE'];
+
+/* --- Simulovaný čas + omluvenka/náhrada model (fáze 1) --- */
+const NOW={d:3,h:10};                 // „teď" = St 3. 6. 2026, 10:00 (žádné Date.now())
+const beforeDeadline=d=>d>NOW.d||(d===NOW.d&&NOW.h<8);  // omluvit lze do 8:00 dne absence
+let _uid=1000; const uid=()=>'x'+(++_uid);
+const fmtD=dt=>dt.getDate()+'. '+(dt.getMonth()+1)+'. '+dt.getFullYear();
+const juneDate=day=>new Date(2026,5,day);
+// Náhrada z data vzniku (origin); expirace = +60 dní. extra může přepsat id/den/exp/expT ap.
+function nahFrom(origin,stav,extra){
+  const exp=new Date(origin);exp.setDate(exp.getDate()+60);
+  return Object.assign({id:uid(),stav,den:null,vznik:fmtD(origin),vznikT:+origin,
+    exp:fmtD(exp),expT:+exp,puvod:'omluva '+origin.getDate()+'. '+(origin.getMonth()+1)+'.'},extra||{});
+}
+const NAHLAB={dostupna:'Dostupná',naplanovana:'Naplánovaná',vyuzita:'Využitá',expirovana:'Expirovaná',nevznikla:'Nevznikla'};
+const OMLAB={vcas:'Včas',['po-deadlinu']:'Po deadlinu',zrusena:'Zrušena'};
+const DUVODLAB={nemoc:'Nemoc',['rodinné důvody']:'Rodinné důvody',['jiné']:'Jiné'};
+const dostupne=c=>c.nahrady.filter(n=>n.stav==='dostupna').length;     // počet se všude odvozuje z pole
+function nextExp(c){const a=c.nahrady.filter(n=>n.stav==='dostupna'&&isFinite(n.expT)).sort((x,y)=>x.expT-y.expT);return a[0]?a[0].exp:null;}
+const nplural=n=>n===1?'náhrada':(n>=2&&n<=4?'náhrady':'náhrad');
+const fmtRange=(a,b)=>a===b?`${DOW[wd(a)]} ${a}. 6.`:`${a}. 6. – ${b}. 6.`;
+
 const children=[
-  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',nahrady:3,att:{},notes:{},fond:{rocni:2000,cerpano:800},
+  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',att:{2:'OM',11:'OM'},notes:{11:'rodinná oslava'},fond:{rocni:2000,cerpano:800},
     faktury:[{obdobi:'Březen 2026',cena:7983,sleva:1996,vystaveno:'9. 3. 2026',paid:false},
              {obdobi:'Únor 2026',cena:7983,sleva:1996,vystaveno:'1. 2. 2026',paid:true},
-             {obdobi:'Leden 2026',cena:7983,sleva:1996,vystaveno:'7. 1. 2026',paid:true}]},
-  {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',nahrady:1,att:{},notes:{},fond:{rocni:2000,cerpano:1500},
+             {obdobi:'Leden 2026',cena:7983,sleva:1996,vystaveno:'7. 1. 2026',paid:true}],
+    nahrady:[
+      nahFrom(new Date(2026,4,12),'dostupna'),
+      nahFrom(new Date(2026,4,20),'dostupna'),
+      nahFrom(juneDate(11),'dostupna',{id:'nE-fut',den:11,omId:'omE-fut'}),
+      nahFrom(new Date(2026,4,26),'naplanovana',{plan:'Příměstský tábor · 21. 7.'}),
+      nahFrom(new Date(2026,3,8),'vyuzita',{pouzita:'15. 5. 2026'}),
+      nahFrom(new Date(2026,1,20),'expirovana'),
+      nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'—',expT:Infinity}),
+    ],
+    omluvenky:[
+      {id:'omE-fut',od:11,do:11,duvod:'rodinné důvody',pozn:'rodinná oslava',stav:'vcas',nahradaIds:['nE-fut']},
+      {id:'omE-2',od:2,do:2,duvod:'nemoc',pozn:'',stav:'po-deadlinu',nahradaIds:['nE-nev']},
+    ]},
+  {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',att:{},notes:{},fond:{rocni:2000,cerpano:1500},
     faktury:[{obdobi:'Březen 2026',cena:9100,sleva:0,vystaveno:'9. 3. 2026',paid:true},
              {obdobi:'Únor 2026',cena:9100,sleva:0,vystaveno:'1. 2. 2026',paid:true},
-             {obdobi:'Leden 2026',cena:9100,sleva:0,vystaveno:'7. 1. 2026',paid:true}]},
+             {obdobi:'Leden 2026',cena:9100,sleva:0,vystaveno:'7. 1. 2026',paid:true}],
+    nahrady:[ nahFrom(new Date(2026,4,15),'dostupna') ],
+    omluvenky:[]},
 ];
 const NEWS=[
   {t:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',from:'Táňa',date:'2. 6.',until:5,urgent:true},

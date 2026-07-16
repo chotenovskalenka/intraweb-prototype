@@ -1,5 +1,5 @@
 /* CORE: RODIC — stav, sekce, drawer/hlavička, render(), go(), toast, úvodní spuštění */
-const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Aktuality','▲'],['dochazka','Docházka','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
+const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Aktuality','▲'],['dochazka','Docházka a náhrady','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
   ['kalendar','Kalendář','▦'],['plan','Tématický plán','✎'],['fotky','Fotky','▢'],['kontakty','Kontakty','✆']];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 const PERCHILD=['prehled','dochazka','profil','platby','fotky'];
@@ -30,10 +30,10 @@ function renderHead(){
   el.innerHTML=h;
 }
 function render(){
-  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':'Akce'):TITLES[section];
+  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):TITLES[section];
   renderHead();renderDrawer();
   document.getElementById('toastbox').innerHTML = toast?`<div class="toast">${toast}</div>`:'';
-  document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():renderAkceDetail(overlay.idx)):RENDER[section]();
+  document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;if(!PERCHILD.includes(s)){} render();};
 window.openDrawer=()=>{drawerOpen=true;render();};
