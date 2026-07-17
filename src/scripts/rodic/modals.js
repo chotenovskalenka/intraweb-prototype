@@ -46,7 +46,7 @@ function omGrid(which){
 function omDeadline(){
   const days=omDays(), timely=days.filter(beforeDeadline), late=days.filter(d=>!beforeDeadline(d));
   let h=`<div class="tile note-info"><div class="tlab" style="color:var(--color-primary);margin-bottom:5px">Než odešleš</div>`;
-  h+=`<div class="omdrow">Omluvit lze do <b>8:00</b> v den absence.</div>`;
+  h+=`<div class="omdrow">Omluvit lze do <b>20:00 předchozího dne</b>.</div>`;
   if(timely.length)h+=`<div class="omdrow ok">✓ Vznikne <b>${timely.length} ${nplural(timely.length)}</b> (za ${timely.length} včas omluvený ${plural(timely.length)}).</div>`;
   if(late.length)h+=`<div class="omdrow bad">⚠ Omluva na ${late.map(d=>d+'. 6.').join(', ')} je po deadlinu — <b>náhrada nevznikne</b>. Dítě je omluvené.</div>`;
   return h+`</div>`;
