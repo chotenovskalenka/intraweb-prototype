@@ -208,6 +208,32 @@
   .sblock{border-radius:14px;padding:11px 14px}
   .sblock .st{font-size:12px;opacity:.8}
   .sblock .sn{font-family:var(--f-head);font-weight:600;font-size:15px}
+
+  /* ---- Sekce 6: směr C — whitespace / klid ---- */
+  .ws{background:var(--surface);border-radius:24px;padding:52px 48px}
+  @media(max-width:720px){.ws{padding:32px 22px}}
+  .ws-eyebrow{font-family:var(--f-head);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .ws-h{font-family:var(--f-head);font-weight:700;font-size:34px;color:var(--primary-strong);margin-bottom:44px}
+  .ws-kpis{display:flex;gap:0;margin-bottom:56px}
+  .ws-kpi{flex:1;padding:0 28px}
+  .ws-kpi:first-child{padding-left:0}
+  .ws-kpi + .ws-kpi{border-left:1px solid var(--border)}
+  .ws-num{font-family:var(--f-head);font-weight:700;font-size:44px;line-height:1;color:var(--text)}
+  .ws-num.focal{color:var(--primary)}
+  .ws-lab{font-size:14px;color:var(--muted);margin-top:10px}
+  .ws-cols{display:grid;grid-template-columns:1.4fr 1fr;gap:56px}
+  @media(max-width:720px){.ws-cols{grid-template-columns:1fr;gap:36px}}
+  .ws-sec{font-family:var(--f-head);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+  .ws-row{display:flex;align-items:baseline;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+  .ws-row:first-of-type{padding-top:0}
+  .ws-row .wt{font-family:var(--f-head);font-weight:600;font-size:16px;color:var(--text)}
+  .ws-row .wtime{font-size:13px;color:var(--hint);min-width:52px}
+  .ws-row .wtag{margin-left:auto;font-size:12px;color:var(--primary);font-weight:600}
+  .ws-prog{margin-top:4px}
+  .ws-prog .pv{font-family:var(--f-head);font-weight:700;font-size:52px;color:var(--primary-strong);line-height:1}
+  .ws-prog .pl{font-size:14px;color:var(--muted);margin:8px 0 20px}
+  .ws-bar{height:6px;border-radius:99px;background:var(--surface-2)}
+  .ws-bar span{display:block;height:100%;width:74%;border-radius:99px;background:var(--primary)}
 </style>
 </head>
 <body>
@@ -443,6 +469,40 @@
         <div class="srow"><span class="stime">9:00</span><div class="sblock tint-blue"><div class="st">kruh</div><div class="sn">Ranní kruh · Voda</div></div></div>
         <div class="srow"><span class="stime">10:00</span><div class="sblock blk-green" style="border-radius:14px"><div class="st" style="color:#CFE6D8">výprava</div><div class="sn">K potoku</div></div></div>
         <div class="srow"><span class="stime">13:00</span><div class="sblock tint-rose"><div class="st">klid</div><div class="sn">Odpolední odpočinek</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec">6 · Směr C — whitespace / klid (aktuální trend)</h2>
+  <p class="note">Míň prvků, velký prostor, minimum rámečků a stínů; barva jen jako <b>akcent</b>, ne plocha.
+  Skupiny odděluje prostor a vlasové linky, ne boxy. Sedí tlumené paletě — působí klidně a prémiově.
+  Porovnej se sekcí 4 (tinty) a 5 (bloky).</p>
+
+  <div class="ws">
+    <div class="ws-eyebrow">Středa · 3. června</div>
+    <div class="ws-h">Přehled dne</div>
+
+    <div class="ws-kpis">
+      <div class="ws-kpi"><div class="ws-num focal">22</div><div class="ws-lab">Děti dnes</div></div>
+      <div class="ws-kpi"><div class="ws-num">3</div><div class="ws-lab">Omluveno</div></div>
+      <div class="ws-kpi"><div class="ws-num">8</div><div class="ws-lab">Náhrady dostupné</div></div>
+      <div class="ws-kpi"><div class="ws-num">2</div><div class="ws-lab">Platby po splatnosti</div></div>
+    </div>
+
+    <div class="ws-cols">
+      <div>
+        <div class="ws-sec">Dnešní program</div>
+        <div class="ws-row"><span class="wtime">9:00</span><span class="wt">Ranní kruh · téma Voda</span><span class="wtag">teď</span></div>
+        <div class="ws-row"><span class="wtime">10:00</span><span class="wt">Výprava k potoku</span><span class="wtag">brzy</span></div>
+        <div class="ws-row"><span class="wtime">13:00</span><span class="wt">Odpolední odpočinek</span></div>
+      </div>
+      <div>
+        <div class="ws-sec">Docházka dnes</div>
+        <div class="ws-prog">
+          <div class="pv">74 %</div>
+          <div class="pl">přítomno · 22 z 30 dětí</div>
+          <div class="ws-bar"><span></span></div>
+        </div>
       </div>
     </div>
   </div>

@@ -363,3 +363,14 @@ palety rozšířit o jasnější akcenty (změna palety = rozhodnutí designérk
 
 **Volba pro designérku:** sekce 4 (jemné tinty, decentnější) × sekce 5 (plné bloky, odvážnější) —
 a zda zemitá paleta dává dost „šťávy", nebo chce zvážit jasnější akcenty.
+
+#### Směr UI — varianta C: whitespace / klid (2026-07-17)
+
+Designérka směřuje k aktuálnímu trendu — „hodně o whitespace". Přidána **sekce 6 „Směr C"**:
+míň prvků, velký prostor, minimum rámečků/stínů; barva jen jako **akcent** (zelené fokální číslo,
+tenká lišta), skupiny odděluje prostor a vlasové linky, ne boxy. Velký radius, hodně paddingu.
+
+Poznatek: whitespace **nejlíp sedí tlumené zemité paletě** — barvy nemusí bojovat o pozornost,
+působí klidně/prémiově; zároveň řeší spor „moc barevné × moc dětské". Zatím **doporučená báze**
+(potvrdí designérka). Tři varianty v náhledu k volbě: **4** tinty · **5** plné bloky · **6** whitespace.
+Lze i kombinovat (whitespace layout + akcentní tinty z 4).
