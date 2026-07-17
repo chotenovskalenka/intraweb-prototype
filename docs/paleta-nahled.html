@@ -176,6 +176,38 @@
   .pl .pt{font-size:14px;font-weight:600}
   .pl .ps{font-size:12px;color:var(--muted)}
   .pl .pr{margin-left:auto}
+
+  /* ---- Sekce 5: směr B — velké barevné bloky (kwikword / parenting) ---- */
+  .b5eyebrow{font-family:var(--f-head);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);font-weight:700;margin-bottom:2px}
+  .b5head{font-family:var(--f-head);font-size:40px;line-height:1.05;color:var(--primary-strong);margin-bottom:18px}
+  .b5head .thin{font-weight:400;color:var(--text)}
+  .b5head .bold{font-weight:700}
+  .blocks{display:grid;grid-template-columns:1.15fr 1fr 1.1fr;gap:16px;align-items:stretch}
+  @media(max-width:900px){.blocks{grid-template-columns:1fr}}
+  .block{border-radius:26px;padding:22px;display:flex;flex-direction:column;min-height:150px}
+  .block .blabel{font-size:14px;font-weight:600;opacity:.85}
+  .block .btitle{font-family:var(--f-head);font-weight:700;font-size:24px;line-height:1.1;margin-top:2px}
+  .block .bbig{font-family:var(--f-head);font-weight:700;font-size:46px;line-height:1;margin:10px 0}
+  .blk-rose{background:#D9B4AC;color:#4A2F28}
+  .blk-green{background:var(--primary);color:#EAF3EE}
+  .blk-dark{background:var(--primary-strong);color:#EAF3EE}
+  .blk-ochre{background:var(--accent);color:#3A3320}
+  .blk-teal{background:var(--info);color:#EAF1F3}
+  .col2{display:flex;flex-direction:column;gap:16px}
+  .col2 .block{flex:1;min-height:0}
+  /* tone-on-tone mini bary v bloku (kwikword Monthly Progress) */
+  .tbars{display:flex;align-items:flex-end;gap:9px;height:96px;margin-top:auto}
+  .tbars .tb{flex:1;border-radius:8px;background:rgba(74,47,40,.20)}
+  .tbars .tb.on{background:#fff}
+  .bround{width:44px;height:44px;border-radius:50%;background:#fff;color:var(--primary-strong);
+       display:flex;align-items:center;justify-content:center;font-size:20px;margin-top:auto;align-self:flex-start}
+  /* barevný rozvrh (parenting Today's Plan / kwikword schedule) */
+  .sched{display:flex;flex-direction:column;gap:2px}
+  .srow{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;min-height:52px}
+  .srow .stime{font-size:12px;color:var(--hint)}
+  .sblock{border-radius:14px;padding:11px 14px}
+  .sblock .st{font-size:12px;opacity:.8}
+  .sblock .sn{font-family:var(--f-head);font-weight:600;font-size:15px}
 </style>
 </head>
 <body>
@@ -374,9 +406,50 @@
     <span class="bdg ok">dopolední</span>
   </div>
 
+  <h2 class="sec">5 · Směr B — velké barevné bloky (kwikword / parenting)</h2>
+  <p class="note">Tentýž obsah odvážněji: <b>plné barevné bloky</b> místo jemných tintů, dvoubarevný
+  velký nadpis, barevný rozvrh, velký radius. Barvy jsou <b>plné odstíny palety</b> (kwikword
+  růžová→rose, navy→tmavě zelená, žlutá→okrová, mint→zelená). Bez ilustrací. Porovnej se sekcí 4.</p>
+
+  <div class="b5eyebrow">Dobré ráno, průvodkyně</div>
+  <div class="b5head"><span class="thin">Začni</span> <span class="bold">den ve školce</span></div>
+
+  <div class="blocks">
+    <div class="block blk-rose">
+      <div class="blabel">Docházka tento měsíc</div>
+      <div class="bbig">+8 %</div>
+      <div class="tbars">
+        <div class="tb" style="height:45%"></div>
+        <div class="tb on" style="height:80%"></div>
+        <div class="tb" style="height:55%"></div>
+        <div class="tb" style="height:38%"></div>
+        <div class="tb" style="height:62%"></div>
+      </div>
+    </div>
+    <div class="col2">
+      <div class="block blk-dark">
+        <div class="blabel">Přehled týdne</div>
+        <div class="btitle">18 dětí · 3 omluvenky</div>
+      </div>
+      <div class="block blk-ochre">
+        <div class="blabel">Ranní kruh</div>
+        <div class="btitle">Spustit program</div>
+        <div class="bround">→</div>
+      </div>
+    </div>
+    <div class="block" style="background:var(--surface);border:1px solid var(--border);color:var(--text)">
+      <div class="blabel" style="color:var(--muted)">Dnešní rozvrh · St 3. 6.</div>
+      <div class="sched" style="margin-top:12px">
+        <div class="srow"><span class="stime">9:00</span><div class="sblock tint-blue"><div class="st">kruh</div><div class="sn">Ranní kruh · Voda</div></div></div>
+        <div class="srow"><span class="stime">10:00</span><div class="sblock blk-green" style="border-radius:14px"><div class="st" style="color:#CFE6D8">výprava</div><div class="sn">K potoku</div></div></div>
+        <div class="srow"><span class="stime">13:00</span><div class="sblock tint-rose"><div class="st">klid</div><div class="sn">Odpolední odpočinek</div></div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="footer">
-    Náhled fáze 4.1 · zdroj identity: vhaaji.cz + designérčiny reference (Donezo aj.) · mimo build (docs/) ·
-    po schválení (V2) se hodnoty přenesou do <code>tokens.css</code> ve fázi 4.2.
+    Náhled fáze 4.1 · zdroj identity: vhaaji.cz + designérčiny reference (Donezo, kwikword, parenting app) ·
+    mimo build (docs/) · po schválení (V2) se hodnoty přenesou do <code>tokens.css</code> ve fázi 4.2.
   </div>
 </div>
 </body>

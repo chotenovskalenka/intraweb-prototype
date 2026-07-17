@@ -347,3 +347,19 @@ sloupce grafu mají správné výšky. Detailní tokenizace (radiusy, stíny, ti
 je na 4.2/4.3/4.6 — tady jde o schválený **směr**, ne finální komponentní CSS.
 
 **Zbývá pro V2:** potvrdit směr UI + tělo (Inter vs Nunito). Pak 4.2.
+
+#### Směr UI — varianta B: velké barevné bloky (2026-07-17)
+
+Designérka požádala porovnat s odvážnějšími referencemi (kwikword, parenting app). Do náhledu
+přidána **sekce 5 „Směr B"** na stejném obsahu Vhaaji: plné barevné bloky místo jemných tintů,
+dvoubarevný velký nadpis, barevný rozvrh, velký radius (26px). Barvy zůstávají **plné odstíny
+palety** — mapování kwikword→Vhaaji: růžová→rose, navy→primary-strong, žlutá→accent, mint→primary
+(žádná nová barva). Kontrasty ověřeny (bloky ≥4.4:1).
+
+**Poctivý poznatek k rozhodnutí:** Vhaaji paleta je **zemitá/tlumená**, takže i jako plné bloky
+je výraz měkčí než „cukrové" barvy kwikwordu/parenting appky. Formy (velké bloky, dvoubarevný
+nadpis, barevný rozvrh) jdou přenést 1:1; **jasnost/sytost barev ne** — na to by byla potřeba
+palety rozšířit o jasnější akcenty (změna palety = rozhodnutí designérky, dnes mimo schválené V2).
+
+**Volba pro designérku:** sekce 4 (jemné tinty, decentnější) × sekce 5 (plné bloky, odvážnější) —
+a zda zemitá paleta dává dost „šťávy", nebo chce zvážit jasnější akcenty.
