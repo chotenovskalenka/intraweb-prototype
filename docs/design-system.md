@@ -48,9 +48,36 @@ Všechny tři fonty webu jsou **Google Fonts** (dostupné, žádná náhrada nut
 Font Awesome / eicons jsou technické, ne značkové.)
 
 Pozn. k čitelnosti: **Itim** je rukodělné písmo — půvabné pro osobní tón, ale pro
-hustý UI text (admin tabulky, malé labely, dlouhé seznamy) rizikové. Návrh proto
-ukazuje víc kandidátů na tělový/UI font vedle sebe (viz náhled a decision-log) —
-rozhoduje designérka (V2).
+hustý UI text (admin tabulky, malé labely, dlouhé seznamy) rizikové.
+
+### Typografie napříč školkami (proč se Vhaaji fonty nepřebírají 1:1)
+
+Typografie je **společná pro všechny čtyři školky** (skiny mění jen barvu — BRIEF kap. 10),
+takže nesmí být podpisem jedné školky. Porovnání webů to potvrzuje:
+
+| Školka | Nadpisy / display | Text / UI |
+|---|---|---|
+| Vhaaji | Shadows Into Light Two, IBM Plex Serif | Itim (psané) |
+| Jaata | Poppins (geometrický sans) | Source Sans Pro |
+| Maata | Sacramento (kaligrafie) | Open Sans |
+| Kouzlo lesa | Playfair Display (serif) | Metropolis (sans) |
+
+**Žádný font není společný** — každá školka má vlastní. Společný je jen **vzorec**:
+charakterní nadpisy + **neutrální, čitelný sans na text** (3 ze 4 školek). Vhaaji s
+rukodělným Itim je výjimka — právě ta špatná čitelnost v UI. Proto se Shadows Into Light
+Two ani Itim **nepřebírají** jako systémové fonty; slouží jen jako reference tónu.
+
+### Přepracovaný univerzální návrh (4.1 — čeká na V2)
+
+- **Tělo / UI — Nunito Sans** (Google): zaoblený humanistický sans. Vřelý a „školkový",
+  ale plně čitelný v malých velikostech, hustých tabulkách i dlouhých seznamech. Řeší
+  Itim a odpovídá vzorci sesterských webů.
+- **Nadpisy — tři kandidáti k výběru** (žádný nepatří jedné školce; náhled je ukazuje vedle sebe):
+  - **A · Fraunces** (měkký serif) — charakterní, teplý, „ruční" bez rukopisu; nejblíž duchu Vhaaji, ale neutrální i pro ostatní.
+  - **B · Nunito Sans** tučným řezem (900/800) — jedna rodina, nejčistší a technicky nejlevnější; méně osobní.
+  - **C · Baloo 2** (zaoblený display) — nejhravější, dětský; pozor na „cukrový" dojem u administrativy vedení.
+
+Rozhoduje designérka (V2). Šablona náhledu má jako výchozí kandidáta A (Fraunces).
 
 ### Tone of voice titulků
 
@@ -83,17 +110,20 @@ Kde web AA neplnil, uvedena nejbližší vyhovující varianta a odchylka.
 | `--color-border` | `rgba(31,42,46,.10)` | odvozeno z text tmavé |
 | `--color-border-strong` | `rgba(31,42,46,.16)` | tamtéž |
 
-### Návrh typografických tokenů
+### Návrh typografických tokenů (univerzální, po porovnání školek)
 
 | Token | Návrh | Pozn. |
 |---|---|---|
-| `--font-display` | `"Shadows Into Light Two", cursive` | logo-blízké, řídké užití (hero) |
-| `--font-serif` | `"IBM Plex Serif", Georgia, serif` | nadpisy sekcí |
-| `--font-sans` | *kandidát A:* `"Itim", sans-serif` — max věrnost webu | tělo/UI |
-| | *kandidát B:* Itim jen nadpisy + čitelný companion na UI | rozhoduje designérka |
+| `--font-sans` | `"Nunito Sans", system-ui, sans-serif` | tělo + UI, univerzální, čitelný |
+| `--font-serif` (nadpisy) | **kandidát A:** `"Fraunces", Georgia, serif` | výchozí; nebo B / C níže |
+| | **kandidát B:** `"Nunito Sans"` tučně (900/800) | jedna rodina, nejčistší |
+| | **kandidát C:** `"Baloo 2", cursive` | hravý zaoblený display |
 
-Škála (návrh, jednotná pro všechny 4 školky): display 28/34, h1 22/28, h2 19/25,
-h3 16/22, body 15/23, label 13/18, hint 12/16 (px/px). Ladí se na náhledu.
+Odmítnuto jako systémový font: `Shadows Into Light Two` a `Itim` (podpis Vhaaji /
+špatná čitelnost v UI) — zůstávají jen jako reference tónu.
+
+Škála (návrh, jednotná pro všechny 4 školky): h1 26/30, h2 20/26, h3 18/24,
+body 15/23, label 13/18, hint 12/16 (px/px). Ladí se na náhledu.
 
 > **Stav:** návrh čeká na schválení designérkou (V2). Po schválení se hodnoty přenesou
 > do `tokens.css` ve fázi 4.2. Skiny sesterských školek mění **jen barevnost**;

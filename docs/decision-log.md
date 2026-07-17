@@ -295,3 +295,15 @@ Zdroj (vstup V1): **[vhaaji.cz](https://vhaaji.cz/)**. Analyticko-návrhová fá
 **Otevřená otázka pro designérku (V2):** tělový/UI font. Itim je rukodělné písmo — půvabné, ale v hustém UI (admin tabulky, malé labely, dlouhé seznamy) hůř čitelné. Náhled ukazuje dvě cesty vedle sebe: **A** Itim všude (max věrnost webu) vs. **B** hybrid (Itim/Shadows na nadpisy a akcenty, čitelnější companion na hustý text). Rozhodne designérka.
 
 **Stav:** čeká na V2 (schválení palety + volba tělového fontu). Poté fáze 4.2 přenese hodnoty do `tokens.css`.
+
+#### Revize typografie po porovnání se sesterskými weby (2026-07-17)
+
+Designérka **schválila barvy**. K typografii: Shadows Into Light Two se nehodí a font musí být **univerzální napříč všemi čtyřmi školkami**. Porovnal jsem weby: Vhaaji (Shadows + Itim), **Jaata** (Poppins + Source Sans Pro), **Maata** (Sacramento + Open Sans), **Kouzlo lesa** (Playfair Display + Metropolis).
+
+Zjištění: **žádný font není napříč školkami společný** — každá má vlastní. Společný je jen **vzorec**: charakterní nadpisy + neutrální čitelný sans na text (3 ze 4 školek). Vhaaji s rukodělným Itim je výjimka (špatná čitelnost v UI). Proto se Shadows ani Itim **nepřebírají** jako systémové fonty.
+
+**Přepracovaný univerzální návrh** (nahrazuje předchozí typografické tokeny):
+- **Tělo/UI: Nunito Sans** — zaoblený humanistický sans, vřelý ale čitelný i v hustém UI.
+- **Nadpisy: 3 kandidáti k výběru** (žádný nepatří jedné školce) — **A Fraunces** (měkký serif, výchozí), **B Nunito Sans** tučně (jedna rodina), **C Baloo 2** (zaoblený display). Náhled je ukazuje vedle sebe nad schválenou paletou.
+
+Náhled i `design-system.md` aktualizovány; ověřeno v prohlížeči (všechny fonty načtené, kandidáti se správnými řezy). **Otevřená otázka pro V2:** výběr nadpisového kandidáta A/B/C.
