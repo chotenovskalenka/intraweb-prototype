@@ -251,3 +251,19 @@ Porovnání prototypu s 27 screenshoty produkčního systému „Dětský klub M
 **Směr pro další fázi (nerealizováno):** rozsah admin appky „nakombinovat" — management nadstavba (Přehled/Aktuality/Porady) + postupné přebírání agend z reálného intrawebu (docházka pro vedení, kalendář, vyúčtování). Rozhodne se po testování.
 
 **Dodatek — Kouzlo lesa je samostatná školka.** Na upřesnění designérky povýšeno z třídy Jaaty na čtvrtou sesterskou školku (`SKOLKY`: Vhaaji 25/28, Jaata 12/12 · plno, Kouzlo lesa 12/14, Maata 16/20). Školka s jedinou skupinou má jednu třídu pojmenovanou po sobě (obsazenost se odvozuje z pole tříd); UI ji neduplikuje — dashboard u ní nevypisuje rozpis tříd a formulář aktuality nabízí jen „Celá školka" bez chipu třídy. Mřížka kapacit přepnuta na `auto-fit`, aby unesla čtyři školky. Seed aktuality „letní provoz" nově míří i na Kouzlo lesa.
+
+### 2026-07-17 — Revize dle podkladů (příručky PDF + tabulka Pro rodiče 25/26)
+
+Podklady: `podklady/Vhaaji pro rodiče DIGI.pdf`, `podklady/Vhaaji průvodce rituály.pdf`, `podklady/Příručka M 2024_2025.pdf` (Maata), `podklady/Pro rodiče 25_26 vhaaji.xlsx`.
+
+**Provedené změny:**
+
+- **Školné dle příručky Vhaaji 2024/25.** Odpolední docházka 10 584 Kč — Eliščiny faktury v `rodic/data.js` (10 584, bez slevy) i admin `PLATBY` (Eliška, Kuba). Matěj (celodenní) má tutéž sazbu — samostatná cena celodenní docházky v podkladech není. Ela Marešová (Maata) → 11 813 Kč (3× týdně do 15:00 dle příručky Maata).
+- **Stravné dle příručky:** dopolední svačina 20 Kč, oběd 80 Kč, odpolední svačina 15 Kč — nová dlaždice v overlay Jídelníček (`rodic/modals.js`) + věta o nepočítání stravného při omluvě do 20:00.
+- **Jídelníček dle skutečnosti** — `MENUS` přepsán reálným týdnem z tabulky (8.–12. 6.): obědy veganské z Mamafood, živočišná složka jen ve svačinkách (dřív seed obsahoval rybí filé jako oběd).
+- **Zaměření dnů zvalidováno s tabulkou (list ROZVRH):** Po rytmika, Út putování, St pohyb, Čt tvorba, Pá hrátky s pohádkou — **prototyp seděl**, beze změny. (Rituály PDF má St/Čt prohozeně — tabulka je novější, platí tabulka.) Doplněn pondělní kroužek „Tanečky s Niki" (`RYTMUS`), kroužky v rodičovském kalendáři přepsány na reálné (Tanečky s Niki po · Živly se Shaunem čt; smyšlená keramika odstraněna).
+- **Konzultace s rodiči 2× ročně — listopad a duben:** seed rozhovorů v `pruvodce/data.js` přesunut na 13. 11. 2025 a 16. 4. 2026.
+- **Výlet předškoláků = 1. čtvrtek v měsíci:** sloučen se seed akcí Horolezení na čt 4. 6. („Výlet předškoláků — horolezení", reálné místo Jungle Sport park Letňany dle tabulky); samostatný smyšlený výlet 8. 6. odstraněn. Pozn.: tabulka uvádí „každá první středa" — dle designérky čtvrtek; případně ověřit.
+- **Celodenní docházka je jen v úterý** (Vhaaji: do 13 / do 15 / úterý do 17): `baseCode`/`getCode` (průvodce) a `code()` (rodič) vrací pro celodenní plán `C` jen v úterý, jinak `O`. Štítek plánu dítěte zůstává „celodenní".
+
+**Odloženo — náhrady.** Příručky popisují jiná pravidla než prototyp (Vhaaji: 20 % omluvených hodin; Maata: fixní roční kvóta hodin dle rozsahu docházky, čerpání rovnoměrně, 50 % v 1. pololetí) — a každá školka jiná. Prototypové „1 včas omluvený den = 1 náhrada" zatím zůstává; designérka ověří s vedením, co reálně platí. Pro admin z toho plyne otázka per-školkové konfigurace pravidel.
