@@ -26,9 +26,9 @@ const fmtRange=(a,b)=>a===b?`${DOW[wd(a)]} ${a}. 6.`:`${a}. 6. – ${b}. 6.`;
 
 const children=[
   {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',att:{2:'OM',11:'OM'},notes:{11:'rodinná oslava'},fond:{rocni:2000,cerpano:800},
-    faktury:[{obdobi:'Březen 2026',cena:7983,sleva:1996,vystaveno:'9. 3. 2026',paid:false},
-             {obdobi:'Únor 2026',cena:7983,sleva:1996,vystaveno:'1. 2. 2026',paid:true},
-             {obdobi:'Leden 2026',cena:7983,sleva:1996,vystaveno:'7. 1. 2026',paid:true}],
+    faktury:[{obdobi:'Březen 2026',cena:10584,sleva:0,vystaveno:'9. 3. 2026',paid:false},
+             {obdobi:'Únor 2026',cena:10584,sleva:0,vystaveno:'1. 2. 2026',paid:true},
+             {obdobi:'Leden 2026',cena:10584,sleva:0,vystaveno:'7. 1. 2026',paid:true}],
     nahrady:[
       nahFrom(new Date(2026,4,12),'dostupna'),
       nahFrom(new Date(2026,4,20),'dostupna'),
@@ -43,9 +43,10 @@ const children=[
       {id:'omE-2',od:2,do:2,duvod:'nemoc',pozn:'',stav:'po-deadlinu',nahradaIds:['nE-nev']},
     ]},
   {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',att:{},notes:{},fond:{rocni:2000,cerpano:1500},
-    faktury:[{obdobi:'Březen 2026',cena:9100,sleva:0,vystaveno:'9. 3. 2026',paid:true},
-             {obdobi:'Únor 2026',cena:9100,sleva:0,vystaveno:'1. 2. 2026',paid:true},
-             {obdobi:'Leden 2026',cena:9100,sleva:0,vystaveno:'7. 1. 2026',paid:true}],
+    /* celodenní = odpolední docházka + úterý do 17:00; samostatná cena v podkladech není, použita odpolední sazba */
+    faktury:[{obdobi:'Březen 2026',cena:10584,sleva:0,vystaveno:'9. 3. 2026',paid:true},
+             {obdobi:'Únor 2026',cena:10584,sleva:0,vystaveno:'1. 2. 2026',paid:true},
+             {obdobi:'Leden 2026',cena:10584,sleva:0,vystaveno:'7. 1. 2026',paid:true}],
     nahrady:[ nahFrom(new Date(2026,4,15),'dostupna') ],
     omluvenky:[]},
 ];
@@ -61,7 +62,7 @@ const ALERTS=[
 ];
 const EVENTS={
   3:{title:'Společné putování Ďábličákem',place:'Vozovna Kobylisy',time:'8:00–8:30',note:'Na oběd jsme zpět ve školce.',sbalit:'pláštěnku a náhradní ponožky',map:'https://mapy.com/s/papobonuzu',gps:'50.1339225N, 14.4545787E'},
-  4:{title:'Horolezení',place:'Lezecká stěna Smíchov',time:'8:00–8:30',note:'Na oběd zpět do školky. Děti odpoledne nespí.',sbalit:'sportovní boty a pití',map:'',gps:''},
+  4:{title:'Výlet předškoláků — horolezení',place:'Jungle Sport park, Letňany',time:'8:00–8:30',note:'Na oběd zpět do školky. Děti odpoledne nespí.',sbalit:'sportovní boty a pití',map:'',gps:''},
 };
 const guides=[
   {n:'Helča',sur:'K',abbr:'He',schedule:'Po, St, Pá · 7:30–16:00',phone:'+420 720 111 222',email:'helca@haj.cz',uspava:true},
@@ -78,28 +79,29 @@ const WEATHER={
   8:{icon:'🌧',t9:12,t17:16,desc:'déšť',nightRain:true},
 };
 const WDEF={icon:'⛅',t9:14,t17:21,desc:'polojasno',nightRain:false};
+/* Jídelníček převzatý z reálného týdenníku Vhaaji (Pro rodiče 25_26): obědy veganské
+   z bistra Mamafood, živočišná složka jen ve svačinkách. */
 const MENUS=[
-  [['Svačinka 1','Jogurt s ovesnými vločkami a ovocem',''],['Polévka','Bramboračka',''],['Hlavní jídlo','Rýže s dušenou zeleninou a tofu','6'],['Svačinka 2','Chléb, pomazánkové máslo, ředkvičky','']],
-  [['Svačinka 1','Pečivo, žervé, paprika',''],['Polévka','Mrkvový krém se zázvorem',''],['Hlavní jídlo','Těstoviny s rajčatovou omáčkou a sýrem','1, 7'],['Svačinka 2','Ovoce a oříšky','8']],
-  [['Svačinka 1','Chléb, Lučina, zelenina',''],['Polévka','Žampiónový krém se sušenými švestkami',''],['Hlavní jídlo','Špagety s omáčkou z pečené zeleniny a fazolí, salátek, oříšková posypka','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
-  [['Svačinka 1','Ovesná kaše s ovocem',''],['Polévka','Čočková',''],['Hlavní jídlo','Bramborové placky se zelím','1'],['Svačinka 2','Chléb, tvarohová pomazánka, okurka','7']],
-  [['Svačinka 1','Pečivo, máslo, med',''],['Polévka','Zeleninový vývar s nudlemi','1'],['Hlavní jídlo','Rybí filé, brambor, salát','4'],['Svačinka 2','Jablko, rýžové chlebíčky','']],
+  [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Mrkvová s pomerančem',''],['Hlavní jídlo','Čočka na kyselo s cibulkou a tofu „vajíčky", rajčatovo-okurkový salátek','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+  [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Ochucená mléčná kaše, ovoce','7'],['Hlavní jídlo','Pečená zelenina s bramborami, křupavým tofu a domácí tatarkou','6'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
+  [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Batátový krém s karamelizovanými hruškami',''],['Hlavní jídlo','Květákové placičky s cizrnou, bramborovo-hráškové pyré a salátek',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
+  [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s květákem, mrkví a bramborami',''],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
+  [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Zeleninová minestrone s bylinkovým pestem',''],['Hlavní jídlo','Chana masala s jasmínovou rýží a cizrnou',''],['Svačinka 2','Domácí bublanina','1']],
 ];
+/* Výlet předškoláků je každý měsíc 1. čtvrtek (v červnu horolezení v Letňanech). */
 const akce=[
-  {title:'Horolezení',date:'čt 4. 6.',time:'8:00–8:30',place:'Lezecká stěna Smíchov',note:'Sraz na místě, na oběd zpět do školky. Děti odpoledne nespí.'},
-  {title:'Výlet předškoláků',date:'po 8. 6.',time:'8:00',place:'Sraz u školky',note:'Celodenní výlet, návrat kolem 15:00. S sebou batůžek a pláštěnku.'},
+  {title:'Výlet předškoláků — horolezení',date:'čt 4. 6.',time:'8:00–8:30',place:'Jungle Sport park, Letňany',note:'Sraz na místě, na oběd zpět do školky. Děti odpoledne nespí.'},
   {title:'Brigáda na zahradě',date:'so 13. 6.',time:'9:00–12:00',place:'Zahrada školky',note:'Společné hrabání a sázení pro rodiče i děti. Občerstvení zajištěno.'},
 ];
 const EVMAP={
-  2:[{t:'Kroužek keramiky · 15:00',type:'rozvrh'}],
-  4:[{t:'Horolezení (předškoláci)',type:'akce'}],
+  4:[{t:'Výlet předškoláků — horolezení',type:'akce'}],
   5:[{t:'Pedagogická porada — školka zavřená',type:'org'}],
-  8:[{t:'Výlet předškoláků',type:'akce'}],
+  8:[{t:'Kroužek Tanečky s Niki · 15:15',type:'rozvrh'}],
   10:[{t:'Narozeniny — Eliška',type:'naro'}],
   11:[{t:'Předškolácký den',type:'rozvrh'}],
   13:[{t:'Brigáda na zahradě',type:'akce'}],
   17:[{t:'Narozeniny — Tonička',type:'naro'}],
-  18:[{t:'Kroužek keramiky · 15:00',type:'rozvrh'}],
+  18:[{t:'Kroužek Živly se Shaunem · 14:00',type:'rozvrh'}],
   20:[{t:'Tatínkovský den',type:'akce'}],
   24:[{t:'Výprava do lesa',type:'akce'},{t:'Narozeniny — Kuba',type:'naro'}],
   27:[{t:'Společné focení tříd',type:'akce'}],
@@ -116,7 +118,8 @@ const wdLocal=(y,m,d)=>(new Date(y,m,d).getDay()+6)%7;
 const editable=d=>d>TODAY;
 const dayLabel=d=>d===TODAY?'Dnes · St 3. 6.':DOW[wd(d)]+' '+d+'. 6.';
 
-const code=(c,d)=>c.att[d]||c.base;
+// celodenní docházka je jen v úterý — v ostatní dny platí odpolední
+const code=(c,d)=>c.att[d]||(c.base==='C'&&wd(d)!==1?'O':c.base);
 const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${CODES[cd][1]}">${CODES[cd][0]}</span>`;
 const mark=cd=>cd==='OM'?'Om':cd==='NE'?'Ne':cd;
 const cur=()=>children[ci];

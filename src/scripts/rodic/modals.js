@@ -12,7 +12,8 @@ function renderMenuDetail(){
   for(let d=1;d<=5;d++){
     h+=`<div class="tile"><div class="tlab">${DOW[wd(d)]} ${d}. 6.${d===TODAY?' · dnes':''}</div>`+MENUS[wd(d)].map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
   }
-  h+=`<div class="note2">Alergeny jsou uvedené čísly dle přílohy vyhlášky. Jídelníček dodává Mamafood.</div>`;
+  h+=`<div class="tile"><div class="tlab">Stravné</div><div class="np"><span>Dopolední svačina</span><b>20 Kč</b></div><div class="np"><span>Oběd</span><b>80 Kč</b></div><div class="np"><span>Odpolední svačina</span><b>15 Kč</b></div></div>`;
+  h+=`<div class="note2">Alergeny jsou uvedené čísly dle přílohy vyhlášky. Jídelníček dodává Mamafood. Při omluvě do 20:00 předchozího dne se stravné nepočítá.</div>`;
   return h;
 }
 function renderGuide(i){const g=guides[i];
