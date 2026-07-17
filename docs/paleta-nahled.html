@@ -6,7 +6,7 @@
 <title>Vhaaji — návrh palety a typografie (fáze 4.1)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Itim&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=Shadows+Into+Light+Two&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@300;600&family=Source+Sans+3:wght@400&family=Open+Sans:wght@400&family=Sacramento&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Itim&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=Shadows+Into+Light+Two&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Spectral:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Poppins:wght@300;600&family=Source+Sans+3:wght@400&family=Open+Sans:wght@400&family=Sacramento&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
   :root{
     /* NÁVRH — odvozeno z vhaaji.cz */
@@ -18,10 +18,10 @@
     --border:rgba(31,42,46,.10); --border-strong:rgba(31,42,46,.16);
     /* Univerzální návrh (po porovnání se sesterskými weby): tělo = neutrální čitelný sans */
     --f-sans:"Nunito Sans",system-ui,sans-serif;
-    /* kandidáti na nadpisy — žádný není podpisem jedné školky */
-    --f-head-a:"Fraunces",Georgia,serif;               /* měkký serif */
-    --f-head-b:"Nunito Sans",system-ui,sans-serif;     /* stejná rodina, tučně */
-    --f-head-c:"Baloo 2",system-ui,cursive;            /* zaoblený friendly display */
+    /* kandidáti na nadpisy — dospělé, profesionální, do IS; žádný není podpisem jedné školky */
+    --f-head-a:"Spectral",Georgia,serif;               /* editoriální knižní serif */
+    --f-head-b:"Zilla Slab",Georgia,serif;             /* slab serif, robustní */
+    --f-head-c:"Bricolage Grotesque",system-ui,sans-serif; /* charakterní grotesk */
     --f-display:var(--f-head-a);                        /* výchozí v náhledu */
     --f-serif:var(--f-head-a);
     /* reference (odmítnuto / vhaaji-specifické) */
@@ -179,34 +179,37 @@
     </div>
   </div>
 
-  <h4 style="font-family:var(--f-head-a);color:var(--muted);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:24px 0 10px">Nadpisy — vyber jednoho kandidáta (A / B / C)</h4>
+  <div class="callout" style="border-left-color:var(--danger)">Předchozí trojice zamítnuta: Fraunces
+  působil moc „genericky", Nunito Sans bold a Baloo 2 moc dětsky pro informační systém. Nová trojice
+  míří na <b>dospělý, profesionální výraz do IS</b> — charakter bez dětskosti a bez trendového soft-serifu.</div>
+  <h4 style="font-family:var(--f-head-a);color:var(--muted);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:20px 0 10px">Nadpisy — nová trojice, vyber jednoho (D / E / F)</h4>
   <div class="cands">
     <div class="card cand">
-      <div class="pick">A</div>
-      <h4>Fraunces — měkký serif</h4>
+      <div class="pick">D</div>
+      <h4>Spectral — editoriální serif</h4>
       <div style="font-family:var(--f-head-a);font-weight:600;font-size:26px;color:var(--primary-strong);line-height:1.15">Dnes ve školce</div>
       <div style="font-family:var(--f-head-a);font-weight:500;font-size:18px;margin-top:6px">Docházka a náhrady</div>
-      <p class="fA" style="font-size:13px;color:var(--muted);margin-top:8px">Charakterní, teplý, přírodní. Serif dodá „ručnost" bez rukopisu. Nejblíž duchu Vhaaji, ale neutrální i pro ostatní.</p>
+      <p class="fA" style="font-size:13px;color:var(--muted);margin-top:8px">Knižní serif navržený pro obrazovky. Klidný, sofistikovaný, dospělý — ne trendový. Vřelost bez dětskosti.</p>
     </div>
     <div class="card cand">
-      <div class="pick">B</div>
-      <h4>Nunito Sans — jedna rodina</h4>
-      <div style="font-family:var(--f-head-b);font-weight:900;font-size:26px;color:var(--primary-strong);line-height:1.15">Dnes ve školce</div>
-      <div style="font-family:var(--f-head-b);font-weight:800;font-size:18px;margin-top:6px">Docházka a náhrady</div>
-      <p class="fA" style="font-size:13px;color:var(--muted);margin-top:8px">Nadpisy tučným řezem tělového fontu. Nejčistší, nejklidnější, technicky nejlevnější (jeden font). Méně „osobní".</p>
+      <div class="pick">E</div>
+      <h4>Zilla Slab — slab serif</h4>
+      <div style="font-family:var(--f-head-b);font-weight:600;font-size:26px;color:var(--primary-strong);line-height:1.15">Dnes ve školce</div>
+      <div style="font-family:var(--f-head-b);font-weight:500;font-size:18px;margin-top:6px">Docházka a náhrady</div>
+      <p class="fA" style="font-size:13px;color:var(--muted);margin-top:8px">Pevný, strukturovaný slab s charakterem. „Dokumentární" tón — sedí do systému s daty, tabulkami a platbami.</p>
     </div>
     <div class="card cand">
-      <div class="pick">C</div>
-      <h4>Baloo 2 — zaoblený display</h4>
+      <div class="pick">F</div>
+      <h4>Bricolage Grotesque</h4>
       <div style="font-family:var(--f-head-c);font-weight:700;font-size:26px;color:var(--primary-strong);line-height:1.15">Dnes ve školce</div>
       <div style="font-family:var(--f-head-c);font-weight:600;font-size:18px;margin-top:6px">Docházka a náhrady</div>
-      <p class="fA" style="font-size:13px;color:var(--muted);margin-top:8px">Nejhravější — kulaté, měkké, dětské. Pozor na příliš „cukrový" dojem u administrativy (vedení, platby).</p>
+      <p class="fA" style="font-size:13px;color:var(--muted);margin-top:8px">Současný grotesk s jemnou nepravidelností = identita bez genericnosti. Moderní a profesionální, bezpatkový.</p>
     </div>
   </div>
 
   <h2 class="sec">3 · Nové vs. současné (lešení)</h2>
   <p class="note">Tytéž komponenty prototypu vlevo v novém návrhu (schválené barvy + Nunito Sans
-  text, nadpisy kandidát&nbsp;A Fraunces), vpravo v současné (neschválené) paletě a fontech.</p>
+  text, nadpisy kandidát&nbsp;D Spectral), vpravo v současné (neschválené) paletě a fontech.</p>
   <div class="demo">
     <div class="stage new">
       <div class="lbl">Nový návrh</div>

@@ -307,3 +307,13 @@ Zjištění: **žádný font není napříč školkami společný** — každá 
 - **Nadpisy: 3 kandidáti k výběru** (žádný nepatří jedné školce) — **A Fraunces** (měkký serif, výchozí), **B Nunito Sans** tučně (jedna rodina), **C Baloo 2** (zaoblený display). Náhled je ukazuje vedle sebe nad schválenou paletou.
 
 Náhled i `design-system.md` aktualizovány; ověřeno v prohlížeči (všechny fonty načtené, kandidáti se správnými řezy). **Otevřená otázka pro V2:** výběr nadpisového kandidáta A/B/C.
+
+#### Druhá trojice nadpisů (2026-07-17)
+
+Designérka zamítla všechny tři z první trojice: **Fraunces** moc generický, **Nunito Sans bold** i **Baloo 2** moc dětské, nevhodné pro informační systém. Nová trojice cílí na dospělý, profesionální výraz do IS (charakter bez dětskosti, bez trendového soft-serifu):
+
+- **D · Spectral** — editoriální knižní serif pro obrazovky, klidný a sofistikovaný (výchozí v náhledu).
+- **E · Zilla Slab** — slab serif, pevný a strukturovaný, „dokumentární" tón do dat/tabulek/plateb.
+- **F · Bricolage Grotesque** — současný grotesk s jemnou nepravidelností = identita bez genericnosti; bezpatkový.
+
+Tělo zůstává **Nunito Sans** (designérce nevadilo). Náhled aktualizován, ověřeno v prohlížeči (D/E/F načtené a aplikované). Čeká na výběr D/E/F pro V2.

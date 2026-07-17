@@ -72,12 +72,14 @@ Two ani Itim **nepřebírají** jako systémové fonty; slouží jen jako refere
 - **Tělo / UI — Nunito Sans** (Google): zaoblený humanistický sans. Vřelý a „školkový",
   ale plně čitelný v malých velikostech, hustých tabulkách i dlouhých seznamech. Řeší
   Itim a odpovídá vzorci sesterských webů.
-- **Nadpisy — tři kandidáti k výběru** (žádný nepatří jedné školce; náhled je ukazuje vedle sebe):
-  - **A · Fraunces** (měkký serif) — charakterní, teplý, „ruční" bez rukopisu; nejblíž duchu Vhaaji, ale neutrální i pro ostatní.
-  - **B · Nunito Sans** tučným řezem (900/800) — jedna rodina, nejčistší a technicky nejlevnější; méně osobní.
-  - **C · Baloo 2** (zaoblený display) — nejhravější, dětský; pozor na „cukrový" dojem u administrativy vedení.
+- **Nadpisy — kandidáti k výběru** (žádný nepatří jedné školce; náhled je ukazuje vedle sebe).
+  První trojice **zamítnuta** (Fraunces moc generický, Nunito Sans bold a Baloo 2 moc dětské pro IS).
+  Druhá trojice míří na dospělý, profesionální výraz do informačního systému:
+  - **D · Spectral** (editoriální knižní serif) — klidný, sofistikovaný, dospělý; vřelost bez dětskosti, ne trendový soft-serif.
+  - **E · Zilla Slab** (slab serif) — pevný, strukturovaný, „dokumentární"; sedí do systému s daty, tabulkami, platbami.
+  - **F · Bricolage Grotesque** (grotesk) — jemná nepravidelnost = identita bez genericnosti; moderní, profesionální, bezpatkový.
 
-Rozhoduje designérka (V2). Šablona náhledu má jako výchozí kandidáta A (Fraunces).
+Rozhoduje designérka (V2). Šablona náhledu má jako výchozí kandidáta D (Spectral).
 
 ### Tone of voice titulků
 
@@ -115,10 +117,11 @@ Kde web AA neplnil, uvedena nejbližší vyhovující varianta a odchylka.
 | Token | Návrh | Pozn. |
 |---|---|---|
 | `--font-sans` | `"Nunito Sans", system-ui, sans-serif` | tělo + UI, univerzální, čitelný |
-| `--font-serif` (nadpisy) | **kandidát A:** `"Fraunces", Georgia, serif` | výchozí; nebo B / C níže |
-| | **kandidát B:** `"Nunito Sans"` tučně (900/800) | jedna rodina, nejčistší |
-| | **kandidát C:** `"Baloo 2", cursive` | hravý zaoblený display |
+| `--font-serif` (nadpisy) | **kandidát D:** `"Spectral", Georgia, serif` | výchozí; nebo E / F níže |
+| | **kandidát E:** `"Zilla Slab", Georgia, serif` | slab serif, robustní |
+| | **kandidát F:** `"Bricolage Grotesque", sans-serif` | charakterní grotesk |
 
+Zamítnutá 1. trojice nadpisů: Fraunces (generický), Nunito Sans bold + Baloo 2 (dětské pro IS).
 Odmítnuto jako systémový font: `Shadows Into Light Two` a `Itim` (podpis Vhaaji /
 špatná čitelnost v UI) — zůstávají jen jako reference tónu.
 
