@@ -98,3 +98,35 @@ Náhradní den vzniklý včasnou omluvou; lze jej vyčerpat i na příměstský 
 - **`nevznikla`** — náhrada nevznikla kvůli pozdní omluvě (drží stopu po omluvě po deadlinu).
 
 Zůstatek náhrad se **všude odvozuje** z pole (`dostupne()`), nikde není uložený jako číslo.
+
+---
+
+## Aktualita
+
+Oznámení, které vedení/administrativa posílá rodičům konkrétních školek a tříd (Flow 4).
+
+**Umístění v kódu:** `AKTUALITY: [...]` v `src/scripts/admin/data.js`; flow (seznam + formulář) v `src/scripts/admin/screens/aktuality.js`. Appka vedení je **desktopová a vidí všechny tři školky** (Vhaaji, Jaata, Maata) — na rozdíl od mobilních appek.
+
+### Atributy
+
+| Atribut | Význam |
+|---|---|
+| `id` | identifikátor |
+| `text` | text aktuality |
+| `urgent` | příznak „důležité / urgentní" |
+| `stav` | viz níže |
+| `datum` | datum odeslání (u `naplanovana` popisný text „odešle se …") |
+| `recip` | příjemci — mapa `skolkaId → {all:bool, tridy:[názvy tříd]}` |
+
+### Příjemci (povinní)
+
+Aktualitu **nelze odeslat bez určených příjemců** — „bez určených příjemců" (BRIEF kap. 4) je **chyba, ne stav**, v datech se neukládá. Příjemce lze zvolit na úrovni celé školky (`all:true`) nebo výběrem konkrétních tříd (`tridy`). Náhled příjemců (`recipText`) sestaví věty typu „Vhaaji — všichni (25 rodin)" / „Jaata — Sluníčka (12 rodin)"; počet rodin se odvozuje z obsazenosti školky/třídy (`obsazeno(s)` / `t.obs`), nikde není natvrdo. `hasRecip(recip)` je podmínka odeslání. Koncept jde uložit i bez příjemců.
+
+### Stavy
+
+- **`koncept`** — rozpracovaná, ještě neodeslaná. Lze upravit i odeslat (odeslání jen s příjemci).
+- **`odeslana`** — odeslaná; u ní je vidět, komu odešla (`recip`). Lze archivovat.
+- **`archivovana`** — uklizená z aktivního seznamu.
+- **`naplanovana`** — naplánovaná k automatickému odeslání. **Jen v seed datech** — plánování odeslání se v prototypu nedělá (viz decision-log).
+
+Přechody v UI: `koncept → odeslana` (Odeslat), `odeslana → archivovana` (Archivovat). Propsání do rodičovské appky je **simulované jen shodou seed dat** (aktuality „roupy" a „dřívější vyzvednutí" odpovídají `NEWS` v `rodic/data.js`) — appky spolu nesdílejí data.

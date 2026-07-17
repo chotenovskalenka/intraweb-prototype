@@ -189,3 +189,23 @@ Založena **třetí appka** pro roli vedení/administrativa (`src/admin.html`) s
 **Smoke-test 3.1 (dist přes http server, offline-capable single file).** Appka startuje do Přehledu; sidebar přepíná všech 5 sekcí bez chyb v konzoli (ověřeno `read_console_messages` — žádná chyba); kapacity ukazují tři školky (Vhaaji 25/28, Jaata 24/24 · plno, Maata 16/20); odškrtnutí úkolu funguje (1/5 → 2/5, checkbox se zaškrtne); `dist/prototyp_admin.html` je jednosouborový (jediná externí závislost Google Fonts, shodně s ostatními appkami); mobilní appky nezměněny (`git diff`).
 
 **Odloženo do 3.2 / 3.3 (dle plánu):** `screens/aktuality.js` (Flow 4), `screens/porady.js` (Flow 5) + plná seed data zápisů, objekty Aktualita/Porada/Štítek do `objekty-systemu.md`, Flow 4/5 do `flows.md`. Proklik dlaždice „poslední porady" zatím míří na placeholder.
+
+### 2026-07-17 — Fáze 3.2 (Aktuality s povinnými příjemci, Flow 4)
+
+Přidána sekce **Aktuality** do appky vedení (`src/scripts/admin/screens/aktuality.js`) dle `docs/plan-faze-3.md`. **Rodičovská a průvodcovská appka nedotčeny**; v admin appce upraveny jen `data.js` (seed), `core.js` (RENDER + reset `akView` v `go`), `admin.html` (script tag) a `screens-admin.css` (nové třídy).
+
+**Flow 4 — jádro: příjemci jsou povinní.** Formulář nové aktuality: text, volitelně „důležité" (urgentní), **povinný výběr příjemců** — školka → volitelně konkrétní třídy (chipy). `hasRecip(recip)` je podmínka odeslání; bez příjemců je tlačítko Odeslat `disabled` + červené vysvětlení „Bez určených příjemců nelze aktualitu odeslat". „Bez určených příjemců" je tedy **chyba, ne stav** (v datech se neukládá). **Koncept jde uložit i bez příjemců.** Náhled příjemců (`recipText`) sestaví věty „Vhaaji — všichni (25 rodin)" / „Jaata — Sluníčka (12 rodin)"; **počet rodin se odvozuje** z obsazenosti (`obsazeno(s)` / `t.obs`), není natvrdo.
+
+**Model příjemců.** `recip` = mapa `skolkaId → {all:bool, tridy:[názvy]}`. „Celá školka" (`all:true`) a výběr tříd se vzájemně vylučují (zapnutí jednoho vyčistí druhé); prázdný záznam školky se z mapy maže, aby `hasRecip` a náhled zůstaly konzistentní.
+
+**Stavy aktuality:** `koncept`, `odeslana`, `archivovana` (přechody v UI: Odeslat, Archivovat); **`naplanovana` jen v seed datech** — plánované odesílání se nedělá (dle „Co NEdělat"). Badge stavů: `koncept`→`.bdg.wait`, `naplanovana`→`.bdg.part` (z 3.1), nové `.bdg.sent`/`.bdg.arch` v `screens-admin.css`. Odeslat lze i přímo z konceptu v seznamu (`akSendId`), pokud už má příjemce — jinak je i tam tlačítko disabled.
+
+**Zachování rozepsaného textu.** Bez frameworku každý toggle příjemce/urgentní volá `render()`, což zničí `<textarea>`. Před každou takovou akcí `akSyncText()` přečte aktuální hodnotu z `#akText` do `formA.text` a šablona ji zpět dosadí — text se při přepínání příjemců neztrácí (ověřeno ve smoke-testu). Vědomě se nepoužívá `renderKeepFocus` (fokus po kliknutí na chip stejně odchází z textarey).
+
+**Konzistence s rodičovskou appkou.** Seed `AKTUALITY` obsahuje aktuality „roupy" a „dřívější vyzvednutí v pátek", které odpovídají `NEWS` v `rodic/data.js`. Propsání do rodičovské appky je **simulované jen shodou seed dat** — appky spolu nesdílejí data (žádné sdílení stavu).
+
+**Dokumentace.** Objekt **Aktualita** doplněn do `docs/objekty-systemu.md`, **Flow 4** do `docs/flows.md` (mermaid), intro flows.md aktualizováno.
+
+**Smoke-test 3.2 (dist přes http server).** Nová aktualita bez příjemců → Odeslat blokované s vysvětlením ✓; po výběru školky/třídy se ukáže náhled příjemců a Odeslat se aktivuje ✓; odeslání → aktualita v seznamu se stavem „Odeslaná" a výčtem příjemců (`Jaata — Sluníčka (12 rodin)`, datum 3. 6. 2026) ✓; uložení konceptu (i bez příjemců) funguje ✓; archivace odeslané funguje ✓; text přežije přepnutí příjemců ✓; žádné chyby v konzoli; mobilní appky nezměněny (`git diff`).
+
+**Odloženo do 3.3:** `screens/porady.js` (Flow 5), seed zápisů porad/evaluací se štítky, objekty Porada/Evaluace a Štítek, Flow 5, propojení dashboardové dlaždice „poslední porady" na skutečnou sekci.

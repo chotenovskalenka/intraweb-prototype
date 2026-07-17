@@ -1,6 +1,6 @@
 # User flows
 
-Diagramy hlavních scénářů prototypu (viz `docs/BRIEF.md`, kap. 2). Pokryty Flow 1 v průvodcovské appce (fáze 2) a Flow 2/3 v rodičovské (fáze 1); ostatní se doplní v dalších fázích. Diagramy odpovídají chování v kódu; objekty a stavy jsou popsané v `docs/objekty-systemu.md`.
+Diagramy hlavních scénářů prototypu (viz `docs/BRIEF.md`, kap. 2). Pokryty Flow 1 v průvodcovské appce (fáze 2), Flow 2/3 v rodičovské (fáze 1) a Flow 4 v appce vedení (fáze 3.2); ostatní se doplní v dalších fázích. Diagramy odpovídají chování v kódu; objekty a stavy jsou popsané v `docs/objekty-systemu.md`.
 
 Simulovaný čas je **středa 3. 6. 2026, 10:00**; omluvit lze do **8:00 dne absence**.
 
@@ -125,3 +125,30 @@ stateDiagram-v2
 Do zůstatku se počítá jen stav `dostupna` — počet se všude odvozuje z pole (`dostupne()`), nikde není uložený jako číslo.
 
 Seed data: Eliška pokrývá všech 5 stavů náhrad + 2 omluvenky (budoucí `vcas`, minulá `po-deadlinu`); Matěj 1 dostupnou.
+
+---
+
+## Flow 4 — Vedení posílá aktualitu rodičům
+
+Vedení vytvoří aktualitu a určí příjemce (školka → volitelně třídy). Bez příjemců **nelze odeslat** — tlačítko je neaktivní a doplněné vysvětlením; koncept jde uložit i bez nich. Po odeslání je u aktuality vidět, komu odešla. Zdroj chování: `src/scripts/admin/screens/aktuality.js`, seed `AKTUALITY` v `src/scripts/admin/data.js`. Počty rodin se odvozují z obsazenosti (`obsazeno(s)` / `t.obs`), nejsou natvrdo.
+
+```mermaid
+flowchart TD
+  A([Aktuality → seznam<br/>koncept · naplánovaná · odeslaná · archivovaná]):::term --> B["+ Nová aktualita"]
+  B --> C["Text · volitelně „důležité“"]
+  C --> D["Výběr příjemců<br/>školka → celá / konkrétní třídy"]
+  D --> E{"Vybrán aspoň<br/>jeden příjemce?"}:::dec
+  E -->|ne| F["Odeslat neaktivní<br/>„Bez určených příjemců nelze odeslat“"]
+  F --> G[/"Uložit koncept<br/>(lze i bez příjemců)"/]
+  F --> D
+  E -->|ano| H["Náhled příjemců<br/>„odešle se rodičům: Vhaaji — všichni (25 rodin)“"]:::hi
+  H --> I[/"Odeslat · toast „Aktualita odeslána“"/]
+  I --> J([Aktualita v seznamu · stav „odeslaná“<br/>s výčtem příjemců]):::term
+  G --> K([Koncept v seznamu]):::term
+  J --> L["Archivovat → stav „archivovaná“"]
+  classDef term fill:#DCE7DC,stroke:#2E5E43,color:#21402F,stroke-width:1.5px;
+  classDef hi fill:#E2ECE2,stroke:#3C7A4E,color:#21402F;
+  classDef dec fill:#F0E4CE,stroke:#B07D3A,color:#6f4e1e;
+```
+
+Stavy aktuality a povinnost příjemců jsou popsané v `docs/objekty-systemu.md` (objekt **Aktualita**). Propsání do rodičovské appky je simulované jen shodou seed dat — appky nesdílejí data.
