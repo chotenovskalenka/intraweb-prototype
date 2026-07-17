@@ -1,24 +1,37 @@
-/* Design tokens — sémantická vrstva (fáze 0.4). Hodnoty se oproti původním názvům NEMĚNÍ. */
+/* Design tokens — sémantická vrstva. Hodnoty odvozené z vhaaji.cz (fáze 4.2, redesign).
+   Viz docs/design-system.md. Komponenty čerpají z tokenů, nikdy natvrdo. */
 :root{
-  --color-bg:#EFE9DB;
-  --color-surface:#FBF8F0;
-  --color-surface-2:#F4EEDF;
-  --color-text:#2B2A26;
-  --color-text-muted:#736E61;
-  --color-text-hint:#9A9384;
-  --color-primary:#2E5E43;
-  --color-primary-strong:#21402F;
-  --color-accent-soft:#8FA48C;
-  --color-accent:#B07D3A;
-  --color-info:#5B7C99;
-  --color-border:rgba(43,42,38,.10);
-  --color-border-strong:rgba(43,42,38,.16);
+  /* Povrchy / text */
+  --color-bg:#EFEEE9;
+  --color-surface:#F9F7F1;
+  --color-surface-2:#E7E4DA;
+  --color-text:#1F2A2E;
+  --color-text-muted:#5C6560;
+  --color-text-hint:#767B74;
+  /* Značkové barvy */
+  --color-primary:#2B7059;
+  --color-primary-strong:#1F5344;
+  --color-accent:#C8BC85;          /* okrová — výplň (tmavý text) */
+  --color-accent-ink:#6F5F1C;      /* okrová jako text (AA na světlé) */
+  --color-accent-soft:#C99C93;     /* tlumená růžová — dekor */
+  --color-info:#4E7488;
+  --color-on-primary:#F4EEDF;      /* text/prvky na primární ploše */
+  /* Ohraničení / stavy */
+  --color-border:rgba(31,42,46,.10);
+  --color-border-strong:rgba(31,42,46,.16);
   --color-danger:#B0492F;
   --color-success:#3C7A4E;
+  /* UI tinty (směr whitespace + barva) — světlé kategorie/stavy */
+  --tint-green:#E3EDE7;
+  --tint-rose:#F1E1DC;
+  --tint-ochre:#F1EAD2;
+  --tint-blue:#DEE7EA;
   --radius-md:14px;
-  --font-serif:"Fraunces",Georgia,serif;
-  --font-sans:"Hanken Grotesk","Segoe UI",sans-serif;
-  /* spacing škála — zatím bez použití, připravená pro budoucí fáze */
+  /* Typografie — nadpisy Bricolage Grotesque, tělo/UI Inter (univerzální pro všechny 4 školky).
+     Token --font-serif drží nadpisový font (historický název; hodnota je bezpatková). */
+  --font-serif:"Bricolage Grotesque",system-ui,sans-serif;
+  --font-sans:"Inter",system-ui,sans-serif;
+  /* spacing škála — aktivace v komponentách proběhne ve 4.3 */
   --space-xs:4px;
   --space-sm:8px;
   --space-md:12px;

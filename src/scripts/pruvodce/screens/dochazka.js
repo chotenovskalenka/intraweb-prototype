@@ -24,9 +24,9 @@ const CTX={rano:['Kdo dnes přišel',''],
 function counts(){const o={};TABS_BY().forEach(([k])=>o[k]=data.filter(c=>inTab(c,k)).length);o.pres=data.filter(here).length;return o;}
 function planPill(c){return c.plan==='celodenní'?'<span class="pill p-cel">celodenní</span>':c.plan==='dopolední'?'<span class="pill p-dop">dopolední</span>':'<span class="pill p-odp">odpolední</span>';}
 function cellMark(code){if(!code)return '<span class="wc c-N">N</span>';if(code==='OM')return '<span class="bdg al" style="font-size:9px">om</span>';return `<span class="wc c-${code}">${code}</span>`;}
-function codeLabel(code){const M={C:['celodenní','var(--color-primary)'],D:['dopolední','var(--color-accent)'],O:['odpolední','#3f5d72'],OM:['omluven','var(--color-danger)']};const m=M[code];return m?`<span style="color:${m[1]}">${m[0]}</span>`:'<span style="color:var(--color-text-hint)">nepřítomen</span>';}
+function codeLabel(code){const M={C:['celodenní','var(--color-primary)'],D:['dopolední','var(--color-accent-ink)'],O:['odpolední','#4E7488'],OM:['omluven','var(--color-danger)']};const m=M[code];return m?`<span style="color:${m[1]}">${m[0]}</span>`:'<span style="color:var(--color-text-hint)">nepřítomen</span>';}
 function indicator(c){
-  if(here(c)&&onTrip(c))return'<span class="ind awake" style="color:var(--color-accent)">na výpravě</span>';
+  if(here(c)&&onTrip(c))return'<span class="ind awake" style="color:var(--color-accent-ink)">na výpravě</span>';
   if(c.status==='omluveno')return'<span class="ind off">omluveno</span>';
   if(c.status==='neomluveno')return'<span class="ind off">neomluveno</span>';
   if(c.plan==='dopolední')return'<span class="ind">po obědě domů</span>';
@@ -94,7 +94,7 @@ function dayRoster(d){
   h+=`<div class="rosterbox">`+data.map((c,ci)=>{const code=getCode(c,d);return `<div class="row"><div class="rmain" ${locked?'style="cursor:default"':`onclick="openCell(${ci},${d})"`}>${avatar(c,30)}<span class="nm">${full(c)}</span><span class="ind" style="margin-left:auto;font-weight:500">${codeLabel(code)}</span></div></div>`;}).join('')+`</div>`;
   return h;
 }
-const dlegend=`<div class="legend"><span><b style="color:var(--color-primary)">C</b> celodenní</span><span><b style="color:var(--color-accent)">D</b> dopolední</span><span><b style="color:#3f5d72">O</b> odpolední</span><span><b style="color:var(--color-danger)">om</b> omluven</span><span><b style="color:var(--color-danger)">N</b> nepřítomen</span></div>`;
+const dlegend=`<div class="legend"><span><b style="color:var(--color-primary)">C</b> celodenní</span><span><b style="color:var(--color-accent-ink)">D</b> dopolední</span><span><b style="color:#4E7488">O</b> odpolední</span><span><b style="color:var(--color-danger)">om</b> omluven</span><span><b style="color:var(--color-danger)">N</b> nepřítomen</span></div>`;
 function renderTydenD(){
   let h=`<div class="stepper"><button onclick="stepWeek(-1)" ${weekStart<=1?'disabled':''}>‹</button><span>${weekStart}.–${Math.min(weekStart+4,30)}. 6.</span><button onclick="stepWeek(1)" ${weekStart+7>30?'disabled':''}>›</button></div>`;
   h+=dlegend;

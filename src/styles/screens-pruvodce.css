@@ -1,11 +1,11 @@
-.specbar{background:rgba(176,125,58,.10);border:1px solid rgba(176,125,58,.3);border-radius:var(--radius-md);padding:11px 14px;margin-bottom:11px}
+.specbar{background:rgba(200,188,133,.10);border:1px solid rgba(200,188,133,.3);border-radius:var(--radius-md);padding:11px 14px;margin-bottom:11px}
 .spectit{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-accent);font-weight:600;margin-bottom:6px}
 .specnums{display:flex;gap:16px;font-size:13px;color:var(--color-text)}.specnums b{font-family:var(--font-serif);font-size:19px;color:var(--color-primary-strong);margin-right:4px}
 .temanav{display:flex;gap:6px;margin-bottom:10px}
 .temanav button{flex:1;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:12.5px;font-weight:500;color:var(--color-text-muted);padding:10px 4px;border-radius:10px;cursor:pointer}
-.temanav button.on{background:var(--color-primary);border-color:var(--color-primary);color:#F4EEDF}
+.temanav button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .frow{display:flex;gap:11px;align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:11px 13px;margin-bottom:7px}
-.odbtn{flex-shrink:0;background:var(--color-primary);color:#F4EEDF;border:none;font-family:var(--font-sans);font-size:13px;font-weight:600;padding:8px 15px;border-radius:9px;cursor:pointer}
+.odbtn{flex-shrink:0;background:var(--color-primary);color:var(--color-on-primary);border:none;font-family:var(--font-sans);font-size:13px;font-weight:600;padding:8px 15px;border-radius:9px;cursor:pointer}
 .gchips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .gchip{display:flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:999px;padding:5px 13px 5px 5px;font-size:13.5px;font-weight:500}
 .rozh{font-size:13.5px;line-height:1.5;padding:8px 0;border-top:1px solid var(--color-border);color:var(--color-text)}.rozh:first-of-type{border-top:none}

@@ -3,24 +3,25 @@
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:13px}
 .burger{border:none;background:none;font-size:21px;line-height:1;color:var(--color-primary-strong);cursor:pointer;padding:2px 4px}
 .ttl{font-family:var(--font-serif);font-size:19px;color:var(--color-primary-strong);flex:1}
-.role{font-size:11.5px;font-weight:500;color:var(--color-primary);background:rgba(46,94,67,.10);border:1px solid rgba(46,94,67,.18);padding:5px 10px;border-radius:999px;white-space:nowrap}
-.scrim{position:fixed;inset:0;background:rgba(33,42,30,.42);z-index:5;display:none}.scrim.on{display:block}
+.role{font-size:11.5px;font-weight:500;color:var(--color-primary);background:rgba(43,112,89,.10);border:1px solid rgba(43,112,89,.18);padding:5px 10px;border-radius:999px;white-space:nowrap}
+.scrim{position:fixed;inset:0;background:rgba(31,42,46,.42);z-index:5;display:none}.scrim.on{display:block}
 .drawer{position:fixed;top:0;left:0;bottom:0;width:76%;max-width:300px;background:var(--color-bg);z-index:6;transform:translateX(-101%);transition:.22s;padding:20px 0 14px;box-shadow:6px 0 28px rgba(0,0,0,.16);overflow-y:auto}
 .drawer.on{transform:none}
-.dh{font-family:var(--font-serif);font-size:17px;color:var(--color-primary-strong);padding:0 20px 14px;border-bottom:1px solid var(--color-border);margin-bottom:8px}
+.dh{display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-size:17px;font-weight:700;color:var(--color-primary-strong);padding:0 20px 14px;border-bottom:1px solid var(--color-border);margin-bottom:8px}
+.dh .brand-mark{width:32px;height:32px;flex:none;object-fit:contain}
 .dh small{display:block;font-family:var(--font-sans);font-size:11.5px;color:var(--color-text-muted);font-weight:400}
 .ditem{display:flex;align-items:center;gap:11px;padding:12px 20px;font-size:15px;color:var(--color-text);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--font-sans)}
-.ditem.on{background:rgba(46,94,67,.10);color:var(--color-primary);font-weight:600}
+.ditem.on{background:rgba(43,112,89,.10);color:var(--color-primary);font-weight:600}
 .ditem .ic{width:18px;text-align:center;opacity:.7}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--color-primary-strong);color:#F4EEDF;font-size:14px;font-weight:600;padding:11px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:40;box-shadow:0 6px 20px rgba(0,0,0,.22)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--color-primary-strong);color:var(--color-on-primary);font-size:14px;font-weight:600;padding:11px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:40;box-shadow:0 6px 20px rgba(0,0,0,.22)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* Desktop: mobilní appka se prezentuje jako vycentrovaný telefonní rám.
    Obsah zůstává mobile-first (rodič i průvodce používají systém na mobilu),
    jen se neroztahuje přes celou obrazovku. Na mobilu se nic nemění. */
 @media (min-width:700px){
-  body{background:#E4DCC9;padding:28px 0}
-  .phone{max-width:414px;margin:0 auto;border-radius:26px;box-shadow:0 18px 60px rgba(33,42,30,.20);overflow:hidden;border:1px solid var(--color-border-strong)}
+  body{background:#DED8C6;padding:28px 0}
+  .phone{max-width:414px;margin:0 auto;border-radius:26px;box-shadow:0 18px 60px rgba(31,42,46,.20);overflow:hidden;border:1px solid var(--color-border-strong)}
   .screen{min-height:calc(100vh - 56px)}
   /* drawer se váže na levou hranu rámu (414/2 = 207), ne na okraj okna;
      zavřený musí být i vizuálně skrytý (translateX(-101%) ho jinak nechá vedle rámu) */
@@ -29,7 +30,7 @@
 }
 /* Široký desktop: navigace jako trvalý panel vlevo vedle rámu (vzor admin sidebar) */
 @media (min-width:1100px){
-  .drawer{transform:none;opacity:1;visibility:visible;left:auto;right:calc(50% + 223px);width:280px;bottom:auto;max-height:calc(100vh - 56px);border-radius:26px;box-shadow:0 18px 60px rgba(33,42,30,.12);border:1px solid var(--color-border)}
+  .drawer{transform:none;opacity:1;visibility:visible;left:auto;right:calc(50% + 223px);width:280px;bottom:auto;max-height:calc(100vh - 56px);border-radius:26px;box-shadow:0 18px 60px rgba(31,42,46,.12);border:1px solid var(--color-border)}
   .burger{display:none}
   .scrim{display:none !important}
 }
