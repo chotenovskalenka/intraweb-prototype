@@ -91,9 +91,53 @@ function recipText(recip){
 }
 const hasRecip=recip=>SKOLKY.some(s=>{const r=recip[s.id];return !!(r&&(r.all||(r.tridy&&r.tridy.length)));});
 
-/* Poslední porady a evaluace — pro dashboard stačí titulky, plná data přijdou v 3.3. */
-const PORADY=[
-  {datum:'2. 6. 2026',typ:'porada',titul:'Provozní porada — červen',skolka:'Vhaaji'},
-  {datum:'19. 5. 2026',typ:'evaluace',titul:'Čtvrtletní evaluace pedagogů',skolka:'Jaata'},
-  {datum:'5. 5. 2026',typ:'porada',titul:'Bezpečnost a revize prostředí',skolka:'Maata'},
+/* Porady a evaluace (Flow 5). Jeden zdroj pravdy pro sekci Porady i dashboardovou
+   dlaždici „poslední porady". Každý zápis = datum + typ + školka + účastníci +
+   odstavce označené štítky. Filtr štítek+období vypíše jen relevantní odstavce napříč zápisy.
+   `dt` = číselné datum (RRRRMMDD) pro řazení a filtr období; `datum` = zobrazovaný text. */
+const STITKY=['hygiena','bezpečnost','personál','provoz','pedagogika','inspekce'];
+const OBDOBI=[
+  {k:'vse',   label:'Celé období',            from:0,        to:99999999},
+  {k:'podzim',label:'Podzim 2025 (9–12/2025)',from:20250901, to:20251231},
+  {k:'zima',  label:'Zima 2026 (1–3/2026)',   from:20260101, to:20260331},
+  {k:'jaro',  label:'Jaro 2026 (4–6/2026)',   from:20260401, to:20260630},
+];
+let zapisUid=20;
+let ZAPISY=[
+  {id:'z1',dt:20250910,datum:'10. 9. 2025',typ:'porada',skolka:'Vhaaji',nazev:'Zahájení školního roku',ucastnici:['Táňa','Helča','vedení'],odstavce:[
+    {text:'Adaptace nových dětí proběhla klidně, dvě děti potřebují ještě delší doprovod rodičů při ranním předávání.',stitky:['pedagogika']},
+    {text:'Zkontrolovány lékárničky ve všech maringotkách, doplněny náplasti a dezinfekce; evidence úrazů založena na nový rok.',stitky:['hygiena','bezpečnost']},
+  ]},
+  {id:'z2',dt:20251002,datum:'2. 10. 2025',typ:'porada',skolka:'Jaata',nazev:'Provozní porada — říjen',ucastnici:['Gabča','vedení'],odstavce:[
+    {text:'Revize elektrických spotřebičů proběhla, jeden vařič vyřazen z provozu, objednán nový.',stitky:['bezpečnost','provoz']},
+    {text:'Nová posila do týmu nastupuje od listopadu — zajistit zaškolení a rozšíření o BOZP.',stitky:['personál']},
+  ]},
+  {id:'z3',dt:20251114,datum:'14. 11. 2025',typ:'evaluace',skolka:'Vhaaji',nazev:'Čtvrtletní evaluace pedagogů',ucastnici:['Táňa','Helča','Honza'],odstavce:[
+    {text:'Reflexe adaptačního období — děti dobře zvládají rytmus dne, ranní kruh se osvědčil.',stitky:['pedagogika']},
+    {text:'Doporučení: v chladném počasí zařadit více pohybových aktivit a zkrátit statické bloky.',stitky:['pedagogika','provoz']},
+  ]},
+  {id:'z4',dt:20251205,datum:'5. 12. 2025',typ:'porada',skolka:'Maata',nazev:'Zimní provoz a bezpečnost',ucastnici:['Míša','vedení'],odstavce:[
+    {text:'Kontrola zimního vybavení dětí; upozornit rodiče na chybějící rukavice a náhradní oblečení.',stitky:['provoz']},
+    {text:'Nácvik evakuace při požáru proběhl s dětmi hravou formou, únikové cesty volné.',stitky:['bezpečnost']},
+  ]},
+  {id:'z5',dt:20260120,datum:'20. 1. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Provozní porada — leden',ucastnici:['Táňa','vedení'],odstavce:[
+    {text:'Chřipková sezóna — zpřísněná hygiena rukou, častější větrání a dezinfekce ploch.',stitky:['hygiena']},
+    {text:'Revize smlouvy s dodavatelem obědů, cena od února mírně roste; informovat rodiče.',stitky:['provoz']},
+  ]},
+  {id:'z6',dt:20260211,datum:'11. 2. 2026',typ:'evaluace',skolka:'Jaata',nazev:'Pololetní evaluace',ucastnici:['Gabča','vedení'],odstavce:[
+    {text:'Hodnocení individuálních plánů předškoláků — tři děti připravené na zápis do školy.',stitky:['pedagogika']},
+    {text:'Personální stabilita — bez fluktuace, tým sehraný, rozvrh služeb funguje.',stitky:['personál']},
+  ]},
+  {id:'z7',dt:20260318,datum:'18. 3. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Příprava na inspekci ČŠI',ucastnici:['Táňa','Helča','vedení'],odstavce:[
+    {text:'Kompletace dokumentace k inspekci — třídnice, evidence úrazů, podepsané souhlasy GDPR.',stitky:['inspekce','provoz']},
+    {text:'Kontrola pitného režimu a skladování potravin, teploty lednic zaznamenávány denně.',stitky:['hygiena','inspekce']},
+  ]},
+  {id:'z8',dt:20260505,datum:'5. 5. 2026',typ:'porada',skolka:'Maata',nazev:'Bezpečnost a revize prostředí',ucastnici:['Míša','vedení'],odstavce:[
+    {text:'Revize dřevěných herních prvků na zahradě — dva prvky určeny k opravě, dočasně ohrazeny.',stitky:['bezpečnost','provoz']},
+    {text:'Kontrola lékárniček a expirací léčiv, prošlé položky vyřazeny a doplněny.',stitky:['hygiena','bezpečnost']},
+  ]},
+  {id:'z9',dt:20260602,datum:'2. 6. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Provozní porada — červen',ucastnici:['Táňa','vedení'],odstavce:[
+    {text:'Uzávěrka docházky a náhrad před koncem školního roku, kontrola nevyčerpaných náhrad.',stitky:['provoz']},
+    {text:'Plán letního provozu a personální pokrytí prázdninových týdnů.',stitky:['personál','provoz']},
+  ]},
 ];
