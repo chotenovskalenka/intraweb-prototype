@@ -54,10 +54,10 @@ function renderPrehled(){
   });
   h+=`</div>`;
 
-  // (f) poslední porady / evaluace — titulky, proklik do sekce porad
+  // (f) poslední porady / evaluace — titulky (odvozené ze ZAPISY), proklik do sekce porad
   h+=`<button class="tile dash-link" onclick="go('porady')"><div class="tlab" style="margin:0">Poslední porady a evaluace <span class="dl-arr">›</span></div>`;
-  PORADY.forEach(p=>{
-    h+=`<div class="por-row"><span class="por-d">${p.datum}</span><span class="por-t">${p.titul}<span class="por-sk"> · ${p.skolka}</span></span><span class="por-typ ${p.typ}">${p.typ==='porada'?'porada':'evaluace'}</span></div>`;
+  ZAPISY.slice().sort((a,b)=>b.dt-a.dt).slice(0,3).forEach(p=>{
+    h+=`<div class="por-row"><span class="por-d">${p.datum}</span><span class="por-t">${p.nazev}<span class="por-sk"> · ${p.skolka}</span></span><span class="por-typ ${p.typ}">${p.typ==='porada'?'porada':'evaluace'}</span></div>`;
   });
   h+=`</button>`;
 
