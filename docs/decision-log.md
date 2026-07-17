@@ -317,3 +317,14 @@ Designérka zamítla všechny tři z první trojice: **Fraunces** moc generický
 - **F · Bricolage Grotesque** — současný grotesk s jemnou nepravidelností = identita bez genericnosti; bezpatkový.
 
 Tělo zůstává **Nunito Sans** (designérce nevadilo). Náhled aktualizován, ověřeno v prohlížeči (D/E/F načtené a aplikované). Čeká na výběr D/E/F pro V2.
+
+#### Vybraná typografie (2026-07-17)
+
+Designérka vybrala z druhé trojice **F · Bricolage Grotesque** pro nadpisy a požádala zkusit **Inter** místo Nunito Sans na tělo/UI. Vybraná univerzální typografie (společná pro všechny 4 školky):
+
+- **Nadpisy: Bricolage Grotesque** — grotesk s jemnou nepravidelností, identita bez genericnosti, profesionální do IS.
+- **Tělo/UI: Inter** — neutrální UI sans, čitelný v malých velikostech i tabulkách; věcnější než zaoblený Nunito Sans, ladí s Bricolage.
+
+Náhled přepnut na vybranou kombinaci + doplněno srovnání **Inter vs Nunito Sans** na tělo (ať je volba na konkrétních textech IS). Ověřeno v prohlížeči: tělo Inter, nadpisy Bricolage aplikované i v komponentách; oba srovnávané fonty reálně renderují. Tokeny (návrh 4.2): `--font-sans: "Inter"`, `--font-serif: "Bricolage Grotesque"` (název tokenu je historický, hodnota bezpatková — ve 4.2 zvážit přejmenování na `--font-head`).
+
+**Zbývá pro V2:** finální potvrzení těla (Inter vs Nunito Sans). Pak fáze 4.2.

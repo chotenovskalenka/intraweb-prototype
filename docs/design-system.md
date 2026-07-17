@@ -67,19 +67,17 @@ charakterní nadpisy + **neutrální, čitelný sans na text** (3 ze 4 školek).
 rukodělným Itim je výjimka — právě ta špatná čitelnost v UI. Proto se Shadows Into Light
 Two ani Itim **nepřebírají** jako systémové fonty; slouží jen jako reference tónu.
 
-### Přepracovaný univerzální návrh (4.1 — čeká na V2)
+### Univerzální typografie — vybráno (4.1)
 
-- **Tělo / UI — Nunito Sans** (Google): zaoblený humanistický sans. Vřelý a „školkový",
-  ale plně čitelný v malých velikostech, hustých tabulkách i dlouhých seznamech. Řeší
-  Itim a odpovídá vzorci sesterských webů.
-- **Nadpisy — kandidáti k výběru** (žádný nepatří jedné školce; náhled je ukazuje vedle sebe).
-  První trojice **zamítnuta** (Fraunces moc generický, Nunito Sans bold a Baloo 2 moc dětské pro IS).
-  Druhá trojice míří na dospělý, profesionální výraz do informačního systému:
-  - **D · Spectral** (editoriální knižní serif) — klidný, sofistikovaný, dospělý; vřelost bez dětskosti, ne trendový soft-serif.
-  - **E · Zilla Slab** (slab serif) — pevný, strukturovaný, „dokumentární"; sedí do systému s daty, tabulkami, platbami.
-  - **F · Bricolage Grotesque** (grotesk) — jemná nepravidelnost = identita bez genericnosti; moderní, profesionální, bezpatkový.
+- **Nadpisy — Bricolage Grotesque** (Google): současný grotesk s jemnou nepravidelností =
+  vlastní identita bez genericnosti; moderní, profesionální, bezpatkový, vhodný do IS.
+- **Tělo / UI — Inter** (Google): neutrální UI sans, extrémně čitelný v malých velikostech
+  i hustých tabulkách; věcný, profesionální, ladí s Bricolage.
 
-Rozhoduje designérka (V2). Šablona náhledu má jako výchozí kandidáta D (Spectral).
+Cesta k výběru (viz decision-log): první trojice nadpisů zamítnuta (Fraunces generický,
+Nunito Sans bold + Baloo 2 dětské pro IS); druhá trojice (Spectral, Zilla Slab, Bricolage) →
+designérka vybrala **Bricolage Grotesque**. Tělo přepnuto z návrhu Nunito Sans na **Inter**.
+Odmítnuto jako systémový font: Shadows Into Light Two, Itim (podpis Vhaaji / špatná čitelnost).
 
 ### Tone of voice titulků
 
@@ -112,22 +110,21 @@ Kde web AA neplnil, uvedena nejbližší vyhovující varianta a odchylka.
 | `--color-border` | `rgba(31,42,46,.10)` | odvozeno z text tmavé |
 | `--color-border-strong` | `rgba(31,42,46,.16)` | tamtéž |
 
-### Návrh typografických tokenů (univerzální, po porovnání školek)
+### Typografické tokeny (vybráno, univerzální pro všechny 4 školky)
 
-| Token | Návrh | Pozn. |
+| Token | Hodnota | Pozn. |
 |---|---|---|
-| `--font-sans` | `"Nunito Sans", system-ui, sans-serif` | tělo + UI, univerzální, čitelný |
-| `--font-serif` (nadpisy) | **kandidát D:** `"Spectral", Georgia, serif` | výchozí; nebo E / F níže |
-| | **kandidát E:** `"Zilla Slab", Georgia, serif` | slab serif, robustní |
-| | **kandidát F:** `"Bricolage Grotesque", sans-serif` | charakterní grotesk |
+| `--font-sans` | `"Inter", system-ui, sans-serif` | tělo + UI, čitelný do IS |
+| `--font-serif` (nadpisy) | `"Bricolage Grotesque", system-ui, sans-serif` | charakterní grotesk (i přes název „serif" token) |
 
-Zamítnutá 1. trojice nadpisů: Fraunces (generický), Nunito Sans bold + Baloo 2 (dětské pro IS).
-Odmítnuto jako systémový font: `Shadows Into Light Two` a `Itim` (podpis Vhaaji /
-špatná čitelnost v UI) — zůstávají jen jako reference tónu.
+Pozn.: token `--font-serif` je historický název pro „nadpisový font" — hodnota je bezpatková.
+Ve fázi 4.2 zvážit přejmenování na `--font-head`. Zamítnuto: Fraunces, Nunito Sans, Baloo 2,
+Spectral, Zilla Slab (nadpisy); `Shadows Into Light Two`, `Itim` (podpis Vhaaji / čitelnost).
 
-Škála (návrh, jednotná pro všechny 4 školky): h1 26/30, h2 20/26, h3 18/24,
-body 15/23, label 13/18, hint 12/16 (px/px). Ladí se na náhledu.
+Škála (jednotná pro všechny 4 školky): h1 26/30, h2 20/26, h3 18/24,
+body 15/23, label 13/18, hint 12/16 (px/px). Ladí se ve 4.2.
 
-> **Stav:** návrh čeká na schválení designérkou (V2). Po schválení se hodnoty přenesou
-> do `tokens.css` ve fázi 4.2. Skiny sesterských školek mění **jen barevnost**;
-> typografie je společná (BRIEF kap. 10).
+> **Stav:** barvy schváleny; nadpisy Bricolage Grotesque vybrány; tělo Inter (zkouší se
+> místo Nunito Sans) — čeká na finální potvrzení Inter vs Nunito (V2). Po potvrzení se
+> hodnoty přenesou do `tokens.css` ve fázi 4.2. Skiny sesterských školek mění **jen
+> barevnost**; typografie je společná (BRIEF kap. 10).
