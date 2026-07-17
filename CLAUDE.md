@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A mobile-app prototype for **Vhaaji** (Lesní školka Vhaaji), a Czech forest kindergarten. There are two apps, one per role:
 
-- **guide/teacher** ("průvodce"): attendance, program planning, staff shifts, children roster, cultural fund, contacts.
+- **guide/teacher** ("průvodce"): dashboard (přehled), attendance, program planning, staff shifts, children roster, cultural fund, contacts.
 - **parent** ("rodič"): overview, news, attendance, child profile, payments, calendar, photos, contacts.
 
 Each app is built from **modular source files in `src/`** and compiled by [build.sh](build.sh) into a **single self-contained file in `dist/`** for sharing with respondents. All UI text and domain vocabulary is **Czech**. No framework, no package manager, no test suite. The only external network dependency is the Google Fonts `<link>` (Fraunces + Hanken Grotesk).
@@ -72,6 +72,7 @@ build.sh                inlines src/ modules → single-file dist/*.html
 - **Omluvenka (excuse) — parent app** (`child.omluvenky` in `data.js`; flow in `rodic/modals.js` overlay `omluvenka`). Rodič omlouvá dítě z dashboardu / sekce Docházka a náhrady: rozsah od–do, důvod, deadline vysvětlený před i po odeslání. **Deadline rule:** excuse allowed until **8:00 of the absence day** (`beforeDeadline(d)`); a late excuse still marks the child excused (`OM`) but creates **no náhrada**. States: `vcas` / `po-deadlinu` / `zrusena`. Full spec (attributes, transitions) in [docs/objekty-systemu.md](docs/objekty-systemu.md).
 - **Náhrada (make-up day) — parent app** (`child.nahrady` array in `data.js`). **1 timely-excused day = 1 náhrada** (per day for multi-day excuses); expires **60 days** after creation. States: `dostupna` / `naplanovana` / `vyuzita` / `expirovana` / `nevznikla` (late excuse). The available balance is **always derived** from the array via `dostupne(child)` — never stored as a number. Planning/consuming a náhrada (picking a make-up day) is out of scope; `naplanovana` only appears in seed data. The parent's `dochazka` section is labelled **"Docházka a náhrady"** and holds the náhrady + omluvenky lists above the attendance calendar.
 - **Cultural fund** (`fond`) is tracked **per child**, not per class; paid events deduct only from children who attended and joined the event (see `renderOdecet`/`presentIdx` in the guide app).
+- **Guide dashboard (`prehled`) — the app's start screen** (`section='prehled'`, first entry in `SECTIONS`; `screens/prehled.js`). Shows today at a glance and is the entry point of Flow 1 (attendance): counts (derived from `counts()`, never hardcoded), who's absent today and why, the week's poem/song (current week = `Math.floor((TODAYD-1)/7)` of `TEMA.tydny`), health notes, today's event — one tap into the daily roster (`goDochTab`/`go('dochazka')`). A **parental excuse** propagated from a parent is simulated in seed only (`child.parentExcuse={time,reason}`, rendered via `parentExcuseLine`); it is **display-only** — the two apps still share no data. **Offline/sync states and the třídnice (day-log) object are deliberately deferred** — see decision-log fáze 2 and `docs/flows.md` Flow 1.
 
 ## Styling
 

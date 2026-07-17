@@ -137,6 +137,27 @@ Implementovány Flow 2 (omluvenka) a Flow 3 (náhrady) v rodičovské appce dle 
 
 **Nedotčeno.** Průvodcovská appka a sdílené soubory (`components.css` — využita jen existující třída `.bdg`, žádná změna; `shared.js`) beze změny; nové CSS třídy jen v `screens-rodic.css`. `git diff` na `dist/prototyp_pruvodce.html` je prázdný.
 
+### 2026-07-17 — Fáze 2 (Průvodce: dashboard a doladění Flow 1)
+
+Přidán průvodcovský dashboard (`prehled`) a dotažen Flow 1 dle `docs/plan-faze-2.md`. Zafixovaná rozhodnutí z plánu dodržena; níže odchylky, doplňky a nálezy. Flow 1 zdokumentován v `docs/flows.md`. **Rodičovská appka nedotčena** (`git diff` na `dist/prototyp_rodic.html` prázdný; žádný soubor v `src/scripts/rodic/**` ani `screens-rodic.css` neupraven).
+
+**Nová sekce `prehled` („Přehled“).** První položka v `SECTIONS` (ikona `⌂`), appka v ní startuje (`section='prehled'`), statický titulek v `pruvodce.html` změněn na „Přehled“. Titulek v draweru/topbaru se odvozuje ze `SECTIONS`/`TITLES`. `RENDER.prehled=renderPrehled`; script tag `screens/prehled.js` zařazen jako první mezi obrazovkami (na runtime nezáleží — funkce jsou hoistované a volané až v `render()`).
+
+**Obsah dashboardu dle priorit z výzkumu (`renderPrehled`):** (1) počty dnes jako `.tabs` strip (přítomno/obědy/spí/po obědě/nepřítomní), (2) výrazné tlačítko `.addbig` → dnešní docházka, (3) „kdo dnes nepřijde“ jmenovitě s důvodem, (4) básnička + písnička týdne, (5) zdravotní/provozní poznámky, (6) dnešní akce. Hlavička = dnešní datum + kdo slouží/otevírá (odvozeno z `GUIDESHIFT` jako sekce Průvodci, přes `serving`/`startMin`).
+
+**Počty i propojení bez duplikace stavu.** Počty se berou z `counts()` (sdílené s docházkou), takže změna docházky → návrat na Přehled ukáže aktuální stav (ověřeno: odškrtnutí dítěte změnilo počty i seznam „kdo nepřijde“). Propojení: `go('dochazka')` (tlačítko), nový handler `goDochTab(k)` (proklik počtu nastaví `tab`+den a přejde do docházky), `go('plan')` (básnička/písnička), `openAkceDetail(id)` (akce).
+
+**Seed data.** `TEMA.tydny`: obsah přesunut z 2. do 1. týdne, aby aktuální týden (odvozený `Math.floor((TODAYD-1)/7)` = index 0) nebyl při demu prázdný; prázdný týden → decentní empty state s proklikem do Plánu. Dnes nepřítomné děti: `data[5]`/`data[1]` `status='omluveno'` + `parentExcuse={time,reason}` (simulace propsané rodičovské omluvenky), `data[20]` `neomluveno`. Helper `parentExcuseLine(c)` vrací text „omluveno rodičem dnes HH:MM · důvod“. Zobrazení na dashboardu i v detailu dítěte v rosteru (`editPanel` — nový řádek „Omluvenka od rodiče“). **Jen zobrazení, žádná logika ani sdílení dat mezi appkami** (appky mají oddělený stav).
+
+**Zafixovaně odloženo (zapsáno dle plánu bodů 1–2):**
+
+- **Offline režim a stavy synchronizace se NEDĚLAJÍ.** Žádný přepínač „bez signálu“, žádná fronta změn; potvrzení uložení zůstává toast. Vědomě odložená část Flow 1 — až bude řešena, promítne se do dashboardu i rosteru.
+- **Třídnice / zápis dne — budoucí objekt.** Průvodce má v budoucnu na dashboardu číst/doplňovat zápisy z předchozího dne. Zatím se nedělá **ani placeholder**; na dashboard nepřidán.
+
+**CSS.** Nové třídy jen v `screens-pruvodce.css` (`.prehl-abs`/`.pa-nm`/`.pa-r`, `.prehl-tema`/`.pa-arr`/`.pa-cap`) — zbytek poskládán z existujících komponent (`.tile`, `.tabs`/`.tab`, `.addbig`, `.acard`, `.rnote`, `.empty`). Vizuální styl, fonty ani barvy nezměněny.
+
+**Smoke-test (src i dist).** Appka startuje do Přehledu; počty 22/22/13/2/3 odpovídají docházce; datum St 3. června; slouží Táňa (otevírá)/Helča/Honza/Míša. „Kdo nepřijde“ = Tonička (7:15 · rodinné důvody), Róza (6:40 · nemoc), Linda (neomluveno). Básnička i písnička 1. týdne vyplněné, tile → Plán. Tlačítko → dnešní roster; po označení dítěte přítomným počet Nepřítomní 3→2 a jméno zmizelo ze seznamu. Zdravotní poznámky (Eliška po nemoci, Šimon vši) i dnešní akce (Škola v přírodě 1.–5. 6., proklik na detail) zobrazeny. Všech 8 sekcí projde bez chyb v konzoli.
+
 ## Nálezy
 
 _(Zjištěné bugy / nekonzistence — v této fázi se NEOPRAVUJÍ, jen zaznamenávají.)_
