@@ -277,3 +277,21 @@ Mobilní appky (rodič, průvodce) se na desktopu roztahovaly přes celou šíř
 - Obsah zůstává mobile-first (rodič i průvodce jsou dle briefu mobilní role); skutečný responzivní re-layout obrazovek se nedělá. Admin appka nedotčena (má vlastní `layout-admin.css`).
 
 Ověřeno v prohlížeči: rodič i průvodce na 1440/900/375 px — trvalý sidebar + navigace, overlay drawer na střední šířce, mobil beze změny, modal vycentrovaný, admin beze změny.
+
+### 2026-07-17 — Fáze 4.1: extrakce identity z webu, návrh palety a typografie
+
+Zdroj (vstup V1): **[vhaaji.cz](https://vhaaji.cz/)**. Analyticko-návrhová fáze — do `tokens.css` se zatím **nezasahuje**, čeká se na schválení designérkou (V2). Pracovní extrakt v `podklady/web-extract/` (logo, hero, vzorky; gitignore), shrnutí v [docs/design-system.md](design-system.md), náhled ke schválení [docs/paleta-nahled.html](paleta-nahled.html) (mimo build).
+
+**Co web reálně používá (ne invence modelu):**
+- **Logo:** ruční inkoustový linoryt (strom-kruh, dítě ve větvích, dospělý, psané „vhaaji"), černá na průhledné — `logo-vhaaji.png` 500×480.
+- **Barvy:** krémový podklad `#EFEEE9`, akvarelové skvrny ve třech hue — zelená `#309078`–`#489078`, okrová `#C8BC85`, tlumená růžová/mauve `#D8A890`; inkoustová tmavá `#1F2A2E` (text/patička). Vzorkováno z hero akvarelu (canvas) + CSS.
+- **Typografie (vše Google Fonts):** Shadows Into Light Two (display/nadpisy), IBM Plex Serif (odkazy/serif), Itim (běžný text) — všechny rukodělné/serifové, sedí k neformálnímu tónu.
+
+**Návrh mapování na tokeny** (plná tabulka v design-system.md), doladěno na WCAG AA:
+- Barvy: `bg #EFEEE9`, `surface #F9F7F1`, `surface-2 #E7E4DA`, `text #1F2A2E`, `muted #5C6560`, `hint #767B74`, `primary #2B7059`, `primary-strong #1F5344`, `accent #C8BC85` (výplň) + `accent-ink #6F5F1C` (text), `accent-soft #C99C93` (jen dekor), `info #4E7488`; `danger`/`success` ponechány.
+- **Odchylky od webu kvůli AA** (web původní odstín neplnil): text-muted web `#888` → `#5C6560`; zelená ztmavena na `#2B7059`; okrová jako text → `#6F5F1C`. Růžová a okrová v původním jasu zůstávají jen jako výplň/dekor, ne text. Kontrasty spočteny skriptem (text ≥4.5:1, velký/UI ≥3:1) — všechny navržené kombinace prošly.
+- Typografie: `--font-display` Shadows Into Light Two, `--font-serif` IBM Plex Serif, `--font-sans` Itim; jednotná pro všechny 4 školky.
+
+**Otevřená otázka pro designérku (V2):** tělový/UI font. Itim je rukodělné písmo — půvabné, ale v hustém UI (admin tabulky, malé labely, dlouhé seznamy) hůř čitelné. Náhled ukazuje dvě cesty vedle sebe: **A** Itim všude (max věrnost webu) vs. **B** hybrid (Itim/Shadows na nadpisy a akcenty, čitelnější companion na hustý text). Rozhodne designérka.
+
+**Stav:** čeká na V2 (schválení palety + volba tělového fontu). Poté fáze 4.2 přenese hodnoty do `tokens.css`.
