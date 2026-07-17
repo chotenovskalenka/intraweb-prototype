@@ -267,3 +267,13 @@ Podklady: `podklady/Vhaaji pro rodiče DIGI.pdf`, `podklady/Vhaaji průvodce rit
 - **Celodenní docházka je jen v úterý** (Vhaaji: do 13 / do 15 / úterý do 17): `baseCode`/`getCode` (průvodce) a `code()` (rodič) vrací pro celodenní plán `C` jen v úterý, jinak `O`. Štítek plánu dítěte zůstává „celodenní".
 
 **Odloženo — náhrady.** Příručky popisují jiná pravidla než prototyp (Vhaaji: 20 % omluvených hodin; Maata: fixní roční kvóta hodin dle rozsahu docházky, čerpání rovnoměrně, 50 % v 1. pololetí) — a každá školka jiná. Prototypové „1 včas omluvený den = 1 náhrada" zatím zůstává; designérka ověří s vedením, co reálně platí. Pro admin z toho plyne otázka per-školkové konfigurace pravidel.
+
+### 2026-07-17 — Desktopová prezentace mobilních appek
+
+Mobilní appky (rodič, průvodce) se na desktopu roztahovaly přes celou šířku okna. Řešení bez zásahu do JS, jen v `layout.css` + `components.css` (media queries; na mobilu beze změny):
+
+- **≥ 700 px:** appka se prezentuje jako vycentrovaný „telefonní rám" (max 414 px, zaoblení, stín, tmavší pozadí za rámem). Drawer se váže na hranu rámu a zavřený je skutečně skrytý (opacity/visibility — samotné `translateX(-101%)` ho při posunutém `left` nechávalo viditelné vedle rámu). Modaly (průvodce) se místo bottom-sheetu zobrazují vycentrované v šířce rámu.
+- **≥ 1100 px:** navigace jako **trvalý panel vlevo vedle rámu** (vzor admin sidebaru) — burger i scrim se skryjí, drawer je vždy viditelný. Vzniklo původně jako vedlejší efekt posunutého draweru, ponecháno záměrně: desktopový uživatel má stálou navigaci a vidí ji vedle mobilního obsahu.
+- Obsah zůstává mobile-first (rodič i průvodce jsou dle briefu mobilní role); skutečný responzivní re-layout obrazovek se nedělá. Admin appka nedotčena (má vlastní `layout-admin.css`).
+
+Ověřeno v prohlížeči: rodič i průvodce na 1440/900/375 px — trvalý sidebar + navigace, overlay drawer na střední šířce, mobil beze změny, modal vycentrovaný, admin beze změny.

@@ -55,6 +55,25 @@ body{background:var(--color-bg);font-family:var(--font-sans);color:var(--color-t
 .ditem .ic{width:18px;text-align:center;opacity:.7}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--color-primary-strong);color:#F4EEDF;font-size:14px;font-weight:600;padding:11px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:40;box-shadow:0 6px 20px rgba(0,0,0,.22)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Desktop: mobilní appka se prezentuje jako vycentrovaný telefonní rám.
+   Obsah zůstává mobile-first (rodič i průvodce používají systém na mobilu),
+   jen se neroztahuje přes celou obrazovku. Na mobilu se nic nemění. */
+@media (min-width:700px){
+  body{background:#E4DCC9;padding:28px 0}
+  .phone{max-width:414px;margin:0 auto;border-radius:26px;box-shadow:0 18px 60px rgba(33,42,30,.20);overflow:hidden;border:1px solid var(--color-border-strong)}
+  .screen{min-height:calc(100vh - 56px)}
+  /* drawer se váže na levou hranu rámu (414/2 = 207), ne na okraj okna;
+     zavřený musí být i vizuálně skrytý (translateX(-101%) ho jinak nechá vedle rámu) */
+  .drawer{left:calc(50% - 207px);top:28px;bottom:28px;border-radius:26px 0 0 26px;opacity:0;visibility:hidden;transition:transform .22s,opacity .22s,visibility .22s}
+  .drawer.on{opacity:1;visibility:visible}
+}
+/* Široký desktop: navigace jako trvalý panel vlevo vedle rámu (vzor admin sidebar) */
+@media (min-width:1100px){
+  .drawer{transform:none;opacity:1;visibility:visible;left:auto;right:calc(50% + 223px);width:280px;bottom:auto;max-height:calc(100vh - 56px);border-radius:26px;box-shadow:0 18px 60px rgba(33,42,30,.12);border:1px solid var(--color-border)}
+  .burger{display:none}
+  .scrim{display:none !important}
+}
 </style>
 <style>
 .tile{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:13px 15px;margin-bottom:11px}
@@ -152,6 +171,11 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .modal-scrim{position:fixed;inset:0;background:rgba(33,42,30,.5);z-index:30;display:flex;align-items:flex-end;justify-content:center}
 .modal{background:var(--color-bg);width:100%;max-width:460px;border-radius:18px 18px 0 0;padding:18px 18px 22px;max-height:90vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
 .modal h3{font-family:var(--font-serif);font-size:19px;color:var(--color-primary-strong);margin-bottom:6px}
+/* Desktop (telefonní rám z layout.css): bottom-sheet se drží šířky rámu a plave nad okrajem */
+@media (min-width:700px){
+  .modal-scrim{align-items:center}
+  .modal{max-width:414px;border-radius:18px;max-height:84vh}
+}
 .mrow2{display:flex;gap:9px}
 .mbtns{display:flex;gap:9px;margin-top:16px}
 .btn-primary{flex:1;background:var(--color-primary);color:#F4EEDF;border:none;font-family:var(--font-sans);font-size:15px;font-weight:600;padding:13px;border-radius:11px;cursor:pointer}
