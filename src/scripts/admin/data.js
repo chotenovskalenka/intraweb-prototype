@@ -57,6 +57,40 @@ let UKOLY=[
   {t:'Potvrdit termín inspekce ČŠI',done:false},
 ];
 
+/* Aktuality (Flow 4). Stavy: koncept / naplanovana / odeslana / archivovana.
+   `naplanovana` jen v seed datech — plánování odeslání se nedělá (viz decision-log).
+   `recip` = mapa skolkaId → {all:bool, tridy:[názvy tříd]}; příjemci jsou POVINNÍ pro odeslání.
+   „Bez určených příjemců" (BRIEF kap. 4) je chyba, ne stav — v datech se neukládá.
+   Odeslané aktuality sedí s NEWS v rodičovské appce (roupy, dřívější vyzvednutí) — simulace shodou seedu, žádné sdílení. */
+const AKSTAV={
+  koncept:{lab:'Koncept',cls:'wait'},
+  naplanovana:{lab:'Naplánovaná',cls:'part'},
+  odeslana:{lab:'Odeslaná',cls:'sent'},
+  archivovana:{lab:'Archivovaná',cls:'arch'},
+};
+let akUid=10;
+let AKTUALITY=[
+  {id:'ak1',text:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',urgent:true,stav:'odeslana',datum:'2. 6. 2026',recip:{vhaaji:{all:true,tridy:[]}}},
+  {id:'ak2',text:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada). Prosíme o dřívější vyzvednutí.',urgent:true,stav:'odeslana',datum:'1. 6. 2026',recip:{vhaaji:{all:true,tridy:[]}}},
+  {id:'ak3',text:'Sbíráme víčka od PET lahví na výtvarku — sběrný koš je u vchodu do maringotky.',urgent:false,stav:'archivovana',datum:'28. 5. 2026',recip:{vhaaji:{all:false,tridy:['Lišky']}}},
+  {id:'ak4',text:'Letní provoz: přihlašování na červencové týdny je otevřené do 20. 6.',urgent:false,stav:'naplanovana',datum:'odešle se 10. 6. 2026',recip:{vhaaji:{all:true,tridy:[]},jaata:{all:true,tridy:[]},maata:{all:true,tridy:[]}}},
+  {id:'ak5',text:'Brigáda na zahradě 13. 6. — připravit přihlašovací tabulku a rozeslat rodinám.',urgent:false,stav:'koncept',datum:'',recip:{}},
+];
+// souhrn příjemců aktuality → pole vět „Školka — všichni/třídy (N rodin)"; počet rodin ~ obsazenost
+function recipText(recip){
+  const parts=[];
+  SKOLKY.forEach(s=>{
+    const r=recip[s.id]; if(!r)return;
+    if(r.all){parts.push(`${s.nazev} — všichni (${obsazeno(s)} rodin)`);}
+    else if(r.tridy&&r.tridy.length){
+      const fam=r.tridy.reduce((n,tn)=>{const t=s.tridy.find(x=>x.n===tn);return n+(t?t.obs:0);},0);
+      parts.push(`${s.nazev} — ${r.tridy.join(', ')} (${fam} rodin)`);
+    }
+  });
+  return parts;
+}
+const hasRecip=recip=>SKOLKY.some(s=>{const r=recip[s.id];return !!(r&&(r.all||(r.tridy&&r.tridy.length)));});
+
 /* Poslední porady a evaluace — pro dashboard stačí titulky, plná data přijdou v 3.3. */
 const PORADY=[
   {datum:'2. 6. 2026',typ:'porada',titul:'Provozní porada — červen',skolka:'Vhaaji'},
