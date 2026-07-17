@@ -213,7 +213,7 @@ table.wt td.pastc{opacity:.45}
 .ph-d{font-size:13.5px;color:var(--color-text-muted)}
 
 /* (a) kapacity */
-.caps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
 .cap-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .cap-nm{font-family:var(--font-serif);font-size:15.5px;color:var(--color-primary-strong)}
 .cap-n{font-size:13px;color:var(--color-text-muted);font-weight:600}
@@ -379,24 +379,26 @@ function renderKeepFocus(){const a=document.activeElement;const pos=a&&a.selecti
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),1500);}
 </script>
 <script>
-/* DATA: ADMIN — seed pro appku vedení/administrativy (tři školky).
+/* DATA: ADMIN — seed pro appku vedení/administrativy (čtyři školky).
    Data se s ostatními appkami NESDÍLEJÍ; kde to dává smysl, čísla sedí s mobilními appkami
    (např. Eliška Dvořáková má neuhrazenou fakturu za březen — viz rodic/data.js). */
 
 const TODAYD=3;                    // St 3. 6. 2026 — shodný simulovaný čas jako ostatní appky
 
-/* Tři sesterské školky: obsazenost/kapacita a třídy/skupiny.
-   Vhaaji sedí s průvodcovskou appkou (25 dětí). */
-/* Názvy tříd převzaty z reálného intrawebu (Vhaaji/Vhaaji žlutá, Jaata/Kouzlo lesa,
-   Modrá/Zelená třída) — viz decision-log, revize dle reality. */
+/* Sesterské školky: obsazenost/kapacita a třídy/skupiny. Vhaaji sedí s průvodcovskou
+   appkou (25 dětí). Názvy převzaty z reálného intrawebu — viz decision-log, revize dle
+   reality. Kouzlo lesa je samostatná školka (ne třída Jaaty). Školka s jednou skupinou
+   má jednu třídu pojmenovanou po sobě (obsazenost se všude odvozuje z pole tříd). */
 const SKOLKY=[
   {id:'vhaaji',nazev:'Vhaaji',kapacita:28,tridy:[
     {n:'Vhaaji',obs:13,kap:14},
     {n:'Vhaaji žlutá',obs:12,kap:14},
   ]},
-  {id:'jaata',nazev:'Jaata',kapacita:24,tridy:[
+  {id:'jaata',nazev:'Jaata',kapacita:12,tridy:[
     {n:'Jaata',obs:12,kap:12},
-    {n:'Kouzlo lesa',obs:12,kap:12},
+  ]},
+  {id:'kouzlo',nazev:'Kouzlo lesa',kapacita:14,tridy:[
+    {n:'Kouzlo lesa',obs:12,kap:14},
   ]},
   {id:'maata',nazev:'Maata',kapacita:20,tridy:[
     {n:'Modrá třída',obs:9,kap:10},
@@ -435,7 +437,7 @@ const NAHRADY_SUM={dostupne:14,expiruje:14,naplanovane:5};
 
 /* Provozní úkoly — jednoduchý checklist, odškrtávání funguje v paměti (mizí po reloadu). */
 let UKOLY=[
-  {t:'Objednat sezónní ovoce na červen (všechny tři školky)',done:false},
+  {t:'Objednat sezónní ovoce na červen (všechny školky)',done:false},
   {t:'Revize lékárniček — Vhaaji a Maata',done:false},
   {t:'Odeslat účetní podklady za květen',done:true},
   {t:'Připravit rozpis letního provozu',done:false},
@@ -458,7 +460,7 @@ let AKTUALITY=[
   {id:'ak1',text:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',urgent:true,stav:'odeslana',datum:'2. 6. 2026',recip:{vhaaji:{all:true,tridy:[]}}},
   {id:'ak2',text:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada). Prosíme o dřívější vyzvednutí.',urgent:true,stav:'odeslana',datum:'1. 6. 2026',recip:{vhaaji:{all:true,tridy:[]}}},
   {id:'ak3',text:'Sbíráme víčka od PET lahví na výtvarku — sběrný koš je u vchodu do maringotky.',urgent:false,stav:'archivovana',datum:'28. 5. 2026',recip:{vhaaji:{all:false,tridy:['Vhaaji žlutá']}}},
-  {id:'ak4',text:'Letní provoz: přihlašování na červencové týdny je otevřené do 20. 6.',urgent:false,stav:'naplanovana',datum:'odešle se 10. 6. 2026',recip:{vhaaji:{all:true,tridy:[]},jaata:{all:true,tridy:[]},maata:{all:true,tridy:[]}}},
+  {id:'ak4',text:'Letní provoz: přihlašování na červencové týdny je otevřené do 20. 6.',urgent:false,stav:'naplanovana',datum:'odešle se 10. 6. 2026',recip:{vhaaji:{all:true,tridy:[]},jaata:{all:true,tridy:[]},kouzlo:{all:true,tridy:[]},maata:{all:true,tridy:[]}}},
   {id:'ak5',text:'Brigáda na zahradě 13. 6. — připravit přihlašovací tabulku a rozeslat rodinám.',urgent:false,stav:'koncept',datum:'',recip:{}},
 ];
 // souhrn příjemců aktuality → pole vět „Školka — všichni/třídy (N rodin)"; počet rodin ~ obsazenost
@@ -529,20 +531,21 @@ let ZAPISY=[
 </script>
 <script>
 /* SCREEN: ADMIN_PREHLED — dashboard vedení (BRIEF kap. 1):
-   kapacity tří školek, chybějící platby, systémová upozornění, souhrn náhrad,
+   kapacity školek, chybějící platby, systémová upozornění, souhrn náhrad,
    provozní úkoly, poslední porady/evaluace. */
 function renderPrehled(){
-  let h=`<div class="dash-head">${DOW[wd(TODAYD)]} ${TODAYD}. června 2026 · přehled tří školek</div>`;
+  let h=`<div class="dash-head">${DOW[wd(TODAYD)]} ${TODAYD}. června 2026 · přehled všech školek</div>`;
 
-  // (a) kapacity tří školek — obsazeno / kapacita, vizuální pruh
+  // (a) kapacity školek — obsazeno / kapacita, vizuální pruh; u jednoskupinové školky
+  // se rozpis tříd neduplikuje
   h+=`<div class="tile"><div class="tlab">Kapacity školek</div><div class="caps">`;
   SKOLKY.forEach(s=>{
     const obs=obsazeno(s), pct=Math.round(obs/s.kapacita*100), full=obs>=s.kapacita;
-    const tridy=s.tridy.map(t=>`${t.n} ${t.obs}/${t.kap}`).join(' · ');
+    const tridy=s.tridy.length>1?s.tridy.map(t=>`${t.n} ${t.obs}/${t.kap}`).join(' · '):'';
     h+=`<div class="cap">`
       +`<div class="cap-top"><span class="cap-nm">${s.nazev}</span><span class="cap-n ${full?'is-full':''}">${obs}/${s.kapacita}${full?' · plno':''}</span></div>`
       +`<div class="cap-bar"><span class="cap-fill ${full?'is-full':''}" style="width:${pct}%"></span></div>`
-      +`<div class="cap-sub">${tridy}</div>`
+      +(tridy?`<div class="cap-sub">${tridy}</div>`:'')
       +`</div>`;
   });
   h+=`</div></div>`;
@@ -660,7 +663,8 @@ function renderAkForm(){
     const r=recip[s.id]||{all:false,tridy:[]};
     h+=`<div class="rec-sk"><div class="rec-nm">${s.nazev} <span class="rec-fam">${obsazeno(s)} rodin</span></div><div class="pchips">`;
     h+=`<button class="${r.all?'on':''}" onclick="akToggleAll('${s.id}')">Celá školka</button>`;
-    s.tridy.forEach(t=>{
+    // u školky s jedinou skupinou by chip třídy jen dubloval „Celá školka"
+    if(s.tridy.length>1)s.tridy.forEach(t=>{
       const on=!r.all&&r.tridy.indexOf(t.n)>=0;
       h+=`<button class="${on?'on':''}" onclick="akToggleTrida('${s.id}','${t.n}')">${t.n} <span class="rec-fam">${t.obs}</span></button>`;
     });
