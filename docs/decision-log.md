@@ -165,3 +165,27 @@ _(Zjištěné bugy / nekonzistence — v této fázi se NEOPRAVUJÍ, jen zazname
 - **Mrtvý kód v rodičovské appce** (definice bez jediné reference): data `WEATHER`, `WDEF`, `ALERTS`, `ORDER`; handlery `openMenu` (a tím i nedosažitelný overlay „Jídelníček" `renderMenuDetail`), `setCode`, `setNote`, `goEditDay`. Ponecháno; kandidáti na úklid v pozdější fázi.
 - **`.odbtn` přebíjí `.ghostred`.** Tlačítko „Vrátit" v historii čerpání fondu má třídu `odbtn ghostred`; `.ghostred` (transparentní pozadí + červený rám) je v CSS definováno dříve než `.odbtn` (plné zelené pozadí), takže při stejné specificitě vyhrává `.odbtn` a tlačítko je zelené, ne červené/ghost. Zachováno beze změny (split kaskádu nemění). Kandidát na opravu mimo fázi 0.
 - **Pravděpodobně mrtvý kód** v průvodcovské appce: `weekFor`, `PREDEF`, `dopoMap`/`setDopo`, `renderDenRoster`, `monthDay`/`closeMonthDay`, `.modes`/`.gchips` CSS — bez dohledatelného použití v šablonách. Ponecháno; kandidáti na úklid v pozdější fázi.
+
+### 2026-07-17 — Fáze 3.1 (Admin appka: shell a dashboard vedení)
+
+Založena **třetí appka** pro roli vedení/administrativa (`src/admin.html`) se stejným technologickým vzorem jako mobilní appky (žádný framework, globální scope, `render()` do `#content.innerHTML`, `window.*` handlery). Řízeno `docs/plan-faze-3.md`, provedena **jen fáze 3.1**. **Rodičovská a průvodcovská appka nedotčeny** (`git diff` na `dist/prototyp_rodic.html` a `dist/prototyp_pruvodce.html` prázdný; žádný soubor v `src/scripts/{rodic,pruvodce}/**` ani jejich `screens-*.css` neupraven).
+
+**Desktopový shell místo mobilního draweru.** Nový `src/styles/layout-admin.css` (`.admin`/`.sidebar`/`.sb-item`/`.main`/`.topbar-a`) — stálý levý sidebar s navigací, obsah s max šířkou 980 px, topbar s názvem sekce a badge role „Vedení". `admin.html` **nenačítá `layout.css`** (mobilní `.phone`/`.drawer` shell); pořadí CSS je `tokens → base → layout-admin → components → screens-admin`. Skripty: `shared.js → data.js → screens/prehled.js → core.js` (**bez `modals.js`** — admin nemá v 3.1 žádné overlaye). Mobil je jen „nerozbité" (`@media(max-width:720px)`: sidebar jako vodorovná lišta nahoře), ne optimalizované — dle plánu.
+
+**Zafixovaná rozhodnutí z plánu (potvrzena):**
+
+- **Role hospodářka spadá pod admin appku** (správa fondu a plateb) — nezavádí se čtvrtá role.
+- **Fakturační modul se NEDĚLÁ.** Dashboard zobrazuje chybějící platby (kdo, částka, po splatnosti) jen jako přehled; poznámka „Fakturaci školka řeší mimo appku — zde jen přehled." Stavy platby z BRIEF kap. 4 použity jako badge: `po-splatnosti` (`.bdg.al`, existující), + nové varianty `.bdg.ne`/`.part`/`.wait` v `screens-admin.css` (základ `.bdg` z `components.css` beze změny).
+- **Data se nesdílejí** — admin má vlastní seed v `src/scripts/admin/data.js` (tři školky s kapacitami a třídami, chybějící platby, souhrn náhrad, systémová upozornění, provozní úkoly, titulky posledních porad). Kde to dává smysl, čísla sedí s mobilními appkami: **Eliška Dvořáková — Školné Březen 2026, 5987 Kč** (= `7983 − 1996` sleva z `rodic/data.js`), Vhaaji obsazeno **25** (= 25 dětí v `pruvodce/data.js`).
+- **Simulovaný čas** shodný: `TODAYD=3` (St 3. 6. 2026). Vlastní `TODAYD` v `admin/data.js` (appky nesdílejí stav).
+- **Vizuální styl nezměněn** — jen existující tokeny; nové třídy pouze v `layout-admin.css` a `screens-admin.css`.
+
+**Dashboard (`screens/prehled.js`)** dle BRIEF kap. 1, shora: (a) kapacity tří školek s pruhem obsazenosti (plná školka Jaata zvýrazněná akcentem), (b) chybějící platby s badge stavů, (c) systémová upozornění vč. chybějících dat („u 2 dětí chybí kontakt"), (d) souhrn náhrad (dostupné / expiruje do 30 dní / naplánované) s proklikem, (e) provozní úkoly — checklist, **odškrtávání funguje v paměti** (`toggleUkol` → `render()`, mizí po reloadu), (f) poslední porady/evaluace (titulky, proklik do sekce Porady). Počty obsazenosti se **odvozují** z `obsazeno(s)` nad polem tříd, ne hardcoded.
+
+**Navigace:** 5 sekcí (`prehled`, `aktuality`, `porady`, `platby`, `nahrady`). Mimo 3.1 renderují decentní placeholder `renderPlaceholder()` (definován v `core.js`, mapován v `RENDER` pro `aktuality`/`porady`/`platby`/`nahrady`) — v 3.2/3.3 se nahradí `screens/aktuality.js` a `screens/porady.js`.
+
+**Rozcestník.** Do root `index.html` přidána třetí karta „Vedení" → `dist/prototyp_admin.html`; `build.sh` beze změny zpracoval nový `src/admin.html` i regeneroval `dist/index.html` s relativním odkazem.
+
+**Smoke-test 3.1 (dist přes http server, offline-capable single file).** Appka startuje do Přehledu; sidebar přepíná všech 5 sekcí bez chyb v konzoli (ověřeno `read_console_messages` — žádná chyba); kapacity ukazují tři školky (Vhaaji 25/28, Jaata 24/24 · plno, Maata 16/20); odškrtnutí úkolu funguje (1/5 → 2/5, checkbox se zaškrtne); `dist/prototyp_admin.html` je jednosouborový (jediná externí závislost Google Fonts, shodně s ostatními appkami); mobilní appky nezměněny (`git diff`).
+
+**Odloženo do 3.2 / 3.3 (dle plánu):** `screens/aktuality.js` (Flow 4), `screens/porady.js` (Flow 5) + plná seed data zápisů, objekty Aktualita/Porada/Štítek do `objekty-systemu.md`, Flow 4/5 do `flows.md`. Proklik dlaždice „poslední porady" zatím míří na placeholder.
