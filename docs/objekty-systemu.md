@@ -39,10 +39,11 @@ Rodičem odeslaná omluva nepřítomnosti dítěte na jeden nebo více dní.
 
 ### Pravidlo deadlinu
 
-Omluvit lze do **8:00 dne absence** (`beforeDeadline(d)` v `data.js`). Vzhledem k `NOW` (St 3. 6. 10:00):
+Omluvit lze do **20:00 předchozího dne** (`beforeDeadline(d)` v `data.js`; pravidlo převzato z reálného intrawebu — viz decision-log „revize dle reality"). Vzhledem k `NOW` (St 3. 6. 10:00):
 
-- omluva na **dnešek (3. 6.)** = po deadlinu → náhrada nevznikne;
-- omluva na **zítřek (4. 6.) a dál** = včas → náhrada vznikne.
+- omluva na **dnešek (3. 6.)** = po deadlinu (deadline byl včera 20:00) → náhrada nevznikne;
+- omluva na **zítřek (4. 6.)** = včas (deadline dnes 20:00) → náhrada vznikne;
+- omluva na **pozdější dny** = včas.
 
 Omluvenka odeslaná po deadlinu **projde** (dítě je omluvené), jen bez náhrady.
 
@@ -75,7 +76,7 @@ Náhradní den vzniklý včasnou omluvou; lze jej vyčerpat i na příměstský 
 | `id` | identifikátor |
 | `stav` | viz níže |
 | `vznik` | datum vzniku (např. `12. 5. 2026`) |
-| `exp` | datum expirace = vznik + 60 dní; u `nevznikla` `—` |
+| `exp` | datum expirace = konec školního roku (30. 6.); u `nevznikla` `—` |
 | `puvod` | za co vznikla (např. `omluva 4. 6.`) |
 | `plan` | (jen `naplanovana`) na co je naplánovaná |
 | `pouzita` | (jen `vyuzita`) datum využití |
@@ -87,14 +88,14 @@ Náhradní den vzniklý včasnou omluvou; lze jej vyčerpat i na příměstský 
 
 ### Expirace
 
-**60 dní od vzniku** — zobrazovaná informace. Prototyp expiraci aktivně nevyhodnocuje nad rámec seed dat (stav `expirovana` je v seed datech nastaven ručně).
+**Koncem školního roku (30. 6.)** — náhrady se do dalšího roku nepřenášejí (pravidlo převzato z reality, viz decision-log „revize dle reality"). Zobrazovaná informace; prototyp expiraci aktivně nevyhodnocuje nad rámec seed dat (stav `expirovana` je v seed datech nastaven ručně — náhrada z minulého školního roku).
 
 ### Stavy
 
 - **`dostupna`** — k dispozici k vyčerpání. Jen tyto se počítají do zůstatku (`dostupne(child)`).
 - **`naplanovana`** — přiřazená k budoucímu využití (v prototypu jen v seed datech).
 - **`vyuzita`** — vyčerpaná.
-- **`expirovana`** — propadlá (uplynulo 60 dní).
+- **`expirovana`** — propadlá (skončil školní rok, ve kterém vznikla).
 - **`nevznikla`** — náhrada nevznikla kvůli pozdní omluvě (drží stopu po omluvě po deadlinu).
 
 Zůstatek náhrad se **všude odvozuje** z pole (`dostupne()`), nikde není uložený jako číslo.

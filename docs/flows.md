@@ -2,7 +2,7 @@
 
 Diagramy hlavních scénářů prototypu (viz `docs/BRIEF.md`, kap. 2). Pokryty Flow 1 v průvodcovské appce (fáze 2), Flow 2/3 v rodičovské (fáze 1), Flow 4 v appce vedení (fáze 3.2) a Flow 5 (fáze 3.3); ostatní se doplní v dalších fázích. Diagramy odpovídají chování v kódu; objekty a stavy jsou popsané v `docs/objekty-systemu.md`.
 
-Simulovaný čas je **středa 3. 6. 2026, 10:00**; omluvit lze do **8:00 dne absence**.
+Simulovaný čas je **středa 3. 6. 2026, 10:00**; omluvit lze do **20:00 předchozího dne**.
 
 > GitHub vykresluje mermaid bloky automaticky. Lokálně použij náhled s podporou mermaid (VS Code rozšíření apod.).
 
@@ -44,7 +44,7 @@ flowchart TD
   A([Dashboard / Docházka a náhrady]):::term --> B["Tlačítko „Omluvit dítě“"]
   B --> C["Výběr dní: od – do<br/>(default zítřek · minulé dny a víkendy nelze)"]
   C --> D["Důvod: nemoc / rodinné důvody / jiné<br/>(+ nepovinná poznámka)"]
-  D --> E{"Deadline<br/>do 8:00 dne absence"}:::dec
+  D --> E{"Deadline<br/>do 20:00 předchozího dne"}:::dec
   E -->|"den včas (zítra a dál)"| F["Vznikne náhrada"]:::ok
   E -->|"den po deadlinu (dnes)"| G["Náhrada nevznikne<br/>(dítě je stále omluvené)"]:::bad
   F --> H["Odeslat omluvenku"]
@@ -74,7 +74,7 @@ flowchart TD
   A([Dashboard — dlaždice Náhrady]):::term --> C
   B([Drawer → „Docházka a náhrady“]):::term --> C
   C["Zůstatek dostupných náhrad<br/>(odvozený z pole · + nejbližší expirace)"]:::hi
-  C --> D["Seznam náhrad<br/>(původ · vznik · expirace +60 dní · stav)"]
+  C --> D["Seznam náhrad<br/>(původ · vznik · expirace 30. 6. · stav)"]
   C --> E["Seznam omluvenek<br/>(rozsah · důvod · stav)"]
   E --> F{"Budoucí omluvenka?"}:::dec
   F -->|ano| G["„Zrušit“ → vrátí kalendář<br/>+ odečte vzniklé náhrady"]:::bad
@@ -115,7 +115,7 @@ stateDiagram-v2
   [*] --> nevznikla: den po deadlinu
   dostupna --> naplanovana: přiřazena k využití
   naplanovana --> vyuzita: vyčerpána
-  dostupna --> expirovana: po 60 dnech
+  dostupna --> expirovana: koncem školního roku (30. 6.)
   dostupna --> [*]: omluvenka zrušena
   nevznikla --> [*]
   vyuzita --> [*]

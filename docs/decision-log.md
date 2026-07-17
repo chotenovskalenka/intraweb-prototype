@@ -227,3 +227,25 @@ Přidána sekce **Porady a evaluace** do appky vedení (`src/scripts/admin/scree
 **Smoke-test 3.3 (dist přes http server).** Filtr štítek „hygiena" + období → výpis ukazuje jen odstavce s tím štítkem, s daty a odkazy (4, resp. 1 po zúžení na jaro) ✓; export volá tiskové zobrazení (`.no-print` skryje shell) ✓; detail zobrazuje odstavce se štítky a štítek jde přidat (`z9` odstavec 0: `provoz` → `provoz, inspekce`) ✓; nový zápis jde vytvořit a objeví se v seznamu, výpisu i na dashboardu (`z20` „Testovací zápis inspekce", evaluace, 3. 6. 2026) ✓; všech 5 sekcí projde bez chyb v konzoli; mobilní appky nezměněny (`git diff`).
 
 **Fáze 3 hotová.** `dist/prototyp_admin.html` funguje offline, rozcestník má tři odkazy. Flow 4 i Flow 5 jsou průchozí dle ověřovacích otázek briefu (nelze odeslat bez příjemců; admin ví, komu odešlo; štítky najdou konkrétní podklad; export dává použitelný výstup). `objekty-systemu.md` obsahuje Aktualitu, Poradu/Evaluaci i Štítek; `flows.md` má Flow 4 a 5. Sekce **Platby** a **Náhrady** zůstávají jako přehledové placeholdery — plný rozsah nebyl v zadání fáze 3 (fakturační modul se vědomě nedělá).
+
+### 2026-07-17 — Revize dle reality (benchmark proti produkčnímu intrawebu)
+
+Porovnání prototypu s 27 screenshoty produkčního systému „Dětský klub Maata" (intraweb.maata.cz, dodavatel Matosoft). Reálný systém má dvě rozhraní: přední appku (Nástěnka · Docházka · Kroužky · Kalendář · Vyúčtování · Nastavení) a technický backend „Administrace" (konfigurace, oprávnění). Rozhodnutí níže učinila designérka; provedeno v této revizi.
+
+**Screenshoty obsahují osobní údaje** (jména dětí, e-maily rodičů, částky) — složka `screenshots/` se **necommituje** (viz `.gitignore`).
+
+**Provedené změny (sjednocení s realitou):**
+
+- **Deadline omluvy → 20:00 předchozího dne** (dřív prototyp: 8:00 dne absence; realita: limit 20:00 v konfiguraci docházky). `beforeDeadline(d)` v `rodic/data.js` přepsán na `d>NOW.d+1||(d===NOW.d+1&&NOW.h<20)`; texty v omluvence a docs aktualizovány. Chování seed scénářů se nemění (dnešek = po deadlinu, zítřek = včas) — mění se pravidlo a jeho vysvětlení.
+- **Expirace náhrad → koncem školního roku (30. 6.), nepřenáší se.** Dřív prototyp +60 dní; realita má v konfiguraci 300 dní, ale skutečné provozní pravidlo (dle designérky) je propadnutí s koncem školního roku. `nahFrom` počítá `exp` jako 30. 6. daného školního roku; seed `expirovana` náhrada přesunuta do minulého šk. roku (propadla 30. 6. 2025); `naplanovana` změněna z „Příměstský tábor · 21. 7." na „Náhradní den · 18. 6." (plán po expiraci by byl matoucí). Admin dlaždice náhrad: „expiruje do 30 dní" → „propadne 30. 6. (konec šk. roku)" — v červnu propadají všechny dostupné, což je pro vedení silný signál.
+- **Třídy převzaty z reality.** Admin `SKOLKY`: Vhaaji = **Vhaaji + Vhaaji žlutá**, Jaata = **Jaata + Kouzlo lesa**, Maata = **Modrá třída + Zelená třída** (dřív smyšlené Lišky/Veverky, Sluníčka/Kapky, Sovy/Ježci). Obsazenosti zachovány (25/24/16). Seed aktuality ak3: příjemce „Lišky" → „Vhaaji žlutá".
+
+**Vědomě ponecháno jinak než realita:**
+
+- **Kódy docházky C/D/O zůstávají** (realita: 13/15/17 + lesní 13L/15L/17L podle hodin). Písmenné kódy jsou pro respondenty čitelnější; dimenze „lesní docházka" v prototypu zatím není.
+- **Struktura 3 sesterských školek zůstává** (realita: jeden klub Maata s třídami pojmenovanými po značkách + dva právní subjekty pro MŠMT export). Záměrné zjednodušení pro testování multi-school pohledu vedení; třídy uvnitř školek nyní nesou reálné názvy.
+- **Příjemci aktualit jen školky/třídy** (realita nabízí i „Lektorům" a „Vybraným dětem"). Nepřidáno — viz výzkumná otázka níže.
+
+**Výzkumná otázka — aktuality vs. WhatsApp.** Funkce „událost s odesláním e-mailem" v reálném intrawebu se nepoužívá; komunikace běží ve WhatsApp skupinách (jednoduché, ale notifikačně zatěžující). Hypotéza pro testování: aktualita s povinnými příjemci + push notifikace v appce může WhatsApp nahradit (struktura + dohledatelnost + „vím, komu odešlo"). Ověřit s respondenty, zda by jim to stačilo; podle výsledku případně doplnit příjemce „Lektorům/průvodcům" a „Vybraným dětem".
+
+**Směr pro další fázi (nerealizováno):** rozsah admin appky „nakombinovat" — management nadstavba (Přehled/Aktuality/Porady) + postupné přebírání agend z reálného intrawebu (docházka pro vedení, kalendář, vyúčtování). Rozhodne se po testování.
