@@ -10,7 +10,7 @@
 .ph-d{font-size:13.5px;color:var(--color-text-muted)}
 
 /* (a) kapacity */
-.caps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
 .cap-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .cap-nm{font-family:var(--font-serif);font-size:15.5px;color:var(--color-primary-strong)}
 .cap-n{font-size:13px;color:var(--color-text-muted);font-weight:600}

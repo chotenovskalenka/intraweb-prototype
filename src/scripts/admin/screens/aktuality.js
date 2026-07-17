@@ -61,7 +61,8 @@ function renderAkForm(){
     const r=recip[s.id]||{all:false,tridy:[]};
     h+=`<div class="rec-sk"><div class="rec-nm">${s.nazev} <span class="rec-fam">${obsazeno(s)} rodin</span></div><div class="pchips">`;
     h+=`<button class="${r.all?'on':''}" onclick="akToggleAll('${s.id}')">Celá školka</button>`;
-    s.tridy.forEach(t=>{
+    // u školky s jedinou skupinou by chip třídy jen dubloval „Celá školka"
+    if(s.tridy.length>1)s.tridy.forEach(t=>{
       const on=!r.all&&r.tridy.indexOf(t.n)>=0;
       h+=`<button class="${on?'on':''}" onclick="akToggleTrida('${s.id}','${t.n}')">${t.n} <span class="rec-fam">${t.obs}</span></button>`;
     });

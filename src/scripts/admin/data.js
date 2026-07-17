@@ -1,21 +1,23 @@
-/* DATA: ADMIN — seed pro appku vedení/administrativy (tři školky).
+/* DATA: ADMIN — seed pro appku vedení/administrativy (čtyři školky).
    Data se s ostatními appkami NESDÍLEJÍ; kde to dává smysl, čísla sedí s mobilními appkami
    (např. Eliška Dvořáková má neuhrazenou fakturu za březen — viz rodic/data.js). */
 
 const TODAYD=3;                    // St 3. 6. 2026 — shodný simulovaný čas jako ostatní appky
 
-/* Tři sesterské školky: obsazenost/kapacita a třídy/skupiny.
-   Vhaaji sedí s průvodcovskou appkou (25 dětí). */
-/* Názvy tříd převzaty z reálného intrawebu (Vhaaji/Vhaaji žlutá, Jaata/Kouzlo lesa,
-   Modrá/Zelená třída) — viz decision-log, revize dle reality. */
+/* Sesterské školky: obsazenost/kapacita a třídy/skupiny. Vhaaji sedí s průvodcovskou
+   appkou (25 dětí). Názvy převzaty z reálného intrawebu — viz decision-log, revize dle
+   reality. Kouzlo lesa je samostatná školka (ne třída Jaaty). Školka s jednou skupinou
+   má jednu třídu pojmenovanou po sobě (obsazenost se všude odvozuje z pole tříd). */
 const SKOLKY=[
   {id:'vhaaji',nazev:'Vhaaji',kapacita:28,tridy:[
     {n:'Vhaaji',obs:13,kap:14},
     {n:'Vhaaji žlutá',obs:12,kap:14},
   ]},
-  {id:'jaata',nazev:'Jaata',kapacita:24,tridy:[
+  {id:'jaata',nazev:'Jaata',kapacita:12,tridy:[
     {n:'Jaata',obs:12,kap:12},
-    {n:'Kouzlo lesa',obs:12,kap:12},
+  ]},
+  {id:'kouzlo',nazev:'Kouzlo lesa',kapacita:14,tridy:[
+    {n:'Kouzlo lesa',obs:12,kap:14},
   ]},
   {id:'maata',nazev:'Maata',kapacita:20,tridy:[
     {n:'Modrá třída',obs:9,kap:10},
@@ -54,7 +56,7 @@ const NAHRADY_SUM={dostupne:14,expiruje:14,naplanovane:5};
 
 /* Provozní úkoly — jednoduchý checklist, odškrtávání funguje v paměti (mizí po reloadu). */
 let UKOLY=[
-  {t:'Objednat sezónní ovoce na červen (všechny tři školky)',done:false},
+  {t:'Objednat sezónní ovoce na červen (všechny školky)',done:false},
   {t:'Revize lékárniček — Vhaaji a Maata',done:false},
   {t:'Odeslat účetní podklady za květen',done:true},
   {t:'Připravit rozpis letního provozu',done:false},
@@ -77,7 +79,7 @@ let AKTUALITY=[
   {id:'ak1',text:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',urgent:true,stav:'odeslana',datum:'2. 6. 2026',recip:{vhaaji:{all:true,tridy:[]}}},
   {id:'ak2',text:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada). Prosíme o dřívější vyzvednutí.',urgent:true,stav:'odeslana',datum:'1. 6. 2026',recip:{vhaaji:{all:true,tridy:[]}}},
   {id:'ak3',text:'Sbíráme víčka od PET lahví na výtvarku — sběrný koš je u vchodu do maringotky.',urgent:false,stav:'archivovana',datum:'28. 5. 2026',recip:{vhaaji:{all:false,tridy:['Vhaaji žlutá']}}},
-  {id:'ak4',text:'Letní provoz: přihlašování na červencové týdny je otevřené do 20. 6.',urgent:false,stav:'naplanovana',datum:'odešle se 10. 6. 2026',recip:{vhaaji:{all:true,tridy:[]},jaata:{all:true,tridy:[]},maata:{all:true,tridy:[]}}},
+  {id:'ak4',text:'Letní provoz: přihlašování na červencové týdny je otevřené do 20. 6.',urgent:false,stav:'naplanovana',datum:'odešle se 10. 6. 2026',recip:{vhaaji:{all:true,tridy:[]},jaata:{all:true,tridy:[]},kouzlo:{all:true,tridy:[]},maata:{all:true,tridy:[]}}},
   {id:'ak5',text:'Brigáda na zahradě 13. 6. — připravit přihlašovací tabulku a rozeslat rodinám.',urgent:false,stav:'koncept',datum:'',recip:{}},
 ];
 // souhrn příjemců aktuality → pole vět „Školka — všichni/třídy (N rodin)"; počet rodin ~ obsazenost

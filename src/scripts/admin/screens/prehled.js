@@ -1,18 +1,19 @@
 /* SCREEN: ADMIN_PREHLED — dashboard vedení (BRIEF kap. 1):
-   kapacity tří školek, chybějící platby, systémová upozornění, souhrn náhrad,
+   kapacity školek, chybějící platby, systémová upozornění, souhrn náhrad,
    provozní úkoly, poslední porady/evaluace. */
 function renderPrehled(){
-  let h=`<div class="dash-head">${DOW[wd(TODAYD)]} ${TODAYD}. června 2026 · přehled tří školek</div>`;
+  let h=`<div class="dash-head">${DOW[wd(TODAYD)]} ${TODAYD}. června 2026 · přehled všech školek</div>`;
 
-  // (a) kapacity tří školek — obsazeno / kapacita, vizuální pruh
+  // (a) kapacity školek — obsazeno / kapacita, vizuální pruh; u jednoskupinové školky
+  // se rozpis tříd neduplikuje
   h+=`<div class="tile"><div class="tlab">Kapacity školek</div><div class="caps">`;
   SKOLKY.forEach(s=>{
     const obs=obsazeno(s), pct=Math.round(obs/s.kapacita*100), full=obs>=s.kapacita;
-    const tridy=s.tridy.map(t=>`${t.n} ${t.obs}/${t.kap}`).join(' · ');
+    const tridy=s.tridy.length>1?s.tridy.map(t=>`${t.n} ${t.obs}/${t.kap}`).join(' · '):'';
     h+=`<div class="cap">`
       +`<div class="cap-top"><span class="cap-nm">${s.nazev}</span><span class="cap-n ${full?'is-full':''}">${obs}/${s.kapacita}${full?' · plno':''}</span></div>`
       +`<div class="cap-bar"><span class="cap-fill ${full?'is-full':''}" style="width:${pct}%"></span></div>`
-      +`<div class="cap-sub">${tridy}</div>`
+      +(tridy?`<div class="cap-sub">${tridy}</div>`:'')
       +`</div>`;
   });
   h+=`</div></div>`;
