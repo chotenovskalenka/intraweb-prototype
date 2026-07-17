@@ -394,3 +394,25 @@ Designérka potvrdila **tělo/UI = Inter**. Tím je vstup **V2 schválen v plné
 Náhled i `design-system.md` označeny jako V2-schváleno. **Fáze 4.1 (analyticko-návrhová) je hotová**;
 tokeny se zatím do prototypu nepřepínaly (dle zadání). Následuje **fáze 4.2** — přenos palety, fontů
 (Google Fonts `<link>`) a UI směru do `tokens.css` + nasazení na reálné obrazovky — spustí se samostatně.
+
+### 2026-07-18 — Fáze 4.2: aplikace redesignu (barvy, typografie, logo)
+
+Přeneseno schválené V2 do prototypu. Vzhled se poprvé reálně změnil.
+
+- **Tokeny** (`tokens.css`): paleta přepsána na hodnoty z vhaaji.cz; přidány `--color-accent-ink`
+  (okrová jako text), `--color-on-primary` (text na primární ploše), `--tint-green/rose/ochre/blue`.
+  `--font-serif` = Bricolage Grotesque (nadpisy), `--font-sans` = Inter (tělo/UI).
+- **Google Fonts** `<link>` ve všech třech `src/*.html` přepnut na Bricolage Grotesque + Inter.
+- **Sweep natvrdo psaných barev** → nové odstíny/tokeny napříč `styles/*.css` a inline v `scripts/`:
+  staré primární/akcentní/info/muted/text/surface rgba i hexy přemapovány (skript). `#F4EEDF`
+  → `var(--color-on-primary)`. Docházkové kódy (`CODES`, `codeLabel`, `dlegend`) a avatarová
+  pozadí (`shared.js` `BG`) přeladěny na paletu. **Danger/success a Google-kalendář `.gcal*`
+  ponechány** (dle zadání). Skin/hair avatarů = lidské tóny, ponechány.
+- **Logo**: emblém (optimalizované PNG data URI, konstanta `VHAAJI_LOGO` v `shared.js`) v hlavičce
+  draweru (rodič, průvodce) i sidebaru (admin) vedle „Vhaaji". Favicon (48px PNG data URI) ve
+  všech třech `src/*.html`. Rozcestník `index.html` přepsán na novou paletu/fonty + logo + favicon.
+
+**QA (prohlížeč, http server):** rodič/průvodce/admin na 1440 i 375 px — nová paleta všude, žádná
+stará barva, logo v hlavičkách, drawer OK, stavové badge čitelné, žádné chyby v konzoli. Dist
+ověřen jako **offline-schopný** (žádné externí obrázky mimo Google Fonts; logo+favicon jako data URI).
+Typografická velikostní škála jako tokeny a aktivace `--space-*` v komponentách zůstává na 4.3.
