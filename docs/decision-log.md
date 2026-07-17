@@ -328,3 +328,22 @@ Designérka vybrala z druhé trojice **F · Bricolage Grotesque** pro nadpisy a 
 Náhled přepnut na vybranou kombinaci + doplněno srovnání **Inter vs Nunito Sans** na tělo (ať je volba na konkrétních textech IS). Ověřeno v prohlížeči: tělo Inter, nadpisy Bricolage aplikované i v komponentách; oba srovnávané fonty reálně renderují. Tokeny (návrh 4.2): `--font-sans: "Inter"`, `--font-serif: "Bricolage Grotesque"` (název tokenu je historický, hodnota bezpatková — ve 4.2 zvážit přejmenování na `--font-head`).
 
 **Zbývá pro V2:** finální potvrzení těla (Inter vs Nunito Sans). Pak fáze 4.2.
+
+#### Směr UI komponent — reference (2026-07-17)
+
+Designérka označila dosavadní UI náhledu za „hodně generické" a dodala **6 referenčních
+dashboardů** (Donezo, Codename.com, kwikword, parenting app, KIDS.toon, EduFinance). Na dotaz
+zvolila směr **„Donezo + víc barvy a hravosti"** — bohatý dashboard jazyk + barevné dlaždice,
+ale **bez dětských ilustrací** (drží dřívější „ne dětské, do IS").
+
+Rozhodnutí: UI vychází z referencí, ale **barevnost výhradně ze schválené palety** (rule 1) —
+barevné kategorie jsou měkké tinty primary/accent/accent-soft/info, ne nové barvy. Do náhledu
+přidána **sekce 4 „Směr UI"** na obsahu Vhaaji: gradientní hero se soft bloby, stat dlaždice
+(velké číslo Bricolage + trend), barevné kategorie, šrafovaný sloupcový graf, progress prstenec,
+seznam s icon-chipy a jednotné stavové pilulky. Vzory zapsány do `design-system.md`.
+
+Ověřeno v prohlížeči (1280px): gradient/prstenec/šraf/tinty renderují, žádný horizontální přetok,
+sloupce grafu mají správné výšky. Detailní tokenizace (radiusy, stíny, tint tokeny, ikonografie)
+je na 4.2/4.3/4.6 — tady jde o schválený **směr**, ne finální komponentní CSS.
+
+**Zbývá pro V2:** potvrdit směr UI + tělo (Inter vs Nunito). Pak 4.2.

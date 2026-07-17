@@ -84,6 +84,28 @@ Odmítnuto jako systémový font: Shadows Into Light Two, Itim (podpis Vhaaji / 
 Neformální, lidský, přírodní. Rukodělná estetika (linoryt, akvarel, psané písmo)
 napříč. Žádné ostré geometrické tvary ani korporátní čistota.
 
+### Směr UI komponent — z designérčiných referencí (Donezo aj.)
+
+Designérka dodala 6 referenčních dashboardů a zvolila směr **„Donezo + víc barvy a hravosti"**
+(bohatý dashboard jazyk + barevné dlaždice, ale **bez dětských ilustrací**). Odvozené UI
+vzory (demonstrované v sekci 4 náhledu, **jen barvy ze schválené palety**):
+
+- **Stat dlaždice** — velké číslo (Bricolage) + label + malý trend; jedna zvýrazněná
+  **gradientní „hero" dlaždice** (zelený gradient primary→primary-strong, světlý text).
+- **Gradientní/blobová hero karta** — pozdrav/přehled se soft „bloby" (rozostřené kruhy
+  v tintech palety), jako parenting-app reference.
+- **Barevné kategorie** — zaoblené dlaždice v měkkých tintech: green `#E3EDE7`, rose
+  `#F1E1DC`, ochre `#F1EAD2`, blue `#DEE7EA` (odvozené z primary / accent-soft / accent / info).
+  Dávají „hravost" bez odklonu od palety.
+- **Grafy** — sloupce: aktivní plné (primary / primary-strong), neaktivní/budoucí **šrafované**
+  (repeating-linear-gradient); **progress prstenec** (conic-gradient, velké % uprostřed) + legenda s tečkami.
+- **Seznamy** — řádek: barevný icon-chip (tint) + název + podtitul + stavová pilulka vpravo.
+- **Měkkost** — velký radius (18–20px), vzduch, jemné bordery/stíny.
+
+Ikony jsou zatím unicode glyfy (placeholder) — o ikonografii rozhodne designérka (4.6),
+případné ikony inline SVG. Detailní tokenizace komponent (radiusy, stíny, tint tokeny)
+proběhne ve 4.2/4.3; tady jde o schválený vizuální **směr**, ne finální CSS.
+
 ---
 
 ## Návrh mapování na tokeny prototypu (4.1 — čeká na V2)
