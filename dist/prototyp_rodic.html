@@ -512,13 +512,14 @@ const ORDER=['D','O','C','OM','NE'];
 
 /* --- Simulovaný čas + omluvenka/náhrada model (fáze 1) --- */
 const NOW={d:3,h:10};                 // „teď" = St 3. 6. 2026, 10:00 (žádné Date.now())
-const beforeDeadline=d=>d>NOW.d||(d===NOW.d&&NOW.h<8);  // omluvit lze do 8:00 dne absence
+const beforeDeadline=d=>d>NOW.d+1||(d===NOW.d+1&&NOW.h<20);  // omluvit lze do 20:00 předchozího dne (dle reálného intrawebu)
 let _uid=1000; const uid=()=>'x'+(++_uid);
 const fmtD=dt=>dt.getDate()+'. '+(dt.getMonth()+1)+'. '+dt.getFullYear();
 const juneDate=day=>new Date(2026,5,day);
-// Náhrada z data vzniku (origin); expirace = +60 dní. extra může přepsat id/den/exp/expT ap.
+// Náhrada z data vzniku (origin); expiruje koncem školního roku (30. 6.), nepřenáší se dál.
+// extra může přepsat id/den/exp/expT ap.
 function nahFrom(origin,stav,extra){
-  const exp=new Date(origin);exp.setDate(exp.getDate()+60);
+  const exp=new Date(origin.getFullYear()+(origin.getMonth()>=8?1:0),5,30);
   return Object.assign({id:uid(),stav,den:null,vznik:fmtD(origin),vznikT:+origin,
     exp:fmtD(exp),expT:+exp,puvod:'omluva '+origin.getDate()+'. '+(origin.getMonth()+1)+'.'},extra||{});
 }
@@ -539,9 +540,9 @@ const children=[
       nahFrom(new Date(2026,4,12),'dostupna'),
       nahFrom(new Date(2026,4,20),'dostupna'),
       nahFrom(juneDate(11),'dostupna',{id:'nE-fut',den:11,omId:'omE-fut'}),
-      nahFrom(new Date(2026,4,26),'naplanovana',{plan:'Příměstský tábor · 21. 7.'}),
+      nahFrom(new Date(2026,4,26),'naplanovana',{plan:'Náhradní den · 18. 6.'}),
       nahFrom(new Date(2026,3,8),'vyuzita',{pouzita:'15. 5. 2026'}),
-      nahFrom(new Date(2026,1,20),'expirovana'),
+      nahFrom(new Date(2025,4,20),'expirovana'),   // z minulého šk. roku — propadla 30. 6. 2025
       nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'—',expT:Infinity}),
     ],
     omluvenky:[
@@ -918,7 +919,7 @@ function omGrid(which){
 function omDeadline(){
   const days=omDays(), timely=days.filter(beforeDeadline), late=days.filter(d=>!beforeDeadline(d));
   let h=`<div class="tile note-info"><div class="tlab" style="color:var(--color-primary);margin-bottom:5px">Než odešleš</div>`;
-  h+=`<div class="omdrow">Omluvit lze do <b>8:00</b> v den absence.</div>`;
+  h+=`<div class="omdrow">Omluvit lze do <b>20:00 předchozího dne</b>.</div>`;
   if(timely.length)h+=`<div class="omdrow ok">✓ Vznikne <b>${timely.length} ${nplural(timely.length)}</b> (za ${timely.length} včas omluvený ${plural(timely.length)}).</div>`;
   if(late.length)h+=`<div class="omdrow bad">⚠ Omluva na ${late.map(d=>d+'. 6.').join(', ')} je po deadlinu — <b>náhrada nevznikne</b>. Dítě je omluvené.</div>`;
   return h+`</div>`;
