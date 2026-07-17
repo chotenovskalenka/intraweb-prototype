@@ -130,3 +130,40 @@ Aktualitu **nelze odeslat bez určených příjemců** — „bez určených př
 - **`naplanovana`** — naplánovaná k automatickému odeslání. **Jen v seed datech** — plánování odeslání se v prototypu nedělá (viz decision-log).
 
 Přechody v UI: `koncept → odeslana` (Odeslat), `odeslana → archivovana` (Archivovat). Propsání do rodičovské appky je **simulované jen shodou seed dat** (aktuality „roupy" a „dřívější vyzvednutí" odpovídají `NEWS` v `rodic/data.js`) — appky spolu nesdílejí data.
+
+---
+
+## Porada / Evaluace (zápis)
+
+Zápis z porady nebo evaluace v appce vedení (Flow 5). Slouží jako podklad pro inspekci — filtrovatelný podle štítků a období.
+
+**Umístění v kódu:** `ZAPISY: [...]` v `src/scripts/admin/data.js`; sekce (seznam / detail / výpis / nový zápis) v `src/scripts/admin/screens/porady.js`. Stejná data napájejí i dashboardovou dlaždici „poslední porady" (`prehled.js`) — jeden zdroj pravdy.
+
+### Atributy
+
+| Atribut | Význam |
+|---|---|
+| `id` | identifikátor |
+| `dt` | číselné datum `RRRRMMDD` — řazení a filtr období |
+| `datum` | zobrazovaný text data (např. „18. 3. 2026") |
+| `typ` | `porada` / `evaluace` |
+| `skolka` | Vhaaji / Jaata / Maata |
+| `nazev` | název zápisu (titulek v seznamu i na dashboardu) |
+| `ucastnici` | pole jmen |
+| `odstavce` | pole `{text, stitky:[]}` — jednotlivé body zápisu, každý s vlastními štítky |
+
+### Chování
+
+- **Seznam** filtruje podle školky a typu, řadí od nejnovějšího.
+- **Detail** zobrazuje odstavce a jejich štítky; štítek u odstavce lze přidat/odebrat klepnutím (chip toggle).
+- **Filtrovaný výpis** (jádro Flow 5): výběr štítku + období vypíše **jen odstavce** s daným štítkem napříč zápisy (s datem, školkou a odkazem na celý zápis) — ne celé dlouhé zápisy.
+- **Export** (`window.print()`) otevře tiskové zobrazení výpisu; `@media print` skryje shell a ovládací prvky (třídy `.no-print`), ponechá jen obsah (třída `.print-only` zpřístupní tištěnou variantu štítků).
+- **Nový zápis** je minimální (název + typ + školka + text + štítky = jeden odstavec).
+
+## Štítek
+
+Kategorizační značka odstavce zápisu; propojuje konkrétní podklad s tématem inspekce.
+
+**Umístění v kódu:** `STITKY` v `src/scripts/admin/data.js` (pole názvů); použití na `odstavec.stitky`.
+
+Hodnoty: `hygiena`, `bezpečnost`, `personál`, `provoz`, `pedagogika`, `inspekce`. Štítek je prostý řetězec (žádné id) — odstavec jich může mít víc. Filtr výpisu pracuje nad jedním vybraným štítkem; ve výsledku je shodný štítek zvýrazněný (`.stitek.hi`).

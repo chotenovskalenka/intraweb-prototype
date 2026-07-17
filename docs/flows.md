@@ -1,6 +1,6 @@
 # User flows
 
-Diagramy hlavních scénářů prototypu (viz `docs/BRIEF.md`, kap. 2). Pokryty Flow 1 v průvodcovské appce (fáze 2), Flow 2/3 v rodičovské (fáze 1) a Flow 4 v appce vedení (fáze 3.2); ostatní se doplní v dalších fázích. Diagramy odpovídají chování v kódu; objekty a stavy jsou popsané v `docs/objekty-systemu.md`.
+Diagramy hlavních scénářů prototypu (viz `docs/BRIEF.md`, kap. 2). Pokryty Flow 1 v průvodcovské appce (fáze 2), Flow 2/3 v rodičovské (fáze 1), Flow 4 v appce vedení (fáze 3.2) a Flow 5 (fáze 3.3); ostatní se doplní v dalších fázích. Diagramy odpovídají chování v kódu; objekty a stavy jsou popsané v `docs/objekty-systemu.md`.
 
 Simulovaný čas je **středa 3. 6. 2026, 10:00**; omluvit lze do **8:00 dne absence**.
 
@@ -152,3 +152,27 @@ flowchart TD
 ```
 
 Stavy aktuality a povinnost příjemců jsou popsané v `docs/objekty-systemu.md` (objekt **Aktualita**). Propsání do rodičovské appky je simulované jen shodou seed dat — appky nesdílejí data.
+
+---
+
+## Flow 5 — Vedení hledá podklady pro inspekci
+
+Vedení potřebuje z porad a evaluací rychle najít konkrétní podklad k tématu (např. hygiena) za dané období — a mít z toho použitelný tištěný/PDF výstup. Jádrem je **filtrovaný výpis**: štítek + období vypíše jen relevantní odstavce napříč zápisy, ne celé dlouhé zápisy. Zdroj chování: `src/scripts/admin/screens/porady.js`, seed `ZAPISY` v `src/scripts/admin/data.js`. Výpis se skládá odvozeně z odstavců, nikde není uložený.
+
+```mermaid
+flowchart TD
+  A([Porady a evaluace]):::term --> B{"Záložka"}:::dec
+  B -->|Zápisy| C["Seznam zápisů<br/>filtr školka · typ"]
+  C --> D["Detail zápisu<br/>odstavce se štítky"]
+  D --> E["Přidat/odebrat štítek u odstavce<br/>(chip toggle)"]
+  B -->|Výpis podle štítku| F["Vyber štítek + období"]:::hi
+  F --> G["Jen odstavce s daným štítkem<br/>napříč zápisy · datum · školka"]:::hi
+  G --> H["→ celý zápis (proklik do detailu)"]
+  G --> I[/"Exportovat výpis → window.print()<br/>tiskové zobrazení (PDF)"/]
+  E -.->|štítek zpřístupní odstavec výpisu| G
+  classDef term fill:#DCE7DC,stroke:#2E5E43,color:#21402F,stroke-width:1.5px;
+  classDef hi fill:#E2ECE2,stroke:#3C7A4E,color:#21402F;
+  classDef dec fill:#F0E4CE,stroke:#B07D3A,color:#6f4e1e;
+```
+
+Objekty **Porada/Evaluace (zápis)** a **Štítek** jsou popsané v `docs/objekty-systemu.md`. Nový zápis lze založit minimálně (název + typ + školka + text + štítky = jeden odstavec).

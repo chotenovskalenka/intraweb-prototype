@@ -209,3 +209,21 @@ Přidána sekce **Aktuality** do appky vedení (`src/scripts/admin/screens/aktua
 **Smoke-test 3.2 (dist přes http server).** Nová aktualita bez příjemců → Odeslat blokované s vysvětlením ✓; po výběru školky/třídy se ukáže náhled příjemců a Odeslat se aktivuje ✓; odeslání → aktualita v seznamu se stavem „Odeslaná" a výčtem příjemců (`Jaata — Sluníčka (12 rodin)`, datum 3. 6. 2026) ✓; uložení konceptu (i bez příjemců) funguje ✓; archivace odeslané funguje ✓; text přežije přepnutí příjemců ✓; žádné chyby v konzoli; mobilní appky nezměněny (`git diff`).
 
 **Odloženo do 3.3:** `screens/porady.js` (Flow 5), seed zápisů porad/evaluací se štítky, objekty Porada/Evaluace a Štítek, Flow 5, propojení dashboardové dlaždice „poslední porady" na skutečnou sekci.
+
+### 2026-07-17 — Fáze 3.3 (Porady a evaluace se štítky, Flow 5)
+
+Přidána sekce **Porady a evaluace** do appky vedení (`src/scripts/admin/screens/porady.js`) dle `docs/plan-faze-3.md` — poslední dílčí fáze fáze 3. **Rodičovská a průvodcovská appka nedotčeny**; v admin appce upraveny `data.js` (seed), `core.js` (RENDER + reset stavu v `go`), `admin.html` (script tag), `screens/prehled.js` (dashboard čerpá ze `ZAPISY`) a `screens-admin.css`.
+
+**Datový model.** `ZAPISY` (9 zápisů, 9/2025–6/2026): každý má `dt` (číselné `RRRRMMDD` pro řazení a filtr období), `datum` (text), `typ` (`porada`/`evaluace`), `skolka`, `nazev`, `ucastnici`, a `odstavce: [{text, stitky:[]}]`. Štítek je **prostý řetězec** (bez id), odstavec jich může mít víc. `STITKY` = `hygiena`, `bezpečnost`, `personál`, `provoz`, `pedagogika`, `inspekce`. Období pro filtr jsou předdefinovaná (`OBDOBI`: celé / podzim 2025 / zima 2026 / jaro 2026) s `from`/`to` mezemi nad `dt`.
+
+**Jádro Flow 5 — filtrovaný výpis.** Záložka „Výpis podle štítku": výběr štítku + období posbírá **jen odstavce** s daným štítkem napříč všemi zápisy (řazeno od nejnovějšího), každý s datem, školkou, názvem zápisu a prolinkem „→ celý zápis". Ve výsledku je shodný štítek zvýrazněný (`.stitek.hi`). Výpis se **odvozuje** při renderu, nikde není uložený. Ověřeno: „hygiena" / celé období → 4 odstavce ze 4 různých zápisů; zúžení na „jaro 2026" → 1.
+
+**Detail a přidávání štítků.** Detail zápisu ukazuje odstavce; pod každým jsou všechny štítky jako `pchips` toggle — klepnutím se štítek přidá/odebere (`poToggleStitek`), čímž se odstavec ihned zpřístupní/odebere z výpisu. Vytváření nového zápisu je minimální (název + typ + školka + text + štítky = jeden odstavec), datováno na `TODAYD` (3. 6. 2026).
+
+**Export (`window.print()`).** Tlačítko „Exportovat výpis" volá `window.print()`; `@media print` v `screens-admin.css` skryje sidebar, topbar, switch a všechny ovládací prvky (třída `.no-print`), zúží obsah na plnou šířku a přepne štítky na tištěnou variantu (`.print-only`). Hlavička výpisu („Výpis zápisů — štítek …, období …, N odstavců") je záměrně součástí obsahu, aby dávala smysl i na papíře/v PDF.
+
+**Jeden zdroj pravdy pro dashboard.** Dashboardová dlaždice „poslední porady" (`prehled.js`) nově **odvozuje** poslední tři zápisy ze `ZAPISY` (řazeno dle `dt`) místo dřívějšího samostatného seed pole `PORADY` (odstraněno) — dlaždice tak vede do skutečné sekce a zůstává konzistentní i po vytvoření nového zápisu.
+
+**Smoke-test 3.3 (dist přes http server).** Filtr štítek „hygiena" + období → výpis ukazuje jen odstavce s tím štítkem, s daty a odkazy (4, resp. 1 po zúžení na jaro) ✓; export volá tiskové zobrazení (`.no-print` skryje shell) ✓; detail zobrazuje odstavce se štítky a štítek jde přidat (`z9` odstavec 0: `provoz` → `provoz, inspekce`) ✓; nový zápis jde vytvořit a objeví se v seznamu, výpisu i na dashboardu (`z20` „Testovací zápis inspekce", evaluace, 3. 6. 2026) ✓; všech 5 sekcí projde bez chyb v konzoli; mobilní appky nezměněny (`git diff`).
+
+**Fáze 3 hotová.** `dist/prototyp_admin.html` funguje offline, rozcestník má tři odkazy. Flow 4 i Flow 5 jsou průchozí dle ověřovacích otázek briefu (nelze odeslat bez příjemců; admin ví, komu odešlo; štítky najdou konkrétní podklad; export dává použitelný výstup). `objekty-systemu.md` obsahuje Aktualitu, Poradu/Evaluaci i Štítek; `flows.md` má Flow 4 a 5. Sekce **Platby** a **Náhrady** zůstávají jako přehledové placeholdery — plný rozsah nebyl v zadání fáze 3 (fakturační modul se vědomě nedělá).
