@@ -1,5 +1,6 @@
 /* CORE: PRUVODCE — stav, sekce, drawer, render(), go(), úvodní spuštění */
 const SECTIONS=[
+  ['prehled','Přehled','⌂'],
   ['dochazka','Docházka','✓'],
   ['plan','Plán & program','✎'],
   ['pruvodci','Docházka průvodců','◷'],
@@ -10,12 +11,12 @@ const SECTIONS=[
 ];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 
-let section='dochazka', drawerOpen=false, wquery='';
+let section='prehled', drawerOpen=false, wquery='';
 let view='den', open=-1, query='', tab='rano';
 let rytOpen=-1, modal=null, shiftM=null;
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={dochazka:renderDochazka,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
+const RENDER={prehled:renderPrehled,dochazka:renderDochazka,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
