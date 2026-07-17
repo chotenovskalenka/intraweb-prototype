@@ -302,8 +302,49 @@ table.wt td.pastc{opacity:.45}
 .ak-warn{font-size:13px;color:var(--color-danger);background:rgba(176,73,47,.08);border:1px solid rgba(176,73,47,.20);border-radius:10px;padding:10px 12px;line-height:1.45}
 .btn-primary:disabled{opacity:.45;cursor:not-allowed}
 
+/* porady — štítek chip */
+.stitek{display:inline-block;font-size:11px;font-weight:500;color:var(--color-text-muted);background:var(--color-surface-2);border:1px solid var(--color-border);padding:2px 9px;border-radius:999px;margin:0 5px 5px 0}
+.stitek.hi{color:var(--color-primary);background:rgba(46,94,67,.12);border-color:rgba(46,94,67,.22);font-weight:600}
+.za-tags{margin-top:9px}
+
+/* porady — seznam zápisů */
+.za-item{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
+.za-sk{font-size:12.5px;color:var(--color-text-muted)}
+.za-nz{font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong);margin-top:8px}
+.za-nz-lg{font-size:20px}
+.za-ucast{font-size:12.5px;color:var(--color-text-muted);margin-top:4px}
+
+/* porady — detail odstavce */
+.odst{border-top:1px solid var(--color-border);padding:13px 0}
+.odst:first-of-type{border-top:none;margin-top:10px}
+.odst-tx{font-size:14.5px;color:var(--color-text);line-height:1.55}
+.odst-chips{margin-top:9px}
+.odst-chips button{font-size:11.5px;padding:5px 10px}
+
+/* porady — filtrovaný výpis */
+.vypis-head{margin:2px 2px 12px}
+.vh-t{font-family:var(--font-serif);font-size:18px;color:var(--color-primary-strong)}
+.vh-s{font-size:12.5px;color:var(--color-text-muted);margin-top:2px}
+.vy-item .vy-nz{font-family:var(--font-serif);font-size:14.5px;color:var(--color-primary);margin:6px 0 6px}
+.vy-link{background:none;border:none;color:var(--color-primary);font-weight:600;font-size:12.5px;font-family:var(--font-sans);cursor:pointer;padding:8px 0 0}
+
+.print-only{display:none}
+
 @media(max-width:720px){
   .caps,.nh-grid{grid-template-columns:1fr}
+}
+
+/* tisk / PDF export výpisu — skryje shell a ovládací prvky, nechá jen obsah */
+@media print{
+  .sidebar,.topbar-a,.switch,.no-print,.toast{display:none!important}
+  .print-only{display:block}
+  .admin{display:block}
+  .main{display:block}
+  .content-wrap{padding:0}
+  .content-wrap #content{max-width:100%}
+  .tile{border-color:#ccc;box-shadow:none;break-inside:avoid}
+  .vypis-head{margin-bottom:16px}
+  body{background:#fff}
 }
 </style>
 </head>
@@ -431,11 +472,55 @@ function recipText(recip){
 }
 const hasRecip=recip=>SKOLKY.some(s=>{const r=recip[s.id];return !!(r&&(r.all||(r.tridy&&r.tridy.length)));});
 
-/* Poslední porady a evaluace — pro dashboard stačí titulky, plná data přijdou v 3.3. */
-const PORADY=[
-  {datum:'2. 6. 2026',typ:'porada',titul:'Provozní porada — červen',skolka:'Vhaaji'},
-  {datum:'19. 5. 2026',typ:'evaluace',titul:'Čtvrtletní evaluace pedagogů',skolka:'Jaata'},
-  {datum:'5. 5. 2026',typ:'porada',titul:'Bezpečnost a revize prostředí',skolka:'Maata'},
+/* Porady a evaluace (Flow 5). Jeden zdroj pravdy pro sekci Porady i dashboardovou
+   dlaždici „poslední porady". Každý zápis = datum + typ + školka + účastníci +
+   odstavce označené štítky. Filtr štítek+období vypíše jen relevantní odstavce napříč zápisy.
+   `dt` = číselné datum (RRRRMMDD) pro řazení a filtr období; `datum` = zobrazovaný text. */
+const STITKY=['hygiena','bezpečnost','personál','provoz','pedagogika','inspekce'];
+const OBDOBI=[
+  {k:'vse',   label:'Celé období',            from:0,        to:99999999},
+  {k:'podzim',label:'Podzim 2025 (9–12/2025)',from:20250901, to:20251231},
+  {k:'zima',  label:'Zima 2026 (1–3/2026)',   from:20260101, to:20260331},
+  {k:'jaro',  label:'Jaro 2026 (4–6/2026)',   from:20260401, to:20260630},
+];
+let zapisUid=20;
+let ZAPISY=[
+  {id:'z1',dt:20250910,datum:'10. 9. 2025',typ:'porada',skolka:'Vhaaji',nazev:'Zahájení školního roku',ucastnici:['Táňa','Helča','vedení'],odstavce:[
+    {text:'Adaptace nových dětí proběhla klidně, dvě děti potřebují ještě delší doprovod rodičů při ranním předávání.',stitky:['pedagogika']},
+    {text:'Zkontrolovány lékárničky ve všech maringotkách, doplněny náplasti a dezinfekce; evidence úrazů založena na nový rok.',stitky:['hygiena','bezpečnost']},
+  ]},
+  {id:'z2',dt:20251002,datum:'2. 10. 2025',typ:'porada',skolka:'Jaata',nazev:'Provozní porada — říjen',ucastnici:['Gabča','vedení'],odstavce:[
+    {text:'Revize elektrických spotřebičů proběhla, jeden vařič vyřazen z provozu, objednán nový.',stitky:['bezpečnost','provoz']},
+    {text:'Nová posila do týmu nastupuje od listopadu — zajistit zaškolení a rozšíření o BOZP.',stitky:['personál']},
+  ]},
+  {id:'z3',dt:20251114,datum:'14. 11. 2025',typ:'evaluace',skolka:'Vhaaji',nazev:'Čtvrtletní evaluace pedagogů',ucastnici:['Táňa','Helča','Honza'],odstavce:[
+    {text:'Reflexe adaptačního období — děti dobře zvládají rytmus dne, ranní kruh se osvědčil.',stitky:['pedagogika']},
+    {text:'Doporučení: v chladném počasí zařadit více pohybových aktivit a zkrátit statické bloky.',stitky:['pedagogika','provoz']},
+  ]},
+  {id:'z4',dt:20251205,datum:'5. 12. 2025',typ:'porada',skolka:'Maata',nazev:'Zimní provoz a bezpečnost',ucastnici:['Míša','vedení'],odstavce:[
+    {text:'Kontrola zimního vybavení dětí; upozornit rodiče na chybějící rukavice a náhradní oblečení.',stitky:['provoz']},
+    {text:'Nácvik evakuace při požáru proběhl s dětmi hravou formou, únikové cesty volné.',stitky:['bezpečnost']},
+  ]},
+  {id:'z5',dt:20260120,datum:'20. 1. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Provozní porada — leden',ucastnici:['Táňa','vedení'],odstavce:[
+    {text:'Chřipková sezóna — zpřísněná hygiena rukou, častější větrání a dezinfekce ploch.',stitky:['hygiena']},
+    {text:'Revize smlouvy s dodavatelem obědů, cena od února mírně roste; informovat rodiče.',stitky:['provoz']},
+  ]},
+  {id:'z6',dt:20260211,datum:'11. 2. 2026',typ:'evaluace',skolka:'Jaata',nazev:'Pololetní evaluace',ucastnici:['Gabča','vedení'],odstavce:[
+    {text:'Hodnocení individuálních plánů předškoláků — tři děti připravené na zápis do školy.',stitky:['pedagogika']},
+    {text:'Personální stabilita — bez fluktuace, tým sehraný, rozvrh služeb funguje.',stitky:['personál']},
+  ]},
+  {id:'z7',dt:20260318,datum:'18. 3. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Příprava na inspekci ČŠI',ucastnici:['Táňa','Helča','vedení'],odstavce:[
+    {text:'Kompletace dokumentace k inspekci — třídnice, evidence úrazů, podepsané souhlasy GDPR.',stitky:['inspekce','provoz']},
+    {text:'Kontrola pitného režimu a skladování potravin, teploty lednic zaznamenávány denně.',stitky:['hygiena','inspekce']},
+  ]},
+  {id:'z8',dt:20260505,datum:'5. 5. 2026',typ:'porada',skolka:'Maata',nazev:'Bezpečnost a revize prostředí',ucastnici:['Míša','vedení'],odstavce:[
+    {text:'Revize dřevěných herních prvků na zahradě — dva prvky určeny k opravě, dočasně ohrazeny.',stitky:['bezpečnost','provoz']},
+    {text:'Kontrola lékárniček a expirací léčiv, prošlé položky vyřazeny a doplněny.',stitky:['hygiena','bezpečnost']},
+  ]},
+  {id:'z9',dt:20260602,datum:'2. 6. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Provozní porada — červen',ucastnici:['Táňa','vedení'],odstavce:[
+    {text:'Uzávěrka docházky a náhrad před koncem školního roku, kontrola nevyčerpaných náhrad.',stitky:['provoz']},
+    {text:'Plán letního provozu a personální pokrytí prázdninových týdnů.',stitky:['personál','provoz']},
+  ]},
 ];
 </script>
 <script>
@@ -495,10 +580,10 @@ function renderPrehled(){
   });
   h+=`</div>`;
 
-  // (f) poslední porady / evaluace — titulky, proklik do sekce porad
+  // (f) poslední porady / evaluace — titulky (odvozené ze ZAPISY), proklik do sekce porad
   h+=`<button class="tile dash-link" onclick="go('porady')"><div class="tlab" style="margin:0">Poslední porady a evaluace <span class="dl-arr">›</span></div>`;
-  PORADY.forEach(p=>{
-    h+=`<div class="por-row"><span class="por-d">${p.datum}</span><span class="por-t">${p.titul}<span class="por-sk"> · ${p.skolka}</span></span><span class="por-typ ${p.typ}">${p.typ==='porada'?'porada':'evaluace'}</span></div>`;
+  ZAPISY.slice().sort((a,b)=>b.dt-a.dt).slice(0,3).forEach(p=>{
+    h+=`<div class="por-row"><span class="por-d">${p.datum}</span><span class="por-t">${p.nazev}<span class="por-sk"> · ${p.skolka}</span></span><span class="por-typ ${p.typ}">${p.typ==='porada'?'porada':'evaluace'}</span></div>`;
   });
   h+=`</button>`;
 
@@ -626,6 +711,151 @@ window.akSendId=id=>{const a=AKTUALITY.find(x=>x.id===id);if(!hasRecip(a.recip)|
 window.akArchive=id=>{const a=AKTUALITY.find(x=>x.id===id);a.stav='archivovana';showToast('Aktualita archivována');render();};
 </script>
 <script>
+/* SCREEN: ADMIN_PORADY — Flow 5: vedení hledá podklady pro inspekci.
+   Seznam zápisů (filtr školka/typ) · detail se štítky u odstavců ·
+   filtrovaný výpis (štítek + období) napříč zápisy · export do tisku. */
+
+let poView='zapisy';   // 'zapisy' | 'vypis'
+let poOpen=null;       // id otevřeného zápisu (detail), null = seznam
+let poNew=false;       // formulář nového zápisu
+let fSkolka='vse', fTyp='vse';         // filtry seznamu
+let vStitek='hygiena', vObdobi='vse';  // filtry výpisu
+let newZ=null;         // {nazev,typ,skolka,text,stitky:[]}
+
+function renderPorady(){
+  if(poNew)return renderPoForm();
+  if(poOpen)return renderPoDetail();
+  let h=`<div class="switch">`
+    +`<button class="${poView==='zapisy'?'on':''}" onclick="poGo('zapisy')">Zápisy</button>`
+    +`<button class="${poView==='vypis'?'on':''}" onclick="poGo('vypis')">Výpis podle štítku</button></div>`;
+  h+=poView==='vypis'?renderPoVypis():renderPoList();
+  return h;
+}
+
+/* ---- seznam zápisů ---- */
+function renderPoList(){
+  let h=`<button class="addbig no-print" onclick="poNewZ()">+ Nový zápis</button>`;
+  // filtry
+  h+=`<div class="filters no-print">`
+    +chip('fSkolka','vse','Všechny školky',fSkolka)
+    +SKOLKY.map(s=>chip('fSkolka',s.nazev,s.nazev,fSkolka)).join('')
+    +`</div>`;
+  h+=`<div class="filters no-print">`
+    +chip('fTyp','vse','Vše',fTyp)+chip('fTyp','porada','Porady',fTyp)+chip('fTyp','evaluace','Evaluace',fTyp)
+    +`</div>`;
+  const list=ZAPISY.slice().sort((a,b)=>b.dt-a.dt)
+    .filter(z=>(fSkolka==='vse'||z.skolka===fSkolka)&&(fTyp==='vse'||z.typ===fTyp));
+  if(!list.length)h+=`<div class="tile"><div class="ph-d">Žádné zápisy pro zvolený filtr.</div></div>`;
+  list.forEach(z=>{
+    const tags=[...new Set(z.odstavce.flatMap(o=>o.stitky))];
+    h+=`<button class="tile za-item" onclick="poShow('${z.id}')">`
+      +`<div class="ak-top"><span class="por-typ ${z.typ}">${z.typ}</span><span class="za-sk">${z.skolka}</span><span class="ak-date">${z.datum}</span></div>`
+      +`<div class="za-nz">${escTa(z.nazev)}</div>`
+      +`<div class="za-tags">${tags.map(t=>`<span class="stitek">${t}</span>`).join('')}</div>`
+      +`</button>`;
+  });
+  return h;
+}
+
+/* ---- detail zápisu ---- */
+function renderPoDetail(){
+  const z=ZAPISY.find(x=>x.id===poOpen);
+  let h=`<button class="back no-print" onclick="poBack()">‹ Zpět na seznam</button>`;
+  h+=`<div class="tile">`
+    +`<div class="ak-top"><span class="por-typ ${z.typ}">${z.typ}</span><span class="za-sk">${z.skolka}</span><span class="ak-date">${z.datum}</span></div>`
+    +`<div class="za-nz za-nz-lg">${escTa(z.nazev)}</div>`
+    +`<div class="za-ucast">Účastníci: ${z.ucastnici.join(', ')}</div>`;
+  z.odstavce.forEach((o,i)=>{
+    h+=`<div class="odst"><div class="odst-tx">${escTa(o.text)}</div>`
+      +`<div class="pchips odst-chips no-print">`
+      +STITKY.map(t=>`<button class="${o.stitky.indexOf(t)>=0?'on':''}" onclick="poToggleStitek('${z.id}',${i},'${t}')">${t}</button>`).join('')
+      +`</div>`
+      // v tisku se místo přepínačů ukážou jen aktivní štítky
+      +`<div class="za-tags print-only">${o.stitky.map(t=>`<span class="stitek">${t}</span>`).join('')}</div>`
+      +`</div>`;
+  });
+  h+=`<div class="note2 no-print">Štítek u odstavce přidáte/odeberete klepnutím — takto se odstavce zpřístupní filtrovanému výpisu.</div>`;
+  h+=`</div>`;
+  return h;
+}
+
+/* ---- filtrovaný výpis (jádro Flow 5) ---- */
+function renderPoVypis(){
+  const ob=OBDOBI.find(o=>o.k===vObdobi);
+  // posbírej odstavce s vybraným štítkem v období, napříč zápisy
+  const hits=[];
+  ZAPISY.slice().sort((a,b)=>b.dt-a.dt).forEach(z=>{
+    if(z.dt<ob.from||z.dt>ob.to)return;
+    z.odstavce.forEach(o=>{if(o.stitky.indexOf(vStitek)>=0)hits.push({z,o});});
+  });
+  let h=`<div class="filters no-print">`
+    +STITKY.map(t=>chip('vStitek',t,t,vStitek)).join('')+`</div>`;
+  h+=`<div class="filters no-print">`
+    +OBDOBI.map(o=>chip('vObdobi',o.k,o.label,vObdobi)).join('')+`</div>`;
+  // hlavička výpisu (užitečná i na papíře)
+  h+=`<div class="vypis-head"><div class="vh-t">Výpis zápisů — štítek „${vStitek}"</div>`
+    +`<div class="vh-s">${ob.label} · ${hits.length} ${hits.length===1?'odstavec':(hits.length>=2&&hits.length<=4?'odstavce':'odstavců')}</div></div>`;
+  h+=`<button class="btn-s primary no-print" style="margin-bottom:12px" onclick="window.print()">Exportovat výpis (tisk / PDF)</button>`;
+  if(!hits.length){
+    h+=`<div class="tile"><div class="ph-d">Pro tento štítek a období nejsou žádné odstavce.</div></div>`;
+    return h;
+  }
+  hits.forEach(({z,o})=>{
+    h+=`<div class="tile vy-item"><div class="ak-top"><span class="por-typ ${z.typ}">${z.typ}</span><span class="za-sk">${z.skolka}</span><span class="ak-date">${z.datum}</span></div>`
+      +`<div class="vy-nz">${escTa(z.nazev)}</div>`
+      +`<div class="odst-tx">${escTa(o.text)}</div>`
+      +`<div class="za-tags">${o.stitky.map(t=>`<span class="stitek ${t===vStitek?'hi':''}">${t}</span>`).join('')}</div>`
+      +`<button class="vy-link no-print" onclick="poShow('${z.id}')">→ celý zápis</button></div>`;
+  });
+  return h;
+}
+
+/* ---- nový zápis (minimální: titulek + text + štítky) ---- */
+function renderPoForm(){
+  const f=newZ;
+  let h=`<button class="back" onclick="poCancel()">‹ Zpět na seznam</button>`;
+  h+=`<div class="tile">`
+    +`<div class="field"><div class="l">Název zápisu</div><input class="pin" id="nzNazev" value="${esc(f.nazev)}" placeholder="Např. Provozní porada — červen"></div>`;
+  h+=`<div class="field"><div class="l">Typ</div><div class="pchips">`
+    +`<button class="${f.typ==='porada'?'on':''}" onclick="poFType('porada')">Porada</button>`
+    +`<button class="${f.typ==='evaluace'?'on':''}" onclick="poFType('evaluace')">Evaluace</button></div></div>`;
+  h+=`<div class="field"><div class="l">Školka</div><div class="pchips">`
+    +SKOLKY.map(s=>`<button class="${f.skolka===s.nazev?'on':''}" onclick="poFSkolka('${s.nazev}')">${s.nazev}</button>`).join('')+`</div></div>`;
+  h+=`<div class="field"><div class="l">Text</div><textarea class="pta" id="nzText" placeholder="Zápis z porady…">${escTa(f.text)}</textarea></div>`;
+  h+=`<div class="field"><div class="l">Štítky</div><div class="pchips">`
+    +STITKY.map(t=>`<button class="${f.stitky.indexOf(t)>=0?'on':''}" onclick="poFStitek('${t}')">${t}</button>`).join('')+`</div></div>`;
+  const ok=f.nazev.trim()&&f.text.trim();
+  h+=`<div class="mbtns"><button class="btn-ghost" onclick="poCancel()">Zrušit</button>`
+    +(ok?`<button class="btn-primary" onclick="poSave()">Uložit zápis</button>`:`<button class="btn-primary" disabled>Uložit zápis</button>`)+`</div>`;
+  if(!ok)h+=`<div class="note2">Vyplňte název a text zápisu.</div>`;
+  h+=`</div>`;
+  return h;
+}
+
+/* ---- helpery / handlery ---- */
+function chip(varName,val,label,cur){return `<button class="${cur===val?'on':''}" onclick="poFilter('${varName}','${val}')">${label}</button>`;}
+
+window.poGo=v=>{poView=v;render();};
+window.poShow=id=>{poOpen=id;poNew=false;render();};
+window.poBack=()=>{poOpen=null;render();};
+window.poFilter=(v,val)=>{if(v==='fSkolka')fSkolka=val;else if(v==='fTyp')fTyp=val;else if(v==='vStitek')vStitek=val;else if(v==='vObdobi')vObdobi=val;render();};
+
+// přidání/odebrání štítku odstavci v detailu
+window.poToggleStitek=(zid,i,t)=>{const o=ZAPISY.find(z=>z.id===zid).odstavce[i];const k=o.stitky.indexOf(t);if(k>=0)o.stitky.splice(k,1);else o.stitky.push(t);render();};
+
+// nový zápis
+window.poNewZ=()=>{newZ={nazev:'',typ:'porada',skolka:SKOLKY[0].nazev,text:'',stitky:[]};poNew=true;render();};
+function nzSync(){const n=document.getElementById('nzNazev'),t=document.getElementById('nzText');if(newZ){if(n)newZ.nazev=n.value;if(t)newZ.text=t.value;}}
+window.poFType=v=>{nzSync();newZ.typ=v;render();};
+window.poFSkolka=v=>{nzSync();newZ.skolka=v;render();};
+window.poFStitek=t=>{nzSync();const k=newZ.stitky.indexOf(t);if(k>=0)newZ.stitky.splice(k,1);else newZ.stitky.push(t);render();};
+window.poCancel=()=>{poNew=false;newZ=null;render();};
+window.poSave=()=>{nzSync();if(!newZ.nazev.trim()||!newZ.text.trim())return;
+  const d=TODAYD, dt=20260600+d, datum=`${d}. 6. 2026`;
+  ZAPISY.unshift({id:'z'+(zapisUid++),dt,datum,typ:newZ.typ,skolka:newZ.skolka,nazev:newZ.nazev.trim(),ucastnici:['vedení'],odstavce:[{text:newZ.text.trim(),stitky:newZ.stitky.slice()}]});
+  poNew=false;newZ=null;showToast('Zápis uložen');render();};
+</script>
+<script>
 /* CORE: ADMIN — stav, sekce, sidebar, render(), go(), úvodní spuštění.
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
 const SECTIONS=[
@@ -644,7 +874,7 @@ function renderPlaceholder(){
   return `<div class="tile ph-tile"><div class="ph-ic">🌿</div><div class="ph-t">${TITLES[section]}</div>`
     +`<div class="ph-d">Tato sekce se připravuje v další fázi prototypu.</div></div>`;
 }
-const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPlaceholder,platby:renderPlaceholder,nahrady:renderPlaceholder};
+const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlaceholder,nahrady:renderPlaceholder};
 
 function renderSidebar(){
   const el=document.getElementById('sidebar');
@@ -656,7 +886,7 @@ function render(){
   renderSidebar();
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{section=s;if(s!=='aktuality')akView='list';render();};
+window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}render();};
 
 render();
 </script>
