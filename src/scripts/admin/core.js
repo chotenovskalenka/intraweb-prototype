@@ -16,7 +16,7 @@ function renderPlaceholder(){
   return `<div class="tile ph-tile"><div class="ph-ic">🌿</div><div class="ph-t">${TITLES[section]}</div>`
     +`<div class="ph-d">Tato sekce se připravuje v další fázi prototypu.</div></div>`;
 }
-const RENDER={prehled:renderPrehled,aktuality:renderPlaceholder,porady:renderPlaceholder,platby:renderPlaceholder,nahrady:renderPlaceholder};
+const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPlaceholder,platby:renderPlaceholder,nahrady:renderPlaceholder};
 
 function renderSidebar(){
   const el=document.getElementById('sidebar');
@@ -28,6 +28,6 @@ function render(){
   renderSidebar();
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{section=s;render();};
+window.go=s=>{section=s;if(s!=='aktuality')akView='list';render();};
 
 render();

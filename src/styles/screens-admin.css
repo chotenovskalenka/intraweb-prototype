@@ -70,6 +70,35 @@
 .por-typ.porada{color:var(--color-primary);background:rgba(46,94,67,.12)}
 .por-typ.evaluace{color:var(--color-accent);background:rgba(176,125,58,.14)}
 
+/* badge varianty stavů aktuality (základ .bdg z components.css) */
+.bdg.sent{color:var(--color-primary);background:rgba(46,94,67,.12)}
+.bdg.arch{color:var(--color-text-hint);background:rgba(43,42,38,.07)}
+
+/* aktuality — seznam */
+.ak-item{padding:14px 16px}
+.ak-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ak-date{margin-left:auto;font-size:12.5px;color:var(--color-text-muted)}
+.ak-txt{font-size:14.5px;color:var(--color-text);line-height:1.5}
+.ak-empty{color:var(--color-text-hint);font-style:italic}
+.ak-rec{font-size:12.5px;color:var(--color-text-muted);margin-top:9px;line-height:1.45}
+.ak-rlab{color:var(--color-text);font-weight:600}
+.ak-norec{color:var(--color-danger)}
+.ak-acts{display:flex;gap:8px;align-items:center;margin-top:12px}
+.ak-hint,.ak-acts .ak-hint{font-size:12.5px;color:var(--color-text-muted);font-style:italic}
+.btn-s{border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:13px;font-weight:500;color:var(--color-text);padding:8px 16px;border-radius:9px;cursor:pointer}
+.btn-s.primary{background:var(--color-primary);border-color:var(--color-primary);color:#F4EEDF}
+.btn-s:disabled{opacity:.4;cursor:not-allowed}
+
+/* aktuality — formulář */
+.rec-sk{margin-bottom:11px}
+.rec-sk:last-child{margin-bottom:0}
+.rec-nm{font-size:13.5px;font-weight:600;color:var(--color-primary-strong);margin-bottom:6px}
+.rec-fam{font-weight:400;color:var(--color-text-muted);font-size:11.5px}
+.ak-preview{margin-top:4px}
+.ak-preview b{color:var(--color-primary)}
+.ak-warn{font-size:13px;color:var(--color-danger);background:rgba(176,73,47,.08);border:1px solid rgba(176,73,47,.20);border-radius:10px;padding:10px 12px;line-height:1.45}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+
 @media(max-width:720px){
   .caps,.nh-grid{grid-template-columns:1fr}
 }
