@@ -200,6 +200,13 @@ table.wt td.pastc{opacity:.45}
 .gchip{display:flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:999px;padding:5px 13px 5px 5px;font-size:13.5px;font-weight:500}
 .rozh{font-size:13.5px;line-height:1.5;padding:8px 0;border-top:1px solid var(--color-border);color:var(--color-text)}.rozh:first-of-type{border-top:none}
 .rozhd{font-size:11.5px;color:var(--color-primary);font-weight:600;margin-bottom:2px}
+/* Přehled (dashboard) */
+.prehl-abs{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
+.prehl-abs .pa-nm{font-size:14px;font-weight:500;color:var(--color-text)}
+.prehl-abs .pa-r{margin-left:auto;font-size:12px;color:var(--color-danger);text-align:right;max-width:52%;line-height:1.35}
+.prehl-tema{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
+.prehl-tema .pa-arr{color:var(--color-primary)}
+.prehl-tema .pa-cap{font-size:12px;color:var(--color-text-muted);margin-top:9px}
 </style>
 </head>
 <body>
@@ -207,7 +214,7 @@ table.wt td.pastc{opacity:.45}
   <div class="scrim" id="scrim" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer"></div>
   <div class="scroll">
-    <div class="topbar"><button class="burger" onclick="openDrawer()">☰</button><span class="ttl" id="ttl">Docházka</span><span class="role">Průvodce</span></div>
+    <div class="topbar"><button class="burger" onclick="openDrawer()">☰</button><span class="ttl" id="ttl">Přehled</span><span class="role">Průvodce</span></div>
     <div id="content"></div>
   </div>
 </div></div>
@@ -259,6 +266,12 @@ const data=raw.map(([n,sur,plan,spi],i)=>({n,sur,plan,spi,status:'pritomen',note
 data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='OM'; data[1].att[18]='OM'; data[20].att[12]='';
 data[10].note='Od pondělí má vši, prosím o kontrolu hlavičky. Doma jsme to řešili, ale pro jistotu hlídejte.';
 data[3].note='Eliška je po nemoci, prosíme dnes klidnější režim a hlídat pití.';
+// dnes nepřítomné děti — 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená
+data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc'};
+data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody'};
+data[20].status='neomluveno';
+// zobrazení propsané omluvenky (jen text; žádná logika ani sdílení dat mezi appkami)
+function parentExcuseLine(c){return c.parentExcuse?`omluveno rodičem dnes ${c.parentExcuse.time} · ${c.parentExcuse.reason}`:'';}
 data.forEach((c,i)=>{const dd=((i*7)%27)+1,mm=((i*5)%12)+1,yy=c.predskolak?2020:2021;c.nar=`${dd}. ${mm}. ${yy}`;c.vek=2026-yy;});
 function recordsFor(c){const r=[['Vstupní depistáž','9/2025'],['Čtvrtletní hodnocení','1/2026'],['Pozorování v lese','3/2026']];if(c.predskolak)r.push(['Posouzení školní zralosti','4/2026']);return r;}
 function parentsFor(c){const base=c.n.normalize('NFD').replace(/[^a-zA-Z]/g,'').toLowerCase();return [
@@ -303,7 +316,8 @@ let AKCE=[
 const PREDEF=['Výlet','Výjezd předškoláků','Slavnost','Brigáda','Horolezení','Beseda','Divadlo','Narozeniny','Škola v přírodě'];
 const _basen='Uvijeme věneček ze všech našich kytiček. Kvítek, lístek i větvičku, uvijeme do věnečku. Jaké jméno máš? Tak pojď mezi nás.';
 const _pisen='Šel zahradník do zahrady s motykou, s motykou. Vykopal tam rozmarýnu velikou, velikou. Nebyla to rozmarýna, byl to křen, byl to křen. Vyhodil ho zahradníček z okna ven, z okna ven.';
-let TEMA={hodnota:'nadšení',file:'',tydny:[{b:'',byt:'',p:'',yt:''},{b:_basen,byt:'',p:_pisen,yt:'https://www.youtube.com/results?search_query=Šel+zahradník+do+zahrady'},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''}]};
+// 1. týden (aktuální dle TODAYD) má vyplněnou básničku i písničku, ať dashboard není při demu prázdný
+let TEMA={hodnota:'nadšení',file:'',tydny:[{b:_basen,byt:'',p:_pisen,yt:'https://www.youtube.com/results?search_query=Šel+zahradník+do+zahrady'},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''}]};
 const TEMA_KVETEN={hodnota:'péče',tydny:[
   {b:'Vyšlo slunce nad lesem, hřeje nás i pod nosem.',byt:'',p:'Travička zelená, to je moje potěšení…',yt:'https://www.youtube.com/results?search_query=Travička+zelená'},
   {b:'Prší, prší, jen se leje…',byt:'',p:'Prší, prší, jen se leje',yt:''},
@@ -340,6 +354,66 @@ function presentCount(d){return data.filter(c=>{const k=getCode(c,d);return k&&k
 
 function dayLbl(a){return (a.dayEnd&&a.dayEnd!==a.day)?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`;}
 const serving=d=>d&&!d.off;
+</script>
+<script>
+/* SCREEN: PRUVODCE_PREHLED — dashboard: dnešek jedním pohledem, jedním klikem do docházky */
+function renderPrehled(){
+  const c=counts();
+  // hlavička: dnešní datum + kdo slouží/otevírá (odvozeno z GUIDESHIFT jako sekce Průvodci)
+  const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
+  const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
+  const servingTxt=todays.length?todays.map(x=>`${x.g.n}${opener&&x.i===opener.i?' <b style="color:var(--color-primary)">otevírá</b>':''}`).join(' · '):'nikdo nemá službu';
+  let h=`<div class="tile"><div class="tlab" style="margin-bottom:4px">${DOW[wd(TODAYD)]} ${TODAYD}. června 2026 · dnes</div><div class="tval" style="font-size:13.5px">Slouží: ${servingTxt}</div></div>`;
+
+  // 1) počty dětí dnes — odvozené z counts() (stejný zdroj jako docházka)
+  const strip=[['Přítomno',c.pres,'rano'],['Obědy',c.pres,'rano'],['Spí',c.spi,'spi'],['Po obědě',c.poobede,'poobede'],['Nepřítomní',c.neprit,'neprit']];
+  h+=`<div class="tabs">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`;
+
+  // 2) rychlý vstup do docházky
+  h+=`<button class="addbig" style="margin-top:11px" onclick="go('dochazka')">Otevřít dnešní docházku →</button>`;
+
+  // 3) kdo dnes nepřijde — jmenovitě, s důvodem (u rodičovské omluvenky čas + důvod)
+  const absent=data.map((c,i)=>({c,i})).filter(x=>x.c.status!=='pritomen');
+  h+=`<div class="tile"><div class="tlab">Kdo dnes nepřijde</div>`;
+  if(absent.length){
+    absent.forEach(({c})=>{
+      const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno':'neomluveno');
+      h+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${full(c)}</span><span class="pa-r">${r}</span></button>`;
+    });
+  }else{
+    h+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
+  }
+  h+=`</div>`;
+
+  // 4) básnička a písnička aktuálního týdne (odvozeno z TODAYD; 3. 6. = 1. týden)
+  const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
+  h+=`<button class="tile prehl-tema" onclick="go('plan')"><div class="tlab" style="margin:0">Básnička a písnička týdne <span class="pa-arr">›</span></div>`;
+  if(wk&&(wk.b||wk.p)){
+    if(wk.b)h+=`<div class="pa-cap">Básnička</div><div class="tval">${wk.b}</div>`;
+    if(wk.p)h+=`<div class="pa-cap" style="margin-top:8px">Písnička</div><div class="tval">${wk.p}</div>`;
+  }else{
+    h+=`<div class="empty" style="padding:6px 0 0;text-align:left;font-style:normal">Pro tento týden zatím nevyplněno — otevřít tématický plán ›</div>`;
+  }
+  h+=`</button>`;
+
+  // 5) zdravotní / provozní poznámky (děti s poznámkou od rodičů)
+  const notes=data.filter(c=>c.note);
+  if(notes.length){
+    h+=`<div class="tile"><div class="tlab">Zdravotní a provozní poznámky</div>`;
+    notes.forEach(c=>{h+=`<div class="rnote" style="margin:6px 0 0">✉️ <b>${c.n}:</b> ${c.note}</div>`;});
+    h+=`</div>`;
+  }
+
+  // 6) dnešní akce (pokud na dnešek nějaká je) — proklik na detail
+  const akToday=[...AKCE].filter(a=>a.day<=TODAYD&&(a.dayEnd?a.dayEnd>=TODAYD:a.day===TODAYD)).sort((a,b)=>a.day-b.day);
+  if(akToday.length){
+    h+=`<div class="tile"><div class="tlab">Dnešní akce</div>`;
+    akToday.forEach(a=>{const m=[a.time,a.place].filter(Boolean).join(' · ');h+=`<button class="acard" style="margin:6px 0 0" onclick="openAkceDetail('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;});
+    h+=`</div>`;
+  }
+  return h;
+}
+window.goDochTab=k=>{tab=k;view='den';denDay=TODAYD;open=-1;query='';go('dochazka');};
 </script>
 <script>
 /* SCREEN: PRUVODCE_DOCHAZKA */
@@ -380,6 +454,7 @@ function editPanel(c,i){
   const seg=(arr,cur,fn)=>arr.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="${fn}(${i},'${o[0]}')">${o[1]}</button>`).join('');
   let h=`<div class="field"><div class="l">Docházka</div><div class="mini">${seg([['dopolední','Dopol.'],['odpolední','Odpol.'],['celodenní','Celodenní']],c.plan,'setPlan')}</div></div>`;
   h+=`<div class="field"><div class="l">Stav</div><div class="mini warn">${seg([['pritomen','Přítomen'],['omluveno','Omluveno'],['neomluveno','Neomluveno']],c.status,'setStatus')}</div></div>`;
+  if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}</div></div>`;
   if(c.note)h+=`<div class="field"><div class="l">Poznámka od rodiče</div><div class="pnote">${c.note}</div></div>`;
   if(staysPM(c))h+=`<div class="field"><div class="l">Odpoledne</div><div class="mini">${seg([[true,'Spí'],[false,'Nespí']],c.spi,'setSpi')}</div></div>`;
   return h;
@@ -773,6 +848,7 @@ window.setCell=code=>{data[cellM.ci].att[cellM.d]=code;cellM=null;renderModalRoo
 <script>
 /* CORE: PRUVODCE — stav, sekce, drawer, render(), go(), úvodní spuštění */
 const SECTIONS=[
+  ['prehled','Přehled','⌂'],
   ['dochazka','Docházka','✓'],
   ['plan','Plán & program','✎'],
   ['pruvodci','Docházka průvodců','◷'],
@@ -783,12 +859,12 @@ const SECTIONS=[
 ];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 
-let section='dochazka', drawerOpen=false, wquery='';
+let section='prehled', drawerOpen=false, wquery='';
 let view='den', open=-1, query='', tab='rano';
 let rytOpen=-1, modal=null, shiftM=null;
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={dochazka:renderDochazka,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
+const RENDER={prehled:renderPrehled,dochazka:renderDochazka,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
