@@ -148,7 +148,6 @@ Spectral, Zilla Slab (nadpisy); `Shadows Into Light Two`, `Itim` (podpis Vhaaji 
 Škála (jednotná pro všechny 4 školky): h1 26/30, h2 20/26, h3 18/24,
 body 15/23, label 13/18, hint 12/16 (px/px). Ladí se ve 4.2.
 
-> **Stav:** barvy schváleny; nadpisy Bricolage Grotesque vybrány; tělo Inter (zkouší se
-> místo Nunito Sans) — čeká na finální potvrzení Inter vs Nunito (V2). Po potvrzení se
-> hodnoty přenesou do `tokens.css` ve fázi 4.2. Skiny sesterských školek mění **jen
-> barevnost**; typografie je společná (BRIEF kap. 10).
+> **Stav: V2 schváleno.** Barvy ✅, nadpisy Bricolage Grotesque ✅, tělo/UI Inter ✅, směr UI
+> whitespace + barva (sweet spot) ✅. Fáze 4.1 uzavřena. Hodnoty se přenesou do `tokens.css`
+> ve fázi 4.2. Skiny sesterských školek mění **jen barevnost**; typografie je společná (BRIEF kap. 10).

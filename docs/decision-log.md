@@ -382,3 +382,15 @@ Designérka: „3 (whitespace) je super, akorát bych použila víc barvy (sweet
 (nesou význam; AA ≥4.5 ověřeno), kategorie-chipy v tintech, barevné tečky/tagy u programu, jeden
 tónovaný highlight, tenká progress lišta. **Toto je schválený směr UI pro V2.** Principy zapsány
 do `design-system.md` („Směr UI komponent — vybráno"). Sekce 4–6 ponechány jako doklad cesty.
+
+#### V2 kompletní — fáze 4.1 uzavřena (2026-07-17)
+
+Designérka potvrdila **tělo/UI = Inter**. Tím je vstup **V2 schválen v plném rozsahu**:
+
+- **Barvy** — paleta odvozená z vhaaji.cz (viz mapování tokenů výše).
+- **Typografie** — nadpisy **Bricolage Grotesque**, tělo/UI **Inter** (univerzální pro všechny 4 školky).
+- **Směr UI** — whitespace + barva jako akcent (sweet spot, náhled sekce 7).
+
+Náhled i `design-system.md` označeny jako V2-schváleno. **Fáze 4.1 (analyticko-návrhová) je hotová**;
+tokeny se zatím do prototypu nepřepínaly (dle zadání). Následuje **fáze 4.2** — přenos palety, fontů
+(Google Fonts `<link>`) a UI směru do `tokens.css` + nasazení na reálné obrazovky — spustí se samostatně.
