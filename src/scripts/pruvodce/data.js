@@ -22,6 +22,12 @@ const data=raw.map(([n,sur,plan,spi],i)=>({n,sur,plan,spi,status:'pritomen',note
 data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='OM'; data[1].att[18]='OM'; data[20].att[12]='';
 data[10].note='Od pondělí má vši, prosím o kontrolu hlavičky. Doma jsme to řešili, ale pro jistotu hlídejte.';
 data[3].note='Eliška je po nemoci, prosíme dnes klidnější režim a hlídat pití.';
+// dnes nepřítomné děti — 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená
+data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc'};
+data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody'};
+data[20].status='neomluveno';
+// zobrazení propsané omluvenky (jen text; žádná logika ani sdílení dat mezi appkami)
+function parentExcuseLine(c){return c.parentExcuse?`omluveno rodičem dnes ${c.parentExcuse.time} · ${c.parentExcuse.reason}`:'';}
 data.forEach((c,i)=>{const dd=((i*7)%27)+1,mm=((i*5)%12)+1,yy=c.predskolak?2020:2021;c.nar=`${dd}. ${mm}. ${yy}`;c.vek=2026-yy;});
 function recordsFor(c){const r=[['Vstupní depistáž','9/2025'],['Čtvrtletní hodnocení','1/2026'],['Pozorování v lese','3/2026']];if(c.predskolak)r.push(['Posouzení školní zralosti','4/2026']);return r;}
 function parentsFor(c){const base=c.n.normalize('NFD').replace(/[^a-zA-Z]/g,'').toLowerCase();return [
@@ -66,7 +72,8 @@ let AKCE=[
 const PREDEF=['Výlet','Výjezd předškoláků','Slavnost','Brigáda','Horolezení','Beseda','Divadlo','Narozeniny','Škola v přírodě'];
 const _basen='Uvijeme věneček ze všech našich kytiček. Kvítek, lístek i větvičku, uvijeme do věnečku. Jaké jméno máš? Tak pojď mezi nás.';
 const _pisen='Šel zahradník do zahrady s motykou, s motykou. Vykopal tam rozmarýnu velikou, velikou. Nebyla to rozmarýna, byl to křen, byl to křen. Vyhodil ho zahradníček z okna ven, z okna ven.';
-let TEMA={hodnota:'nadšení',file:'',tydny:[{b:'',byt:'',p:'',yt:''},{b:_basen,byt:'',p:_pisen,yt:'https://www.youtube.com/results?search_query=Šel+zahradník+do+zahrady'},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''}]};
+// 1. týden (aktuální dle TODAYD) má vyplněnou básničku i písničku, ať dashboard není při demu prázdný
+let TEMA={hodnota:'nadšení',file:'',tydny:[{b:_basen,byt:'',p:_pisen,yt:'https://www.youtube.com/results?search_query=Šel+zahradník+do+zahrady'},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''}]};
 const TEMA_KVETEN={hodnota:'péče',tydny:[
   {b:'Vyšlo slunce nad lesem, hřeje nás i pod nosem.',byt:'',p:'Travička zelená, to je moje potěšení…',yt:'https://www.youtube.com/results?search_query=Travička+zelená'},
   {b:'Prší, prší, jen se leje…',byt:'',p:'Prší, prší, jen se leje',yt:''},
