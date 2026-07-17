@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administrativa (prototyp)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/layout-admin.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/screens-admin.css">
+</head>
+<body>
+<div class="admin">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <div class="topbar-a"><span class="ttl-a" id="ttl">Přehled</span><span class="role-a">Vedení</span></div>
+    <div class="content-wrap"><div id="content"></div></div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="scripts/shared.js"></script>
+<script src="scripts/admin/data.js"></script>
+<script src="scripts/admin/screens/prehled.js"></script>
+<script src="scripts/admin/core.js"></script>
+</body>
+</html>

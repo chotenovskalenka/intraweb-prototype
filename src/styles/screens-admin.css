@@ -1,0 +1,75 @@
+/* SCREENS: ADMIN — obrazovkové styly (dashboard vedení). Skládá z existujících komponent
+   (.tile, .tlab, .bdg, .note2); nové jen tam, kde není co znovupoužít. */
+
+.dash-head{font-size:13px;color:var(--color-text-muted);margin:0 2px 14px}
+
+/* placeholder pro sekce mimo 3.1 */
+.ph-tile{text-align:center;padding:40px 20px}
+.ph-ic{font-size:34px;margin-bottom:10px}
+.ph-t{font-family:var(--font-serif);font-size:19px;color:var(--color-primary-strong);margin-bottom:4px}
+.ph-d{font-size:13.5px;color:var(--color-text-muted)}
+
+/* (a) kapacity */
+.caps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cap-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.cap-nm{font-family:var(--font-serif);font-size:15.5px;color:var(--color-primary-strong)}
+.cap-n{font-size:13px;color:var(--color-text-muted);font-weight:600}
+.cap-n.is-full{color:var(--color-accent)}
+.cap-bar{height:8px;background:var(--color-surface-2);border-radius:999px;overflow:hidden}
+.cap-fill{display:block;height:100%;background:var(--color-primary);border-radius:999px}
+.cap-fill.is-full{background:var(--color-accent)}
+.cap-sub{font-size:11.5px;color:var(--color-text-muted);margin-top:6px;line-height:1.4}
+
+/* (b) platby */
+.pay-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--color-border)}
+.pay-row:first-of-type{border-top:none}
+.pay-main{flex:1;min-width:0}
+.pay-nm{font-size:14px;font-weight:600;color:var(--color-text)}
+.pay-sk{font-weight:400;color:var(--color-text-muted)}
+.pay-sub{font-size:12px;color:var(--color-text-muted);margin-top:2px}
+.pay-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.pay-amt{font-family:var(--font-serif);font-size:15px;color:var(--color-primary-strong)}
+
+/* badge varianty stavů platby (základ .bdg + .al v components.css) */
+.bdg.ne{color:var(--color-danger);background:rgba(176,73,47,.12)}
+.bdg.part{color:var(--color-accent);background:rgba(176,125,58,.14)}
+.bdg.wait{color:var(--color-info);background:rgba(91,124,153,.14)}
+
+/* (c) upozornění */
+.al-row{display:flex;gap:9px;align-items:flex-start;padding:7px 0;font-size:13.5px;color:var(--color-text);line-height:1.45}
+.al-ic{flex-shrink:0;width:18px;text-align:center}
+.al-sk{color:var(--color-text-muted)}
+.al-data .al-ic{color:var(--color-accent)}
+.al-provoz .al-ic{color:var(--color-info)}
+.al-system .al-ic{color:var(--color-success)}
+
+/* (d) náhrady souhrn + (f) proklikové dlaždice */
+.dash-link{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
+.dl-arr{float:right;color:var(--color-primary);font-weight:600}
+.nh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.nh-cell{text-align:center;background:var(--color-surface-2);border-radius:12px;padding:12px 6px}
+.nh-num{font-family:var(--font-serif);font-weight:600;font-size:26px;color:var(--color-primary-strong);line-height:1}
+.nh-num.warn{color:var(--color-accent)}
+.nh-lab{font-size:11.5px;color:var(--color-text-muted);margin-top:5px}
+
+/* (e) úkoly */
+.tl-count{float:right;color:var(--color-text-muted);font-weight:600;letter-spacing:0;text-transform:none}
+.task{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;cursor:pointer;font-family:var(--font-sans);font-size:14px;color:var(--color-text)}
+.task:first-of-type{border-top:none}
+.task-box{flex-shrink:0;width:22px;height:22px;border-radius:6px;border:1.5px solid var(--color-border-strong);background:var(--color-surface-2);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.task.done .task-box{background:var(--color-primary);border-color:var(--color-primary)}
+.task.done .task-t{color:var(--color-text-hint);text-decoration:line-through}
+
+/* (f) porady řádky */
+.por-row{display:flex;align-items:baseline;gap:11px;padding:8px 0;border-top:1px solid var(--color-border)}
+.por-row:first-of-type{border-top:none}
+.por-d{font-size:12.5px;color:var(--color-text-muted);min-width:74px;flex-shrink:0}
+.por-t{flex:1;font-size:14px;color:var(--color-text)}
+.por-sk{color:var(--color-text-muted)}
+.por-typ{font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px;flex-shrink:0}
+.por-typ.porada{color:var(--color-primary);background:rgba(46,94,67,.12)}
+.por-typ.evaluace{color:var(--color-accent);background:rgba(176,125,58,.14)}
+
+@media(max-width:720px){
+  .caps,.nh-grid{grid-template-columns:1fr}
+}
