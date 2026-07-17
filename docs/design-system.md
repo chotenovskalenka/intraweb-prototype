@@ -84,27 +84,29 @@ Odmítnuto jako systémový font: Shadows Into Light Two, Itim (podpis Vhaaji / 
 Neformální, lidský, přírodní. Rukodělná estetika (linoryt, akvarel, psané písmo)
 napříč. Žádné ostré geometrické tvary ani korporátní čistota.
 
-### Směr UI komponent — z designérčiných referencí (Donezo aj.)
+### Směr UI komponent — vybráno: whitespace + barva (sweet spot)
 
-Designérka dodala 6 referenčních dashboardů a zvolila směr **„Donezo + víc barvy a hravosti"**
-(bohatý dashboard jazyk + barevné dlaždice, ale **bez dětských ilustrací**). Odvozené UI
-vzory (demonstrované v sekci 4 náhledu, **jen barvy ze schválené palety**):
+Cesta k rozhodnutí (viz decision-log): designérka dodala 6 referenčních dashboardů; postupně jsme
+vyzkoušeli tři varianty v náhledu — **4** jemné tinty (Donezo), **5** plné barevné bloky (kwikword),
+**6** whitespace/klid. Zvolila **whitespace** jako kostru + **víc barvy** → finální **sekce 7 „sweet spot"**.
 
-- **Stat dlaždice** — velké číslo (Bricolage) + label + malý trend; jedna zvýrazněná
-  **gradientní „hero" dlaždice** (zelený gradient primary→primary-strong, světlý text).
-- **Gradientní/blobová hero karta** — pozdrav/přehled se soft „bloby" (rozostřené kruhy
-  v tintech palety), jako parenting-app reference.
-- **Barevné kategorie** — zaoblené dlaždice v měkkých tintech: green `#E3EDE7`, rose
-  `#F1E1DC`, ochre `#F1EAD2`, blue `#DEE7EA` (odvozené z primary / accent-soft / accent / info).
-  Dávají „hravost" bez odklonu od palety.
-- **Grafy** — sloupce: aktivní plné (primary / primary-strong), neaktivní/budoucí **šrafované**
-  (repeating-linear-gradient); **progress prstenec** (conic-gradient, velké % uprostřed) + legenda s tečkami.
-- **Seznamy** — řádek: barevný icon-chip (tint) + název + podtitul + stavová pilulka vpravo.
-- **Měkkost** — velký radius (18–20px), vzduch, jemné bordery/stíny.
+**Principy finálního směru** (vše barvou ze schválené palety, bez dětských ilustrací):
 
-Ikony jsou zatím unicode glyfy (placeholder) — o ikonografii rozhodne designérka (4.6),
-případné ikony inline SVG. Detailní tokenizace komponent (radiusy, stíny, tint tokeny)
-proběhne ve 4.2/4.3; tady jde o schválený vizuální **směr**, ne finální CSS.
+- **Whitespace first** — velký prostor, hodně paddingu (karta ~48–52px), velký radius (24px);
+  skupiny odděluje **prostor a vlasové linky** (`--color-border`), ne rámečky/boxy. Minimum stínů.
+- **Barva jako akcent, ne plocha:**
+  - **Barevná fokální čísla** — KPI čísla nesou i význam: děti=primary, omluveno=rose-ink `#7A4B41`,
+    náhrady=accent-ink `#6F5F1C`, po splatnosti=danger. (AA ≥4.5 na surface ověřeno.)
+  - **Kategorie-chipy** — světlé tinty (green `#E3EDE7`, rose `#F1E1DC`, ochre `#F1EAD2`, blue `#DEE7EA`)
+    s malým icon-chipem; vzdušné, ne plné dlaždice.
+  - **Barevné tečky + tagy** u řádků programu (primary / accent / info).
+  - **Jeden tónovaný highlight** (např. připomínka) jako jediný větší barevný moment.
+- **Typografie** — velké klidné nadpisy Bricolage, data Inter.
+- **Progress** — tenká lišta (ne těžký prstenec) s velkým % vedle.
+
+Zamítnuté varianty ponechány v náhledu (sekce 4–6) jako doklad cesty. Ikony jsou zatím unicode
+glyfy (placeholder) — o ikonografii rozhodne designérka (4.6), případné ikony inline SVG. Detailní
+tokenizace (radiusy, stíny, tint tokeny) proběhne ve 4.2/4.3; tady je schválený vizuální **směr**.
 
 ---
 

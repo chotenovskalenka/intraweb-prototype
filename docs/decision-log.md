@@ -374,3 +374,11 @@ Poznatek: whitespace **nejlíp sedí tlumené zemité paletě** — barvy nemus�
 působí klidně/prémiově; zároveň řeší spor „moc barevné × moc dětské". Zatím **doporučená báze**
 (potvrdí designérka). Tři varianty v náhledu k volbě: **4** tinty · **5** plné bloky · **6** whitespace.
 Lze i kombinovat (whitespace layout + akcentní tinty z 4).
+
+#### VYBRÁNO: sweet spot — whitespace + barva (2026-07-17)
+
+Designérka: „3 (whitespace) je super, akorát bych použila víc barvy (sweet spot)." → finální
+**sekce 7** v náhledu: vzdušná kostra ze sekce 6 + barva jako akcent — barevná fokální čísla
+(nesou význam; AA ≥4.5 ověřeno), kategorie-chipy v tintech, barevné tečky/tagy u programu, jeden
+tónovaný highlight, tenká progress lišta. **Toto je schválený směr UI pro V2.** Principy zapsány
+do `design-system.md` („Směr UI komponent — vybráno"). Sekce 4–6 ponechány jako doklad cesty.
