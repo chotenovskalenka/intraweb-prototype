@@ -408,7 +408,8 @@ const SKOLKY=[
 const obsazeno=s=>s.tridy.reduce((n,t)=>n+t.obs,0);
 
 /* Stavy platby (BRIEF kap. 4). Fakturační modul se nedělá — dashboard jen přehled
-   „řeší se mimo appku". Eliška Dvořáková: Březen 2026, 5987 Kč (7983 − 1996 sleva) = shoda s rodic/data.js. */
+   „řeší se mimo appku". Částky dle reálných příruček 2024/25: Vhaaji odpolední docházka
+   10 584 Kč (Eliška = shoda s rodic/data.js), Maata 3× týdně do 15:00 = 11 813 Kč. */
 const PLATBASTAVY={
   'po-splatnosti':{lab:'Po splatnosti',cls:'al'},
   'neuhrazeno':{lab:'Neuhrazeno',cls:'ne'},
@@ -416,10 +417,10 @@ const PLATBASTAVY={
   'ceka':{lab:'Čeká na spárování',cls:'wait'},
 };
 const PLATBY=[
-  {dite:'Eliška Dvořáková',skolka:'Vhaaji',obdobi:'Školné · Březen 2026',castka:5987,stav:'po-splatnosti',poDnu:80},
-  {dite:'Kuba Svoboda',skolka:'Vhaaji',obdobi:'Školné · Květen 2026',castka:5987,stav:'neuhrazeno',poDnu:19},
+  {dite:'Eliška Dvořáková',skolka:'Vhaaji',obdobi:'Školné · Březen 2026',castka:10584,stav:'po-splatnosti',poDnu:80},
+  {dite:'Kuba Svoboda',skolka:'Vhaaji',obdobi:'Školné · Květen 2026',castka:10584,stav:'neuhrazeno',poDnu:19},
   {dite:'Tomáš Beran',skolka:'Jaata',obdobi:'Školné · Květen 2026',castka:8200,stav:'castecne',uhrazeno:4000,poDnu:19},
-  {dite:'Ela Marešová',skolka:'Maata',obdobi:'Školné · Duben 2026',castka:7500,stav:'ceka',poDnu:0},
+  {dite:'Ela Marešová',skolka:'Maata',obdobi:'Školné · Duben 2026',castka:11813,stav:'ceka',poDnu:0},
 ];
 
 /* Systémová upozornění vč. chybějících / nevyplněných dat. */
