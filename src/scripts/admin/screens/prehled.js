@@ -42,7 +42,7 @@ function renderPrehled(){
   h+=`<button class="tile dash-link" onclick="go('nahrady')"><div class="tlab" style="margin:0">Náhrady <span class="dl-arr">›</span></div>`
     +`<div class="nh-grid">`
     +`<div class="nh-cell"><div class="nh-num">${NAHRADY_SUM.dostupne}</div><div class="nh-lab">dostupných</div></div>`
-    +`<div class="nh-cell"><div class="nh-num warn">${NAHRADY_SUM.expiruje30}</div><div class="nh-lab">expiruje do 30 dní</div></div>`
+    +`<div class="nh-cell"><div class="nh-num warn">${NAHRADY_SUM.expiruje}</div><div class="nh-lab">propadne 30. 6. (konec šk. roku)</div></div>`
     +`<div class="nh-cell"><div class="nh-num">${NAHRADY_SUM.naplanovane}</div><div class="nh-lab">naplánovaných</div></div>`
     +`</div></button>`;
 
