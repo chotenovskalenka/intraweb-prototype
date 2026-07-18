@@ -38,10 +38,10 @@
   --tint-blue:#DEE7EA;
   /* Stavová paleta — jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
      Každý stav má -ink (text) a -bg (světlá výplň). */
-  --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.13);
-  --state-info-ink:var(--color-info);        --state-info-bg:rgba(73,109,126,.15);
+  --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.11);
+  --state-info-ink:var(--color-info);        --state-info-bg:rgba(73,109,126,.10);
   --state-warn-ink:var(--color-accent-ink);  --state-warn-bg:rgba(200,188,133,.22);
-  --state-danger-ink:var(--color-danger);    --state-danger-bg:rgba(176,73,47,.12);
+  --state-danger-ink:var(--color-danger);    --state-danger-bg:rgba(176,73,47,.08);
   --state-neutral-ink:var(--color-text-muted);--state-neutral-bg:rgba(92,101,96,.14);
   --state-muted-ink:var(--color-text-hint);  --state-muted-bg:rgba(31,42,46,.07);
   --state-brand-ink:var(--color-primary);    --state-brand-bg:rgba(43,112,89,.12);
@@ -103,16 +103,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
     flex:none;height:100vh;border-radius:0;box-shadow:none;border-right:1px solid var(--color-border);z-index:1;padding:24px 0 16px}
   .scrim{display:none!important}
   .burger{display:none}
-  .scroll{flex:1;min-width:0;max-width:1200px;margin:0 auto;padding:26px 32px 48px}
+  .scroll{flex:1;min-width:0;max-width:1060px;margin:0 auto;padding:26px 36px 48px}
   .topbar{margin-bottom:20px}
-  /* obsah do sloupců podle šířky (≈2 sloupce od 900px, 3 od ~1300px) */
-  #content{column-width:340px;column-gap:20px}
-  #content > *{break-inside:avoid;margin-bottom:16px}
+  /* obsah do dvou vyvážených sloupců (fokus, ne rozsyp) */
+  #content{column-count:2;column-gap:24px}
+  #content > *{break-inside:avoid;margin-bottom:20px}
+  /* karty na desktopu dostanou jemný stín pro definici (na krémovém pozadí jinak splývají) */
+  #content > .tile,#content > .newsitem,#content > .newsbox{box-shadow:0 1px 3px rgba(31,42,46,.06)}
   /* prvky přes celou šířku (přehledové hlavičky, akce, sekce, seznamy docházky) */
   #content > .hero,#content > .daybar,#content > .daypicker,#content > .omluvbtn,#content > .vhead,
   #content > .switch,#content > .mini,#content > .bulktoggle,#content > .hint,#content > .note2,
   #content > .sectip,#content > .selinfo,#content > .choices,#content > .wkrow,#content > .legend,
-  #content > .stepper,#content > .filters,#content > .back,#content > .temanav{column-span:all;margin-bottom:12px}
+  #content > .stepper,#content > .filters,#content > .back,#content > .temanav,
+  /* široké seznamy/tabulky (docházka apod.) — jeden sloupec, ne masonry rozdělení */
+  #content > .search,#content > .weekbox,#content > .rosterbox,#content > .ctxhead,#content > .tabs{column-span:all;margin-bottom:12px}
 }
 </style>
 <style>
@@ -133,9 +137,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .tab{flex:0 0 auto;min-width:76px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:13px 15px 11px;text-align:center;cursor:pointer}
 .modes{display:flex;gap:6px;margin-bottom:10px}
 .modes button{flex:1;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:12.5px;font-weight:500;color:var(--color-text-muted);padding:11px 4px;border-radius:10px;cursor:pointer}
-.modes button.on{background:var(--color-accent);border-color:var(--color-accent);color:#F9F7F1}
-.c-N{background:rgba(176,73,47,.14);color:var(--color-danger)}
-.rnote{margin:0 8px 8px;padding:9px 11px;background:rgba(176,73,47,.10);border-radius:9px;font-size:12.5px;color:var(--color-danger);line-height:1.45;font-weight:500}
+.modes button.on{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-text)}
+.c-N{background:rgba(176,73,47,.08);color:var(--color-danger)}
+.rnote{margin:0 8px 8px;padding:9px 11px;background:rgba(176,73,47,.08);border-radius:9px;font-size:12.5px;color:var(--color-danger);line-height:1.45;font-weight:500}
 .ghostred{background:transparent;border:1px solid var(--color-danger);color:var(--color-danger)}
 .clink{color:var(--color-primary);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .tab .num{font-family:var(--font-serif);font-weight:600;font-size:28px;line-height:1;color:var(--color-primary-strong)}
@@ -156,10 +160,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .chk.on{background:var(--color-primary);border-color:var(--color-primary)}
 .rmain .nm{font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:60px}
 .rmain .ind{margin-left:auto;font-size:11.5px;color:var(--color-text-muted);flex-shrink:0;white-space:nowrap}
-.ind.sleep{color:var(--color-info)}.ind.awake{color:var(--color-accent)}.ind.off{color:var(--color-danger)}
+.ind.sleep{color:var(--color-info)}.ind.awake{color:var(--color-accent-ink)}.ind.off{color:var(--color-danger)}
 .pill{font-size:10px;font-weight:500;padding:2px 6px;border-radius:6px;flex-shrink:0}
-.p-cel{background:rgba(43,112,89,.10);color:var(--color-primary)}.p-odp{background:rgba(78,116,136,.13);color:#4E7488}
-.p-dop{background:rgba(200,188,133,.13);color:var(--color-accent)}.p-note{background:rgba(176,73,47,.10);color:var(--color-danger)}
+.p-cel{background:rgba(43,112,89,.10);color:var(--color-primary)}.p-odp{background:rgba(73,109,126,.10);color:var(--color-info)}
+.p-dop{background:rgba(200,188,133,.13);color:var(--color-accent-ink)}.p-note{background:rgba(176,73,47,.08);color:var(--color-danger)}
 .row.absent .nm{color:var(--color-text-hint);text-decoration:line-through}
 .edit{border-top:1px solid var(--color-border);padding:11px 11px 12px;background:var(--color-surface-2)}
 .field{margin-bottom:9px}.field .l{font-size:11px;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
@@ -187,8 +191,8 @@ table.wt tbody tr{border-bottom:1px solid var(--color-border)}
 table.wt th.today,table.wt td.today{background:rgba(43,112,89,.06)}
 table.wt thead th.today{color:var(--color-primary);background:rgba(43,112,89,.12)}
 .wc{display:inline-block;width:24px;height:24px;line-height:24px;border-radius:6px;font-size:11px;font-weight:600}
-.c-C{background:rgba(43,112,89,.16);color:var(--color-primary)}.c-D{background:rgba(200,188,133,.20);color:var(--color-accent)}
-.c-O{background:rgba(78,116,136,.20);color:#4E7488}.wc.e{background:transparent;color:var(--color-text-hint);font-weight:400}
+.c-C{background:rgba(43,112,89,.16);color:var(--color-primary)}.c-D{background:rgba(200,188,133,.20);color:var(--color-accent-ink)}
+.c-O{background:rgba(73,109,126,.11);color:var(--color-info)}.wc.e{background:transparent;color:var(--color-text-hint);font-weight:400}
 table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);font-weight:600;color:var(--color-primary-strong);border-top:1px solid var(--color-border-strong);font-size:12.5px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--color-text-muted);margin:10px 2px 0}.legend span b{font-weight:600;color:var(--color-text)}
 .prow{background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;margin-bottom:6px;overflow:hidden}
@@ -196,7 +200,7 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .pmain{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer}
 .pd{font-size:13.5px;color:var(--color-text-muted);min-width:34px;flex-shrink:0}
 .pp{font-family:var(--font-serif);font-size:15.5px;color:var(--color-primary-strong)}
-.psub{padding:0 13px 10px;font-size:12.5px;color:var(--color-accent);margin-top:-4px}
+.psub{padding:0 13px 10px;font-size:12.5px;color:var(--color-accent-ink);margin-top:-4px}
 .pedit{border-top:1px solid var(--color-border);background:var(--color-surface-2);padding:12px 13px}
 .pl{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin:9px 0 5px}.pl:first-child{margin-top:0}
 .pchips{display:flex;flex-wrap:wrap;gap:6px}
@@ -204,7 +208,7 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .pchips button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .pin{width:100%;border:1px solid var(--color-border-strong);border-radius:9px;padding:9px 11px;font-family:var(--font-sans);font-size:13.5px;color:var(--color-text);background:var(--color-surface)}
 .pta{width:100%;border:1px solid var(--color-border-strong);border-radius:9px;padding:9px 11px;font-family:var(--font-sans);font-size:13.5px;color:var(--color-text);background:var(--color-surface);min-height:62px;resize:vertical;line-height:1.5}
-.addbig{width:100%;border:1.5px solid var(--color-primary);background:rgba(43,112,89,.07);color:var(--color-primary);font-family:var(--font-sans);font-size:15px;font-weight:600;padding:var(--space-md);border-radius:12px;cursor:pointer;margin-bottom:11px}
+.addbig{width:100%;border:none;background:var(--color-primary);color:var(--color-on-primary);font-family:var(--font-sans);font-size:15px;font-weight:600;padding:14px;border-radius:12px;cursor:pointer;margin-bottom:11px}
 .acard{display:flex;gap:11px;align-items:flex-start;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:11px 13px;margin-bottom:7px;cursor:pointer;width:100%;text-align:left;font-family:var(--font-sans)}
 .adate{font-family:var(--font-serif);font-size:14px;color:var(--color-primary);min-width:64px;flex-shrink:0;padding-top:1px}
 .aname{font-size:14.5px;font-weight:500;color:var(--color-text)}
@@ -258,7 +262,7 @@ table.wt td.pastc{opacity:.45}
   /* navigace (drawer i admin sidebar) */
   .ditem:hover:not(.on),.sb-item:hover:not(.on){background:rgba(43,112,89,.07)}
   /* plné (primární) akce — jemné projasnění */
-  .btn-primary:hover,.omluvbtn:hover,.savebtn:hover,.odbtn:hover,.fondbtn:hover,.btn-s.primary:hover,.omcheck:hover{filter:brightness(1.08)}
+  .btn-primary:hover,.omluvbtn:hover,.addbig:hover,.savebtn:hover,.odbtn:hover,.fondbtn:hover,.btn-s.primary:hover,.omcheck:hover{filter:brightness(1.08)}
   /* ghost / outline / segment tlačítka — jemný tint */
   .cbtn:hover,.addbtn:hover,.bulktoggle:hover,.omx:hover,.filters button:hover:not(.on),.switch button:hover:not(.on),.mini button:hover:not(.on),.temanav button:hover:not(.on),.kids button:hover:not(.on),.choices button:hover{background:rgba(43,112,89,.06);border-color:var(--color-primary)}
   /* klikací karty / řádky — zvýraznění povrchu */
@@ -291,10 +295,10 @@ table.wt td.pastc{opacity:.45}
 .harr{margin-left:auto;font-size:18px;opacity:.65}
 .hero .hrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:13px;padding-top:13px;border-top:1px solid rgba(249,247,241,.18)}
 .hero .hchip{font-family:var(--font-serif);font-size:22px;font-weight:600}
-.hero .ed{min-height:44px;background:rgba(249,247,241,.16);border:1px solid rgba(249,247,241,.3);color:#F9F7F1;font-family:var(--font-sans);font-size:13px;font-weight:500;padding:11px 16px;border-radius:10px;cursor:pointer}
+.hero .ed{min-height:44px;background:var(--color-on-primary);border:none;color:var(--color-primary-strong);font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:11px 18px;border-radius:10px;cursor:pointer;box-shadow:0 1px 4px rgba(31,42,46,.18)}
 .profillink{background:none;border:none;color:var(--color-primary);font-weight:600;font-size:12.5px;font-family:var(--font-sans);cursor:pointer;padding:4px 2px;margin-bottom:9px}
-.np.pay{color:var(--color-accent);border-top:1px solid var(--color-border);margin-top:4px;padding-top:8px}
-.np.pay b{color:var(--color-accent)}
+.np.pay{color:var(--color-accent-ink);border-top:1px solid var(--color-border);margin-top:4px;padding-top:8px}
+.np.pay b{color:var(--color-accent-ink)}
 .ev .evt{font-weight:600;font-size:14px;color:var(--color-primary-strong)}
 .ev .evd{font-size:13px;color:var(--color-text);margin-top:3px}
 .ev .evd b{font-weight:600}
@@ -309,7 +313,7 @@ table.wt td.pastc{opacity:.45}
 .mrow:first-of-type{border-top:none;padding-top:0}
 .mk2{font-size:10.5px;color:var(--color-text-muted);min-width:72px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
 .mv{flex:1}
-.alerg{font-size:10px;color:var(--color-accent);background:rgba(200,188,133,.12);border-radius:6px;padding:1px 6px;flex-shrink:0;align-self:center}
+.alerg{font-size:10px;color:var(--color-accent-ink);background:rgba(200,188,133,.12);border-radius:6px;padding:1px 6px;flex-shrink:0;align-self:center}
 .akce{min-height:44px;display:flex;justify-content:space-between;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
 .akce:first-of-type{border-top:none;padding-top:0}
 .akce .when{color:var(--color-text-muted);font-size:12.5px;font-weight:400}
@@ -341,7 +345,7 @@ table.wt td.pastc{opacity:.45}
 .agd{font-size:11.5px;color:var(--color-text-muted);min-width:54px;flex-shrink:0;font-weight:600}
 .agt{flex:1;font-size:13.5px}
 .agtag{font-size:10px;color:var(--color-primary);background:rgba(43,112,89,.10);border-radius:6px;padding:1px 7px;align-self:center}
-.agtag.naro{color:var(--color-accent);background:rgba(200,188,133,.12)}
+.agtag.naro{color:var(--color-accent-ink);background:rgba(200,188,133,.12)}
 .agtag.org{color:var(--color-text-muted);background:rgba(92,101,96,.12)}
 
 /* fotky */
@@ -380,21 +384,21 @@ table.wt td.pastc{opacity:.45}
 .dpcell.rng{background:rgba(43,112,89,.12);color:var(--color-primary-strong)}
 .omdrow{font-size:12.5px;color:var(--color-text);line-height:1.5;margin-top:4px}
 .omdrow.ok{color:var(--color-primary)}
-.omdrow.bad{color:var(--color-accent)}
+.omdrow.bad{color:var(--color-accent-ink)}
 .omdone{text-align:center}
 .omcheck{width:46px;height:46px;margin:2px auto 8px;border-radius:50%;background:var(--color-primary);color:var(--color-on-primary);font-size:24px;display:flex;align-items:center;justify-content:center}
 .omdt{font-family:var(--font-serif);font-size:18px;color:var(--color-primary-strong)}
 .omsub{font-size:12.5px;color:var(--color-text-muted);margin:3px 0 10px}
 .omres{font-size:13px;line-height:1.5;padding:9px 11px;border-radius:9px;margin-top:8px;text-align:left}
 .omres.ok{color:var(--color-primary);background:rgba(43,112,89,.08)}
-.omres.bad{color:var(--color-accent);background:rgba(200,188,133,.10)}
+.omres.bad{color:var(--color-accent-ink);background:rgba(200,188,133,.10)}
 .omnext{font-size:12px;color:var(--color-text-muted);margin-top:11px;line-height:1.5;text-align:left}
 .wx{padding:11px 15px}
 .wxrow{display:flex;align-items:center;gap:10px}
 .wxic{font-size:22px;line-height:1}
 .wxmain{font-size:13px;color:var(--color-text-muted)}
 .wxmain b{color:var(--color-text);font-weight:600}
-.wxwet{margin-top:9px;padding:8px 11px;background:rgba(78,116,136,.10);border-radius:9px;font-size:12.5px;color:#4E7488;line-height:1.45}
+.wxwet{margin-top:9px;padding:8px 11px;background:rgba(78,116,136,.10);border-radius:9px;font-size:12.5px;color:var(--color-info);line-height:1.45}
 .alerttile{background:rgba(176,73,47,.08);border:1px solid rgba(176,73,47,.28);border-radius:var(--radius-md);padding:11px 14px;margin-bottom:11px;font-size:13px;color:var(--color-danger);line-height:1.45}
 .alertsub{display:block;font-size:10.5px;color:var(--color-text-hint);margin-top:3px}
 button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
@@ -410,7 +414,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .newsurg{display:inline-block;font-size:10px;font-weight:700;color:var(--color-danger);background:rgba(176,73,47,.12);border-radius:6px;padding:2px 8px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
 .newstext{font-size:13.5px;line-height:1.5}
 .newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
-.sbalit{margin-top:9px;padding:8px 11px;background:rgba(200,188,133,.10);border-radius:9px;font-size:12.5px;color:var(--color-accent)}
+.sbalit{margin-top:9px;padding:8px 11px;background:rgba(200,188,133,.10);border-radius:9px;font-size:12.5px;color:var(--color-accent-ink)}
 .sbalit b{font-weight:600}
 .zitra{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans);border-color:var(--color-accent-soft)}
 .tilelink{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
@@ -423,7 +427,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .linkbtn{background:none;border:none;color:var(--color-primary);font-weight:600;cursor:pointer;font-size:13px;font-family:var(--font-sans)}
 .bulkactions{display:flex;gap:7px;margin-top:9px}
 .bulkactions button{flex:1;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:9px;padding:8px;font-size:12.5px;color:var(--color-text-muted);font-family:var(--font-sans);cursor:pointer}
-.selinfo{font-size:12.5px;color:var(--color-accent);font-weight:600;margin-top:11px}
+.selinfo{font-size:12.5px;color:var(--color-accent-ink);font-weight:600;margin-top:11px}
 .daycard{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:14px 15px;margin-bottom:7px}
 .daycard .dt{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px}
 .daycard .wd{font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong)}
@@ -454,8 +458,11 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .fondbtn,.neuhr{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
 .ftop{display:flex;justify-content:space-between;align-items:center}
 .more{font-size:12.5px;color:var(--color-primary);font-weight:600}
-.neuhr{border-color:var(--color-accent);background:rgba(200,188,133,.07)}
-.neuhr .np,.neuhr .tlab,.neuhr b{color:var(--color-accent)}
+.neuhr{border:1.5px solid var(--color-danger);background:var(--state-danger-bg)}
+.neuhr .np,.neuhr .tlab,.neuhr b{color:var(--color-danger)}
+.neuhr .tlab{font-weight:700}
+.neuhr b{font-size:15px}
+.neuhr .nwarn{margin-right:7px}
 .wkrow.today .wkmain{background:rgba(43,112,89,.06)}
 .wkrow.bsel{border-color:var(--color-accent);box-shadow:0 0 0 1px var(--color-accent)}
 .bchk{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--color-border-strong);flex-shrink:0;background:var(--color-surface-2)}
@@ -469,7 +476,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .bulkbar .choices{margin-top:9px}
 .notelab{font-size:11px;color:var(--color-text-muted);margin-top:10px}
 .chip{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:7px}
-.deadline{font-size:11.5px;color:var(--color-accent);font-style:italic;margin-top:10px}
+.deadline{font-size:11.5px;color:var(--color-accent-ink);font-style:italic;margin-top:10px}
 .cal .h{font-size:10.5px;color:var(--color-text-muted);text-align:center;padding:2px 0;font-weight:600}
 .cal .cell{aspect-ratio:1;border:1px solid var(--color-border);border-radius:9px;background:var(--color-surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;padding:2px}
 .cal .cell.we{background:transparent;border-color:transparent;cursor:default}
@@ -718,7 +725,7 @@ function renderDashboard(){
   {const av=dostupne(c), ne=nextExp(c);
    h+=`<button class="tile nahdash" onclick="go('dochazka')"><div class="ftop"><div><div class="tlab" style="margin:0">Náhrady</div><div class="nahdashn">${av} ${nplural(av)}</div></div><div class="nahdashx">${ne?'nejbližší expirace '+ne+' ›':'›'}</div></div></button>`;}
   if(dashEdit&&(editable(dashDay)||dashDay===TODAY))h+=`<div class="tile dashedit">${editor(dashDay)}</div>`;
-  if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0">Neuhrazeno · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
+  if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>Po splatnosti · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
   // K úhradě přesunuto úplně dolů
   const nws=NEWS.filter(n=>TODAY<=n.until).slice(0,5);
   if(nws.length){h+=`<div class="tile newsbox"><div class="tlab tlabrow"><button class="tlabbtn" onclick="go('aktuality')">Aktuality<span class="tarr">›</span></button></div>`;

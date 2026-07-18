@@ -38,10 +38,10 @@
   --tint-blue:#DEE7EA;
   /* Stavová paleta — jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
      Každý stav má -ink (text) a -bg (světlá výplň). */
-  --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.13);
-  --state-info-ink:var(--color-info);        --state-info-bg:rgba(73,109,126,.15);
+  --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.11);
+  --state-info-ink:var(--color-info);        --state-info-bg:rgba(73,109,126,.10);
   --state-warn-ink:var(--color-accent-ink);  --state-warn-bg:rgba(200,188,133,.22);
-  --state-danger-ink:var(--color-danger);    --state-danger-bg:rgba(176,73,47,.12);
+  --state-danger-ink:var(--color-danger);    --state-danger-bg:rgba(176,73,47,.08);
   --state-neutral-ink:var(--color-text-muted);--state-neutral-bg:rgba(92,101,96,.14);
   --state-muted-ink:var(--color-text-hint);  --state-muted-bg:rgba(31,42,46,.07);
   --state-brand-ink:var(--color-primary);    --state-brand-bg:rgba(43,112,89,.12);
@@ -123,9 +123,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .tab{flex:0 0 auto;min-width:76px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:13px 15px 11px;text-align:center;cursor:pointer}
 .modes{display:flex;gap:6px;margin-bottom:10px}
 .modes button{flex:1;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:12.5px;font-weight:500;color:var(--color-text-muted);padding:11px 4px;border-radius:10px;cursor:pointer}
-.modes button.on{background:var(--color-accent);border-color:var(--color-accent);color:#F9F7F1}
-.c-N{background:rgba(176,73,47,.14);color:var(--color-danger)}
-.rnote{margin:0 8px 8px;padding:9px 11px;background:rgba(176,73,47,.10);border-radius:9px;font-size:12.5px;color:var(--color-danger);line-height:1.45;font-weight:500}
+.modes button.on{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-text)}
+.c-N{background:rgba(176,73,47,.08);color:var(--color-danger)}
+.rnote{margin:0 8px 8px;padding:9px 11px;background:rgba(176,73,47,.08);border-radius:9px;font-size:12.5px;color:var(--color-danger);line-height:1.45;font-weight:500}
 .ghostred{background:transparent;border:1px solid var(--color-danger);color:var(--color-danger)}
 .clink{color:var(--color-primary);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .tab .num{font-family:var(--font-serif);font-weight:600;font-size:28px;line-height:1;color:var(--color-primary-strong)}
@@ -146,10 +146,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .chk.on{background:var(--color-primary);border-color:var(--color-primary)}
 .rmain .nm{font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:60px}
 .rmain .ind{margin-left:auto;font-size:11.5px;color:var(--color-text-muted);flex-shrink:0;white-space:nowrap}
-.ind.sleep{color:var(--color-info)}.ind.awake{color:var(--color-accent)}.ind.off{color:var(--color-danger)}
+.ind.sleep{color:var(--color-info)}.ind.awake{color:var(--color-accent-ink)}.ind.off{color:var(--color-danger)}
 .pill{font-size:10px;font-weight:500;padding:2px 6px;border-radius:6px;flex-shrink:0}
-.p-cel{background:rgba(43,112,89,.10);color:var(--color-primary)}.p-odp{background:rgba(78,116,136,.13);color:#4E7488}
-.p-dop{background:rgba(200,188,133,.13);color:var(--color-accent)}.p-note{background:rgba(176,73,47,.10);color:var(--color-danger)}
+.p-cel{background:rgba(43,112,89,.10);color:var(--color-primary)}.p-odp{background:rgba(73,109,126,.10);color:var(--color-info)}
+.p-dop{background:rgba(200,188,133,.13);color:var(--color-accent-ink)}.p-note{background:rgba(176,73,47,.08);color:var(--color-danger)}
 .row.absent .nm{color:var(--color-text-hint);text-decoration:line-through}
 .edit{border-top:1px solid var(--color-border);padding:11px 11px 12px;background:var(--color-surface-2)}
 .field{margin-bottom:9px}.field .l{font-size:11px;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
@@ -177,8 +177,8 @@ table.wt tbody tr{border-bottom:1px solid var(--color-border)}
 table.wt th.today,table.wt td.today{background:rgba(43,112,89,.06)}
 table.wt thead th.today{color:var(--color-primary);background:rgba(43,112,89,.12)}
 .wc{display:inline-block;width:24px;height:24px;line-height:24px;border-radius:6px;font-size:11px;font-weight:600}
-.c-C{background:rgba(43,112,89,.16);color:var(--color-primary)}.c-D{background:rgba(200,188,133,.20);color:var(--color-accent)}
-.c-O{background:rgba(78,116,136,.20);color:#4E7488}.wc.e{background:transparent;color:var(--color-text-hint);font-weight:400}
+.c-C{background:rgba(43,112,89,.16);color:var(--color-primary)}.c-D{background:rgba(200,188,133,.20);color:var(--color-accent-ink)}
+.c-O{background:rgba(73,109,126,.11);color:var(--color-info)}.wc.e{background:transparent;color:var(--color-text-hint);font-weight:400}
 table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);font-weight:600;color:var(--color-primary-strong);border-top:1px solid var(--color-border-strong);font-size:12.5px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--color-text-muted);margin:10px 2px 0}.legend span b{font-weight:600;color:var(--color-text)}
 .prow{background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;margin-bottom:6px;overflow:hidden}
@@ -186,7 +186,7 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .pmain{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer}
 .pd{font-size:13.5px;color:var(--color-text-muted);min-width:34px;flex-shrink:0}
 .pp{font-family:var(--font-serif);font-size:15.5px;color:var(--color-primary-strong)}
-.psub{padding:0 13px 10px;font-size:12.5px;color:var(--color-accent);margin-top:-4px}
+.psub{padding:0 13px 10px;font-size:12.5px;color:var(--color-accent-ink);margin-top:-4px}
 .pedit{border-top:1px solid var(--color-border);background:var(--color-surface-2);padding:12px 13px}
 .pl{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin:9px 0 5px}.pl:first-child{margin-top:0}
 .pchips{display:flex;flex-wrap:wrap;gap:6px}
@@ -194,7 +194,7 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .pchips button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .pin{width:100%;border:1px solid var(--color-border-strong);border-radius:9px;padding:9px 11px;font-family:var(--font-sans);font-size:13.5px;color:var(--color-text);background:var(--color-surface)}
 .pta{width:100%;border:1px solid var(--color-border-strong);border-radius:9px;padding:9px 11px;font-family:var(--font-sans);font-size:13.5px;color:var(--color-text);background:var(--color-surface);min-height:62px;resize:vertical;line-height:1.5}
-.addbig{width:100%;border:1.5px solid var(--color-primary);background:rgba(43,112,89,.07);color:var(--color-primary);font-family:var(--font-sans);font-size:15px;font-weight:600;padding:var(--space-md);border-radius:12px;cursor:pointer;margin-bottom:11px}
+.addbig{width:100%;border:none;background:var(--color-primary);color:var(--color-on-primary);font-family:var(--font-sans);font-size:15px;font-weight:600;padding:14px;border-radius:12px;cursor:pointer;margin-bottom:11px}
 .acard{display:flex;gap:11px;align-items:flex-start;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:11px 13px;margin-bottom:7px;cursor:pointer;width:100%;text-align:left;font-family:var(--font-sans)}
 .adate{font-family:var(--font-serif);font-size:14px;color:var(--color-primary);min-width:64px;flex-shrink:0;padding-top:1px}
 .aname{font-size:14.5px;font-weight:500;color:var(--color-text)}
@@ -248,7 +248,7 @@ table.wt td.pastc{opacity:.45}
   /* navigace (drawer i admin sidebar) */
   .ditem:hover:not(.on),.sb-item:hover:not(.on){background:rgba(43,112,89,.07)}
   /* plné (primární) akce — jemné projasnění */
-  .btn-primary:hover,.omluvbtn:hover,.savebtn:hover,.odbtn:hover,.fondbtn:hover,.btn-s.primary:hover,.omcheck:hover{filter:brightness(1.08)}
+  .btn-primary:hover,.omluvbtn:hover,.addbig:hover,.savebtn:hover,.odbtn:hover,.fondbtn:hover,.btn-s.primary:hover,.omcheck:hover{filter:brightness(1.08)}
   /* ghost / outline / segment tlačítka — jemný tint */
   .cbtn:hover,.addbtn:hover,.bulktoggle:hover,.omx:hover,.filters button:hover:not(.on),.switch button:hover:not(.on),.mini button:hover:not(.on),.temanav button:hover:not(.on),.kids button:hover:not(.on),.choices button:hover{background:rgba(43,112,89,.06);border-color:var(--color-primary)}
   /* klikací karty / řádky — zvýraznění povrchu */
@@ -274,7 +274,7 @@ table.wt td.pastc{opacity:.45}
 .cap-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .cap-nm{font-family:var(--font-serif);font-size:15.5px;color:var(--color-primary-strong)}
 .cap-n{font-size:13px;color:var(--color-text-muted);font-weight:600}
-.cap-n.is-full{color:var(--color-accent)}
+.cap-n.is-full{color:var(--color-accent-ink)}
 .cap-bar{height:8px;background:var(--color-surface-2);border-radius:999px;overflow:hidden}
 .cap-fill{display:block;height:100%;background:var(--color-primary);border-radius:999px}
 .cap-fill.is-full{background:var(--color-accent)}
@@ -299,7 +299,7 @@ table.wt td.pastc{opacity:.45}
 .al-row{display:flex;gap:9px;align-items:flex-start;padding:7px 0;font-size:13.5px;color:var(--color-text);line-height:1.45}
 .al-ic{flex-shrink:0;width:18px;text-align:center}
 .al-sk{color:var(--color-text-muted)}
-.al-data .al-ic{color:var(--color-accent)}
+.al-data .al-ic{color:var(--color-accent-ink)}
 .al-provoz .al-ic{color:var(--color-info)}
 .al-system .al-ic{color:var(--color-success)}
 
@@ -309,7 +309,7 @@ table.wt td.pastc{opacity:.45}
 .nh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
 .nh-cell{text-align:center;background:var(--color-surface-2);border-radius:12px;padding:12px 6px}
 .nh-num{font-family:var(--font-serif);font-weight:600;font-size:26px;color:var(--color-primary-strong);line-height:1}
-.nh-num.warn{color:var(--color-accent)}
+.nh-num.warn{color:var(--color-accent-ink)}
 .nh-lab{font-size:11.5px;color:var(--color-text-muted);margin-top:5px}
 
 /* (e) úkoly */
@@ -328,7 +328,7 @@ table.wt td.pastc{opacity:.45}
 .por-sk{color:var(--color-text-muted)}
 .por-typ{font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px;flex-shrink:0}
 .por-typ.porada{color:var(--color-primary);background:rgba(43,112,89,.12)}
-.por-typ.evaluace{color:var(--color-accent);background:rgba(200,188,133,.14)}
+.por-typ.evaluace{color:var(--color-accent-ink);background:rgba(200,188,133,.14)}
 
 /* badge varianty stavů aktuality (základ .bdg z components.css) */
 .bdg.sent{color:var(--state-brand-ink);background:var(--state-brand-bg)}

@@ -499,3 +499,34 @@ Z jeho checklistu/UX domény vzaty **dvě nekonfliktní mezery** (obě reálně 
   položce dává tint, reduced-motion i hover pravidla přítomná v distu, žádné chyby.
 
 Ostatní checklist body už splněny v 4.4 (kontrast AA, focus-visible, dotykové cíle, responzivita 375–1440).
+
+### 2026-07-18 — Revize desktopu: viditelnost, barevná hierarchie, uspořádání (ui-ux-pro-max)
+
+Designérka: po přechodu na desktop bylo rozložení „rozházené" a některé prvky špatně vidět
+(faktura po splatnosti moc slabá, „Nahlásit absenci" a další buttony/texty málo viditelné).
+Revize přes **ui-ux-pro-max** (principy: hierarchie, kontrast, stav barvou + ikonou/textem).
+
+**Viditelnost / barevná hierarchie:**
+- **Faktura po splatnosti** (rodič dashboard `.neuhr`): z tlumené okrové na **výraznou červenou** —
+  danger border + text + ⚠ ikona + text „Po splatnosti" (barva **i** ikona, ne jen barva). AA doladěno.
+- **„Nahlásit absenci"** (`.hero .ed`): z průhledného ghostu na **plné krémové tlačítko** s tmavě
+  zeleným textem (7.6:1).
+- **Primární akce `.addbig`** (Otevřít docházku, Nová aktualita, Nový zápis): z ghostu na **plné
+  zelené** tlačítko — jasná primární akce napříč průvodcem i adminem.
+- **Světlá okrová jako text** (18 míst: `.p-dop`, `.ind.awake`, `.spectit`, `.selinfo`, `.deadline`,
+  `.np.pay`, admin kapacity/náhrady …) → **`--color-accent-ink`** (z ~2:1 na ≥5:1). Zbylé hardcoded
+  staré info `#4E7488` → token. `.modes button.on` (krém na okrové = světlé na světlém) → tmavý text.
+- **Stavové tinty zesvětleny** (tokeny + docházkové pilly): danger .12→.08, info .15→.10, ok .13→.11
+  — všechny badge/pill inkousty teď **AA ≥4.5** (dřív 4.2–4.4).
+
+**Uspořádání desktopu (méně „rozházené"):**
+- Sloupce omezeny na **2 vyvážené** (`column-count:2`), obsah max-width **1060px** vycentrovaný.
+- **Karty na desktopu dostaly jemný stín** (na krémovém pozadí jinak splývaly → dojem rozsypání).
+- **Široké seznamy/tabulky** (docházka: `.search`, `.weekbox`, `.rosterbox`, `.ctxhead`, `.tabs`)
+  jdou přes celou šířku — konec osamoceného vyhledávacího pole vedle tabulky.
+
+Pozn.: doporučení stylu/palety/fontů z ui-ux-pro-max (vibrant, Baloo 2, teal/amber) **nepřevzato** —
+koliduje se schválenou identitou (neměnné pravidlo). Vzaty jen principy hierarchie/kontrastu/stavů.
+
+**QA:** rodič/průvodce/admin 1440 i 375 px — faktura výrazně červená, tlačítka plná a čitelná,
+docházka jeden sloupec, badge AA, mobil beze změny, žádné chyby v konzoli. Dist rebuilt.
