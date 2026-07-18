@@ -26,6 +26,15 @@
   --tint-rose:#F1E1DC;
   --tint-ochre:#F1EAD2;
   --tint-blue:#DEE7EA;
+  /* Stavová paleta — jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
+     Každý stav má -ink (text) a -bg (světlá výplň). */
+  --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(60,122,78,.12);
+  --state-info-ink:var(--color-info);        --state-info-bg:rgba(78,116,136,.14);
+  --state-warn-ink:var(--color-accent-ink);  --state-warn-bg:rgba(200,188,133,.22);
+  --state-danger-ink:var(--color-danger);    --state-danger-bg:rgba(176,73,47,.12);
+  --state-neutral-ink:var(--color-text-muted);--state-neutral-bg:rgba(92,101,96,.14);
+  --state-muted-ink:var(--color-text-hint);  --state-muted-bg:rgba(31,42,46,.07);
+  --state-brand-ink:var(--color-primary);    --state-brand-bg:rgba(43,112,89,.12);
   --radius-md:14px;
   /* Typografie — nadpisy Bricolage Grotesque, tělo/UI Inter (univerzální pro všechny 4 školky).
      Token --font-serif drží nadpisový font (historický název; hodnota je bezpatková). */

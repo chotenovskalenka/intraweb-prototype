@@ -9,7 +9,6 @@ let kalY=2026, kalM=5;
 let kidMenuOpen=false;
 let dashEdit=false;
 let draft={};   // {den: {code, note}}
-let toast='';
 let dashPickerOpen=false;
 
 const RENDER={prehled:renderDashboard,aktuality:renderAktuality,dochazka:renderDochazka,profil:renderProfil,platby:renderPlatby,kalendar:renderKalendar,plan:renderPlan,fotky:renderFotky,kontakty:renderKontakty};
@@ -32,7 +31,6 @@ function renderHead(){
 function render(){
   document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):TITLES[section];
   renderHead();renderDrawer();
-  document.getElementById('toastbox').innerHTML = toast?`<div class="toast">${toast}</div>`:'';
   document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;if(!PERCHILD.includes(s)){} render();};
@@ -40,7 +38,6 @@ window.openDrawer=()=>{drawerOpen=true;render();};
 window.toggleKidMenu=e=>{e.stopPropagation();kidMenuOpen=!kidMenuOpen;render();};
 window.pickKid=i=>{ci=i;kidMenuOpen=false;render();};
 window.closeDrawer=()=>{drawerOpen=false;render();};
-window.showToast=m=>{toast=m;render();setTimeout(()=>{toast='';render();},1800);};
 document.addEventListener('click',()=>{if(kidMenuOpen){kidMenuOpen=false;render();}});
 
 render();

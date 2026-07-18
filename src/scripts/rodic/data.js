@@ -1,6 +1,4 @@
 /* DATA: RODIC — seed data + čisté datové helpery sdílené více obrazovkami */
-const CODES={D:['Dopolední','#6F5F1C','rgba(200,188,133,.16)'],O:['Odpolední','#4E7488','rgba(78,116,136,.18)'],
-  C:['Celodenní','#2B7059','rgba(43,112,89,.14)'],OM:['Omluveno','#5C6560','rgba(92,101,96,.14)'],NE:['Neomluveno','#B0492F','rgba(176,73,47,.14)']};
 const ORDER=['D','O','C','OM','NE'];
 
 /* --- Simulovaný čas + omluvenka/náhrada model (fáze 1) --- */

@@ -54,12 +54,12 @@ function renderNahrady(c){
   const av=dostupne(c), ne=nextExp(c);
   let h=`<div class="tile"><div class="ftop"><div><div class="tlab" style="margin:0">Dostupné náhrady</div><div class="nahbig">${av}</div></div><div class="nahexp">${ne?'nejbližší expirace<br>'+ne:''}</div></div>`;
   h+=`<div class="nahsub2">Náhradu lze vyčerpat i na příměstský tábor. Vzniká za každý včas omluvený den.</div>`;
-  h+=c.nahrady.map(nahRow).join('');
+  h+=c.nahrady.length?c.nahrady.map(nahRow).join(''):'<div class="empty">Zatím žádné náhrady. Vzniknou za každý včas omluvený den.</div>';
   return h+`</div>`;
 }
 function renderOmluvenky(c){
-  if(!c.omluvenky.length)return '';
   let h=`<div class="tile"><div class="tlab">Omluvenky</div>`;
+  if(!c.omluvenky.length)return h+'<div class="empty">Zatím žádné omluvenky. Omluvit dítě můžete tlačítkem nahoře.</div></div>';
   c.omluvenky.forEach(o=>{
     const canCancel=o.od>NOW.d&&o.stav!=='zrusena';
     h+=`<div class="omrow"><div class="omL"><div class="omo">${fmtRange(o.od,o.do)}</div><div class="omv">${DUVODLAB[o.duvod]||o.duvod}${o.pozn?' · '+escTa(o.pozn):''}</div></div><span class="bdg om-${o.stav}">${OMLAB[o.stav]}</span>${canCancel?`<button class="omx" onclick="omCancel('${o.id}')">Zrušit</button>`:''}</div>`;

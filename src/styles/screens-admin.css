@@ -31,9 +31,9 @@
 .pay-amt{font-family:var(--font-serif);font-size:15px;color:var(--color-primary-strong)}
 
 /* badge varianty stavů platby (základ .bdg + .al v components.css) */
-.bdg.ne{color:var(--color-danger);background:rgba(176,73,47,.12)}
-.bdg.part{color:var(--color-accent);background:rgba(200,188,133,.14)}
-.bdg.wait{color:var(--color-info);background:rgba(78,116,136,.14)}
+.bdg.ne{color:var(--state-danger-ink);background:var(--state-danger-bg)}
+.bdg.part{color:var(--state-warn-ink);background:var(--state-warn-bg)}
+.bdg.wait{color:var(--state-info-ink);background:var(--state-info-bg)}
 
 /* (c) upozornění */
 .al-row{display:flex;gap:9px;align-items:flex-start;padding:7px 0;font-size:13.5px;color:var(--color-text);line-height:1.45}
@@ -71,8 +71,8 @@
 .por-typ.evaluace{color:var(--color-accent);background:rgba(200,188,133,.14)}
 
 /* badge varianty stavů aktuality (základ .bdg z components.css) */
-.bdg.sent{color:var(--color-primary);background:rgba(43,112,89,.12)}
-.bdg.arch{color:var(--color-text-hint);background:rgba(31,42,46,.07)}
+.bdg.sent{color:var(--state-brand-ink);background:var(--state-brand-bg)}
+.bdg.arch{color:var(--state-muted-ink);background:var(--state-muted-bg)}
 
 /* aktuality — seznam */
 .ak-item{padding:14px 16px}

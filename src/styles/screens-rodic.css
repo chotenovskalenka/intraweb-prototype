@@ -1,9 +1,6 @@
 /* SCREENS: RODIC — rodičovské obrazovky + rodičovské varianty sdílených tříd.
    Sdílené třídy shodné s components/layout se sem NEkopírují (viz decision-log).
    Rozdíly proti průvodci se sjednotí ve fázi 0.3. */
-.scroll{padding:14px 16px 22px}
-.burger{border:none;background:none;font-size:20px;line-height:1;color:var(--color-primary-strong);cursor:pointer;padding:2px 4px}
-.ttl{font-family:var(--font-serif);font-size:18px;color:var(--color-primary-strong);flex:1}
 .kids{display:flex;gap:7px;margin-bottom:13px}
 .kids button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-serif);font-size:15px;font-weight:500;color:var(--color-text-muted);padding:9px 6px;border-radius:12px;cursor:pointer}
 .kids button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
@@ -14,7 +11,6 @@
 .kitem{display:flex;align-items:center;gap:8px;width:100%;border:none;background:none;padding:8px 10px;border-radius:8px;font-family:var(--font-sans);font-size:13.5px;color:var(--color-text);cursor:pointer;text-align:left}
 .kitem.on{background:rgba(43,112,89,.08);font-weight:600}
 .kchk{margin-left:auto;color:var(--color-primary);font-weight:700}
-.ditem{display:flex;align-items:center;gap:11px;padding:12px 20px;font-size:14.5px;color:var(--color-text);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--font-sans)}
 
 /* dashboard / shared tiles */
 .hero{background:var(--color-primary);border-radius:var(--radius-md);padding:15px 16px;margin-bottom:8px;color:var(--color-on-primary)}
@@ -27,9 +23,6 @@
 .hero .hchip{font-family:var(--font-serif);font-size:22px;font-weight:600}
 .hero .ed{background:rgba(249,247,241,.16);border:1px solid rgba(249,247,241,.3);color:#F9F7F1;font-family:var(--font-sans);font-size:13px;font-weight:500;padding:11px 16px;border-radius:10px;cursor:pointer}
 .profillink{background:none;border:none;color:var(--color-primary);font-weight:600;font-size:12.5px;font-family:var(--font-sans);cursor:pointer;padding:4px 2px;margin-bottom:9px}
-.tlab{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin-bottom:7px}
-.tval{font-size:13.5px;color:var(--color-text)}
-.np{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;padding:4px 0}
 .np.pay{color:var(--color-accent);border-top:1px solid var(--color-border);margin-top:4px;padding-top:8px}
 .np.pay b{color:var(--color-accent)}
 .ev .evt{font-weight:600;font-size:14px;color:var(--color-primary-strong)}
@@ -50,9 +43,6 @@
 .akce{display:flex;justify-content:space-between;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
 .akce:first-of-type{border-top:none;padding-top:0}
 .akce .when{color:var(--color-text-muted);font-size:12.5px;font-weight:400}
-.pav{display:flex;justify-content:center;margin:4px 0 10px}
-.pfull{text-align:center;font-size:12.5px;color:var(--color-text-muted);margin-bottom:16px}
-.cbtn{flex:1;text-align:center;border:1px solid var(--color-primary);color:var(--color-primary);border-radius:9px;padding:9px;font-size:12.5px;font-weight:600;text-decoration:none;font-family:var(--font-sans)}
 .cinfo{font-size:12px;color:var(--color-text-muted);margin-top:10px;text-align:center}
 
 /* platby */
@@ -74,7 +64,6 @@
 .rozhov{font-size:13px;padding:8px 0;border-top:1px solid var(--color-border)}
 .rozhov:first-of-type{border-top:none}
 .rozhov .rd{font-size:11.5px;color:var(--color-text-muted);margin-bottom:2px}
-.addbtn{margin-top:10px;width:100%;border:1px dashed var(--color-border-strong);background:transparent;color:var(--color-text-muted);font-family:var(--font-sans);font-size:12.5px;padding:9px;border-radius:10px;cursor:pointer}
 
 /* kalendář / agenda */
 .ag{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--color-border)}
@@ -88,8 +77,6 @@
 /* fotky */
 .gal{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
 .ph{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38)}
-.switch button{flex:1;border:none;background:transparent;font-family:var(--font-sans);font-size:13px;font-weight:500;color:var(--color-text-muted);padding:12px 4px;border-radius:999px;cursor:pointer}
-.vhead{font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong);margin:2px 2px 8px}
 .bulktoggle{width:100%;border:1px solid var(--color-primary);background:var(--color-surface);color:var(--color-primary);font-family:var(--font-sans);font-size:13px;font-weight:600;padding:13px;border-radius:10px;cursor:pointer;margin-bottom:10px}
 .nahline{display:flex;align-items:baseline;gap:6px;font-size:13px;color:var(--color-text-muted);margin:0 2px 10px}
 .nahline b{font-family:var(--font-serif);font-size:17px;color:var(--color-primary-strong)}
@@ -114,12 +101,12 @@
 .omo{font-size:13.5px;font-weight:500;color:var(--color-text)}
 .omv{font-size:11.5px;color:var(--color-text-muted);margin-top:2px}
 .omx{border:1px solid var(--color-danger);background:transparent;color:var(--color-danger);font-family:var(--font-sans);font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:8px;cursor:pointer;flex-shrink:0}
-.bdg.n-dostupna,.bdg.om-vcas{color:var(--color-success);background:rgba(60,122,78,.12)}
-.bdg.n-naplanovana{color:var(--color-info);background:rgba(78,116,136,.14)}
-.bdg.n-vyuzita{color:var(--color-text-muted);background:rgba(92,101,96,.14)}
-.bdg.n-expirovana,.bdg.om-zrusena{color:var(--color-text-hint);background:rgba(92,101,96,.10)}
-.bdg.n-nevznikla{color:var(--color-danger);background:rgba(176,73,47,.12)}
-.bdg.om-po-deadlinu{color:var(--color-accent);background:rgba(200,188,133,.14)}
+.bdg.n-dostupna,.bdg.om-vcas{color:var(--state-ok-ink);background:var(--state-ok-bg)}
+.bdg.n-naplanovana{color:var(--state-info-ink);background:var(--state-info-bg)}
+.bdg.n-vyuzita{color:var(--state-neutral-ink);background:var(--state-neutral-bg)}
+.bdg.n-expirovana,.bdg.om-zrusena{color:var(--state-muted-ink);background:var(--state-muted-bg)}
+.bdg.n-nevznikla{color:var(--state-danger-ink);background:var(--state-danger-bg)}
+.bdg.om-po-deadlinu{color:var(--state-warn-ink);background:var(--state-warn-bg)}
 .dpcell.rng{background:rgba(43,112,89,.12);color:var(--color-primary-strong)}
 .omdrow{font-size:12.5px;color:var(--color-text);line-height:1.5;margin-top:4px}
 .omdrow.ok{color:var(--color-primary)}
@@ -187,7 +174,6 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .dashedit{margin-top:-4px;border-top-left-radius:0;border-top-right-radius:0}
 .savebtn{width:100%;margin-top:11px;border:none;background:var(--color-primary);color:var(--color-on-primary);font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:11px;border-radius:10px;cursor:pointer}
 .savebtn.dis{background:var(--color-surface-2);color:var(--color-text-hint);cursor:default}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--color-primary-strong);color:var(--color-on-primary);font-size:13px;font-weight:500;padding:10px 18px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:20}
 .latebtn{width:100%;border:1px solid var(--color-danger);background:transparent;color:var(--color-danger);font-family:var(--font-sans);font-size:13px;font-weight:500;padding:12px;border-radius:10px;cursor:pointer;text-align:left}
 .qrtile{text-align:center}
 .qramt{font-family:var(--font-serif);font-size:26px;font-weight:600;color:var(--color-primary-strong)}
@@ -211,7 +197,6 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .choices button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .choices button.abs.on{background:var(--color-danger);border-color:var(--color-danger)}
 .bulkbar .choices{margin-top:9px}
-.note{width:100%;border:1px solid var(--color-border-strong);border-radius:9px;padding:9px 11px;font-family:var(--font-sans);font-size:13px;color:var(--color-text);background:var(--color-surface);min-height:48px;resize:vertical;margin-top:9px;line-height:1.45}
 .notelab{font-size:11px;color:var(--color-text-muted);margin-top:10px}
 .chip{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:7px}
 .deadline{font-size:11.5px;color:var(--color-accent);font-style:italic;margin-top:10px}
@@ -279,5 +264,3 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .gstep .gmo{font-size:16px;font-weight:600;color:#3c4043;min-width:64px;text-align:center;text-transform:capitalize}
 .gstep .gyr{font-size:16px;font-weight:600;color:#3c4043;min-width:42px;text-align:center}
 .gcell.gempty{cursor:default;background:transparent}
-.hint{font-size:11.5px;color:var(--color-text-hint);text-align:center;margin-top:14px;line-height:1.45}
-.note2{font-size:11.5px;color:var(--color-text-hint);margin-top:10px;line-height:1.45}
