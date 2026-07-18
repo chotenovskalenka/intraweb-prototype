@@ -94,10 +94,10 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .modal-scrim{position:fixed;inset:0;background:rgba(31,42,46,.5);z-index:30;display:flex;align-items:flex-end;justify-content:center}
 .modal{background:var(--color-bg);width:100%;max-width:460px;border-radius:18px 18px 0 0;padding:18px 18px 22px;max-height:90vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
 .modal h3{font-family:var(--font-serif);font-size:19px;color:var(--color-primary-strong);margin-bottom:6px}
-/* Desktop (telefonní rám z layout.css): bottom-sheet se drží šířky rámu a plave nad okrajem */
+/* Desktop: bottom-sheet (průvodce modal) se změní na vycentrovaný dialog. */
 @media (min-width:700px){
   .modal-scrim{align-items:center}
-  .modal{max-width:414px;border-radius:18px;max-height:84vh}
+  .modal{max-width:460px;border-radius:18px;max-height:84vh}
 }
 .mrow2{display:flex;gap:9px}
 .mbtns{display:flex;gap:9px;margin-top:var(--space-lg)}
