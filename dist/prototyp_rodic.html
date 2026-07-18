@@ -66,6 +66,12 @@ body{background:var(--color-bg);font-family:var(--font-sans);color:var(--color-t
 :focus{outline:none}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{
   outline:2px solid var(--color-primary);outline-offset:2px;border-radius:6px}
+
+/* Přístupnost: respektuj systémové omezení pohybu (nevolnost z animací). */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
 </style>
 <style>
 .phone{width:100%;background:var(--color-bg)}
@@ -245,6 +251,21 @@ table.wt td.pastc{opacity:.45}
 .cdot{width:5px;height:5px;border-radius:50%;background:var(--color-accent);margin-top:2px}
 .ccount{font-size:11px;font-weight:600;color:var(--color-primary);margin-top:1px}.ccount.lk{color:var(--color-text-hint)}
 .calcell.sel .cdot{background:var(--color-on-primary)}
+
+/* Hover feedback — jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
+@media (hover:hover){
+  a,button{transition:background-color .15s ease,color .15s ease,border-color .15s ease,filter .15s ease}
+  /* navigace (drawer i admin sidebar) */
+  .ditem:hover:not(.on),.sb-item:hover:not(.on){background:rgba(43,112,89,.07)}
+  /* plné (primární) akce — jemné projasnění */
+  .btn-primary:hover,.omluvbtn:hover,.savebtn:hover,.odbtn:hover,.fondbtn:hover,.btn-s.primary:hover,.omcheck:hover{filter:brightness(1.08)}
+  /* ghost / outline / segment tlačítka — jemný tint */
+  .cbtn:hover,.addbtn:hover,.bulktoggle:hover,.omx:hover,.filters button:hover:not(.on),.switch button:hover:not(.on),.mini button:hover:not(.on),.temanav button:hover:not(.on),.kids button:hover:not(.on),.choices button:hover{background:rgba(43,112,89,.06);border-color:var(--color-primary)}
+  /* klikací karty / řádky — zvýraznění povrchu */
+  button.tile:hover,.akce:hover,.hkid:hover,.kbtn:hover,.daypick:hover,.prehl-abs:hover,.zitra:hover,.stepper button:hover:not(:disabled),.daybar button:hover{background:var(--color-surface-2)}
+  /* textové odkazy */
+  .clink:hover,.newsmore:hover,.tlabbtn:hover{text-decoration:underline}
+}
 </style>
 <style>
 /* SCREENS: RODIC — rodičovské obrazovky + rodičovské varianty sdílených tříd.

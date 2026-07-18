@@ -484,3 +484,18 @@ v `layout.css` (JS beze změny), admin nedotčen (má vlastní `layout-admin.css
 **QA:** rodič i průvodce na 1680/1280/1024/375 px — sidebar + 2–3 sloupce, full-width hlavičky/akce,
 overlay omluvenky 2-sloupcový, modal centrovaný, mobil beze změny, žádné chyby. Nahrazuje zápis
 „Desktopová prezentace mobilních appek".
+
+### 2026-07-18 — Revize ui-ux-pro-max: reduced-motion + hover stavy
+
+Použit skill **ui-ux-pro-max** jako revizní vrstva (ne k přepsání identity). Jeho doporučení stylu/
+palety/fontů (vibrant block-based, Baloo 2/Comic Neue, teal/amber) **záměrně nepřevzato** — kolidovalo
+by se schválenou identitou z vhaaji.cz a s designérčiným zamítnutím dětského směru (neměnné pravidlo).
+
+Z jeho checklistu/UX domény vzaty **dvě nekonfliktní mezery** (obě reálně chyběly):
+- **`prefers-reduced-motion: reduce`** (High) — přidán globální reset animací/transitions v `base.css`.
+- **Hover stavy** (Web, teď relevantní kvůli desktop layoutu) — `@media (hover:hover)` v `components.css`:
+  nav (drawer i admin sidebar), plné akce (projasnění), ghost/segment tlačítka (tint + border),
+  klikací karty/řádky (povrch), textové odkazy (podtržení). Dotyk nezasažen. Ověřeno: hover na nav
+  položce dává tint, reduced-motion i hover pravidla přítomná v distu, žádné chyby.
+
+Ostatní checklist body už splněny v 4.4 (kontrast AA, focus-visible, dotykové cíle, responzivita 375–1440).
