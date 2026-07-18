@@ -588,3 +588,20 @@ Dle zpětné vazby designérky:
 **QA:** 1440 i 375 px — šipky u data, modal flow end-to-end (důvod + oběd → Neomluveno červeně,
 poznámka i oběd na kartě, záznam v omluvenkách + náhrada „nevznikla", toast), dnešek v omluvence
 zablokovaný (prefill zítřek), mobil bottom-sheet, žádné chyby v konzoli. Dist rebuilt.
+
+### 2026-07-18 — Dashboard rodiče, 3. iterace (denní program z reálné tabulky, hodiny průvodců)
+
+- **Hlavička výš:** velký datumový nadpis „Eliška · středa 3. 6. ‹ ▾ ›" je teď titulek stránky —
+  duplicitní „Přehled" v topbaru se na dashboardu skrývá (`core.js`, ttl='' pro `prehled`). Šipky
+  nowrap.
+- **Program dne z reality:** doplněn `DENNI` (činnost dle dne v týdnu) — zdroj `podklady/Pro rodiče
+  25_26 vhaaji.xlsx`, tab ČERVEN: Po Rytmika · Út Putování · St Pohyb · Čt Tvorba · Pá Hrátky s
+  pohádkou. Karta „Program dne" ukazuje činnost výrazně (`.prog-day`) + speciální akci (sraz) navíc.
+- **Průvodci dnes s hodinami:** z pillů na seznam řádků (avatar · jméno · od–do · ☾ uspává). Hodiny
+  (`h`) doplněny do seedu průvodců, grounded v tabu ROZVRH a kontakty (prototyp drží 4 průvodce;
+  reálný per-day roster je bohatší, zjednodušeno). Legenda „☾ = dnes uspává".
+- **Modal dnešní absence** ověřen skutečným kliknutím (funguje; předchozí „nevidím změnu" byla cache
+  starého distu — nutný hard refresh).
+
+**QA:** 1440 i 375 px — datum titulek (topbar bez „Přehled"), program dne se mění dle dne (Čt Tvorba,
+Pá Hrátky…), průvodci s hodinami, modal otevřen klikem, konzole čistá. Dist rebuilt.

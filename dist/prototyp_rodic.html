@@ -288,11 +288,11 @@ table.wt td.pastc{opacity:.45}
 
 /* dashboard / shared tiles */
 /* Dashboard — hlavička dne (velké jméno + datum), 3sloupcová mřížka, nadpisy karet */
-.dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:2px 0 14px}
+.dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:0 0 16px}
 .dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
-.dh-nav{display:flex;gap:6px;align-items:center}
+.dh-nav{display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
 .dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:10px;font-size:18px;color:var(--color-primary);cursor:pointer}
 .dh-today{min-height:44px;border:none;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;cursor:pointer;font-family:var(--font-sans)}
 .ch{font-family:var(--font-serif);font-size:16px;font-weight:600;color:var(--color-primary-strong);margin-bottom:9px}
@@ -542,7 +542,11 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .doch-sleep{font-size:13px;color:var(--color-text-muted);margin:-6px 0 10px}
 .doch-sleep b{color:var(--color-text)}
 .doch-pozn{background:var(--tint-ochre);border-radius:9px;padding:8px 11px;font-size:13px;line-height:1.45;margin:0 0 10px}
-.glist{display:flex;flex-wrap:wrap;gap:8px}
+.glist{display:flex;flex-direction:column;gap:2px}
+.grow{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;background:none;border:none;border-top:1px solid var(--color-border);padding:7px 0;cursor:pointer;text-align:left;font-family:var(--font-sans)}
+.grow:first-of-type{border-top:none}
+.grow-n{font-size:14px;font-weight:500;color:var(--color-text)}
+.grow-h{margin-left:auto;font-size:12.5px;color:var(--color-text-muted);flex-shrink:0;white-space:nowrap}
 .bp{padding:8px 0 4px}
 .bp+.bp{border-top:1px solid var(--color-border);margin-top:4px}
 .bp-k{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin-bottom:3px}
@@ -554,6 +558,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .abs-warn{background:var(--state-danger-bg);border:1px solid rgba(176,73,47,.25);color:var(--color-danger);border-radius:9px;padding:9px 12px;font-size:13px;line-height:1.45;margin-bottom:10px}
 .abs-menu{background:var(--color-surface-2);border-radius:9px;padding:6px 11px;margin-bottom:8px}
 .abs-hint{font-size:12px;color:var(--color-text-hint);margin:6px 0 2px}
+.prog-day{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--color-primary);margin:0 0 4px}
 </style>
 </head>
 <body>
@@ -671,11 +676,14 @@ const EVENTS={
   3:{title:'Společné putování Ďábličákem',place:'Vozovna Kobylisy',time:'8:00–8:30',note:'Na oběd jsme zpět ve školce.',sbalit:'pláštěnku a náhradní ponožky',map:'https://mapy.com/s/papobonuzu',gps:'50.1339225N, 14.4545787E'},
   4:{title:'Výlet předškoláků — horolezení',place:'Jungle Sport park, Letňany',time:'8:00–8:30',note:'Na oběd zpět do školky. Děti odpoledne nespí.',sbalit:'sportovní boty a pití',map:'',gps:''},
 };
+/* Denní program (činnost) dle dne v týdnu — zdroj: Pro rodiče 25_26 vhaaji.xlsx, tab ČERVEN.
+   Každý pracovní den má téma; speciální akce (výlety, sraz) navíc v EVENTS. */
+const DENNI=['Rytmika','Putování','Pohyb','Tvorba','Hrátky s pohádkou'];
 const guides=[
-  {n:'Helča',sur:'K',abbr:'He',schedule:'Po, St, Pá · 7:30–16:00',phone:'+420 720 111 222',email:'helca@haj.cz',uspava:true},
-  {n:'Gabča',sur:'N',abbr:'G',schedule:'Út, Čt · 7:30–16:00',phone:'+420 720 333 444',email:'gabca@haj.cz'},
-  {n:'Honza',sur:'P',abbr:'Ho',schedule:'St, Pá · 8:00–16:30',phone:'+420 720 555 666',email:'honza@haj.cz'},
-  {n:'Táňa',sur:'V',abbr:'T',schedule:'Po–Pá · 7:30–16:00',phone:'+420 720 777 888',email:'tana@haj.cz'},
+  {n:'Helča',sur:'K',abbr:'He',h:'7:30–16:00',schedule:'Po, St, Pá · 7:30–16:00',phone:'+420 720 111 222',email:'helca@haj.cz',uspava:true},
+  {n:'Gabča',sur:'N',abbr:'G',h:'8:20–15:00',schedule:'Út, Čt · 7:30–16:00',phone:'+420 720 333 444',email:'gabca@haj.cz'},
+  {n:'Honza',sur:'P',abbr:'Ho',h:'8:00–13:00',schedule:'St, Pá · 8:00–16:30',phone:'+420 720 555 666',email:'honza@haj.cz'},
+  {n:'Táňa',sur:'V',abbr:'T',h:'8:20–17:00',schedule:'Po–Pá · 7:30–16:00',phone:'+420 720 777 888',email:'tana@haj.cz'},
 ];
 const GUIDES_TODAY=[0,1,2,3];
 const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@haj.cz',phone:'+420 720 000 111',adresa:'Ďáblický háj, Praha 8'};
@@ -764,15 +772,17 @@ function renderDashboard(){
   else if(!today&&!editable(dashDay))h+=`<div class="edlock">Proběhlý den — jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)h+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
   h+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
-  h+=`<div class="tile"><div class="ch">Průvodci</div><div class="glist">`+GUIDES_TODAY.map(i=>`<button class="gchip" onclick="openGuide(${i})">${avatar(guides[i],26)}<span>${guides[i].n}</span>${guides[i].uspava?'<span class="moon">☾</span>':''}</button>`).join('')+`</div></div>`;
+  h+=`<div class="tile"><div class="ch">Průvodci dnes</div><div class="glist">`+GUIDES_TODAY.map(i=>{const g=guides[i];return `<button class="grow" onclick="openGuide(${i})">${avatar(g,30)}<span class="grow-n">${g.n}${g.uspava?' <span class="moon">☾</span>':''}</span><span class="grow-h">${g.h||''}</span></button>`;}).join('')+`</div>`;
+  if(guides.some(g=>g.uspava))h+=`<div class="doch-note" style="margin-top:8px">☾ = dnes uspává</div>`;
+  h+=`</div>`;
   h+=`</div>`;
   // 3) Sloupec 2 — dnešek: program, jídlo, básnička+písnička
   h+=`<div class="dcol">`;
-  h+=`<div class="tile"><div class="ch">${today?`Co ${c.ak} dnes čeká`:'Program dne'}</div>`;
+  h+=`<div class="tile"><div class="ch">Program dne</div>`;
+  h+=`<div class="prog-day">${DENNI[wd(dashDay)]||'Volný program'}</div>`;
   if(ev){h+=`<div class="ev"><div class="evt">${ev.title}</div><div class="evd">Sraz: <b>${ev.place}</b> · ${ev.time}</div><div class="evd">${ev.note}</div>`;
     if(ev.map)h+=`<a class="maplink" href="${ev.map}" target="_blank" rel="noopener">Otevřít mapu</a>`;
-    if(ev.gps)h+=`<div class="gps">${ev.gps}</div>`;if(ev.sbalit)h+=`<div class="sbalit">🎒 Nezapomeňte sbalit: <b>${ev.sbalit}</b></div>`;h+=`</div>`;
-  }else{h+=`<div class="ev"><div class="evd" style="font-size:13.5px">${c.n} začíná den ve školce.</div></div>`;}
+    if(ev.gps)h+=`<div class="gps">${ev.gps}</div>`;if(ev.sbalit)h+=`<div class="sbalit">🎒 Nezapomeňte sbalit: <b>${ev.sbalit}</b></div>`;h+=`</div>`;}
   h+=`</div>`;
   h+=`<div class="tile"><div class="ch">Co bude ${c.n} jíst</div>`+menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
   h+=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>
@@ -1162,7 +1172,8 @@ function renderHead(){
   el.innerHTML=h;
 }
 function render(){
-  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):TITLES[section];
+  /* Dashboard: velký datumový nadpis je titulek → v topbaru „Přehled" neopakujeme. */
+  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):(section==='prehled'?'':TITLES[section]);
   renderHead();renderDrawer();
   document.getElementById('modalRoot').innerHTML = (typeof absModal!=='undefined'&&absModal)?renderAbsModal():'';
   document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():renderAkceDetail(overlay.idx)):RENDER[section]();
