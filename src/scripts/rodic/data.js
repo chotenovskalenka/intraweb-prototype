@@ -71,11 +71,14 @@ const EVENTS={
   3:{title:'Společné putování Ďábličákem',place:'Vozovna Kobylisy',time:'8:00–8:30',note:'Na oběd jsme zpět ve školce.',sbalit:'pláštěnku a náhradní ponožky',map:'https://mapy.com/s/papobonuzu',gps:'50.1339225N, 14.4545787E'},
   4:{title:'Výlet předškoláků — horolezení',place:'Jungle Sport park, Letňany',time:'8:00–8:30',note:'Na oběd zpět do školky. Děti odpoledne nespí.',sbalit:'sportovní boty a pití',map:'',gps:''},
 };
+/* Denní program (činnost) dle dne v týdnu — zdroj: Pro rodiče 25_26 vhaaji.xlsx, tab ČERVEN.
+   Každý pracovní den má téma; speciální akce (výlety, sraz) navíc v EVENTS. */
+const DENNI=['Rytmika','Putování','Pohyb','Tvorba','Hrátky s pohádkou'];
 const guides=[
-  {n:'Helča',sur:'K',abbr:'He',schedule:'Po, St, Pá · 7:30–16:00',phone:'+420 720 111 222',email:'helca@haj.cz',uspava:true},
-  {n:'Gabča',sur:'N',abbr:'G',schedule:'Út, Čt · 7:30–16:00',phone:'+420 720 333 444',email:'gabca@haj.cz'},
-  {n:'Honza',sur:'P',abbr:'Ho',schedule:'St, Pá · 8:00–16:30',phone:'+420 720 555 666',email:'honza@haj.cz'},
-  {n:'Táňa',sur:'V',abbr:'T',schedule:'Po–Pá · 7:30–16:00',phone:'+420 720 777 888',email:'tana@haj.cz'},
+  {n:'Helča',sur:'K',abbr:'He',h:'7:30–16:00',schedule:'Po, St, Pá · 7:30–16:00',phone:'+420 720 111 222',email:'helca@haj.cz',uspava:true},
+  {n:'Gabča',sur:'N',abbr:'G',h:'8:20–15:00',schedule:'Út, Čt · 7:30–16:00',phone:'+420 720 333 444',email:'gabca@haj.cz'},
+  {n:'Honza',sur:'P',abbr:'Ho',h:'8:00–13:00',schedule:'St, Pá · 8:00–16:30',phone:'+420 720 555 666',email:'honza@haj.cz'},
+  {n:'Táňa',sur:'V',abbr:'T',h:'8:20–17:00',schedule:'Po–Pá · 7:30–16:00',phone:'+420 720 777 888',email:'tana@haj.cz'},
 ];
 const GUIDES_TODAY=[0,1,2,3];
 const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@haj.cz',phone:'+420 720 000 111',adresa:'Ďáblický háj, Praha 8'};

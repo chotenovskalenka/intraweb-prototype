@@ -27,15 +27,17 @@ function renderDashboard(){
   else if(!today&&!editable(dashDay))h+=`<div class="edlock">Proběhlý den — jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)h+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
   h+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
-  h+=`<div class="tile"><div class="ch">Průvodci</div><div class="glist">`+GUIDES_TODAY.map(i=>`<button class="gchip" onclick="openGuide(${i})">${avatar(guides[i],26)}<span>${guides[i].n}</span>${guides[i].uspava?'<span class="moon">☾</span>':''}</button>`).join('')+`</div></div>`;
+  h+=`<div class="tile"><div class="ch">Průvodci dnes</div><div class="glist">`+GUIDES_TODAY.map(i=>{const g=guides[i];return `<button class="grow" onclick="openGuide(${i})">${avatar(g,30)}<span class="grow-n">${g.n}${g.uspava?' <span class="moon">☾</span>':''}</span><span class="grow-h">${g.h||''}</span></button>`;}).join('')+`</div>`;
+  if(guides.some(g=>g.uspava))h+=`<div class="doch-note" style="margin-top:8px">☾ = dnes uspává</div>`;
+  h+=`</div>`;
   h+=`</div>`;
   // 3) Sloupec 2 — dnešek: program, jídlo, básnička+písnička
   h+=`<div class="dcol">`;
-  h+=`<div class="tile"><div class="ch">${today?`Co ${c.ak} dnes čeká`:'Program dne'}</div>`;
+  h+=`<div class="tile"><div class="ch">Program dne</div>`;
+  h+=`<div class="prog-day">${DENNI[wd(dashDay)]||'Volný program'}</div>`;
   if(ev){h+=`<div class="ev"><div class="evt">${ev.title}</div><div class="evd">Sraz: <b>${ev.place}</b> · ${ev.time}</div><div class="evd">${ev.note}</div>`;
     if(ev.map)h+=`<a class="maplink" href="${ev.map}" target="_blank" rel="noopener">Otevřít mapu</a>`;
-    if(ev.gps)h+=`<div class="gps">${ev.gps}</div>`;if(ev.sbalit)h+=`<div class="sbalit">🎒 Nezapomeňte sbalit: <b>${ev.sbalit}</b></div>`;h+=`</div>`;
-  }else{h+=`<div class="ev"><div class="evd" style="font-size:13.5px">${c.n} začíná den ve školce.</div></div>`;}
+    if(ev.gps)h+=`<div class="gps">${ev.gps}</div>`;if(ev.sbalit)h+=`<div class="sbalit">🎒 Nezapomeňte sbalit: <b>${ev.sbalit}</b></div>`;h+=`</div>`;}
   h+=`</div>`;
   h+=`<div class="tile"><div class="ch">Co bude ${c.n} jíst</div>`+menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
   h+=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>
