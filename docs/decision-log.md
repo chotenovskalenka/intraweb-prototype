@@ -270,7 +270,7 @@ Podklady: `podklady/Vhaaji pro rodiče DIGI.pdf`, `podklady/Vhaaji průvodce rit
 
 **Odloženo — náhrady.** Příručky popisují jiná pravidla než prototyp (Vhaaji: 20 % omluvených hodin; Maata: fixní roční kvóta hodin dle rozsahu docházky, čerpání rovnoměrně, 50 % v 1. pololetí) — a každá školka jiná. Prototypové „1 včas omluvený den = 1 náhrada" zatím zůstává; designérka ověří s vedením, co reálně platí. Pro admin z toho plyne otázka per-školkové konfigurace pravidel.
 
-### 2026-07-17 — Desktopová prezentace mobilních appek
+### 2026-07-17 — Desktopová prezentace mobilních appek — ⚠️ NAHRAZENO (viz „Responzivní re-layout" 2026-07-18)
 
 Mobilní appky (rodič, průvodce) se na desktopu roztahovaly přes celou šířku okna. Řešení bez zásahu do JS, jen v `layout.css` + `components.css` (media queries; na mobilu beze změny):
 
@@ -465,3 +465,22 @@ se zobrazí (ověřeno vynulováním seznamů), žádné chyby v konzoli. Dist r
 
 **QA:** rodič/průvodce/admin 1440 i 375 px — bez nečitelných textů, cíle ≥44 (mimo záměrný gcal),
 focus ring funguje, žádné chyby v konzoli. Dist rebuilt.
+
+### 2026-07-18 — Responzivní re-layout mobilních appek (nahrazuje telefonní rám)
+
+Designérka: telefonní rám s menu vedle nebyl responzivní, jen „mobil s menu". Zvolila **plně
+responzivní re-layout** (obsah se na desktopu přeskládá do více sloupců). Řešeno **CSS-only**
+v `layout.css` (JS beze změny), admin nedotčen (má vlastní `layout-admin.css`).
+
+- **<900 px:** beze změny — drawer overlay + jeden sloupec (mobile-first).
+- **≥900 px:** `.screen` = flex; `.drawer` = **trvalý levý sidebar** (sticky, 250px, border-right;
+  ne fixed overlay), burger a scrim skryté. `.scroll` = obsah, `flex:1`, max-width 1200px, vycentrovaný.
+- **Obsah do sloupců (masonry):** `#content{column-width:340px}` → 2 sloupce od ~900, 3 od ~1300.
+  `break-inside:avoid` na dětech; full-width přes sloupce (`column-span:all`): hero, day-nav,
+  `.omluvbtn`, `.vhead`, `.switch`, `.wkrow`, legend, stepper, filtry, `.back`, `.temanav`.
+- **Overlaye** (rodič do `#content`) se masonry skládají do pěkného vícesloupcového formuláře
+  (OD/DO kalendáře vedle sebe). **Modaly** (průvodce `#modalRoot`) se ≥700 px centrují jako dialog.
+
+**QA:** rodič i průvodce na 1680/1280/1024/375 px — sidebar + 2–3 sloupce, full-width hlavičky/akce,
+overlay omluvenky 2-sloupcový, modal centrovaný, mobil beze změny, žádné chyby. Nahrazuje zápis
+„Desktopová prezentace mobilních appek".
