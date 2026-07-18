@@ -2,8 +2,10 @@
 
 Živý dokument. Vzniká ve fázi 4 (redesign dle skutečné identity). Zdroj pravdy pro
 vizuál je **web školky [vhaaji.cz](https://vhaaji.cz/)**, ne prototyp ani invence modelu.
-Tato první verze pokrývá **Foundations** vytěžené z webu (fáze 4.1) — návrh k odsouhlasení
-designérkou (vstup V2). Tokeny prototypu se zatím **nepřepínají**.
+Foundations (4.1) níže jsou **schválené (V2)** a **nasazené v prototypu**: paleta a typografie
+přeneseny do `tokens.css` ve fázi 4.2, tvarosloví a stavový vizuál sjednoceny ve fázi 4.3
+(viz „Komponenty a stavy" na konci). Sekce „Návrh mapování" a proces výběru jsou ponechány
+jako doklad cesty.
 
 Pracovní extrakt (logo, hero, vzorky) je v `podklady/web-extract/` (gitignore).
 
@@ -151,3 +153,69 @@ body 15/23, label 13/18, hint 12/16 (px/px). Ladí se ve 4.2.
 > **Stav: V2 schváleno.** Barvy ✅, nadpisy Bricolage Grotesque ✅, tělo/UI Inter ✅, směr UI
 > whitespace + barva (sweet spot) ✅. Fáze 4.1 uzavřena. Hodnoty se přenesou do `tokens.css`
 > ve fázi 4.2. Skiny sesterských školek mění **jen barevnost**; typografie je společná (BRIEF kap. 10).
+
+---
+
+## Komponenty a stavy (fáze 4.3 — sada rozhodnutí a pravidel)
+
+Po aplikaci palety (4.2) sjednoceno tvarosloví a stavový vizuál. Toto je **sada rozhodnutí a
+pravidel**, ne knihovna — pravidla, jak stavět, ať appky mluví jedním jazykem.
+
+### Tokeny (tokens.css)
+
+- **Povrchy/text:** `--color-bg`, `--color-surface`, `--color-surface-2`, `--color-text`,
+  `--color-text-muted`, `--color-text-hint`.
+- **Značka:** `--color-primary`, `--color-primary-strong`, `--color-accent` (výplň),
+  `--color-accent-ink` (okrová jako text), `--color-accent-soft` (rose, dekor), `--color-info`,
+  `--color-on-primary` (text na primární ploše).
+- **Tinty:** `--tint-green/rose/ochre/blue` (světlé kategorie/chipy).
+- **Spacing:** `--space-xs/sm/md/lg` (4/8/12/16). Aktivováno tam, kde hodnota přesně sedí;
+  zbytek rytmu designu je záměrně mimo škálu (5/6/9/11/13/15) — plošná migrace = vizuální změna, neděláme.
+- **Typografie:** `--font-serif` = Bricolage Grotesque (nadpisy), `--font-sans` = Inter (tělo/UI).
+
+### Stavová paleta (`--state-*`) — jeden jazyk stavů
+
+Každý stav má `-ink` (text) a `-bg` (světlá výplň). **Nikdy nebarvit stav natvrdo — vždy přes `--state-*`.**
+
+| Stav | Token | Význam | Použití |
+|---|---|---|---|
+| ok | `--state-ok-*` | pozitivní/hotovo | náhrada dostupná, omluvenka včas, uhrazeno |
+| info | `--state-info-*` | naplánováno/čeká | náhrada naplánovaná, platba čeká na spárování, odpolední docházka |
+| warn | `--state-warn-*` | pozor/částečně | omluvenka po deadlinu, částečně uhrazeno, dopolední docházka |
+| danger | `--state-danger-*` | problém | neomluveno, po splatnosti, náhrada nevznikla |
+| neutral | `--state-neutral-*` | využito/omluveno | náhrada využitá, omluveno |
+| muted | `--state-muted-*` | neaktivní | expirováno, zrušeno, archivováno |
+| brand | `--state-brand-*` | zvýraznění značkou | celodenní docházka, odeslaná aktualita |
+
+Pozn.: `warn` používá `--color-accent-ink` (ne světlou `--color-accent`) — okrová jako text jinak neplní AA.
+
+### Badge / chip
+
+- **`.bdg`** = malý štítek stavu; modifikátor pojmenovaný doménově (`.n-dostupna`, `.om-vcas`,
+  `.ne`, `.part`, `.wait`, `.sent`, `.arch`, …), ale **barva vždy z `--state-*`** (definice v CSS
+  seskupené po stavech). Tentýž stav = tatáž barva ve všech třech appkách.
+- **`.chip`** = docházkový kód (rodič) / inline popisek (průvodce). Barvy z **sdílené mapy `CODES`
+  v `shared.js`** (`[label, ink, bg]` přes `--state-*`). Kódy: C=brand, D=warn, O=info, OM=neutral,
+  NE=danger. Průvodcovy inline popisky (`codeLabel`, `dlegend`) čerpají ze stejné `CODES`.
+
+### Toast
+
+Jeden mechanismus napříč appkami: globální `showToast(m)` v `shared.js` → element `#toast`
+(mimo `#content`, přežije re-render) + třída `.on`. (Povolená výjimka z pravidla „appky nesdílí data".)
+
+### Typografická hierarchie (mobilní appky sjednocené)
+
+Dvojí varianty sdílených tříd (`.tlab`, `.tval`, `.ttl`, `.ditem`, `.hint`, `.note`, …) sjednoceny
+na **jednu — průvodcovskou (větší/čitelnější), ať funguje venku na mobilu**; rodičovské přepisy
+smazány. Rodič i průvodce mají teď shodnou typografickou škálu.
+
+### Empty states a potvrzení
+
+- Každý **variabilní** seznam má smysluplný prázdný stav (`.empty`, sdílené v components.css):
+  průvodce napříč obrazovkami; rodič náhrady/omluvenky. Seznamy vždy plněné seed daty empty stav nepotřebují.
+- Každá **mutující akce** dává potvrzení přes `showToast` (omluvenka, docházka, plán, fond, aktuality…).
+
+### Kolize jmen (ponecháno per-app)
+
+`.frow`, `.gchips`/`.gchip` mají v každé appce jiný účel a nikdy se nenačítají spolu — nejsou to
+sdílené komponenty, zůstávají v příslušném `screens-*.css`.

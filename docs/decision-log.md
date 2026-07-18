@@ -42,6 +42,8 @@ Sjednoceno jen to, co je **vizuálně/funkčně nerozlišitelné** (Neměnné pr
 - **Toast.** Průvodce: pevný `#toast` + třída `.on` s CSS transition (`shared.js` `showToast`). Rodič: `#toastbox`, do kterého se vloží `<div class="toast">` a po 1,8 s odstraní (`rodic/core.js` `window.showToast`, přebíjí sdílenou verzi). CSS `.toast` se proto taky liší (layout.css s `.on`/opacity/transform vs. screens-rodic.css statický). Sjednocení = viditelná změna animace u jedné z appek → neprovedeno.
 - **Docházkové kódy.** Obě appky používají shodná písmena `C/D/O/OM`. Rodič má navíc `NE` (Neomluveno; průvodce pro tentýž stav používá prázdný řetězec) a vlastní centrální mapu `CODES`/`ORDER`/`chip`/`mark`; průvodce centrální mapu nemá (popisky inline v obrazovkách). Vytvoření sdílené `CODES` mapy a přepojení průvodcových inline popisků je refaktor s rizikem změny chování → odloženo na fázi 1 (sjednocení stavů), viz plán 0.3 bod 4.
 
+**✅ VYŘEŠENO ve fázi 4.3 (2026-07-18):** všechny níže uvedené třídy sjednoceny na **průvodcovskou (větší/čitelnější) variantu**, rodičovské přepisy smazány ze `screens-rodic.css`. Rodič i průvodce mají teď shodnou typografickou hierarchii. `.tlab` navíc tokenizován (`#605B4F` → `--color-text-muted`). Tabulka níže je historický záznam.
+
 **Otevřená rozhodnutí — viditelně odlišné varianty sdílených tříd (ponechány obě, rozhodne uživatelka):**
 
 Tyto třídy mají v průvodci (`components.css`/`layout.css`) a rodiči (`screens-rodic.css`) odlišnou vizuální hodnotu. Sjednocení na jednu variantu by změnilo vzhled jedné appky, proto zatím ponechány obě. Pokud uživatelka bude chtít jednotnou typografickou škálu, půjde o vědomou vizuální úpravu (fáze 1 / UI), ne o mechanickou dedup.
@@ -416,3 +418,29 @@ Přeneseno schválené V2 do prototypu. Vzhled se poprvé reálně změnil.
 stará barva, logo v hlavičkách, drawer OK, stavové badge čitelné, žádné chyby v konzoli. Dist
 ověřen jako **offline-schopný** (žádné externí obrázky mimo Google Fonts; logo+favicon jako data URI).
 Typografická velikostní škála jako tokeny a aktivace `--space-*` v komponentách zůstává na 4.3.
+
+### 2026-07-18 — Fáze 4.3: sjednocení komponent a stavový vizuál
+
+- **Sjednocení dvojích variant** (tab. „Otevřená rozhodnutí" výše): 16 sdílených tříd sjednoceno na
+  průvodcovskou (větší) hodnotu smazáním rodičovských přepisů; `.tlab` tokenizován. Rodič i průvodce
+  mají shodnou typografickou škálu.
+- **`--space-*` aktivace:** bezpečně na 13 přesných shodách (jen spacing, ne font-size/radius) v
+  components.css. Rytmus designu je jinak záměrně mimo škálu (5/6/9/11/13/15) — plošná migrace by
+  změnila vzhled, neděláme.
+- **Toast sjednocen:** rodič přešel z vlastního `#toastbox` + re-render na sdílený `showToast` (shared.js)
+  přes `#toast` element (mimo `#content`) + `.on`. Jeden mechanismus napříč appkami (povolená výjimka).
+  Rodičovský `.toast` CSS přepis smazán.
+- **Stavová paleta `--state-*`** (ok/info/warn/danger/neutral/muted/brand, každý -ink/-bg) v tokens.css.
+  Badge třídy (`.bdg.*`) v rodiči/adminu/components přepojeny na ni → **tentýž stav vypadá stejně ve
+  všech appkách**. Opraven kontrast: `warn` používá `--color-accent-ink` (světlá accent jako text
+  neplnila AA).
+- **Sdílená `CODES`** přesunuta do `shared.js` (barvy z `--state-*`); rodič i průvodce ji sdílí,
+  průvodcovy inline popisky (`codeLabel`, `dlegend`) na ni přepojeny (odložený bod z 0.3).
+- **Empty states:** doplněny do rodičovských náhrad a omluvenek; průvodce je má napříč. Seznamy vždy
+  plněné seed daty je nepotřebují. Mutující akce dávají potvrzení přes `showToast`.
+- **design-system.md:** doplněna sekce „Komponenty a stavy" (tokeny, stavová paleta, badge/chip, toast,
+  typografická hierarchie, empty states) — sada rozhodnutí a pravidel dle briefu.
+
+**QA (prohlížeč):** rodič/průvodce/admin 1440 i 375 px — badge stavy jednotné napříč appkami (ověřeny
+shodné barvy CODES v rodiči i průvodcovském legendu), toast funguje přes sdílený `#toast`, empty stavy
+se zobrazí (ověřeno vynulováním seznamů), žádné chyby v konzoli. Dist rebuilt, offline-schopný.
