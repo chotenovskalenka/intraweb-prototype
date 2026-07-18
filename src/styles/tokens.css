@@ -28,10 +28,10 @@
   --tint-blue:#DEE7EA;
   /* Stavová paleta — jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
      Každý stav má -ink (text) a -bg (světlá výplň). */
-  --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.13);
-  --state-info-ink:var(--color-info);        --state-info-bg:rgba(73,109,126,.15);
+  --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.11);
+  --state-info-ink:var(--color-info);        --state-info-bg:rgba(73,109,126,.10);
   --state-warn-ink:var(--color-accent-ink);  --state-warn-bg:rgba(200,188,133,.22);
-  --state-danger-ink:var(--color-danger);    --state-danger-bg:rgba(176,73,47,.12);
+  --state-danger-ink:var(--color-danger);    --state-danger-bg:rgba(176,73,47,.08);
   --state-neutral-ink:var(--color-text-muted);--state-neutral-bg:rgba(92,101,96,.14);
   --state-muted-ink:var(--color-text-hint);  --state-muted-bg:rgba(31,42,46,.07);
   --state-brand-ink:var(--color-primary);    --state-brand-bg:rgba(43,112,89,.12);

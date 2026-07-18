@@ -14,7 +14,7 @@
 .cap-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .cap-nm{font-family:var(--font-serif);font-size:15.5px;color:var(--color-primary-strong)}
 .cap-n{font-size:13px;color:var(--color-text-muted);font-weight:600}
-.cap-n.is-full{color:var(--color-accent)}
+.cap-n.is-full{color:var(--color-accent-ink)}
 .cap-bar{height:8px;background:var(--color-surface-2);border-radius:999px;overflow:hidden}
 .cap-fill{display:block;height:100%;background:var(--color-primary);border-radius:999px}
 .cap-fill.is-full{background:var(--color-accent)}
@@ -39,7 +39,7 @@
 .al-row{display:flex;gap:9px;align-items:flex-start;padding:7px 0;font-size:13.5px;color:var(--color-text);line-height:1.45}
 .al-ic{flex-shrink:0;width:18px;text-align:center}
 .al-sk{color:var(--color-text-muted)}
-.al-data .al-ic{color:var(--color-accent)}
+.al-data .al-ic{color:var(--color-accent-ink)}
 .al-provoz .al-ic{color:var(--color-info)}
 .al-system .al-ic{color:var(--color-success)}
 
@@ -49,7 +49,7 @@
 .nh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
 .nh-cell{text-align:center;background:var(--color-surface-2);border-radius:12px;padding:12px 6px}
 .nh-num{font-family:var(--font-serif);font-weight:600;font-size:26px;color:var(--color-primary-strong);line-height:1}
-.nh-num.warn{color:var(--color-accent)}
+.nh-num.warn{color:var(--color-accent-ink)}
 .nh-lab{font-size:11.5px;color:var(--color-text-muted);margin-top:5px}
 
 /* (e) úkoly */
@@ -68,7 +68,7 @@
 .por-sk{color:var(--color-text-muted)}
 .por-typ{font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px;flex-shrink:0}
 .por-typ.porada{color:var(--color-primary);background:rgba(43,112,89,.12)}
-.por-typ.evaluace{color:var(--color-accent);background:rgba(200,188,133,.14)}
+.por-typ.evaluace{color:var(--color-accent-ink);background:rgba(200,188,133,.14)}
 
 /* badge varianty stavů aktuality (základ .bdg z components.css) */
 .bdg.sent{color:var(--state-brand-ink);background:var(--state-brand-bg)}

@@ -11,7 +11,7 @@ function renderDashboard(){
   {const av=dostupne(c), ne=nextExp(c);
    h+=`<button class="tile nahdash" onclick="go('dochazka')"><div class="ftop"><div><div class="tlab" style="margin:0">Náhrady</div><div class="nahdashn">${av} ${nplural(av)}</div></div><div class="nahdashx">${ne?'nejbližší expirace '+ne+' ›':'›'}</div></div></button>`;}
   if(dashEdit&&(editable(dashDay)||dashDay===TODAY))h+=`<div class="tile dashedit">${editor(dashDay)}</div>`;
-  if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0">Neuhrazeno · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
+  if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>Po splatnosti · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
   // K úhradě přesunuto úplně dolů
   const nws=NEWS.filter(n=>TODAY<=n.until).slice(0,5);
   if(nws.length){h+=`<div class="tile newsbox"><div class="tlab tlabrow"><button class="tlabbtn" onclick="go('aktuality')">Aktuality<span class="tarr">›</span></button></div>`;
