@@ -98,13 +98,16 @@ The running record is more current than any summary. Before starting, read:
 
 ## Dashboard UX pattern ("soupis dne")
 
-The parent dashboard was rebuilt as a **prioritized day summary** (see decision-log iterations):
-big date header as the page title (`Eliška · středa 3. 6. ‹ ▾ ›`, topbar "Přehled" hidden), then
-priority order: **1)** overdue invoice (full-width red alert) · **2)** attendance status + one adaptive
-excuse action (today = same-day absence modal; future day = timely omluvenka) · **3)** today (program,
-guides with hours, menu) · **4)** what's ahead + news. Card headings use `.ch`; `.dash3` grid = 2 cols
-≥900 px, 3 cols ≥1200 px; mobile stacks in priority order. Reuse this pattern (big date title, priority
-columns, real card headings) when building the **guide dashboard** next.
+**Both dashboards** (parent and guide) were rebuilt as a **prioritized day summary** (see decision-log
+iterations). Shape: big date header as the page title (`Eliška · středa 3. 6. ‹ ▾ ›`, topbar "Přehled"
+hidden) then priority columns. Parent order: **1)** overdue invoice (full-width red alert) · **2)**
+attendance status + one adaptive excuse action (today = same-day absence modal; future day = timely
+omluvenka) · **3)** today (day program, guides with hours, menu) · **4)** what's ahead + news. Guide
+order: attendance (counts + action + who's absent) · today (day program from `RYTMUS`, poem/song from
+`TEMA`, events) · team & ops (guides on shift with hours, health notes). The **shared dashboard classes**
+(`.dash-head`/`.dh-t`/`.ch`/`.dash3`/`.dcol`/`.cardlink`/`.prog-day`) live in `components.css` — reuse
+them, don't fork; parent-specific day navigation stays in `screens-rodic.css`. `.dash3` = 2 cols ≥900 px,
+3 cols ≥1200 px; mobile stacks in priority order.
 
 ## Real source data
 
@@ -121,7 +124,7 @@ if on the default branch. Rebuild `dist/` and include it in the commit for any c
 
 ## Where things stand / next
 
-Phases 0–4.4 done; the parent dashboard has been restructured (3 iterations). **Next: apply the same
-"soupis dne" approach to the guide dashboard** (`src/scripts/pruvodce/screens/prehled.js`). Remaining in
-phase 4: **4.5** sister-school skins (color-only via `src/styles/skins.css`, waiting on palettes = input
-V3) and **4.6** a Figma library. The decision-log always has the freshest status — trust it over this line.
+Phases 0–4.4 done. **Both** dashboards (parent, guide) have been restructured into the "soupis dne"
+pattern. Remaining in phase 4: **4.5** sister-school skins (color-only via `src/styles/skins.css`,
+waiting on palettes = input V3) and **4.6** a Figma library; respondent testing is possible now. The
+decision-log always has the freshest status — trust it over this line.
