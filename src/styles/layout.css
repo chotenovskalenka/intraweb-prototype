@@ -33,9 +33,9 @@
   #content{column-count:2;column-gap:24px}
   #content > *{break-inside:avoid;margin-bottom:20px}
   /* karty na desktopu dostanou jemný stín pro definici (na krémovém pozadí jinak splývají) */
-  #content > .tile,#content > .newsitem,#content > .newsbox{box-shadow:0 1px 3px rgba(31,42,46,.06)}
+  #content > .tile,#content > .newsitem,#content > .newsbox,.dash3 .tile{box-shadow:0 1px 3px rgba(31,42,46,.06)}
   /* prvky přes celou šířku (přehledové hlavičky, akce, sekce, seznamy docházky) */
-  #content > .hero,#content > .daybar,#content > .daypicker,#content > .omluvbtn,#content > .vhead,
+  #content > .dash-head,#content > .dash3,#content > .neuhr,#content > .daypicker,#content > .omluvbtn,#content > .vhead,
   #content > .switch,#content > .mini,#content > .bulktoggle,#content > .hint,#content > .note2,
   #content > .sectip,#content > .selinfo,#content > .choices,#content > .wkrow,#content > .legend,
   #content > .stepper,#content > .filters,#content > .back,#content > .temanav,

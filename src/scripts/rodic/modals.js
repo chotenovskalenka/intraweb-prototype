@@ -75,7 +75,9 @@ function renderOmluvenkaDone(c){
   h+=`<button class="omdonebtn" onclick="closeOverlay()">Hotovo</button>`;
   return h;
 }
-window.openOmluvenka=()=>{let t=NOW.d+1;while(t<=30&&isWE(t))t++;omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
+/* Volitelný prefill dne (z dashboardu: dnešek = pozdní omluva, budoucí den = včasná).
+   Bez argumentu (sekce Docházka) předvyplní nejbližší omluvitelný den. */
+window.openOmluvenka=day=>{let t;if(day>=NOW.d&&day<=30&&!isWE(day)){t=day;}else{t=NOW.d+1;while(t<=30&&isWE(t))t++;}omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
 window.omPick=(which,d)=>{omDraft[which]=d;if(which==='od'&&omDraft.do<d)omDraft.do=d;if(which==='do'&&d<omDraft.od)omDraft.od=d;render();};
 window.omReason=k=>{omDraft.duvod=k;render();};
 window.omNote=v=>{omDraft.pozn=v;};
