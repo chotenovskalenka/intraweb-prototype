@@ -605,3 +605,37 @@ zablokovaný (prefill zítřek), mobil bottom-sheet, žádné chyby v konzoli. D
 
 **QA:** 1440 i 375 px — datum titulek (topbar bez „Přehled"), program dne se mění dle dne (Čt Tvorba,
 Pá Hrátky…), průvodci s hodinami, modal otevřen klikem, konzole čistá. Dist rebuilt.
+
+### 2026-07-18 — Průvodcovský dashboard: „soupis dne" (stejný přístup jako rodič)
+
+Přenesen přístup z rodičovského dashboardu i na průvodcovský (`pruvodce/screens/prehled.js`):
+velký datumový nadpis, prioritní sloupce, nadpisy karet `.ch`. Použit skill **ui-ux-pro-max**
+jen jako principy (hierarchie nadpisů h1→`.ch`, stav barvou **i** textem, konzistentní škála,
+dotykové cíle) — jeho paleta/fonty (vibrant, Baloo 2) **nepřevzaty** (schválená identita = neměnné pravidlo).
+
+- **Hlavička = titulek stránky:** velký H1 „Středa 3. června 2026" (`.dash-head`/`.dh-t`) +
+  podtitul „Dnes ve školce · Táňa (otevírá) · …" (`.dh-sub`, odvozeno z `GUIDESHIFT`/`serving`).
+  Duplicitní „Přehled" v topbaru se na dashboardu skrývá (`core.js`, `ttl=''` pro `prehled` — stejně
+  jako rodič). Datum bez listování dnů (průvodcovský dashboard je „dnešek", ne procházení).
+- **Prioritní sloupce `.dash3`** (≥900 px 2 sloupce, ≥1200 px 3; mobil = stoh dle priorit):
+  - **Sl. 1 Docházka:** počty dne (odvozené z `counts()`) + velké tlačítko „Otevřít dnešní docházku"
+    + „Kdo dnes nepřijde" (jmenovitě, důvod barvou i textem).
+  - **Sl. 2 Dnešek:** „Program dne" (`.prog-day` z `RYTMUS[wd]` + kroužek), „Básnička a písnička
+    týdne" (z `TEMA`), „Dnešní akce".
+  - **Sl. 3 Tým a provoz:** „Průvodci dnes" (řádky `.np` s hodinami + otevírá + ☾ uspává),
+    „Zdravotní a provozní poznámky".
+  Nahrazuje dřívější jednosloupcový strip + `.prehl-tema`.
+
+- **Sdílené dashboard třídy přesunuty do `components.css`** (jeden zdroj pravdy — teď je používají
+  oba dashboardy): `.dash-head`, `.dh-t`, `.ch`, `.dash3`/`.dcol`, `.cardlink`, `.prog-day`
+  (+ nový `.dh-sub`). Ze `screens-rodic.css` odstraněny; parent-specifické (`.dh-nav`/`.dh-step`/
+  `.dh-today`/`.dh-date`, day-picker, `.doch-*`) tam zůstávají. Kaskáda beze změny (components se
+  načítá dřív, žádné konfliktní přepisy) — ověřeno, rodičovský dashboard bez regrese.
+- **Nový opt-in `.tabs.wrap`** (v `components.css`): na desktopu se počty ve sloupci zalomí (jinak
+  je `.tabs` horizontální scroll se skrytým scrollbarem → „Nepřítomní" schované). Docházková sekce
+  používá `.tabs` beze změny.
+
+**QA (src přes http server):** průvodce 1280 (3 sloupce dle priorit) i 375 px (stoh: Docházka →
+Kdo nepřijde → Program → Básnička → Akce → Průvodci → Poznámky); 7 karet `.ch`, všech 5 počtů
+viditelných (zalomeno 3+2), topbar bez „Přehled", program „Pohyb" + kroužek dle dne. Rodič
+1280 bez regrese (velký datum s listováním, `.prog-day`, 3 sloupce). Konzole čistá u obou. Dist rebuilt.
