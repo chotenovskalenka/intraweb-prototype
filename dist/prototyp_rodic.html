@@ -109,9 +109,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   #content{column-count:2;column-gap:24px}
   #content > *{break-inside:avoid;margin-bottom:20px}
   /* karty na desktopu dostanou jemný stín pro definici (na krémovém pozadí jinak splývají) */
-  #content > .tile,#content > .newsitem,#content > .newsbox{box-shadow:0 1px 3px rgba(31,42,46,.06)}
+  #content > .tile,#content > .newsitem,#content > .newsbox,.dash3 .tile{box-shadow:0 1px 3px rgba(31,42,46,.06)}
   /* prvky přes celou šířku (přehledové hlavičky, akce, sekce, seznamy docházky) */
-  #content > .hero,#content > .daybar,#content > .daypicker,#content > .omluvbtn,#content > .vhead,
+  #content > .dash-head,#content > .dash3,#content > .neuhr,#content > .daypicker,#content > .omluvbtn,#content > .vhead,
   #content > .switch,#content > .mini,#content > .bulktoggle,#content > .hint,#content > .note2,
   #content > .sectip,#content > .selinfo,#content > .choices,#content > .wkrow,#content > .legend,
   #content > .stepper,#content > .filters,#content > .back,#content > .temanav,
@@ -266,9 +266,9 @@ table.wt td.pastc{opacity:.45}
   /* ghost / outline / segment tlačítka — jemný tint */
   .cbtn:hover,.addbtn:hover,.bulktoggle:hover,.omx:hover,.filters button:hover:not(.on),.switch button:hover:not(.on),.mini button:hover:not(.on),.temanav button:hover:not(.on),.kids button:hover:not(.on),.choices button:hover{background:rgba(43,112,89,.06);border-color:var(--color-primary)}
   /* klikací karty / řádky — zvýraznění povrchu */
-  button.tile:hover,.akce:hover,.hkid:hover,.kbtn:hover,.daypick:hover,.prehl-abs:hover,.zitra:hover,.stepper button:hover:not(:disabled),.daybar button:hover{background:var(--color-surface-2)}
+  button.tile:hover,.akce:hover,.newsrow:hover,.kbtn:hover,.prehl-abs:hover,.stepper button:hover:not(:disabled),.dh-step:hover{background:var(--color-surface-2)}
   /* textové odkazy */
-  .clink:hover,.newsmore:hover,.tlabbtn:hover{text-decoration:underline}
+  .clink:hover,.newsmore:hover,.cardlink:hover,.tlabbtn:hover{text-decoration:underline}
 }
 </style>
 <style>
@@ -287,16 +287,25 @@ table.wt td.pastc{opacity:.45}
 .kchk{margin-left:auto;color:var(--color-primary);font-weight:700}
 
 /* dashboard / shared tiles */
-.hero{background:var(--color-primary);border-radius:var(--radius-md);padding:15px 16px;margin-bottom:8px;color:var(--color-on-primary)}
-.hero .hl{font-size:12px;opacity:.78;text-transform:uppercase;letter-spacing:.04em}
-.hkid{min-height:44px;display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;padding:0;cursor:pointer;color:var(--color-on-primary);text-align:left}
-.hkid .av{border:1.5px solid rgba(249,247,241,.45)}
-.hname{font-family:var(--font-serif);font-size:15px;font-weight:500}
-.harr{margin-left:auto;font-size:18px;opacity:.65}
-.hero .hrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:13px;padding-top:13px;border-top:1px solid rgba(249,247,241,.18)}
-.hero .hchip{font-family:var(--font-serif);font-size:22px;font-weight:600}
-.hero .ed{min-height:44px;background:var(--color-on-primary);border:none;color:var(--color-primary-strong);font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:11px 18px;border-radius:10px;cursor:pointer;box-shadow:0 1px 4px rgba(31,42,46,.18)}
-.profillink{background:none;border:none;color:var(--color-primary);font-weight:600;font-size:12.5px;font-family:var(--font-sans);cursor:pointer;padding:4px 2px;margin-bottom:9px}
+/* Dashboard — hlavička dne (velké jméno + datum), 3sloupcová mřížka, nadpisy karet */
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:2px 0 14px}
+.dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
+.dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
+.dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
+.dh-nav{display:flex;gap:6px;align-items:center}
+.dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:10px;font-size:18px;color:var(--color-primary);cursor:pointer}
+.dh-today{min-height:44px;border:none;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;cursor:pointer;font-family:var(--font-sans)}
+.ch{font-family:var(--font-serif);font-size:16px;font-weight:600;color:var(--color-primary-strong);margin-bottom:9px}
+.doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}
+.doch-code{font-family:var(--font-serif);font-size:24px;font-weight:700}
+.doch-day{font-size:12.5px;color:var(--color-text-muted)}
+.doch-note{font-size:12.5px;color:var(--color-text-hint);margin-top:8px}
+.cardlink{display:block;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);margin-top:12px;padding:12px 0 2px;color:var(--color-primary);font-weight:600;font-size:13px;font-family:var(--font-sans);cursor:pointer}
+@media (min-width:900px){
+  .dash3{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start}
+  .dcol{min-width:0}
+}
+@media (min-width:1200px){.dash3{grid-template-columns:repeat(3,1fr)}}
 .np.pay{color:var(--color-accent-ink);border-top:1px solid var(--color-border);margin-top:4px;padding-top:8px}
 .np.pay b{color:var(--color-accent-ink)}
 .ev .evt{font-weight:600;font-size:14px;color:var(--color-primary-strong)}
@@ -304,7 +313,6 @@ table.wt td.pastc{opacity:.45}
 .ev .evd b{font-weight:600}
 .maplink{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--color-primary);font-weight:600;text-decoration:none;border:1px solid var(--color-primary);border-radius:8px;padding:6px 12px}
 .gps{font-size:11px;color:var(--color-text-hint);margin-top:6px}
-.glab{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin:13px 0 7px}
 .gchips{display:flex;gap:8px;flex-wrap:wrap}
 .gchip{min-height:44px;display:flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:999px;padding:4px 12px 4px 4px;font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--color-text);cursor:pointer}
 .moon{color:var(--color-info);font-size:13px}
@@ -359,9 +367,6 @@ table.wt td.pastc{opacity:.45}
 /* --- Omluvenka + náhrady (fáze 1) --- */
 .omluvbtn{display:block;width:100%;border:none;background:var(--color-primary);color:var(--color-on-primary);font-family:var(--font-sans);font-size:15px;font-weight:600;padding:14px;border-radius:12px;cursor:pointer;margin-bottom:11px;text-align:center}
 .omdonebtn{display:block;width:100%;border:1px solid var(--color-border-strong);background:transparent;color:var(--color-text-muted);font-family:var(--font-sans);font-size:14px;padding:12px;border-radius:11px;cursor:pointer}
-.nahdash .ftop{align-items:flex-start}
-.nahdashn{font-family:var(--font-serif);font-size:22px;font-weight:600;color:var(--color-primary-strong);margin-top:2px}
-.nahdashx{font-size:11.5px;color:var(--color-primary);font-weight:600;text-align:right;line-height:1.35}
 .nahbig{font-family:var(--font-serif);font-size:24px;font-weight:600;color:var(--color-primary-strong);margin-top:2px}
 .nahexp{font-size:11px;color:var(--color-text-muted);text-align:right;line-height:1.35}
 .nahsub2{font-size:11.5px;color:var(--color-text-hint);margin:8px 0 10px;line-height:1.45}
@@ -403,11 +408,11 @@ table.wt td.pastc{opacity:.45}
 .alertsub{display:block;font-size:10.5px;color:var(--color-text-hint);margin-top:3px}
 button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
 .newsbox{padding-bottom:8px}
-.newsrow{display:flex;align-items:flex-start;gap:9px;width:100%;background:none;border:none;border-top:1px solid var(--color-border);padding:8px 0;font-family:var(--font-sans);font-size:13px;color:var(--color-text);cursor:pointer;text-align:left;line-height:1.45}
+.newsrow{display:flex;align-items:baseline;gap:9px;width:100%;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;font-family:var(--font-sans);font-size:13px;color:var(--color-text);cursor:pointer;text-align:left;line-height:1.45}
 .newsrow:first-of-type{border-top:none;padding-top:2px}
-.newsdot{width:7px;height:7px;border-radius:50%;background:var(--color-danger);flex-shrink:0;margin-top:6px}
-.newsdot.q{background:var(--color-accent-soft)}
-.newsline{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.newsdate{font-size:11.5px;color:var(--color-text-muted);min-width:36px;flex-shrink:0}
+.newsline{flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.newsarr{color:var(--color-text-hint);flex-shrink:0}
 .newsmore{min-height:44px;width:100%;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0 3px;font-family:var(--font-sans);font-size:12.5px;font-weight:600;color:var(--color-primary);cursor:pointer}
 .newsitem{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:9px}
 .newsitem.urgent{border-color:rgba(176,73,47,.35);background:rgba(176,73,47,.05)}
@@ -416,9 +421,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
 .sbalit{margin-top:9px;padding:8px 11px;background:rgba(200,188,133,.10);border-radius:9px;font-size:12.5px;color:var(--color-accent-ink)}
 .sbalit b{font-weight:600}
-.zitra{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans);border-color:var(--color-accent-soft)}
 .tilelink{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
-.tlabrow{display:flex;align-items:center;justify-content:space-between}
 .tlabbtn{min-height:44px;display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:0;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;cursor:pointer}
 .tarr{font-size:15px;color:var(--color-primary);font-weight:600}
 .bulkbar{background:var(--color-surface);border:1px solid var(--color-accent);border-radius:12px;padding:11px 13px;margin-bottom:11px}
@@ -445,7 +448,6 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .dpcell.we{background:transparent;color:var(--color-text-hint);cursor:default}
 .dpcell.today{outline:2px solid var(--color-primary);outline-offset:-2px}
 .dpcell.sel{background:var(--color-primary);color:var(--color-on-primary)}
-.dashedit{margin-top:-4px;border-top-left-radius:0;border-top-right-radius:0}
 .savebtn{width:100%;margin-top:11px;border:none;background:var(--color-primary);color:var(--color-on-primary);font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:11px;border-radius:10px;cursor:pointer}
 .savebtn.dis{background:var(--color-surface-2);color:var(--color-text-hint);cursor:default}
 .latebtn{width:100%;border:1px solid var(--color-danger);background:transparent;color:var(--color-danger);font-family:var(--font-sans);font-size:13px;font-weight:500;padding:12px;border-radius:10px;cursor:pointer;text-align:left}
@@ -484,10 +486,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .cal .cell.sel{box-shadow:0 0 0 2px var(--color-accent) inset}
 .cal .dnum{font-size:11px;color:var(--color-text-muted)}
 .cal .mk{font-size:10px;font-weight:700}
-.daybar{display:flex;align-items:center;justify-content:space-between;background:var(--color-surface-2);border-radius:999px;padding:4px 6px;margin-bottom:11px}
-.daybar span{font-family:var(--font-serif);font-size:14px;color:var(--color-primary-strong)}
-.daybar button{min-width:44px;min-height:44px;border:none;background:none;font-size:20px;color:var(--color-primary);cursor:pointer;padding:8px 16px;line-height:1}
-.edlock{font-size:12px;color:rgba(249,247,241,.75);font-style:italic}
+.edlock{font-size:12.5px;color:var(--color-text-muted);font-style:italic}
 .pay2{border-color:var(--color-accent);background:rgba(200,188,133,.07)}
 .wkrow.locked .wkmain .d{color:var(--color-text-hint)}
 .cal .cell.lock{opacity:.5}
@@ -534,7 +533,6 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .gvbar{width:4px;height:18px;border-radius:2px;flex-shrink:0}
 .gevt{margin-left:auto;color:#70757a;font-size:11px}
 .gnone{font-size:12.5px;color:#9aa0a6;font-style:italic;padding:8px 4px}
-.daypick{cursor:pointer;display:inline-flex;align-items:center;min-height:44px}
 .gcalnav{display:flex;justify-content:space-between;align-items:center;margin:0 2px 12px}
 .gstep{display:flex;align-items:center;gap:2px}
 .gstep button{border:none;background:none;color:#5f6368;font-size:18px;cursor:pointer;padding:2px 8px;line-height:1}
@@ -712,43 +710,57 @@ const telnum=p=>p.replace(/ /g,'');
 const kc=n=>n.toLocaleString('cs-CZ');
 </script>
 <script>
-/* SCREEN: RODIC_PREHLED */
+/* SCREEN: RODIC_PREHLED — „soupis dne" dle priorit rodiče:
+   1) faktura po splatnosti  2) docházka + omluvení  3) dnešek (program, průvodci, jídlo)
+   4) výhled (co dítě čeká, aktuality). Desktop: 3 sloupce (.dash3), mobil: stoh v pořadí priorit. */
+const DOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
 function renderDashboard(){
   const c=cur(), td=code(c,dashDay), due=c.faktury.find(f=>!f.paid), ev=EVENTS[dashDay], menu=MENUS[wd(dashDay)];
-  let h=`<div class="daybar"><button onclick="stepDay(-1)">‹</button><span class="daypick" onclick="toggleDashPicker()">${dayLabel(dashDay)} ▾</span><button onclick="stepDay(1)">›</button></div>`;
+  const today=dashDay===TODAY;
+  // Hlavička — velké jméno + datum (datum otevírá výběr dne), listování ‹ ›
+  let h=`<div class="dash-head">
+    <h1 class="dh-t">${c.n} · <button class="dh-date" onclick="toggleDashPicker()">${DOWFULL[wd(dashDay)]} ${dashDay}. 6.<span class="dh-car">▾</span></button></h1>
+    <div class="dh-nav">${today?'':`<button class="dh-today" onclick="pickDashDay(TODAY)">dnes</button>`}<button class="dh-step" onclick="stepDay(-1)">‹</button><button class="dh-step" onclick="stepDay(1)">›</button></div>
+  </div>`;
   if(dashPickerOpen){h+=`<div class="daypicker"><div class="dpcal">`;['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="dpcell we">${d}</div>`;continue;}h+=`<div class="dpcell${d===TODAY?' today':''}${d===dashDay?' sel':''}" onclick="pickDashDay(${d})">${d}</div>`;}h+=`</div></div>`;}
-  h+=`<div class="hero"><button class="hkid" onclick="go('profil')">${avatar(c,34)}<span class="hname">${c.n} ve školce</span><span class="harr">›</span></button><div class="hrow"><span class="hchip">${CODES[td][0]}</span>`;
-  h+= editable(dashDay)?`<button class="ed" onclick="toggleDashEdit()">${dashEdit?'Zavřít':'Upravit'}</button>`:(dashDay===TODAY?`<button class="ed" onclick="toggleDashEdit()">${dashEdit?'Zavřít':'Nahlásit absenci'}</button>`:`<span class="edlock">uzavřeno</span>`);
-  h+=`</div></div>`;
-  // Hlavní akce rodiče: omluvit dítě (Flow 2) + zůstatek náhrad (Flow 3)
-  h+=`<button class="omluvbtn" onclick="openOmluvenka()">Omluvit ${c.ak}</button>`;
-  {const av=dostupne(c), ne=nextExp(c);
-   h+=`<button class="tile nahdash" onclick="go('dochazka')"><div class="ftop"><div><div class="tlab" style="margin:0">Náhrady</div><div class="nahdashn">${av} ${nplural(av)}</div></div><div class="nahdashx">${ne?'nejbližší expirace '+ne+' ›':'›'}</div></div></button>`;}
-  if(dashEdit&&(editable(dashDay)||dashDay===TODAY))h+=`<div class="tile dashedit">${editor(dashDay)}</div>`;
+  // 1) Faktura po splatnosti — plná šířka, nejvyšší priorita
   if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>Po splatnosti · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
-  // K úhradě přesunuto úplně dolů
-  const nws=NEWS.filter(n=>TODAY<=n.until).slice(0,5);
-  if(nws.length){h+=`<div class="tile newsbox"><div class="tlab tlabrow"><button class="tlabbtn" onclick="go('aktuality')">Aktuality<span class="tarr">›</span></button></div>`;
-    nws.forEach(n=>{h+=`<button class="newsrow" onclick="go('aktuality')">${n.urgent?'<span class="newsdot"></span>':'<span class="newsdot q"></span>'}<span class="newsline">${n.t}</span></button>`;});
-    h+=`<button class="newsmore" onclick="go('aktuality')">Všechny aktuality ›</button></div>`;}
-  h+=`<div class="tile"><div class="tlab">Kde ${c.n} začíná den</div>`;
+  h+=`<div class="dash3">`;
+  // 2) Sloupec 1 — docházka zobrazeného dne + omluvení (jedna akce, přizpůsobuje se dni)
+  h+=`<div class="dcol"><div class="tile"><div class="ch">Docházka</div>`;
+  h+=`<div class="doch-line"><span class="doch-code" style="color:${CODES[td][1]}">${CODES[td][0]}</span>${today?'<span class="doch-day">dnes</span>':''}</div>`;
+  if(today)h+=`<button class="omluvbtn" onclick="openOmluvenka(${TODAY})">Nahlásit absenci dnes</button>`;
+  else if(editable(dashDay))h+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
+  else h+=`<div class="edlock">Proběhlý den — jen ke čtení</div>`;
+  if(today||editable(dashDay))h+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
+  h+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div></div>`;
+  // 3) Sloupec 2 — dnešek: program, průvodci, jídlo
+  h+=`<div class="dcol">`;
+  h+=`<div class="tile"><div class="ch">${today?'Dnešní program':'Program dne'}</div>`;
   if(ev){h+=`<div class="ev"><div class="evt">${ev.title}</div><div class="evd">Sraz: <b>${ev.place}</b> · ${ev.time}</div><div class="evd">${ev.note}</div>`;
     if(ev.map)h+=`<a class="maplink" href="${ev.map}" target="_blank" rel="noopener">Otevřít mapu</a>`;
     if(ev.gps)h+=`<div class="gps">${ev.gps}</div>`;if(ev.sbalit)h+=`<div class="sbalit">🎒 Nezapomeňte sbalit: <b>${ev.sbalit}</b></div>`;h+=`</div>`;
   }else{h+=`<div class="ev"><div class="evd" style="font-size:13.5px">${c.n} začíná den ve školce.</div></div>`;}
-  h+=`<div class="glab">Kdo ${c.ak} provází</div><div class="gchips">`+GUIDES_TODAY.map(i=>`<button class="gchip" onclick="openGuide(${i})">${avatar(guides[i],26)}<span>${guides[i].abbr}</span>${guides[i].uspava?'<span class="moon">☾</span>':''}</button>`).join('')+`</div>`;
+  h+=`</div>`;
+  h+=`<div class="tile"><div class="ch">Průvodci</div><div class="gchips">`+GUIDES_TODAY.map(i=>`<button class="gchip" onclick="openGuide(${i})">${avatar(guides[i],26)}<span>${guides[i].abbr}</span>${guides[i].uspava?'<span class="moon">☾</span>':''}</button>`).join('')+`</div>`;
   const u=GUIDES_TODAY.map(i=>guides[i]).find(g=>g.uspava);
   if(u)h+=`<div class="uline">☾ ${c.ak} uspává: <b>${u.n}</b></div>`;
   h+=`</div>`;
-  h+=`<div class="tile"><div class="tlab">Co bude ${c.n} jíst · ${DOW[wd(dashDay)]} ${dashDay}. 6.</div>`+menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
-  if(dashDay===TODAY&&EVENTS[TODAY+1]){const z=EVENTS[TODAY+1];h+=`<button class="tile zitra" onclick="pickDashDay(${TODAY+1})"><div class="tlab tlabrow">Zítra<span class="tarr">›</span></div><div class="tval"><b>${z.title}</b> · sraz ${z.time}${z.sbalit?` · sbalte ${z.sbalit}`:''}</div></button>`;}
-  h+=`<div class="tile"><div class="tlab tlabrow"><button class="tlabbtn" onclick="go('kalendar')">Co ${c.ak} čeká<span class="tarr">›</span></button></div>`+akce.map((a,i)=>`<button class="akce" onclick="openAkce(${i})"><span>${a.title}</span><span class="when">${a.date} ›</span></button>`).join('')+`</div>`;
+  h+=`<div class="tile"><div class="ch">Co bude ${c.n} jíst</div>`+menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
+  h+=`</div>`;
+  // 4) Sloupec 3 — výhled: co dítě čeká + aktuality
+  h+=`<div class="dcol">`;
+  h+=`<div class="tile"><div class="ch"><button class="tlabbtn" onclick="go('kalendar')">Co ${c.ak} čeká<span class="tarr">›</span></button></div>`+akce.map((a,i)=>`<button class="akce" onclick="openAkce(${i})"><span>${a.title}</span><span class="when">${a.date} ›</span></button>`).join('')+`</div>`;
+  const nws=NEWS.filter(n=>TODAY<=n.until).slice(0,5);
+  if(nws.length){h+=`<div class="tile newsbox"><div class="ch"><button class="tlabbtn" onclick="go('aktuality')">Aktuality<span class="tarr">›</span></button></div>`;
+    nws.forEach(n=>{h+=`<button class="newsrow" onclick="go('aktuality')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`;});
+    h+=`<button class="newsmore" onclick="go('aktuality')">Všechny aktuality ›</button></div>`;}
+  h+=`</div></div>`;
   return h;
 }
 window.stepDay=dir=>{let d=dashDay+dir;while(d>=1&&d<=30&&isWE(d))d+=dir;if(d>=1&&d<=30)dashDay=d;render();};
 window.toggleDashPicker=()=>{dashPickerOpen=!dashPickerOpen;render();};
 window.pickDashDay=d=>{dashDay=d;dashPickerOpen=false;dashEdit=false;render();};
-window.toggleDashEdit=()=>{dashEdit=!dashEdit;render();};
 </script>
 <script>
 /* SCREEN: RODIC_AKTUALITY */
@@ -1028,7 +1040,9 @@ function renderOmluvenkaDone(c){
   h+=`<button class="omdonebtn" onclick="closeOverlay()">Hotovo</button>`;
   return h;
 }
-window.openOmluvenka=()=>{let t=NOW.d+1;while(t<=30&&isWE(t))t++;omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
+/* Volitelný prefill dne (z dashboardu: dnešek = pozdní omluva, budoucí den = včasná).
+   Bez argumentu (sekce Docházka) předvyplní nejbližší omluvitelný den. */
+window.openOmluvenka=day=>{let t;if(day>=NOW.d&&day<=30&&!isWE(day)){t=day;}else{t=NOW.d+1;while(t<=30&&isWE(t))t++;}omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
 window.omPick=(which,d)=>{omDraft[which]=d;if(which==='od'&&omDraft.do<d)omDraft.do=d;if(which==='do'&&d<omDraft.od)omDraft.od=d;render();};
 window.omReason=k=>{omDraft.duvod=k;render();};
 window.omNote=v=>{omDraft.pozn=v;};

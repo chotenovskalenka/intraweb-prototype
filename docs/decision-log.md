@@ -530,3 +530,31 @@ koliduje se schválenou identitou (neměnné pravidlo). Vzaty jen principy hiera
 
 **QA:** rodič/průvodce/admin 1440 i 375 px — faktura výrazně červená, tlačítka plná a čitelná,
 docházka jeden sloupec, badge AA, mobil beze změny, žádné chyby v konzoli. Dist rebuilt.
+
+### 2026-07-18 — Restrukturalizace rodičovského dashboardu („soupis dne")
+
+Designérka: dashboard byl na desktopu roztažený a bez priorit; duplicitní akce (Nahlásit absenci
+× Omluvit), náhrady na dashboard nepatří, malé nadpisy, puntíky u aktualit pryč, „Zítra" duplicitní.
+Přestavěno na **„soupis dne" dle priorit rodiče** (schválené pořadí):
+
+1. **Faktura po splatnosti** — plná šířka nahoře (červená, ⚠).
+2. **Docházka + rychlé omluvení** — sloupec 1: velký stav dne + jedna akce.
+3. **Dnešek** — sloupec 2: Dnešní program (dřív „Kde X začíná den"), Průvodci (dřív „Kdo X provází"),
+   Co bude X jíst.
+4. **Výhled** — sloupec 3: Co X čeká + Aktuality (řádek = datum · titulek · ›, bez priorit. puntíků).
+
+- **Hlavička:** velký H1 „Eliška · středa 3. 6. ▾" (datum = titulek dne; jméno v 1. pádu — genitiv
+  „Elišky den" zamítnut, nešel by skloňovat pro všechna jména). Datum otevírá výběr dne, kompaktní
+  ‹ › vpravo, mimo dnešek chip „dnes" pro návrat. Listování na jiné dny zachováno.
+- **Jedna omluvná akce (řeší dřívější duplicitu):** tlačítko se přizpůsobuje zobrazenému dni —
+  dnes „Nahlásit absenci dnes" (openOmluvenka s prefill dneška → flow transparentně ukáže „po
+  deadlinu, náhrada nevznikne"), budoucí den „Omluvit na Čt 4. 6." (včasná), minulý den zamčeno.
+  V omluvence lze rozsah rozšířit (od–do). Inline editor kódu z dashboardu odstraněn (změna typu
+  docházky patří do sekce Docházka; odkaz „Docházka a náhrady ›" v kartě). Náhrady z dashboardu pryč.
+- **Nadpisy karet:** nová třída `.ch` (Bricolage 16/600, primary-strong) místo malého `.tlab`.
+- **Zítra** zrušeno (obsaženo v „Co X čeká"). Hero blok „X ve školce" zrušen (identita je v topbaru).
+- **Layout:** `.dash3` grid — ≥900 px 2 sloupce, ≥1200 px 3 sloupce; mobil = stoh v pořadí priorit.
+  Mrtvé CSS odstraněno (hero, daybar, zitra, nahdash, newsdot, tlabrow, dashedit, daypick, glab…).
+
+**QA:** 1440 (3 sloupce dle priorit) i 375 px (stoh) — listování dnů mění tlačítko i H1, chip „dnes"
+funguje, prefill omluvenky z dneška ukazuje deadline varování, žádné chyby v konzoli. Dist rebuilt.
