@@ -11,6 +11,7 @@
 .switch button.on{background:var(--color-primary);color:var(--color-on-primary)}
 .selin{border:1px solid var(--color-border-strong);border-radius:8px;padding:6px 9px;font-family:var(--font-sans);font-size:13.5px;background:var(--color-surface);color:var(--color-text)}
 .tabs{display:flex;gap:var(--space-sm);overflow-x:auto;padding:2px 0 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs.wrap{flex-wrap:wrap;overflow-x:visible}.tabs.wrap .tab{flex:1 1 auto}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:0 0 auto;min-width:76px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:13px 15px 11px;text-align:center;cursor:pointer}
 .modes{display:flex;gap:6px;margin-bottom:10px}
@@ -133,6 +134,21 @@ table.wt td.pastc{opacity:.45}
 .cdot{width:5px;height:5px;border-radius:50%;background:var(--color-accent);margin-top:2px}
 .ccount{font-size:11px;font-weight:600;color:var(--color-primary);margin-top:1px}.ccount.lk{color:var(--color-text-hint)}
 .calcell.sel .cdot{background:var(--color-on-primary)}
+
+/* Dashboard — sdílený „soupis dne" (rodič i průvodce): velký datumový nadpis,
+   prioritní sloupce, nadpisy karet .ch, program dne. Parent-specifické (listování
+   dnů .dh-nav/.dh-step, day-picker) zůstávají v screens-rodic.css. */
+.dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:0 0 16px}
+.dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
+.dh-sub{width:100%;font-size:13.5px;color:var(--color-text-muted);margin-top:-8px}
+.ch{font-family:var(--font-serif);font-size:16px;font-weight:600;color:var(--color-primary-strong);margin-bottom:9px}
+.prog-day{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--color-primary);margin:0 0 4px}
+.cardlink{display:block;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);margin-top:12px;padding:12px 0 2px;color:var(--color-primary);font-weight:600;font-size:13px;font-family:var(--font-sans);cursor:pointer}
+@media (min-width:900px){
+  .dash3{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start}
+  .dcol{min-width:0}
+}
+@media (min-width:1200px){.dash3{grid-template-columns:repeat(3,1fr)}}
 
 /* Hover feedback — jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
 @media (hover:hover){

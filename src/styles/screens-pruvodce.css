@@ -14,6 +14,4 @@
 .prehl-abs{display:flex;align-items:center;gap:9px;min-height:44px;width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
 .prehl-abs .pa-nm{font-size:14px;font-weight:500;color:var(--color-text)}
 .prehl-abs .pa-r{margin-left:auto;font-size:12px;color:var(--color-danger);text-align:right;max-width:52%;line-height:1.35}
-.prehl-tema{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
-.prehl-tema .pa-arr{color:var(--color-primary)}
-.prehl-tema .pa-cap{font-size:12px;color:var(--color-text-muted);margin-top:9px}
+.pa-cap{font-size:12px;color:var(--color-text-muted);margin-bottom:2px}
