@@ -56,7 +56,7 @@ function renderOmluvenka(){
   const c=cur();
   let h=`<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">Omluvit ${c.ak}</div>`;
   if(omDraft.step==='done')return h+renderOmluvenkaDone(c);
-  h+=`<div class="pfull">Vyber dny, kdy ${c.n} nebude ve školce</div>`;
+  h+=`<div class="pfull">Vyberte dny, kdy ${c.n} nebude ve školce</div>`;
   h+=`<div class="tile"><div class="tlab">Od</div>${omGrid('od')}</div>`;
   h+=`<div class="tile"><div class="tlab">Do</div>${omGrid('do')}</div>`;
   h+=`<div class="tile"><div class="tlab">Důvod</div><div class="pchips">`+[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['jiné','Jiné']].map(([k,l])=>`<button class="${omDraft.duvod===k?'on':''}" onclick="omReason('${k}')">${l}</button>`).join('')+`</div>`;
