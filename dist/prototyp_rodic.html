@@ -288,7 +288,7 @@ table.wt td.pastc{opacity:.45}
 
 /* dashboard / shared tiles */
 /* Dashboard — hlavička dne (velké jméno + datum), 3sloupcová mřížka, nadpisy karet */
-.dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:2px 0 14px}
+.dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:2px 0 14px}
 .dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
@@ -322,9 +322,9 @@ table.wt td.pastc{opacity:.45}
 .mk2{font-size:10.5px;color:var(--color-text-muted);min-width:72px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
 .mv{flex:1}
 .alerg{font-size:10px;color:var(--color-accent-ink);background:rgba(200,188,133,.12);border-radius:6px;padding:1px 6px;flex-shrink:0;align-self:center}
-.akce{min-height:44px;display:flex;justify-content:space-between;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
+.akce{min-height:44px;display:flex;justify-content:space-between;gap:10px;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
 .akce:first-of-type{border-top:none;padding-top:0}
-.akce .when{color:var(--color-text-muted);font-size:12.5px;font-weight:400}
+.akce .when{color:var(--color-text-muted);font-size:12.5px;font-weight:400;flex-shrink:0;white-space:nowrap}
 .cinfo{font-size:12px;color:var(--color-text-muted);margin-top:10px;text-align:center}
 
 /* platby */
@@ -539,6 +539,21 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .gstep .gmo{font-size:16px;font-weight:600;color:#3c4043;min-width:64px;text-align:center;text-transform:capitalize}
 .gstep .gyr{font-size:16px;font-weight:600;color:#3c4043;min-width:42px;text-align:center}
 .gcell.gempty{cursor:default;background:transparent}
+.doch-sleep{font-size:13px;color:var(--color-text-muted);margin:-6px 0 10px}
+.doch-sleep b{color:var(--color-text)}
+.doch-pozn{background:var(--tint-ochre);border-radius:9px;padding:8px 11px;font-size:13px;line-height:1.45;margin:0 0 10px}
+.glist{display:flex;flex-wrap:wrap;gap:8px}
+.bp{padding:8px 0 4px}
+.bp+.bp{border-top:1px solid var(--color-border);margin-top:4px}
+.bp-k{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin-bottom:3px}
+.bp-t{font-size:13.5px;line-height:1.5}
+.bp-link{display:inline-flex;align-items:center;min-height:44px;color:var(--color-primary);font-weight:600;font-size:12.5px;text-decoration:none}
+/* Modal: nahlásit dnešní absenci */
+.omluvbtn.danger{background:var(--color-danger)}
+.abs-sub{font-size:12.5px;color:var(--color-text-muted);margin:-2px 0 10px}
+.abs-warn{background:var(--state-danger-bg);border:1px solid rgba(176,73,47,.25);color:var(--color-danger);border-radius:9px;padding:9px 12px;font-size:13px;line-height:1.45;margin-bottom:10px}
+.abs-menu{background:var(--color-surface-2);border-radius:9px;padding:6px 11px;margin-bottom:8px}
+.abs-hint{font-size:12px;color:var(--color-text-hint);margin:6px 0 2px}
 </style>
 </head>
 <body>
@@ -550,6 +565,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
     <div id="content"></div>
   </div>
 </div></div>
+<div id="modalRoot"></div>
 <div id="toast" class="toast"></div>
 
 <script>
@@ -607,7 +623,7 @@ const nplural=n=>n===1?'náhrada':(n>=2&&n<=4?'náhrady':'náhrad');
 const fmtRange=(a,b)=>a===b?`${DOW[wd(a)]} ${a}. 6.`:`${a}. 6. – ${b}. 6.`;
 
 const children=[
-  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',att:{2:'OM',11:'OM'},notes:{11:'rodinná oslava'},fond:{rocni:2000,cerpano:800},
+  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',spi:true,att:{2:'NE',11:'OM'},notes:{11:'rodinná oslava'},fond:{rocni:2000,cerpano:800},
     faktury:[{obdobi:'Březen 2026',cena:10584,sleva:0,vystaveno:'9. 3. 2026',paid:false},
              {obdobi:'Únor 2026',cena:10584,sleva:0,vystaveno:'1. 2. 2026',paid:true},
              {obdobi:'Leden 2026',cena:10584,sleva:0,vystaveno:'7. 1. 2026',paid:true}],
@@ -624,7 +640,7 @@ const children=[
       {id:'omE-fut',od:11,do:11,duvod:'rodinné důvody',pozn:'rodinná oslava',stav:'vcas',nahradaIds:['nE-fut']},
       {id:'omE-2',od:2,do:2,duvod:'nemoc',pozn:'',stav:'po-deadlinu',nahradaIds:['nE-nev']},
     ]},
-  {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',att:{},notes:{},fond:{rocni:2000,cerpano:1500},
+  {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',spi:false,att:{},notes:{},fond:{rocni:2000,cerpano:1500},
     /* celodenní = odpolední docházka + úterý do 17:00; samostatná cena v podkladech není, použita odpolední sazba */
     faktury:[{obdobi:'Březen 2026',cena:10584,sleva:0,vystaveno:'9. 3. 2026',paid:true},
              {obdobi:'Únor 2026',cena:10584,sleva:0,vystaveno:'1. 2. 2026',paid:true},
@@ -632,6 +648,15 @@ const children=[
     nahrady:[ nahFrom(new Date(2026,4,15),'dostupna') ],
     omluvenky:[]},
 ];
+
+/* Básnička a písnička aktuálního týdne (texty shodné s průvodcovskou appkou).
+   url = proklik (YouTube / jiný odkaz) — reálné vyhledávací odkazy, žádná smyšlená videa. */
+const TYDEN={
+  basnicka:{t:'Uvijeme věneček ze všech našich kytiček. Kvítek, lístek i větvičku, uvijeme do věnečku. Jaké jméno máš? Tak pojď mezi nás.',
+    url:'https://www.youtube.com/results?search_query=Uvijeme+v%C4%9Bne%C4%8Dek+%C5%99%C3%ADkanka'},
+  pisnicka:{t:'Šel zahradník do zahrady s motykou, s motykou. Vykopal tam rozmarýnu velikou, velikou.',
+    url:'https://www.youtube.com/results?search_query=%C5%A0el+zahradn%C3%ADk+do+zahrady+p%C3%ADsni%C4%8Dka'}
+};
 const NEWS=[
   {t:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',from:'Táňa',date:'2. 6.',until:5,urgent:true},
   {t:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada). Prosíme o dřívější vyzvednutí.',from:'Táňa',date:'1. 6.',until:5,urgent:true},
@@ -711,48 +736,56 @@ const kc=n=>n.toLocaleString('cs-CZ');
 </script>
 <script>
 /* SCREEN: RODIC_PREHLED — „soupis dne" dle priorit rodiče:
-   1) faktura po splatnosti  2) docházka + omluvení  3) dnešek (program, průvodci, jídlo)
-   4) výhled (co dítě čeká, aktuality). Desktop: 3 sloupce (.dash3), mobil: stoh v pořadí priorit. */
+   1) faktura po splatnosti  2) docházka (stav, spinkání, poznámka) + nahlášení absence
+   3) dnešek (program, jídlo, básnička)  4) výhled (měsíční program, aktuality školky).
+   Sloupec 1 nese i Průvodce (pod docházkou). Desktop: .dash3 grid, mobil: stoh. */
 const DOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
 function renderDashboard(){
   const c=cur(), td=code(c,dashDay), due=c.faktury.find(f=>!f.paid), ev=EVENTS[dashDay], menu=MENUS[wd(dashDay)];
-  const today=dashDay===TODAY;
-  // Hlavička — velké jméno + datum (datum otevírá výběr dne), listování ‹ ›
+  const today=dashDay===TODAY, absent=(td==='OM'||td==='NE');
+  // Hlavička — velké jméno + datum, hned vedle listování ‹ ▾ › (jeden vizuální pattern)
   let h=`<div class="dash-head">
-    <h1 class="dh-t">${c.n} · <button class="dh-date" onclick="toggleDashPicker()">${DOWFULL[wd(dashDay)]} ${dashDay}. 6.<span class="dh-car">▾</span></button></h1>
-    <div class="dh-nav">${today?'':`<button class="dh-today" onclick="pickDashDay(TODAY)">dnes</button>`}<button class="dh-step" onclick="stepDay(-1)">‹</button><button class="dh-step" onclick="stepDay(1)">›</button></div>
+    <h1 class="dh-t">${c.n} · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>
+    <div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button><button class="dh-step" onclick="toggleDashPicker()" aria-label="Vybrat den">▾</button><button class="dh-step" onclick="stepDay(1)" aria-label="Další den">›</button>${today?'':`<button class="dh-today" onclick="pickDashDay(TODAY)">dnes</button>`}</div>
   </div>`;
   if(dashPickerOpen){h+=`<div class="daypicker"><div class="dpcal">`;['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="dpcell we">${d}</div>`;continue;}h+=`<div class="dpcell${d===TODAY?' today':''}${d===dashDay?' sel':''}" onclick="pickDashDay(${d})">${d}</div>`;}h+=`</div></div>`;}
   // 1) Faktura po splatnosti — plná šířka, nejvyšší priorita
-  if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>Po splatnosti · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
+  if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>Faktura po splatnosti · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
   h+=`<div class="dash3">`;
-  // 2) Sloupec 1 — docházka zobrazeného dne + omluvení (jedna akce, přizpůsobuje se dni)
+  // 2) Sloupec 1 — docházka + průvodci
   h+=`<div class="dcol"><div class="tile"><div class="ch">Docházka</div>`;
   h+=`<div class="doch-line"><span class="doch-code" style="color:${CODES[td][1]}">${CODES[td][0]}</span>${today?'<span class="doch-day">dnes</span>':''}</div>`;
-  if(today)h+=`<button class="omluvbtn" onclick="openOmluvenka(${TODAY})">Nahlásit absenci dnes</button>`;
-  else if(editable(dashDay))h+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
-  else h+=`<div class="edlock">Proběhlý den — jen ke čtení</div>`;
-  if(today||editable(dashDay))h+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
-  h+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div></div>`;
-  // 3) Sloupec 2 — dnešek: program, průvodci, jídlo
+  if(!absent){const us=guides.find(g=>g.uspava);
+    h+=`<div class="doch-sleep">${c.spi?`☾ Spinká${us?` · uspává <b>${us.n}</b>`:''}`:'Nespinká'}</div>`;}
+  if(c.notes[dashDay])h+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;
+  if(c.obed&&c.obed[dashDay]!==undefined&&absent)h+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
+  if(today&&td!=='NE')h+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
+  else if(!today&&editable(dashDay)&&!absent)h+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
+  else if(!today&&!editable(dashDay))h+=`<div class="edlock">Proběhlý den — jen ke čtení</div>`;
+  if(!today&&editable(dashDay)&&!absent)h+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
+  h+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
+  h+=`<div class="tile"><div class="ch">Průvodci</div><div class="glist">`+GUIDES_TODAY.map(i=>`<button class="gchip" onclick="openGuide(${i})">${avatar(guides[i],26)}<span>${guides[i].n}</span>${guides[i].uspava?'<span class="moon">☾</span>':''}</button>`).join('')+`</div></div>`;
+  h+=`</div>`;
+  // 3) Sloupec 2 — dnešek: program, jídlo, básnička+písnička
   h+=`<div class="dcol">`;
-  h+=`<div class="tile"><div class="ch">${today?'Dnešní program':'Program dne'}</div>`;
+  h+=`<div class="tile"><div class="ch">${today?`Co ${c.ak} dnes čeká`:'Program dne'}</div>`;
   if(ev){h+=`<div class="ev"><div class="evt">${ev.title}</div><div class="evd">Sraz: <b>${ev.place}</b> · ${ev.time}</div><div class="evd">${ev.note}</div>`;
     if(ev.map)h+=`<a class="maplink" href="${ev.map}" target="_blank" rel="noopener">Otevřít mapu</a>`;
     if(ev.gps)h+=`<div class="gps">${ev.gps}</div>`;if(ev.sbalit)h+=`<div class="sbalit">🎒 Nezapomeňte sbalit: <b>${ev.sbalit}</b></div>`;h+=`</div>`;
   }else{h+=`<div class="ev"><div class="evd" style="font-size:13.5px">${c.n} začíná den ve školce.</div></div>`;}
   h+=`</div>`;
-  h+=`<div class="tile"><div class="ch">Průvodci</div><div class="gchips">`+GUIDES_TODAY.map(i=>`<button class="gchip" onclick="openGuide(${i})">${avatar(guides[i],26)}<span>${guides[i].abbr}</span>${guides[i].uspava?'<span class="moon">☾</span>':''}</button>`).join('')+`</div>`;
-  const u=GUIDES_TODAY.map(i=>guides[i]).find(g=>g.uspava);
-  if(u)h+=`<div class="uline">☾ ${c.ak} uspává: <b>${u.n}</b></div>`;
-  h+=`</div>`;
   h+=`<div class="tile"><div class="ch">Co bude ${c.n} jíst</div>`+menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
+  h+=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>
+    <div class="bp"><div class="bp-k">Básnička</div><div class="bp-t">${TYDEN.basnicka.t}</div><a class="bp-link" href="${TYDEN.basnicka.url}" target="_blank" rel="noopener">▶ Poslechnout na YouTube ›</a></div>
+    <div class="bp"><div class="bp-k">Písnička</div><div class="bp-t">${TYDEN.pisnicka.t}</div><a class="bp-link" href="${TYDEN.pisnicka.url}" target="_blank" rel="noopener">▶ Přehrát na YouTube ›</a></div></div>`;
   h+=`</div>`;
-  // 4) Sloupec 3 — výhled: co dítě čeká + aktuality
+  // 4) Sloupec 3 — výhled: měsíční program (bez narozenin) + aktuality školky
   h+=`<div class="dcol">`;
-  h+=`<div class="tile"><div class="ch"><button class="tlabbtn" onclick="go('kalendar')">Co ${c.ak} čeká<span class="tarr">›</span></button></div>`+akce.map((a,i)=>`<button class="akce" onclick="openAkce(${i})"><span>${a.title}</span><span class="when">${a.date} ›</span></button>`).join('')+`</div>`;
+  {const rows=[];Object.keys(EVMAP).map(Number).sort((a,b)=>a-b).forEach(d=>{EVMAP[d].forEach(e=>{if(e.type!=='naro')rows.push([d,e.t]);});});
+   h+=`<div class="tile"><div class="ch"><button class="tlabbtn" onclick="go('kalendar')">Měsíční program<span class="tarr">›</span></button></div>`
+     +rows.map(([d,t])=>`<button class="akce" onclick="go('kalendar')"><span>${t}</span><span class="when">${d}. 6. ›</span></button>`).join('')+`</div>`;}
   const nws=NEWS.filter(n=>TODAY<=n.until).slice(0,5);
-  if(nws.length){h+=`<div class="tile newsbox"><div class="ch"><button class="tlabbtn" onclick="go('aktuality')">Aktuality<span class="tarr">›</span></button></div>`;
+  if(nws.length){h+=`<div class="tile newsbox"><div class="ch"><button class="tlabbtn" onclick="go('aktuality')">Aktuality školky<span class="tarr">›</span></button></div>`;
     nws.forEach(n=>{h+=`<button class="newsrow" onclick="go('aktuality')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`;});
     h+=`<button class="newsmore" onclick="go('aktuality')">Všechny aktuality ›</button></div>`;}
   h+=`</div></div>`;
@@ -1003,7 +1036,7 @@ const omDays=()=>{const a=[];for(let d=omDraft.od;d<=omDraft.do;d++)if(!isWE(d))
 function omGrid(which){
   let h=`<div class="dpcal">`;['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);
   for(let d=1;d<=30;d++){
-    if(isWE(d)||d<NOW.d){h+=`<div class="dpcell we">${d}</div>`;continue;}
+    if(isWE(d)||d<=NOW.d){h+=`<div class="dpcell we">${d}</div>`;continue;}
     const sel=omDraft[which]===d, rng=d>=omDraft.od&&d<=omDraft.do;
     h+=`<div class="dpcell${sel?' sel':rng?' rng':''}${d===TODAY?' today':''}" onclick="omPick('${which}',${d})">${d}</div>`;
   }
@@ -1035,14 +1068,14 @@ function renderOmluvenkaDone(c){
   let h=`<div class="tile omdone"><div class="omcheck">✓</div><div class="omdt">Omluvenka odeslána</div><div class="omsub">${c.n} · ${fmtRange(omDraft.od,omDraft.do)} · ${DUVODLAB[omDraft.duvod]}</div>`;
   if(r.timely)h+=`<div class="omres ok">Vznikl${r.timely===1?'a':'y'} <b>${r.timely} ${nplural(r.timely)}</b> — najdeš ${r.timely===1?'ji':'je'} níže v Docházce a náhradách.</div>`;
   if(r.late)h+=`<div class="omres bad">Za ${r.late} ${plural(r.late)} po deadlinu <b>náhrada nevznikla</b>.</div>`;
-  h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce. Docházku v těchto dnech jsme označili jako omluvenou (OM).</div></div>`;
+  h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce. ${r.timely?'Včas omluvené dny jsme označili jako omluvené (OM).':''}${r.late?' Dny po deadlinu jsou neomluvené (NE).':''}</div></div>`;
   h+=`<button class="omluvbtn" onclick="go('dochazka')">Zobrazit náhrady</button>`;
   h+=`<button class="omdonebtn" onclick="closeOverlay()">Hotovo</button>`;
   return h;
 }
 /* Volitelný prefill dne (z dashboardu: dnešek = pozdní omluva, budoucí den = včasná).
    Bez argumentu (sekce Docházka) předvyplní nejbližší omluvitelný den. */
-window.openOmluvenka=day=>{let t;if(day>=NOW.d&&day<=30&&!isWE(day)){t=day;}else{t=NOW.d+1;while(t<=30&&isWE(t))t++;}omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
+window.openOmluvenka=day=>{let t;if(day>NOW.d&&day<=30&&!isWE(day)){t=day;}else{t=NOW.d+1;while(t<=30&&isWE(t))t++;}omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
 window.omPick=(which,d)=>{omDraft[which]=d;if(which==='od'&&omDraft.do<d)omDraft.do=d;if(which==='do'&&d<omDraft.od)omDraft.od=d;render();};
 window.omReason=k=>{omDraft.duvod=k;render();};
 window.omNote=v=>{omDraft.pozn=v;};
@@ -1051,7 +1084,8 @@ window.omSubmit=()=>{
   const timely=days.filter(beforeDeadline), late=days.filter(d=>!beforeDeadline(d));
   const om={id:uid(),od:omDraft.od,do:omDraft.do,duvod:omDraft.duvod,pozn:omDraft.pozn,
     stav:beforeDeadline(omDraft.od)?'vcas':'po-deadlinu',nahradaIds:[]};
-  days.forEach(d=>{c.att[d]='OM';if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
+  timely.forEach(d=>{c.att[d]='OM';});late.forEach(d=>{c.att[d]='NE';});
+  days.forEach(d=>{if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
   timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id});c.nahrady.push(n);om.nahradaIds.push(n.id);});
   late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'—',expT:Infinity});c.nahrady.push(n);om.nahradaIds.push(n.id);});
   c.omluvenky.unshift(om);
@@ -1065,6 +1099,36 @@ window.omCancel=id=>{
   c.nahrady=c.nahrady.filter(n=>!(om.nahradaIds||[]).includes(n.id));
   render();showToast('Omluvenka zrušena, náhrady odečteny');
 };
+
+/* --- Modal: Nahlásit dnešní absenci (po deadlinu → neomluveno, bez náhrady) --- */
+let absModal=null;
+window.openAbsDnes=()=>{absModal={obed:null,pozn:''};render();};
+window.absObed=v=>{absModal.obed=v;render();};
+window.absPozn=v=>{absModal.pozn=v;};
+window.absClose=()=>{absModal=null;render();};
+window.absSubmit=()=>{
+  const c=cur();
+  c.att[TODAY]='NE'; if(absModal.pozn)c.notes[TODAY]=absModal.pozn;
+  c.obed=c.obed||{}; c.obed[TODAY]=absModal.obed===true;
+  const om={id:uid(),od:TODAY,do:TODAY,duvod:'jiné',pozn:absModal.pozn,stav:'po-deadlinu',nahradaIds:[]};
+  const n=nahFrom(juneDate(TODAY),'nevznikla',{den:TODAY,omId:om.id,exp:'—',expT:Infinity});
+  c.nahrady.push(n); om.nahradaIds.push(n.id); c.omluvenky.unshift(om);
+  absModal=null; showToast('Absence nahlášena'); render();
+};
+function renderAbsModal(){
+  const c=cur(), menu=MENUS[wd(TODAY)];
+  const obedy=menu.filter(it=>/pol|hlavn/i.test(it[0]));
+  let h=`<div class="modal-scrim" onclick="absClose()"><div class="modal" onclick="event.stopPropagation()">`;
+  h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n} · středa 3. 6.</div>`;
+  h+=`<div class="abs-warn">⚠ Je po deadlinu (20:00 včera). Den bude <b>neomluvený</b> a náhrada nevznikne.</div>`;
+  h+=`<div class="notelab">Důvod absence — nepovinné</div><textarea class="note" placeholder="např. nemoc, rodinný důvod…" oninput="absPozn(this.value)">${escTa(absModal.pozn)}</textarea>`;
+  h+=`<div class="notelab">Vyzvednete si oběd?</div>`;
+  h+=`<div class="abs-menu">`+obedy.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span></div>`).join('')+`</div>`;
+  h+=`<div class="choices"><button class="${absModal.obed===true?'on':''}" onclick="absObed(true)">Ano, vyzvedneme</button><button class="${absModal.obed===false?'on':''}" onclick="absObed(false)">Ne</button></div>`;
+  h+=`<div class="abs-hint">Nevyzvednutý oběd propadá.</div>`;
+  h+=`<div class="mbtns"><button class="btn-ghost" onclick="absClose()">Zrušit</button><button class="omluvbtn danger" style="margin:0" onclick="absSubmit()">Nahlásit neomluvenou absenci</button></div>`;
+  return h+`</div></div>`;
+}
 </script>
 <script>
 /* CORE: RODIC — stav, sekce, drawer/hlavička, render(), go(), toast, úvodní spuštění */
@@ -1100,6 +1164,7 @@ function renderHead(){
 function render(){
   document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):TITLES[section];
   renderHead();renderDrawer();
+  document.getElementById('modalRoot').innerHTML = (typeof absModal!=='undefined'&&absModal)?renderAbsModal():'';
   document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;if(!PERCHILD.includes(s)){} render();};

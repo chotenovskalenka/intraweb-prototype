@@ -558,3 +558,33 @@ Přestavěno na **„soupis dne" dle priorit rodiče** (schválené pořadí):
 
 **QA:** 1440 (3 sloupce dle priorit) i 375 px (stoh) — listování dnů mění tlačítko i H1, chip „dnes"
 funguje, prefill omluvenky z dneška ukazuje deadline varování, žádné chyby v konzoli. Dist rebuilt.
+
+### 2026-07-18 — Dashboard rodiče, 2. iterace (dnešní absence jako modal, model „po deadlinu = NE")
+
+Dle zpětné vazby designérky:
+
+- **Listování dnů:** ‹ ▾ › hned vedle data (jeden vizuální pattern, ▾ = výběr dne z kalendáříku);
+  dřív šipky na protějším okraji bez vazby na datum.
+- **„Faktura po splatnosti"** — doplněno slovo faktura.
+- **ROZHODNUTÍ (model A): cokoliv po deadlinu = Neomluveno (NE), ne „omluveno po deadlinu".**
+  Sjednocuje prototyp s realitou („po 20:00 jen neomluveno"). Dopady: omluvenkový flow značí pozdní
+  dny NE (včasné OM), dnešek už v omluvence nelze vybrat, seed 2. 6. změněn OM→NE, done-text upraven.
+- **Nový modal „Nahlásit dnešní absenci"** (první modal v rodičovské appce — přidán `#modalRoot`,
+  sdílené `.modal` styly; mobil = bottom-sheet, desktop = dialog): varování (po deadlinu, den
+  neomluvený, náhrada nevznikne) → důvod (nepovinný, propíše se do poznámky dne) → **dnešní oběd**
+  (polévka + hlavní jídlo z jídelníčku) + volba vyzvednutí („Nevyzvednutý oběd propadá.") →
+  danger tlačítko „Nahlásit neomluvenou absenci". Zapisuje att=NE, poznámku, oběd, omluvenkový
+  záznam (po-deadlinu) i náhradu (nevznikla) — Docházka a náhrady zůstávají konzistentní.
+- **Karta Docházka:** stav se propisuje okamžitě (po nahlášení červené „Neomluveno"); nově
+  **spinkání** („☾ Spinká · uspává Helča" / „Nespinká" — plán, per-child pole `spi` v seedu;
+  živý stav by porušil pravidlo o nesdílení dat mezi appkami), **poznámka dne** viditelná hned
+  (okrový box) a po absenci info o obědu (vyzvednete si / propadá).
+- **Průvodci** přesunuti pod Docházku (sloupec 1) a vypsáni **plnými jmény** (zkratky He/G nic neříkaly).
+- **Přejmenování:** „Co Elišku dnes čeká" (dřív Dnešní program), **„Měsíční program"** — vypisuje
+  celý červen z EVMAP (akce, organizační, kroužky; **bez narozenin** dle rozhodnutí), „Aktuality školky".
+- **Básnička a písnička týdne** na dashboardu (texty shodné s průvodcovskou appkou, seed `TYDEN`)
+  s prokliky na YouTube (reálné vyhledávací odkazy, žádná smyšlená videa).
+
+**QA:** 1440 i 375 px — šipky u data, modal flow end-to-end (důvod + oběd → Neomluveno červeně,
+poznámka i oběd na kartě, záznam v omluvenkách + náhrada „nevznikla", toast), dnešek v omluvence
+zablokovaný (prefill zítřek), mobil bottom-sheet, žádné chyby v konzoli. Dist rebuilt.
