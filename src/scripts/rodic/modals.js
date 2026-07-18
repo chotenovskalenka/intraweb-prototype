@@ -38,7 +38,7 @@ const omDays=()=>{const a=[];for(let d=omDraft.od;d<=omDraft.do;d++)if(!isWE(d))
 function omGrid(which){
   let h=`<div class="dpcal">`;['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);
   for(let d=1;d<=30;d++){
-    if(isWE(d)||d<NOW.d){h+=`<div class="dpcell we">${d}</div>`;continue;}
+    if(isWE(d)||d<=NOW.d){h+=`<div class="dpcell we">${d}</div>`;continue;}
     const sel=omDraft[which]===d, rng=d>=omDraft.od&&d<=omDraft.do;
     h+=`<div class="dpcell${sel?' sel':rng?' rng':''}${d===TODAY?' today':''}" onclick="omPick('${which}',${d})">${d}</div>`;
   }
@@ -70,14 +70,14 @@ function renderOmluvenkaDone(c){
   let h=`<div class="tile omdone"><div class="omcheck">✓</div><div class="omdt">Omluvenka odeslána</div><div class="omsub">${c.n} · ${fmtRange(omDraft.od,omDraft.do)} · ${DUVODLAB[omDraft.duvod]}</div>`;
   if(r.timely)h+=`<div class="omres ok">Vznikl${r.timely===1?'a':'y'} <b>${r.timely} ${nplural(r.timely)}</b> — najdeš ${r.timely===1?'ji':'je'} níže v Docházce a náhradách.</div>`;
   if(r.late)h+=`<div class="omres bad">Za ${r.late} ${plural(r.late)} po deadlinu <b>náhrada nevznikla</b>.</div>`;
-  h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce. Docházku v těchto dnech jsme označili jako omluvenou (OM).</div></div>`;
+  h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce. ${r.timely?'Včas omluvené dny jsme označili jako omluvené (OM).':''}${r.late?' Dny po deadlinu jsou neomluvené (NE).':''}</div></div>`;
   h+=`<button class="omluvbtn" onclick="go('dochazka')">Zobrazit náhrady</button>`;
   h+=`<button class="omdonebtn" onclick="closeOverlay()">Hotovo</button>`;
   return h;
 }
 /* Volitelný prefill dne (z dashboardu: dnešek = pozdní omluva, budoucí den = včasná).
    Bez argumentu (sekce Docházka) předvyplní nejbližší omluvitelný den. */
-window.openOmluvenka=day=>{let t;if(day>=NOW.d&&day<=30&&!isWE(day)){t=day;}else{t=NOW.d+1;while(t<=30&&isWE(t))t++;}omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
+window.openOmluvenka=day=>{let t;if(day>NOW.d&&day<=30&&!isWE(day)){t=day;}else{t=NOW.d+1;while(t<=30&&isWE(t))t++;}omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
 window.omPick=(which,d)=>{omDraft[which]=d;if(which==='od'&&omDraft.do<d)omDraft.do=d;if(which==='do'&&d<omDraft.od)omDraft.od=d;render();};
 window.omReason=k=>{omDraft.duvod=k;render();};
 window.omNote=v=>{omDraft.pozn=v;};
@@ -86,7 +86,8 @@ window.omSubmit=()=>{
   const timely=days.filter(beforeDeadline), late=days.filter(d=>!beforeDeadline(d));
   const om={id:uid(),od:omDraft.od,do:omDraft.do,duvod:omDraft.duvod,pozn:omDraft.pozn,
     stav:beforeDeadline(omDraft.od)?'vcas':'po-deadlinu',nahradaIds:[]};
-  days.forEach(d=>{c.att[d]='OM';if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
+  timely.forEach(d=>{c.att[d]='OM';});late.forEach(d=>{c.att[d]='NE';});
+  days.forEach(d=>{if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
   timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id});c.nahrady.push(n);om.nahradaIds.push(n.id);});
   late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'—',expT:Infinity});c.nahrady.push(n);om.nahradaIds.push(n.id);});
   c.omluvenky.unshift(om);
@@ -100,3 +101,33 @@ window.omCancel=id=>{
   c.nahrady=c.nahrady.filter(n=>!(om.nahradaIds||[]).includes(n.id));
   render();showToast('Omluvenka zrušena, náhrady odečteny');
 };
+
+/* --- Modal: Nahlásit dnešní absenci (po deadlinu → neomluveno, bez náhrady) --- */
+let absModal=null;
+window.openAbsDnes=()=>{absModal={obed:null,pozn:''};render();};
+window.absObed=v=>{absModal.obed=v;render();};
+window.absPozn=v=>{absModal.pozn=v;};
+window.absClose=()=>{absModal=null;render();};
+window.absSubmit=()=>{
+  const c=cur();
+  c.att[TODAY]='NE'; if(absModal.pozn)c.notes[TODAY]=absModal.pozn;
+  c.obed=c.obed||{}; c.obed[TODAY]=absModal.obed===true;
+  const om={id:uid(),od:TODAY,do:TODAY,duvod:'jiné',pozn:absModal.pozn,stav:'po-deadlinu',nahradaIds:[]};
+  const n=nahFrom(juneDate(TODAY),'nevznikla',{den:TODAY,omId:om.id,exp:'—',expT:Infinity});
+  c.nahrady.push(n); om.nahradaIds.push(n.id); c.omluvenky.unshift(om);
+  absModal=null; showToast('Absence nahlášena'); render();
+};
+function renderAbsModal(){
+  const c=cur(), menu=MENUS[wd(TODAY)];
+  const obedy=menu.filter(it=>/pol|hlavn/i.test(it[0]));
+  let h=`<div class="modal-scrim" onclick="absClose()"><div class="modal" onclick="event.stopPropagation()">`;
+  h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n} · středa 3. 6.</div>`;
+  h+=`<div class="abs-warn">⚠ Je po deadlinu (20:00 včera). Den bude <b>neomluvený</b> a náhrada nevznikne.</div>`;
+  h+=`<div class="notelab">Důvod absence — nepovinné</div><textarea class="note" placeholder="např. nemoc, rodinný důvod…" oninput="absPozn(this.value)">${escTa(absModal.pozn)}</textarea>`;
+  h+=`<div class="notelab">Vyzvednete si oběd?</div>`;
+  h+=`<div class="abs-menu">`+obedy.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span></div>`).join('')+`</div>`;
+  h+=`<div class="choices"><button class="${absModal.obed===true?'on':''}" onclick="absObed(true)">Ano, vyzvedneme</button><button class="${absModal.obed===false?'on':''}" onclick="absObed(false)">Ne</button></div>`;
+  h+=`<div class="abs-hint">Nevyzvednutý oběd propadá.</div>`;
+  h+=`<div class="mbtns"><button class="btn-ghost" onclick="absClose()">Zrušit</button><button class="omluvbtn danger" style="margin:0" onclick="absSubmit()">Nahlásit neomluvenou absenci</button></div>`;
+  return h+`</div></div>`;
+}

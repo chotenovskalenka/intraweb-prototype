@@ -23,7 +23,7 @@ const nplural=n=>n===1?'náhrada':(n>=2&&n<=4?'náhrady':'náhrad');
 const fmtRange=(a,b)=>a===b?`${DOW[wd(a)]} ${a}. 6.`:`${a}. 6. – ${b}. 6.`;
 
 const children=[
-  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',att:{2:'OM',11:'OM'},notes:{11:'rodinná oslava'},fond:{rocni:2000,cerpano:800},
+  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',spi:true,att:{2:'NE',11:'OM'},notes:{11:'rodinná oslava'},fond:{rocni:2000,cerpano:800},
     faktury:[{obdobi:'Březen 2026',cena:10584,sleva:0,vystaveno:'9. 3. 2026',paid:false},
              {obdobi:'Únor 2026',cena:10584,sleva:0,vystaveno:'1. 2. 2026',paid:true},
              {obdobi:'Leden 2026',cena:10584,sleva:0,vystaveno:'7. 1. 2026',paid:true}],
@@ -40,7 +40,7 @@ const children=[
       {id:'omE-fut',od:11,do:11,duvod:'rodinné důvody',pozn:'rodinná oslava',stav:'vcas',nahradaIds:['nE-fut']},
       {id:'omE-2',od:2,do:2,duvod:'nemoc',pozn:'',stav:'po-deadlinu',nahradaIds:['nE-nev']},
     ]},
-  {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',att:{},notes:{},fond:{rocni:2000,cerpano:1500},
+  {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',spi:false,att:{},notes:{},fond:{rocni:2000,cerpano:1500},
     /* celodenní = odpolední docházka + úterý do 17:00; samostatná cena v podkladech není, použita odpolední sazba */
     faktury:[{obdobi:'Březen 2026',cena:10584,sleva:0,vystaveno:'9. 3. 2026',paid:true},
              {obdobi:'Únor 2026',cena:10584,sleva:0,vystaveno:'1. 2. 2026',paid:true},
@@ -48,6 +48,15 @@ const children=[
     nahrady:[ nahFrom(new Date(2026,4,15),'dostupna') ],
     omluvenky:[]},
 ];
+
+/* Básnička a písnička aktuálního týdne (texty shodné s průvodcovskou appkou).
+   url = proklik (YouTube / jiný odkaz) — reálné vyhledávací odkazy, žádná smyšlená videa. */
+const TYDEN={
+  basnicka:{t:'Uvijeme věneček ze všech našich kytiček. Kvítek, lístek i větvičku, uvijeme do věnečku. Jaké jméno máš? Tak pojď mezi nás.',
+    url:'https://www.youtube.com/results?search_query=Uvijeme+v%C4%9Bne%C4%8Dek+%C5%99%C3%ADkanka'},
+  pisnicka:{t:'Šel zahradník do zahrady s motykou, s motykou. Vykopal tam rozmarýnu velikou, velikou.',
+    url:'https://www.youtube.com/results?search_query=%C5%A0el+zahradn%C3%ADk+do+zahrady+p%C3%ADsni%C4%8Dka'}
+};
 const NEWS=[
   {t:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',from:'Táňa',date:'2. 6.',until:5,urgent:true},
   {t:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada). Prosíme o dřívější vyzvednutí.',from:'Táňa',date:'1. 6.',until:5,urgent:true},

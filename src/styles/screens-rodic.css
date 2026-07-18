@@ -14,7 +14,7 @@
 
 /* dashboard / shared tiles */
 /* Dashboard — hlavička dne (velké jméno + datum), 3sloupcová mřížka, nadpisy karet */
-.dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:2px 0 14px}
+.dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:2px 0 14px}
 .dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
@@ -48,9 +48,9 @@
 .mk2{font-size:10.5px;color:var(--color-text-muted);min-width:72px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
 .mv{flex:1}
 .alerg{font-size:10px;color:var(--color-accent-ink);background:rgba(200,188,133,.12);border-radius:6px;padding:1px 6px;flex-shrink:0;align-self:center}
-.akce{min-height:44px;display:flex;justify-content:space-between;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
+.akce{min-height:44px;display:flex;justify-content:space-between;gap:10px;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
 .akce:first-of-type{border-top:none;padding-top:0}
-.akce .when{color:var(--color-text-muted);font-size:12.5px;font-weight:400}
+.akce .when{color:var(--color-text-muted);font-size:12.5px;font-weight:400;flex-shrink:0;white-space:nowrap}
 .cinfo{font-size:12px;color:var(--color-text-muted);margin-top:10px;text-align:center}
 
 /* platby */
@@ -265,3 +265,18 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .gstep .gmo{font-size:16px;font-weight:600;color:#3c4043;min-width:64px;text-align:center;text-transform:capitalize}
 .gstep .gyr{font-size:16px;font-weight:600;color:#3c4043;min-width:42px;text-align:center}
 .gcell.gempty{cursor:default;background:transparent}
+.doch-sleep{font-size:13px;color:var(--color-text-muted);margin:-6px 0 10px}
+.doch-sleep b{color:var(--color-text)}
+.doch-pozn{background:var(--tint-ochre);border-radius:9px;padding:8px 11px;font-size:13px;line-height:1.45;margin:0 0 10px}
+.glist{display:flex;flex-wrap:wrap;gap:8px}
+.bp{padding:8px 0 4px}
+.bp+.bp{border-top:1px solid var(--color-border);margin-top:4px}
+.bp-k{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin-bottom:3px}
+.bp-t{font-size:13.5px;line-height:1.5}
+.bp-link{display:inline-flex;align-items:center;min-height:44px;color:var(--color-primary);font-weight:600;font-size:12.5px;text-decoration:none}
+/* Modal: nahlásit dnešní absenci */
+.omluvbtn.danger{background:var(--color-danger)}
+.abs-sub{font-size:12.5px;color:var(--color-text-muted);margin:-2px 0 10px}
+.abs-warn{background:var(--state-danger-bg);border:1px solid rgba(176,73,47,.25);color:var(--color-danger);border-radius:9px;padding:9px 12px;font-size:13px;line-height:1.45;margin-bottom:10px}
+.abs-menu{background:var(--color-surface-2);border-radius:9px;padding:6px 11px;margin-bottom:8px}
+.abs-hint{font-size:12px;color:var(--color-text-hint);margin:6px 0 2px}
