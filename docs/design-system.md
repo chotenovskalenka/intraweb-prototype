@@ -219,3 +219,17 @@ smazány. Rodič i průvodce mají teď shodnou typografickou škálu.
 
 `.frow`, `.gchips`/`.gchip` mají v každé appce jiný účel a nikdy se nenačítají spolu — nejsou to
 sdílené komponenty, zůstávají v příslušném `screens-*.css`.
+
+---
+
+## Přístupnost a mikrocopy (fáze 4.4)
+
+- **Kontrast:** všechny hlavní textové kombinace splňují **WCAG AA** (≥4.5, velký text/UI ≥3). `info`
+  a `success` ztmaveny na `#496D7E` / `#387349`, ať procházejí i jako text na pozadí a krémový text na výplni.
+  Hint (`--color-text-hint`) je jen pro nepodstatné hinty (≥3:1).
+- **Dotykové cíle:** interaktivní prvky v mobilních appkách mají **klikací plochu ≥ 44×44 px**
+  (min-height / hit-area přes `::before`; vizuál se nemusí měnit — např. `.chk` zůstává 30 px). Výjimka:
+  Google-kalendář (`.gstep`/`.gcell`) drží kompaktní Google rozměry (záměrná nápodoba).
+- **Focus:** `:focus-visible` (2px `--color-primary` ring) jen při klávesové navigaci; `:focus{outline:none}`
+  potlačuje ring po kliknutí myší. Hlavně pro desktop/admin.
+- **Oslovení:** **průvodce tyká, rodič vyká**, admin neosobní. Formát dat „D. M. RRRR".

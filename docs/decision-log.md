@@ -444,3 +444,24 @@ Typografická velikostní škála jako tokeny a aktivace `--space-*` v komponent
 **QA (prohlížeč):** rodič/průvodce/admin 1440 i 375 px — badge stavy jednotné napříč appkami (ověřeny
 shodné barvy CODES v rodiči i průvodcovském legendu), toast funguje přes sdílený `#toast`, empty stavy
 se zobrazí (ověřeno vynulováním seznamů), žádné chyby v konzoli. Dist rebuilt, offline-schopný.
+
+### 2026-07-18 — Fáze 4.4: čitelnost, přístupnost, mikrocopy
+
+- **Kontrast AA (skript nad reálnými tokeny):** text/muted/primary/primary-strong/accent-ink/danger na
+  povrchech prochází ≥4.5. Marginální `info`/`success` jako text na bg (4.33/4.42) → ztmaveny přes token:
+  `--color-info` #4E7488→**#496D7E**, `--color-success` #3C7A4E→**#387349** (oba teď ≥4.5 na bg/surface
+  i pro krémový text na výplni). Stavové tinty sladěny. Badge (ink na .12–.15 rgba nad surface) ≥4.5.
+- **Dotykové cíle ≥44 px** (klikací plocha, ne nutně vizuál) v obou mobilních appkách: bump min-height/
+  hit-area u `.burger`, `.ditem`, `.chk` (::before inset −7, vizuál zůstává 30px), `.stepper/.daybar button`,
+  `.switch/.mini/.filters/.temanav/.kids/.choices button`, `.clink`, `.cbtn`, `.odbtn`, `.kbtn`, `.hkid`,
+  `.ed`, `.gchip`, `.akce`, `.omx`, `.newsmore`, `.tlabbtn`, `.daypick`, `.addbtn`, `.prehl-abs`.
+  **Google-kalendář `.gstep`/`.gcell` ponechány kompaktní** (záměrná nápodoba Googlu, 42/22 px).
+- **`:focus-visible`** v base.css: viditelný focus ring (2px primary) jen při klávesové navigaci
+  (`:focus{outline:none}` + `:focus-visible` na button/a/input/textarea/select/[tabindex]). Ověřeno
+  Tabem v adminu (matches(':focus-visible')=true, outline primary).
+- **Mikrocopy tykání/vykání (V4):** appky konvenci **už dodržovaly** — průvodce tyká („Klepni, nastav"),
+  rodič vyká („Vyberte, Klepněte"). Opravena 1 odchylka: rodič `modals.js` „Vyber"→„Vyberte". Formát dat
+  konzistentní („D. M. RRRR" s mezerami). Terminologie dle objekty-systemu.md beze změn.
+
+**QA:** rodič/průvodce/admin 1440 i 375 px — bez nečitelných textů, cíle ≥44 (mimo záměrný gcal),
+focus ring funguje, žádné chyby v konzoli. Dist rebuilt.
