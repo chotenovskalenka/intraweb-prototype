@@ -1,7 +1,7 @@
 /* SCREEN: PRUVODCE_PREHLED — „soupis dne" dle priorit průvodce (stejný přístup jako rodič):
    velký datumový nadpis, prioritní sloupce (.dash3), nadpisy karet .ch.
-   Sloupec 1 docházka (počty, akce, kdo nepřijde) · sloupec 2 dnešek (program, básnička, akce)
-   · sloupec 3 tým a provoz (průvodci dnes, zdravotní/provozní poznámky). */
+   Sloupec 1 docházka (počty, akce, kdo nepřijde, zdravotní/provozní poznámky) · sloupec 2 dnešek
+   (program, básnička, akce) · sloupec 3 tým (průvodci dnes). */
 const PDOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
 function renderPrehled(){
   const c=counts();
@@ -34,6 +34,13 @@ function renderPrehled(){
     h+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
   }
   h+=`</div>`;
+  // zdravotní / provozní poznámky (děti s poznámkou od rodičů) — sloupec 1, pod docházkou
+  {const notes=data.filter(c=>c.note);
+   if(notes.length){
+     h+=`<div class="tile"><div class="ch">Zdravotní a provozní poznámky</div>`;
+     notes.forEach(c=>{h+=`<div class="rnote" style="margin:6px 0 0">✉️ <b>${c.n}:</b> ${c.note}</div>`;});
+     h+=`</div>`;
+   }}
   h+=`</div>`;
 
   // ── Sloupec 2: dnešek (program dne, básnička/písnička, dnešní akce) ──
@@ -72,13 +79,6 @@ function renderPrehled(){
     if(usIdx>=0)h+=`<div class="doch-note" style="margin-top:8px">☾ dnes uspává ${GUIDESHIFT[usIdx].n}</div>`;
   }else{h+=`<div class="empty" style="padding:6px">Dnes nikdo nemá službu.</div>`;}
   h+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis ›</button></div>`;
-  // zdravotní / provozní poznámky (děti s poznámkou od rodičů)
-  const notes=data.filter(c=>c.note);
-  if(notes.length){
-    h+=`<div class="tile"><div class="ch">Zdravotní a provozní poznámky</div>`;
-    notes.forEach(c=>{h+=`<div class="rnote" style="margin:6px 0 0">✉️ <b>${c.n}:</b> ${c.note}</div>`;});
-    h+=`</div>`;
-  }
   h+=`</div>`;
 
   h+=`</div>`;// .dash3
