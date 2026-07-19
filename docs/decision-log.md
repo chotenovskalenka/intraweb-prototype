@@ -743,3 +743,78 @@ a přepínač Den/Týden sloučeny do **jednoho pole** v hlavičce.
 **QA (dist):** průvodce 1280 px — hlavička: „Docházka" + `[Den|Týden]` + `‹ datum ›`; přepnutí na Týden
 změní popisek na rozsah a ‹ › krokují týdny (ověřeno „1.–5. 6." → „8.–12. 6."); Měsíc není. 375 px:
 pole se zalomí (přepínač + datum pod sebou), zbytek stoh. Konzole čistá. Dist rebuilt.
+
+### 2026-07-18 — Rodičovská Docházka a náhrady: desktop layout ve stylu Přehledu
+
+Stejný přístup jako u průvodce (desktop ať není roztáhlý mobil), přizpůsobený rodičovskému obsahu.
+`rodic/screens/dochazka.js`, `core.js`, `screens-rodic.css`.
+
+- **Velký nadpis „Docházka a náhrady"** (`.doch-head` .dh-t; duplicitní titulek v topbaru skryt —
+  `core.js`, `ttl=''` i pro `dochazka`) + akce **„Omluvit …"** vpravo v hlavičce (na desktopu normální
+  šířka, ne roztažený full-width pruh; na mobilu full-width pod nadpisem).
+- **Dva sloupce (`.doch-den`, desktop ≥900):** vlevo (`.doch-side`, ~380px) **Dostupné náhrady** +
+  **Omluvenky** (karty, nadpis Omluvenky povýšen na `.ch`); vpravo (`.doch-main`) **Kalendář docházky**
+  (`.ch`) + přepínač Den/Týden/Měsíc (omezená šířka) + editor dne/týdne/měsíce + hint. Celé zabaleno v
+  `.doch` (`column-span:all`) → vystupuje z masonry `column-count:2` (dřív byly náhrady a omluvenky
+  nevyváženě vedle sebe a „Omluvit" přes celou šířku).
+- **Měsíc ponechán** (na rozdíl od průvodce) — pro rodiče dává smysl (přehled, hromadné omluvy);
+  měsíční mřížka se vejde do pravého sloupce.
+- Parent-specifické `.doch*` třídy jsou v `screens-rodic.css` (jiné šířky/obsah než průvodcovské; oba
+  `screens-*.css` se nikdy nenačítají spolu, takže názvy nekolidují). Save-toasty tu už byly
+  (`saveDay`/`applyBulk`).
+- **Mobil beze změny pořadí:** nadpis → Omluvit → náhrady → omluvenky → kalendář (přepínač + pohled).
+
+**QA (dist):** rodič 1280 px — velký nadpis + Omluvit vpravo; vlevo náhrady+omluvenky, vpravo kalendář;
+Den (editor dne), Týden (řádky), Měsíc (mřížka) se vykreslí v pravém sloupci. 375 px stoh v pořadí.
+Konzole čistá. Průvodce/admin nedotčeni. Dist rebuilt.
+
+### 2026-07-18 — Rodičovská Docházka: prohození sloupců, zjednodušení náhrad, hromadné uložení
+
+Sada úprav dle designérky (`rodic/screens/dochazka.js`, `screens-rodic.css`):
+
+- **Prohozené sloupce:** vlevo **Kalendář docházky** (1fr), vpravo **Dostupné náhrady + Omluvenky**
+  (~360px). Mobil: kalendář → náhrady → omluvenky.
+- **Náhrady bez stavů a bez expirace:** zrušeny badge stavů i „expirace/nejbližší expirace". Karta =
+  velké číslo dostupných + text + prostý seznam **jen dostupných** náhrad (původ + „vznik …"). Stavové
+  položky (využitá/expirovaná/naplánovaná/nevznikla) se nevypisují. Omluvenky si stavy (Včas/Po deadlinu)
+  ponechávají — týkalo se jen náhrad.
+- **Smazané texty:** hint „Vyberte docházku na dnešek. Změny na další dny…" (den) a `.deadline`
+  „Po 20:00 lze u dnešního dne zadat už jen neomluveno." (lock-hláška u zamčeného dne zůstává).
+- **Tlačítko „Omluvit …" zrušeno** — omlouvání probíhá výběrem dne/týdne/měsíce v kalendáři. (Overlay
+  omluvenky dál žije přes dashboard; z Docházky jen zmizel duplicitní vstup.)
+- **Hromadné nastavení = tlačítko Uložit + toast:** výběr dní → výběr kódu (zvýrazní se, `bulkCode`) →
+  **Uložit N dní** → aplikuje na všechny + toast „Docházka uložena · N dní ✓". Dřív se kód aplikoval
+  hned klepnutím (bez uložení).
+- **Editor omluvení zúžen** (`.doch-main .choices/.note/.savebtn/.daycard{max-width}`) — dřív roztažený
+  přes celý sloupec.
+
+**Detail omluvení → modal** (rozhodnutí designérky; konzistentní s průvodcovým cell-modalem). Klepnutí
+na den v kalendáři (Den karta / Týden řádek / Měsíc buňka) otevře modal „Docházka a omluva" s editorem
+(volba docházky/omluvy + důvod + Uložit). Nový stav `dayModal`, `renderDayModal()` do `#modalRoot`
+(vzor jako `absModal`; `.modal-scrim`/`.modal` — mobil bottom-sheet, desktop dialog). `pick(d)` otevírá
+modal jen pro editovatelné dny a dnešek (minulé zamčené neotvírají nic), `saveDay` modal zavře + toast
+„Docházka uložena ✓". Inline editbox v týdnu/měsíci a dolní daycard zrušeny; Den = klikací karta
+`.daycard-btn` („Upravit docházku / omluvit ›").
+
+**QA (dist):** rodič 1280 px — sloupce prohozené, náhrady bez stavů/expirace, den-hint pryč, bez tlačítka
+Omluvit; hromadné: výběr → Omluvit → Uložit → toast „…· 2 dny ✓", Čt/Pá → Omluveno; modal: klik na den →
+dialog, Omluvit → důvod → Uložit → toast + zavření, Čt → Omluveno; Den karta → modal. 375 px: modal jako
+bottom-sheet, zbytek stoh. Konzole čistá. Dist rebuilt.
+
+### 2026-07-18 — Rodičovská Docházka: listování týdnů/měsíců, nadpisy, úklid
+
+Dle designérky:
+
+- **Listování období (šipky jako na Přehledu):** nadpis pohledu + `‹ … ›` steppery (`.dh-step`,
+  `.vhrow`/`.dh-lbl`). **Týden** = reálná navigace po červnových týdnech (`weekStart`, `stepWeek`;
+  1.–5. → 8.–12. → … → 29.–30.). **Měsíc** = `‹ Červen 2026 ›`; posun měsíce je placeholder
+  (`stepMonth` → toast „Prototyp pracuje jen s červnem 2026") — prototyp má data jen červen.
+- **Nadpisy pohledů** přejmenovány na **Denní / Týdenní / Měsíční přehled** (dřív „Eliška dnes“ /
+  „Týden Elišce“ / „Červen Elišce“).
+- **Smazán hint** „Klepněte na den a vyberte docházku. Pro více dní naráz „Nastavit více dní“." (celý
+  objekt `HINTS` odstraněn — všechny pohledy ho měly prázdný/mazaný).
+- **„Nastavit více dní najednou"** už není přes celou šířku — `.bulktoggle` `width:auto` (kompaktní tlačítko).
+
+**QA (dist):** rodič 1280 i 375 px — Týden: „Týdenní přehled" + `‹ 1.–5. 6. ›`, krok mění týden
+(ověřeno 1.–5. → 8.–12.), ‹ disabled na prvním týdnu; Měsíc: „Měsíční přehled" + `‹ Červen 2026 ›`,
+šipka → toast; nadpisy sedí, hint pryč, tlačítko kompaktní. Konzole čistá. Dist rebuilt.
