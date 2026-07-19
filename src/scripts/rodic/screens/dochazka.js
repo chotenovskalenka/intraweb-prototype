@@ -1,4 +1,6 @@
 /* SCREEN: RODIC_DOCHAZKA */
+let bulkCode=null; // vybraný kód pro hromadné uložení (aplikuje se až tlačítkem Uložit)
+let dayModal=null; // den otevřený v modalu docházky/omluvy (null = zavřeno)
 function editor(d){const c=cur();
   const dr=draft[d]||{};
   const cd=dr.code!==undefined?dr.code:code(c,d);
@@ -27,39 +29,49 @@ function editor(d){const c=cur();
 function bulkControls(){
   if(!bulk)return `<button class="bulktoggle" onclick="toggleBulk()">Nastavit více dní najednou</button>`;
   let h=`<div class="bulkbar"><div class="top"><span>Hromadné nastavení</span><button class="linkbtn" onclick="toggleBulk()">Hotovo</button></div><div class="bulkactions"><button onclick="selectAll()">Vybrat všechny dny</button><button onclick="clearSel()">Zrušit výběr</button></div>`;
-  if(selSet.size){h+=`<div class="selinfo">Vybráno: ${selSet.size} ${plural(selSet.size)} — nastavit na:</div><div class="choices">`+[['D','Dopolední'],['O','Odpolední'],['C','Celodenní'],['OM','Omluvit']].map(([k,l])=>{const abs=(k==='OM');return `<button class="${abs?'abs':''}" onclick="applyBulk('${k}')">${l}</button>`;}).join('')+'</div>';}
+  if(selSet.size){
+    h+=`<div class="selinfo">Vybráno: ${selSet.size} ${plural(selSet.size)} — nastavit na:</div>`;
+    h+=`<div class="choices">`+[['D','Dopolední'],['O','Odpolední'],['C','Celodenní'],['OM','Omluvit']].map(([k,l])=>{const abs=(k==='OM');return `<button class="${bulkCode===k?'on':''}${abs?' abs':''}" onclick="pickBulkCode('${k}')">${l}</button>`;}).join('')+`</div>`;
+    h+=`<button class="savebtn${bulkCode?'':' dis'}" ${bulkCode?'':'disabled'} onclick="saveBulk()">Uložit ${selSet.size} ${plural(selSet.size)}</button>`;
+  }
   return h+'</div>';}
-function renderDen(){return `<div class="vhead">${cur().n} dnes</div><div class="daycard"><div class="dt"><span class="wd">Středa 3. června</span><span class="small">${cur().n}</span></div><div class="editbox">${editor(TODAY)}<div class="deadline">Po 20:00 lze u dnešního dne zadat už jen neomluveno.</div></div></div>`;}
-function renderTyden(){let h=`<div class="vhead">Týden ${cur().dat}</div>`+bulkControls();
-  for(let d=1;d<=5;d++){const cd=code(cur(),d);const open=!bulk&&sel===d,bs=bulk&&selSet.has(d);
-    h+=`<div class="wkrow${d===TODAY?' today':''}${!editable(d)?' locked':''}${open?' open':''}${bs?' bsel':''}"><div class="wkmain" onclick="pick(${d})">`+(bulk?`<span class="bchk ${selSet.has(d)?'on':''}"></span>`:'')+`<span class="d">${DOW[wd(d)]} <span>${d}. 6.</span></span><span class="cur">${!editable(d)?'<span class="lockflag">🔒 uzavřeno</span>':''}${chip(cd)}</span></div><div class="editbox">${open?editor(d):''}</div></div>`;}
+function renderDen(){const c=cur();return `<div class="vhead">Denní přehled</div><button class="daycard daycard-btn" onclick="pick(${TODAY})"><div class="dt"><span class="wd">Středa 3. června</span>${chip(code(c,TODAY))}</div><div class="dm-open">Upravit docházku / omluvit ›</div></button>`;}
+function renderTyden(){
+  const wend=Math.min(weekStart+4,30);
+  let h=`<div class="vhead vhrow"><span>Týdenní přehled</span><div class="dh-nav"><button class="dh-step" onclick="stepWeek(-1)" ${weekStart<=1?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${weekStart}.–${wend}. 6.</span><button class="dh-step" onclick="stepWeek(1)" ${weekStart+7>30?'disabled':''} aria-label="Další týden">›</button></div></div>`;
+  h+=bulkControls();
+  for(let i=0;i<5;i++){const d=weekStart+i;if(d>30)break;const cd=code(cur(),d);const bs=bulk&&selSet.has(d);
+    h+=`<div class="wkrow${d===TODAY?' today':''}${!editable(d)?' locked':''}${bs?' bsel':''}"><div class="wkmain" onclick="pick(${d})">`+(bulk?`<span class="bchk ${selSet.has(d)?'on':''}"></span>`:'')+`<span class="d">${DOW[wd(d)]} <span>${d}. 6.</span></span><span class="cur">${!editable(d)?'<span class="lockflag">🔒 uzavřeno</span>':''}${chip(cd)}</span></div></div>`;}
   return h;}
-function renderMesic(){let h=`<div class="vhead">Červen ${cur().dat}</div>`+bulkControls()+'<div class="cal">';
+function renderMesic(){let h=`<div class="vhead vhrow"><span>Měsíční přehled</span><div class="dh-nav"><button class="dh-step" onclick="stepMonth(-1)" aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">Červen 2026</span><button class="dh-step" onclick="stepMonth(1)" aria-label="Další měsíc">›</button></div></div>`+bulkControls()+'<div class="cal">';
   DOW.forEach(x=>h+=`<div class="h">${x}</div>`);
   for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="cell we"><span class="dnum">${d}</span></div>`;continue;}const cd=code(cur(),d),s=bulk?selSet.has(d):sel===d;
     h+=`<div class="cell${d===TODAY?' today':''}${!editable(d)?' lock':''}${s?' sel':''}" onclick="pick(${d})"><span class="dnum">${d}</span><span class="mk" style="color:${CODES[cd][1]}">${mark(cd)}</span></div>`;}
   h+='</div>';
-  if(!bulk&&sel>0&&!isWE(sel))h+=`<div class="daycard" style="margin-top:12px"><div class="dt"><span class="wd">${DOW[wd(sel)]} ${sel}. června</span></div><div class="editbox">${editor(sel)}</div></div>`;
   return h;}
-const HINTS={den:'Vyberte docházku na dnešek. Změny na další dny v Týdnu nebo Měsíci.',tyden:'Klepněte na den a vyberte docházku. Pro více dní naráz „Nastavit více dní“.',mesic:'Klepněte na den a vyberte docházku. Pro více dní „Nastavit více dní“. Víkendy školka nemá.'};
+// Modal docházky/omluvy pro vybraný den (editor je uvnitř). Otevírá se z kalendáře přes pick(d).
+function renderDayModal(){
+  const d=dayModal, c=cur();
+  let h=`<div class="modal-scrim" onclick="closeDayModal()"><div class="modal" onclick="event.stopPropagation()">`;
+  h+=`<h3>Docházka a omluva</h3><div class="abs-sub">${c.n} · ${DOWFULL[wd(d)]} ${d}. 6.</div>`;
+  h+=`<div class="dm-editor">${editor(d)}</div>`;
+  h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeDayModal()">Zavřít</button></div>`;
+  return h+`</div></div>`;}
 function nahRow(n){
-  let sub;
-  if(n.stav==='nevznikla')sub=`omluva ${n.vznik} · po deadlinu`;
-  else{sub=`vznik ${n.vznik}`;if(isFinite(n.expT))sub+=` · expirace ${n.exp}`;
-    if(n.stav==='naplanovana'&&n.plan)sub+=` · ${n.plan}`;
-    if(n.stav==='vyuzita'&&n.pouzita)sub+=` · využita ${n.pouzita}`;}
-  return `<div class="nahrow"><div class="nahL"><div class="naho">${n.puvod}</div><div class="nahv">${sub}</div></div><span class="bdg n-${n.stav}">${NAHLAB[n.stav]}</span></div>`;
+  // bez stavů a bez expirace — jen původ + kdy náhrada vznikla
+  return `<div class="nahrow"><div class="nahL"><div class="naho">${n.puvod}</div><div class="nahv">vznik ${n.vznik}</div></div></div>`;
 }
 function renderNahrady(c){
-  const av=dostupne(c), ne=nextExp(c);
-  let h=`<div class="tile"><div class="ftop"><div><div class="tlab" style="margin:0">Dostupné náhrady</div><div class="nahbig">${av}</div></div><div class="nahexp">${ne?'nejbližší expirace<br>'+ne:''}</div></div>`;
+  const av=dostupne(c);
+  let h=`<div class="tile"><div class="ch">Dostupné náhrady</div><div class="nahbig">${av}</div>`;
   h+=`<div class="nahsub2">Náhradu lze vyčerpat i na příměstský tábor. Vzniká za každý včas omluvený den.</div>`;
-  h+=c.nahrady.length?c.nahrady.map(nahRow).join(''):'<div class="empty">Zatím žádné náhrady. Vzniknou za každý včas omluvený den.</div>';
+  const avail=c.nahrady.filter(n=>n.stav==='dostupna');
+  h+=avail.length?avail.map(nahRow).join(''):'<div class="empty">Zatím žádné náhrady. Vzniknou za každý včas omluvený den.</div>';
   return h+`</div>`;
 }
 function renderOmluvenky(c){
-  let h=`<div class="tile"><div class="tlab">Omluvenky</div>`;
-  if(!c.omluvenky.length)return h+'<div class="empty">Zatím žádné omluvenky. Omluvit dítě můžete tlačítkem nahoře.</div></div>';
+  let h=`<div class="tile"><div class="ch">Omluvenky</div>`;
+  if(!c.omluvenky.length)return h+'<div class="empty">Zatím žádné omluvenky. Dítě omluvíte výběrem dne v kalendáři.</div></div>';
   c.omluvenky.forEach(o=>{
     const canCancel=o.od>NOW.d&&o.stav!=='zrusena';
     h+=`<div class="omrow"><div class="omL"><div class="omo">${fmtRange(o.od,o.do)}</div><div class="omv">${DUVODLAB[o.duvod]||o.duvod}${o.pozn?' · '+escTa(o.pozn):''}</div></div><span class="bdg om-${o.stav}">${OMLAB[o.stav]}</span>${canCancel?`<button class="omx" onclick="omCancel('${o.id}')">Zrušit</button>`:''}</div>`;
@@ -68,25 +80,32 @@ function renderOmluvenky(c){
 }
 function renderDochazka(){
   const c=cur();
-  let h=`<button class="omluvbtn" onclick="openOmluvenka()">Omluvit ${c.ak}</button>`;
-  h+=renderNahrady(c);
-  h+=renderOmluvenky(c);
-  h+=`<div class="vhead" style="margin-top:18px">Kalendář docházky</div>`;
-  h+='<div class="switch">'+[['den','Den'],['tyden','Týden'],['mesic','Měsíc']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setView('${v[0]}')">${v[1]}</button>`).join('')+'</div>';
+  // Desktop: velký nadpis + dva sloupce — vlevo kalendář docházky, vpravo náhrady/omluvenky. Mobil: stoh.
+  // Omlouvání probíhá přímo v kalendáři (výběr dne/týdne/měsíce → omluva); samostatné tlačítko zrušeno.
+  let h=`<div class="doch"><div class="doch-head"><h1 class="dh-t">Docházka a náhrady</h1></div>`;
+  h+=`<div class="doch-den">`;
+  h+=`<div class="doch-main"><div class="ch">Kalendář docházky</div>`;
+  h+=`<div class="switch">`+[['den','Den'],['tyden','Týden'],['mesic','Měsíc']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setView('${v[0]}')">${v[1]}</button>`).join('')+`</div>`;
   h+=view==='den'?renderDen():view==='tyden'?renderTyden():renderMesic();
-  h+=`<div class="hint">${HINTS[view]}</div>`;
+  h+=`</div>`;
+  h+=`<aside class="doch-side">${renderNahrady(c)}${renderOmluvenky(c)}</aside>`;
+  h+=`</div></div>`;
   return h;
 }
 window.goEditDay=d=>{section='dochazka';if(d<=5){view='tyden';}else{view='mesic';}sel=d;overlay=null;drawerOpen=false;render();};
-window.setView=v=>{view=v;sel=(v==='den')?TODAY:sel;bulk=false;selSet.clear();render();};
-window.pick=d=>{if(bulk){if(!editable(d))return;selSet.has(d)?selSet.delete(d):selSet.add(d);render();return;}sel=(sel===d)?-1:d;render();};
-window.toggleBulk=()=>{bulk=!bulk;selSet.clear();sel=-1;render();};
+window.setView=v=>{view=v;sel=(v==='den')?TODAY:sel;bulk=false;selSet.clear();bulkCode=null;render();};
+window.pick=d=>{if(bulk){if(!editable(d))return;selSet.has(d)?selSet.delete(d):selSet.add(d);render();return;}if(editable(d)||d===TODAY){dayModal=d;render();}};
+window.closeDayModal=()=>{dayModal=null;render();};
+window.stepWeek=dir=>{let w=weekStart+dir*7;if(w<1)w=1;if(w>29)w=29;weekStart=w;render();};
+window.stepMonth=dir=>{showToast('Prototyp pracuje jen s červnem 2026');};
+window.toggleBulk=()=>{bulk=!bulk;selSet.clear();bulkCode=null;sel=-1;render();};
 window.selectAll=()=>{const days=view==='tyden'?[1,2,3,4,5]:[...Array(30)].map((_,i)=>i+1);days.filter(d=>!isWE(d)&&editable(d)).forEach(d=>selSet.add(d));render();};
-window.clearSel=()=>{selSet.clear();render();};
-window.applyBulk=k=>{selSet.forEach(d=>{cur().att[d]=k;});selSet.clear();showToast('Docházka uložena');};
+window.clearSel=()=>{selSet.clear();bulkCode=null;render();};
+window.pickBulkCode=k=>{bulkCode=(bulkCode===k?null:k);render();};
+window.saveBulk=()=>{if(!bulkCode||!selSet.size)return;const n=selSet.size;selSet.forEach(d=>{cur().att[d]=bulkCode;});selSet.clear();bulkCode=null;render();showToast('Docházka uložena · '+n+' '+plural(n)+' ✓');};
 window.draftCode=(d,k)=>{draft[d]={...(draft[d]||{}),code:k};render();};
 window.draftNote=(d,v)=>{draft[d]={...(draft[d]||{}),note:v};};
 window.draftObed=(d,v)=>{draft[d]={...(draft[d]||{}),obed:v};render();};
-window.saveDay=d=>{const dr=draft[d]||{};if(dr.code!==undefined)cur().att[d]=dr.code;if(dr.note!==undefined)cur().notes[d]=dr.note;if(dr.obed!==undefined){cur().obed=cur().obed||{};cur().obed[d]=dr.obed;}delete draft[d];dashEdit=false;showToast('Docházka uložena');};
+window.saveDay=d=>{const dr=draft[d]||{};if(dr.code!==undefined)cur().att[d]=dr.code;if(dr.note!==undefined)cur().notes[d]=dr.note;if(dr.obed!==undefined){cur().obed=cur().obed||{};cur().obed[d]=dr.obed;}delete draft[d];dayModal=null;render();showToast('Docházka uložena ✓');};
 window.setCode=(d,k)=>{cur().att[d]=k;render();};
 window.setNote=(d,v)=>{cur().notes[d]=v;};

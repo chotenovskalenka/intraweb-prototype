@@ -4,7 +4,7 @@ const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Aktuality','▲'],['d
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 const PERCHILD=['prehled','dochazka','profil','platby','fotky'];
 
-let ci=0, section='prehled', view='tyden', sel=-1, bulk=false, selSet=new Set(), overlay=null, drawerOpen=false, dashDay=TODAY, kalSel=TODAY;
+let ci=0, section='prehled', view='tyden', sel=-1, bulk=false, selSet=new Set(), overlay=null, drawerOpen=false, dashDay=TODAY, kalSel=TODAY, weekStart=1;
 let kalY=2026, kalM=5;
 let kidMenuOpen=false;
 let dashEdit=false;
@@ -31,9 +31,9 @@ function renderHead(){
 }
 function render(){
   /* Dashboard: velký datumový nadpis je titulek → v topbaru „Přehled" neopakujeme. */
-  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):(section==='prehled'?'':TITLES[section]);
+  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):((section==='prehled'||section==='dochazka')?'':TITLES[section]);
   renderHead();renderDrawer();
-  document.getElementById('modalRoot').innerHTML = (typeof absModal!=='undefined'&&absModal)?renderAbsModal():'';
+  document.getElementById('modalRoot').innerHTML = (typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
   document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;if(!PERCHILD.includes(s)){} render();};
