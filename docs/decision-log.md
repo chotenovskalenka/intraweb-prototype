@@ -639,3 +639,43 @@ dotykové cíle) — jeho paleta/fonty (vibrant, Baloo 2) **nepřevzaty** (schv�
 Kdo nepřijde → Program → Básnička → Akce → Průvodci → Poznámky); 7 karet `.ch`, všech 5 počtů
 viditelných (zalomeno 3+2), topbar bez „Přehled", program „Pohyb" + kroužek dle dne. Rodič
 1280 bez regrese (velký datum s listováním, `.prog-day`, 3 sloupce). Konzole čistá u obou. Dist rebuilt.
+
+### 2026-07-18 — Dashboard rodiče, doladění hlavičky a výhledu (dle designérky)
+
+Pět úprav na rodičovském dashboardu (`rodic/screens/prehled.js`, `core.js`, `rodic.html`, `screens-rodic.css`):
+
+- **Hlavička dashboardu (avatar + „Eliška · středa 3. 6." + listování ‹ ▾ ›) je v topbaru na úrovni
+  přepínače dětí.** Vykresluje se do nového `<div class="dashhead" id="dashhead">` (v topbaru za burgerem,
+  před `.ttl`) funkcí `renderDashHead()` volanou z `renderHead()` jen na dashboardu; `renderDashboard()`
+  začíná rovnou fakturou, `#ttl` na dashboardu prázdný. `.dashhead:empty{display:none}` (mimo dashboard
+  bez mezery). `.dh-nav` je `position:relative` (kotva pro kalendář-dropdown). **Mobil (<900 px):**
+  `.topbar{flex-wrap:wrap}` + `.dashhead{order:3;flex-basis:100%}` → topbar řádek = burger + přepínač dětí,
+  hlavička se zalomí celá pod něj (avatar+titulek, šipky). Dolaďovací iterace dle designérky: vedle H1 →
+  do topbaru vpravo → v topbaru vlevo nad nadpis → zpět k nadpisu v obsahu → **finálně celá hlavička do
+  topbaru na úroveň přepínače dětí**.
+- **Kalendář-dropdown má hlavičku „červen 2026"** (`.dp-title`) — dřív chyběl měsíc/rok. Pevný popisek
+  bez přepínání měsíců: prototyp běží jen v červnu 2026, jiné měsíce nemají data (funkční navigace mezi
+  měsíci/roky by byla mimo rozsah a vedla na prázdno).
+- **Karta aktualit přesunuta ze sloupce 3 do sloupce 1 pod „Průvodci dnes"** a **přejmenována
+  „Aktuality školky" → „Novinky ze školky"** (patička „Všechny novinky ›"; designérka vybrala z variant
+  Nástěnka / Novinky ze školky / Co je nového). Sloupec 3 tak nese jen Měsíční program. Pozn.: sekce v menu
+  zůstává „Aktuality" (přejmenování karty se sekce nedotklo). Mobilní stoh = jedno DOM pořadí → novinky
+  jsou nově hned za Průvodci (ne na konci).
+- **▾ otevírá kompaktní kalendář-dropdown** místo obřího gridu přes celou šířku. `.daypicker` je teď
+  `position:absolute` pod ▾ (šířka 236 px, stín, `z-index`), buňky zmenšeny **jen zde**
+  (`.daypicker .dpcell`) — `.dpcal`/`.dpcell` v overlay omluvenky zůstávají velké (sdílené, nedotčené).
+  Zavírání klikem mimo: `dashPickerOpen` přidán do globálního `document click` handleru, `toggleDashPicker(e)`
+  a `.daypicker` mají `stopPropagation`, aby je otevírací/vnitřní klik hned nezavřel (stejný vzor jako `.kmenu`).
+- **„Program dne" → „Co bude Eliška dělat"** (jméno dítěte, konzistentní s „Co bude Eliška jíst").
+- **Měsíční program: datum (a čas) před název** — řádky přepnuty z `.akce` (název vlevo, datum vpravo)
+  na `.newsrow` pattern (datum vlevo · čas tučně · název, ›). Čas se odděluje z názvu regexem
+  `„ · HH:MM" na konci` (kroužky), takže „8. 6. · **15:15** · Kroužek Tanečky s Niki".
+- **Avatar dítěte před H1** (`avatar(c,38)` na začátku `.dash-head`) — kolečko s vygenerovaným avatarem.
+
+**Nedotčeno:** průvodcovská a admin appka (žádný soubor v `pruvodce/**`, `admin/**`, `components.css`
+ani `screens-pruvodce.css` neupraven).
+
+**QA (dist přes http server, cache-bust):** rodič 1280 i 375 px — ‹ ▾ › v topbaru u přepínače dětí,
+avatar před H1, „Co bude Eliška dělat", měsíční program s datem+časem vlevo; ▾ otevře malý dropdown
+(dnešek zvýrazněn), výběr dne přepne H1/program/omluvné tlačítko a ukáže chip „dnes", topbar se vejde
+i na 375 px. Konzole čistá. Dist rebuilt.
