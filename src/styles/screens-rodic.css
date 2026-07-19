@@ -4,6 +4,13 @@
 .kids{display:flex;gap:7px;margin-bottom:13px}
 .kids button{flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-serif);font-size:15px;font-weight:500;color:var(--color-text-muted);padding:9px 6px;border-radius:12px;cursor:pointer}
 .kids button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
+/* Hlavička dashboardu v topbaru (na úrovni přepínače dětí). Prázdná mimo dashboard → skrytá. */
+.dashhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.dashhead:empty{display:none}
+@media (max-width:899px){
+  .topbar{flex-wrap:wrap}
+  .dashhead{order:3;flex-basis:100%;margin-top:6px}
+}
 .kidsel{position:relative}
 .kbtn{min-height:44px;display:flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:999px;padding:4px 10px 4px 4px;font-family:var(--font-serif);font-size:14px;font-weight:500;color:var(--color-text);cursor:pointer}
 .kcaret{font-size:10px;color:var(--color-text-muted)}
@@ -16,7 +23,7 @@
    Sdílené třídy .dash-head/.dh-t/.ch/.dash3/.dcol/.cardlink/.prog-day jsou v components.css. */
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
-.dh-nav{display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
+.dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
 .dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:10px;font-size:18px;color:var(--color-primary);cursor:pointer}
 .dh-today{min-height:44px;border:none;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;cursor:pointer;font-family:var(--font-sans)}
 .doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}
@@ -158,7 +165,10 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .wkmain .d span{color:var(--color-text-muted);font-weight:400}
 .wkmain .cur{margin-left:auto;display:flex;align-items:center;gap:7px}
 .lockflag{font-size:10px;color:var(--color-text-muted);white-space:nowrap}
-.daypicker{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:11px;margin-bottom:11px}
+/* Dashboard výběr dne — kompaktní dropdown pod ▾ v topbaru (ne přes celou šířku). */
+.daypicker{position:absolute;right:0;top:calc(100% + 6px);z-index:9;width:236px;background:var(--color-surface);border:1px solid var(--color-border-strong);border-radius:12px;box-shadow:0 8px 26px rgba(31,83,68,.18);padding:10px;margin:0}
+.daypicker .dpcell{aspect-ratio:1;font-size:11.5px;border-radius:6px}
+.dp-title{font-family:var(--font-serif);font-size:13.5px;font-weight:600;color:var(--color-primary-strong);text-align:center;margin:0 0 8px}
 .dpcal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .dph{font-size:10px;color:var(--color-text-muted);text-align:center;font-weight:600;padding-bottom:2px}
 .dpcell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12.5px;border-radius:8px;cursor:pointer;color:var(--color-text);background:var(--color-surface-2)}

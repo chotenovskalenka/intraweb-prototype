@@ -20,6 +20,7 @@ function renderDrawer(){
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">Vhaaji<small>rodičovská appka</small></span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${s[2]}</span>${s[1]}</button>`).join('');
 }
 function renderHead(){
+  document.getElementById('dashhead').innerHTML=(section==='prehled'&&!overlay)?renderDashHead():'';
   const el=document.getElementById('kidsel');
   if(!PERCHILD.includes(section)||overlay){el.style.display='none';return;}
   el.style.display='block';
@@ -40,6 +41,6 @@ window.openDrawer=()=>{drawerOpen=true;render();};
 window.toggleKidMenu=e=>{e.stopPropagation();kidMenuOpen=!kidMenuOpen;render();};
 window.pickKid=i=>{ci=i;kidMenuOpen=false;render();};
 window.closeDrawer=()=>{drawerOpen=false;render();};
-document.addEventListener('click',()=>{if(kidMenuOpen){kidMenuOpen=false;render();}});
+document.addEventListener('click',()=>{if(kidMenuOpen||dashPickerOpen){kidMenuOpen=false;dashPickerOpen=false;render();}});
 
 render();

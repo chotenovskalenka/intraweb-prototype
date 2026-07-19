@@ -6,12 +6,9 @@ const DOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','ned
 function renderDashboard(){
   const c=cur(), td=code(c,dashDay), due=c.faktury.find(f=>!f.paid), ev=EVENTS[dashDay], menu=MENUS[wd(dashDay)];
   const today=dashDay===TODAY, absent=(td==='OM'||td==='NE');
-  // Hlavička — velké jméno + datum, hned vedle listování ‹ ▾ › (jeden vizuální pattern)
-  let h=`<div class="dash-head">
-    <h1 class="dh-t">${c.n} · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>
-    <div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button><button class="dh-step" onclick="toggleDashPicker()" aria-label="Vybrat den">▾</button><button class="dh-step" onclick="stepDay(1)" aria-label="Další den">›</button>${today?'':`<button class="dh-today" onclick="pickDashDay(TODAY)">dnes</button>`}</div>
-  </div>`;
-  if(dashPickerOpen){h+=`<div class="daypicker"><div class="dpcal">`;['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="dpcell we">${d}</div>`;continue;}h+=`<div class="dpcell${d===TODAY?' today':''}${d===dashDay?' sel':''}" onclick="pickDashDay(${d})">${d}</div>`;}h+=`</div></div>`;}
+  // Hlavička (avatar + jméno/datum + listování ‹ ▾ ›) se vykresluje do topbaru na úroveň přepínače dětí
+  // → renderDashHead() volané z renderHead(). Tady začínáme rovnou fakturou.
+  let h='';
   // 1) Faktura po splatnosti — plná šířka, nejvyšší priorita
   if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>Faktura po splatnosti · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
   h+=`<div class="dash3">`;
@@ -30,10 +27,15 @@ function renderDashboard(){
   h+=`<div class="tile"><div class="ch">Průvodci dnes</div><div class="glist">`+GUIDES_TODAY.map(i=>{const g=guides[i];return `<button class="grow" onclick="openGuide(${i})">${avatar(g,30)}<span class="grow-n">${g.n}${g.uspava?' <span class="moon">☾</span>':''}</span><span class="grow-h">${g.h||''}</span></button>`;}).join('')+`</div>`;
   if(guides.some(g=>g.uspava))h+=`<div class="doch-note" style="margin-top:8px">☾ = dnes uspává</div>`;
   h+=`</div>`;
+  // Aktuality školky — sloupec 1, pod Průvodci (na desktopu pod nimi; na mobilu ve stohu hned za Průvodci)
+  {const nws=NEWS.filter(n=>TODAY<=n.until).slice(0,5);
+   if(nws.length){h+=`<div class="tile newsbox"><div class="ch"><button class="tlabbtn" onclick="go('aktuality')">Novinky ze školky<span class="tarr">›</span></button></div>`;
+     nws.forEach(n=>{h+=`<button class="newsrow" onclick="go('aktuality')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`;});
+     h+=`<button class="newsmore" onclick="go('aktuality')">Všechny novinky ›</button></div>`;}}
   h+=`</div>`;
   // 3) Sloupec 2 — dnešek: program, jídlo, básnička+písnička
   h+=`<div class="dcol">`;
-  h+=`<div class="tile"><div class="ch">Program dne</div>`;
+  h+=`<div class="tile"><div class="ch">Co bude ${c.n} dělat</div>`;
   h+=`<div class="prog-day">${DENNI[wd(dashDay)]||'Volný program'}</div>`;
   if(ev){h+=`<div class="ev"><div class="evt">${ev.title}</div><div class="evd">Sraz: <b>${ev.place}</b> · ${ev.time}</div><div class="evd">${ev.note}</div>`;
     if(ev.map)h+=`<a class="maplink" href="${ev.map}" target="_blank" rel="noopener">Otevřít mapu</a>`;
@@ -47,15 +49,30 @@ function renderDashboard(){
   // 4) Sloupec 3 — výhled: měsíční program (bez narozenin) + aktuality školky
   h+=`<div class="dcol">`;
   {const rows=[];Object.keys(EVMAP).map(Number).sort((a,b)=>a-b).forEach(d=>{EVMAP[d].forEach(e=>{if(e.type!=='naro')rows.push([d,e.t]);});});
+   // řádek: datum · čas · název aktuality (čas se odděluje z názvu, pokud v něm je „ · HH:MM")
    h+=`<div class="tile"><div class="ch"><button class="tlabbtn" onclick="go('kalendar')">Měsíční program<span class="tarr">›</span></button></div>`
-     +rows.map(([d,t])=>`<button class="akce" onclick="go('kalendar')"><span>${t}</span><span class="when">${d}. 6. ›</span></button>`).join('')+`</div>`;}
-  const nws=NEWS.filter(n=>TODAY<=n.until).slice(0,5);
-  if(nws.length){h+=`<div class="tile newsbox"><div class="ch"><button class="tlabbtn" onclick="go('aktuality')">Aktuality školky<span class="tarr">›</span></button></div>`;
-    nws.forEach(n=>{h+=`<button class="newsrow" onclick="go('aktuality')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`;});
-    h+=`<button class="newsmore" onclick="go('aktuality')">Všechny aktuality ›</button></div>`;}
+     +rows.map(([d,t])=>{const m=t.match(/^(.*?) · (\d{1,2}:\d{2})$/);const nm=m?m[1]:t,tm=m?m[2]:'';return `<button class="newsrow" onclick="go('kalendar')"><span class="newsdate">${d}. 6.</span><span class="newsline">${tm?`<b>${tm}</b> · `:''}${nm}</span><span class="newsarr">›</span></button>`;}).join('')+`</div>`;}
   h+=`</div></div>`;
   return h;
 }
+// Hlavička dashboardu v topbaru (na úrovni přepínače dětí): avatar + jméno/datum + listování ‹ ▾ ›.
+function renderDashHead(){
+  const c=cur(), today=dashDay===TODAY;
+  return `${avatar(c,34)}<h1 class="dh-t">${c.n} · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>`
+    +`<div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button>`
+    +`<button class="dh-step" onclick="toggleDashPicker(event)" aria-label="Vybrat den">▾</button>`
+    +`<button class="dh-step" onclick="stepDay(1)" aria-label="Další den">›</button>`
+    +(today?'':`<button class="dh-today" onclick="pickDashDay(TODAY)">dnes</button>`)
+    +(dashPickerOpen?renderDayPicker():'')+`</div>`;
+}
+// ▾ otevře kompaktní kalendář-dropdown pod šipkami (u datumového nadpisu).
+function renderDayPicker(){
+  // Prototyp běží jen v červnu 2026 → měsíc/rok je pevný popisek bez přepínání (jiné měsíce nejsou).
+  let h=`<div class="daypicker" onclick="event.stopPropagation()"><div class="dp-title">červen 2026</div><div class="dpcal">`;
+  ['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);
+  for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="dpcell we">${d}</div>`;continue;}h+=`<div class="dpcell${d===TODAY?' today':''}${d===dashDay?' sel':''}" onclick="pickDashDay(${d})">${d}</div>`;}
+  return h+`</div></div>`;
+}
 window.stepDay=dir=>{let d=dashDay+dir;while(d>=1&&d<=30&&isWE(d))d+=dir;if(d>=1&&d<=30)dashDay=d;render();};
-window.toggleDashPicker=()=>{dashPickerOpen=!dashPickerOpen;render();};
+window.toggleDashPicker=e=>{e&&e.stopPropagation();dashPickerOpen=!dashPickerOpen;render();};
 window.pickDashDay=d=>{dashDay=d;dashPickerOpen=false;dashEdit=false;render();};
