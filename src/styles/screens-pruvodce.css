@@ -10,6 +10,32 @@
 .gchip{display:flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:999px;padding:5px 13px 5px 5px;font-size:13.5px;font-weight:500}
 .rozh{font-size:13.5px;line-height:1.5;padding:8px 0;border-top:1px solid var(--color-border);color:var(--color-text)}.rozh:first-of-type{border-top:none}
 .rozhd{font-size:11.5px;color:var(--color-primary);font-weight:600;margin-bottom:2px}
+/* Docházka — desktop layout ve stylu Přehledu (hlavička + dva panely), ať to není roztáhlý mobil */
+.doch-head .dh-t{margin:0 0 12px}
+.doch-mealsfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:13px;padding-top:13px;border-top:1px solid var(--color-border)}
+.doch-info .np{font-size:13.5px}
+.doch-counts{display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:visible;padding:0}
+.doch-counts .tab{flex:none}
+/* sloučené pole: přepínač Den/Týden + listování data v jedné liště */
+.dfield{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dfield .dsw{margin:0;width:auto;flex:0 0 auto}
+.dfield .dsw button{flex:0 0 auto;padding:10px 18px}
+.dnav{display:flex;align-items:center;gap:2px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:999px;padding:2px}
+.dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:18px;color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:999px}
+.dnav button:disabled{color:var(--color-text-hint);cursor:default}
+.dnav span{font-family:var(--font-serif);font-size:14.5px;color:var(--color-primary-strong);padding:0 8px;white-space:nowrap}
+@media (min-width:900px){
+  #content > .doch{column-span:all;margin-bottom:0}
+  .doch-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .doch-head .dh-t{margin:0}
+  .doch-head .switch{width:auto;margin:0;flex:0 0 auto}
+  .doch-den{display:grid;grid-template-columns:288px minmax(0,1fr);gap:24px;align-items:start}
+  .doch-side{display:flex;flex-direction:column;gap:14px;position:sticky;top:20px}
+  .doch-side>.stepper,.doch-side>.tabs,.doch-side>.tile,.doch-side>.specbar{margin-bottom:0}
+  .doch-main{min-width:0}
+  .doch-main>.search{margin-bottom:12px}
+  .doch-main .rosterbox{max-height:none}
+}
 /* Přehled (dashboard) */
 .prehl-abs{display:flex;align-items:center;gap:9px;min-height:44px;width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
 .prehl-abs .pa-nm{font-size:14px;font-weight:500;color:var(--color-text)}

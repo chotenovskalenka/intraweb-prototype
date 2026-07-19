@@ -25,7 +25,7 @@ function renderDrawer(){
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">Vhaaji<small>průvodcovská appka</small></span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${s[2]}</span>${s[1]}</button>`).join('');
 }
 function render(){
-  document.getElementById('ttl').textContent=section==='prehled'?'':TITLES[section];
+  document.getElementById('ttl').textContent=(section==='prehled'||section==='dochazka')?'':TITLES[section];
   renderDrawer();
   document.getElementById('content').innerHTML=RENDER[section]();
 }

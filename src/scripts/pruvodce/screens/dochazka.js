@@ -58,25 +58,32 @@ function rosterHTML(){
   return out;
 }
 function renderDochazka(){
-  let h='<div class="switch">'+[['den','Den'],['tyden','Týden'],['mesic','Měsíc']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setDView('${v[0]}')">${v[1]}</button>`).join('')+'</div>';
-  if(view==='den')h+=renderDen();
-  else if(view==='tyden')h+=renderTydenD();
-  else h+=renderMesicD();
-  return h;
+  // Desktop: hlavička (nadpis + sloučené pole datum+Den/Týden) + dva panely (styl Přehledu). Mobil: stoh.
+  // Měsíc záměrně jen v rodičovské/admin appce (přehled, hromadné omluvy, statistiky) — průvodce řeší den a týden.
+  let h=`<div class="doch"><div class="doch-head"><h1 class="dh-t">Docházka</h1>${renderDochNav()}</div>`;
+  h+=(view==='tyden')?renderTydenD():renderDen();
+  return h+`</div>`;
 }
-function renderDen(){
-  let h=`<div class="stepper"><button onclick="stepDen(-1)" ${denDay<=1?'disabled':''}>‹</button><span>${DOW[wd(denDay)]} ${denDay}. 6.${denDay===TODAYD?' · dnes':''}</span><button onclick="stepDen(1)" ${denDay>=30?'disabled':''}>›</button></div>`;
-  return h+(denDay===TODAYD?todayRoster():dayRoster(denDay));
+// Sloučené pole: přepínač Den/Týden + listování data (den nebo týdenní rozsah) v jednom.
+function renderDochNav(){
+  const tog=`<div class="switch dsw">`+[['den','Den'],['tyden','Týden']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setDView('${v[0]}')">${v[1]}</button>`).join('')+`</div>`;
+  let label,prev,next,pdis,ndis;
+  if(view==='tyden'){label=`${weekStart}.–${Math.min(weekStart+4,30)}. 6.`;prev='stepWeek(-1)';next='stepWeek(1)';pdis=weekStart<=1;ndis=weekStart+7>30;}
+  else{label=`${DOW[wd(denDay)]} ${denDay}. 6.${denDay===TODAYD?' · dnes':''}`;prev='stepDen(-1)';next='stepDen(1)';pdis=denDay<=1;ndis=denDay>=30;}
+  return `<div class="dfield">${tog}<div class="dnav"><button onclick="${prev}" ${pdis?'disabled':''} aria-label="Předchozí">‹</button><span>${label}</span><button onclick="${next}" ${ndis?'disabled':''} aria-label="Další">›</button></div></div>`;
 }
+function renderDen(){return denDay===TODAYD?todayRoster():dayRoster(denDay);}
 function todayRoster(){
   const c=counts();
-  let h=`<div class="tabs">`+TABS_BY().map(([k,l])=>`<div class="tab${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
-  h+=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${c.pres}</b> / ${data.length}</span></div>`;
-  if(CTX[tab][1])h+=`<div class="sectip">${CTX[tab][1]}</div>`;
-  h+=`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)">`;
-  h+=`<div class="rosterbox"><div id="roster">${rosterHTML()}</div></div>`;
-  h+=`<footer><div class="meals">Obědy <b>${c.pres}</b> · svačiny <b>${c.pres}</b></div><div class="pwa">nainstalovatelné · offline (PWA)</div></footer>`;
-  return h;
+  // levý panel: počty (filtry) — listování dne je nahoře ve sloučeném poli
+  let side=`<div class="tabs wrap doch-counts">`+TABS_BY().map(([k,l])=>`<div class="tab${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
+  // pravý panel: kontext + hledání + roster + souhrn jídel
+  let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${c.pres}</b> / ${data.length}</span></div>`;
+  main+=`<div class="sectip">${CTX[tab][1]||''}</div>`;
+  main+=`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)">`;
+  main+=`<div class="rosterbox"><div id="roster">${rosterHTML()}</div></div>`;
+  main+=`<div class="doch-mealsfoot"><span class="meals">Obědy <b>${c.pres}</b> · svačiny <b>${c.pres}</b></span><span class="pwa">nainstalovatelné · offline (PWA)</span></div>`;
+  return `<div class="doch-den"><aside class="doch-side">${side}</aside><div class="doch-main">${main}</div></div>`;
 }
 function specialBar(d){
   if(!SPECIAL[d])return '';
@@ -88,16 +95,17 @@ function specialBar(d){
 }
 function dayRoster(d){
   const locked=d<TODAYD;
-  let h=specialBar(d);
-  h+=`<div class="ctxhead"><span class="t">Docházka dne</span><span class="pres">přítomno <b>${presentCount(d)}</b> / ${data.length}</span></div>`;
-  h+=`<div class="sectip">${locked?'Proběhlý den — jen ke čtení.':'Klepni na dítě a nastav docházku na tento den.'}</div>`;
-  h+=`<div class="rosterbox">`+data.map((c,ci)=>{const code=getCode(c,d);return `<div class="row"><div class="rmain" ${locked?'style="cursor:default"':`onclick="openCell(${ci},${d})"`}>${avatar(c,30)}<span class="nm">${full(c)}</span><span class="ind" style="margin-left:auto;font-weight:500">${codeLabel(code)}</span></div></div>`;}).join('')+`</div>`;
-  return h;
+  // levý panel: zvláštní den + souhrn; pravý: roster dne (listování dne je nahoře ve sloučeném poli)
+  let side=specialBar(d);
+  side+=`<div class="tile doch-info"><div class="np"><span>Přítomno</span><b>${presentCount(d)} / ${data.length}</b></div><div class="pwa" style="margin-top:6px">${locked?'Proběhlý den — jen ke čtení.':'Budoucí den — editovatelný.'}</div></div>`;
+  let main=`<div class="ctxhead"><span class="t">Docházka dne</span><span class="pres">přítomno <b>${presentCount(d)}</b> / ${data.length}</span></div>`;
+  main+=`<div class="sectip">${locked?'Proběhlý den — jen ke čtení.':'Klepni na dítě a nastav docházku na tento den.'}</div>`;
+  main+=`<div class="rosterbox">`+data.map((c,ci)=>{const code=getCode(c,d);return `<div class="row"><div class="rmain" ${locked?'style="cursor:default"':`onclick="openCell(${ci},${d})"`}>${avatar(c,30)}<span class="nm">${full(c)}</span><span class="ind" style="margin-left:auto;font-weight:500">${codeLabel(code)}</span></div></div>`;}).join('')+`</div>`;
+  return `<div class="doch-den"><aside class="doch-side">${side}</aside><div class="doch-main">${main}</div></div>`;
 }
 const dlegend=`<div class="legend"><span><b style="color:${CODES.C[1]}">C</b> celodenní</span><span><b style="color:${CODES.D[1]}">D</b> dopolední</span><span><b style="color:${CODES.O[1]}">O</b> odpolední</span><span><b style="color:${CODES.OM[1]}">om</b> omluven</span><span><b style="color:${CODES.NE[1]}">N</b> nepřítomen</span></div>`;
 function renderTydenD(){
-  let h=`<div class="stepper"><button onclick="stepWeek(-1)" ${weekStart<=1?'disabled':''}>‹</button><span>${weekStart}.–${Math.min(weekStart+4,30)}. 6.</span><button onclick="stepWeek(1)" ${weekStart+7>30?'disabled':''}>›</button></div>`;
-  h+=dlegend;
+  let h=dlegend;// listování týdne je nahoře ve sloučeném poli
   h+=`<input class="search" placeholder="Najít dítě…" value="${esc(wquery)}" oninput="onWSearch(this.value)">`;
   h+=`<div class="weekbox"><table class="wt"><thead><tr><th class="who">Dítě</th>`+DAYS.map((dn,j)=>`<th class="${weekStart+j===TODAYD?'today':''}">${dn}</th>`).join('')+`</tr></thead><tbody>`;
   const tot=[0,0,0,0,0];
@@ -107,15 +115,6 @@ function renderTydenD(){
     h+=`</tr>`;});
   h+=`</tbody><tfoot><tr><td class="who">Přítomno</td>`+tot.map((n,j)=>{const d=weekStart+j;return `<td class="${d===TODAYD?'today':''}">${d>30?'':n}</td>`;}).join('')+`</tr></tfoot></table></div>`;
   h+=`<div class="hint">Budoucí dny upravíš klepnutím na buňku. Dnešek a minulé dny jsou zamčené.</div>`;
-  return h;
-}
-function renderMesicD(){
-  let h=`<div class="stepper"><button onclick="stepMonth(-1)">‹</button><span>Červen 2026</span><button onclick="stepMonth(1)">›</button></div>`;
-  h+=`<div class="cal">`;
-  DOW.forEach(x=>h+=`<div class="calh">${x}</div>`);
-  for(let d=1;d<=30;d++){const we=isWE(d),today=d===TODAYD,lock=d<=TODAYD;
-    h+=`<div class="calcell${we?' we':''}${today?' today':''}" ${we?'':`onclick="openMonthDay(${d})"`}><span class="cnum">${d}</span>${we?'':`<span class="ccount${lock?' lk':''}">${presentCount(d)}</span>`}</div>`;}
-  h+=`</div>`+dlegend+`<div class="hint">Klepni na den → otevře se docházka všech dětí na ten den.</div>`;
   return h;
 }
 function renderDenRoster(d){
@@ -131,13 +130,12 @@ window.setDView=v=>{view=v;open=-1;query='';monthDay=-1;if(v==='den')denDay=TODA
 window.setTab=k=>{tab=k;open=-1;render();};
 window.toggle=i=>{open=open===i?-1:i;document.getElementById('roster').innerHTML=rosterHTML();};
 window.onSearch=v=>{query=v;document.getElementById('roster').innerHTML=rosterHTML();};
-window.presence=i=>{data[i].status=here(data[i])?'neomluveno':'pritomen';render();};
-window.setPlan=(i,v)=>{data[i].plan=v;render();};
-window.setStatus=(i,v)=>{data[i].status=v;render();};
+window.presence=i=>{data[i].status=here(data[i])?'neomluveno':'pritomen';render();showToast('Docházka uložena ✓');};
+window.setPlan=(i,v)=>{data[i].plan=v;render();showToast('Docházka uložena ✓');};
+window.setStatus=(i,v)=>{data[i].status=v;render();showToast('Docházka uložena ✓');};
 window.onWSearch=v=>{wquery=v;renderKeepFocus();};
-window.setSpi=(i,v)=>{data[i].spi=(v==='true');render();};
+window.setSpi=(i,v)=>{data[i].spi=(v==='true');render();showToast('Uloženo ✓');};
 window.openMonthDay=d=>{if(isWE(d))return;denDay=d;view='den';render();};
 window.closeMonthDay=()=>{monthDay=-1;render();};
 window.stepDen=dir=>{let d=denDay+dir;while(d>=1&&d<=30&&isWE(d))d+=dir;if(d>=1&&d<=30)denDay=d;render();};
 window.stepWeek=dir=>{let w=weekStart+dir*7;if(w<1)w=1;if(w>29)w=29;weekStart=w;render();};
-window.stepMonth=dir=>{showToast('Prototyp pracuje s červnem 2026');};
