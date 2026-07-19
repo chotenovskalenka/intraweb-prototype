@@ -679,3 +679,67 @@ ani `screens-pruvodce.css` neupraven).
 avatar před H1, „Co bude Eliška dělat", měsíční program s datem+časem vlevo; ▾ otevře malý dropdown
 (dnešek zvýrazněn), výběr dne přepne H1/program/omluvné tlačítko a ukáže chip „dnes", topbar se vejde
 i na 375 px. Konzole čistá. Dist rebuilt.
+
+### 2026-07-18 — Průvodcovský dashboard: zdravotní poznámky pod docházku
+
+Symetricky s rodičem: karta **„Zdravotní a provozní poznámky"** přesunuta ze sloupce 3 (tým)
+do **sloupce 1 pod docházku** (`pruvodce/screens/prehled.js`) — pořadí sloupce 1: Docházka dnes →
+Kdo dnes nepřijde → Zdravotní a provozní poznámky. Sloupec 3 tak nese jen „Průvodci dnes". Mobilní
+stoh = jedno DOM pořadí → poznámky jsou nově hned za „Kdo nepřijde", ne až za Průvodci.
+
+**QA (dist):** průvodce 1280 px — sloupec 1 = Docházka/Kdo nepřijde/Zdravotní poznámky, sloupec 3 =
+jen Průvodci dnes (ověřeno DOM + vizuálně). Konzole čistá. Rodič/admin nedotčeni. Dist rebuilt.
+
+### 2026-07-18 — Průvodcovská Docházka: desktop layout ve stylu Přehledu
+
+Designérka: Docházka vypadala na desktopu jako roztáhlý mobil (jeden full-width sloupec — široký
+přepínač, stepper, roztažené řádky rosteru). Překopáno do stejného stylu jako Přehled
+(`pruvodce/screens/dochazka.js`, `core.js`, `screens-pruvodce.css`).
+
+- **Hlavička:** velký nadpis `<h1 class="dh-t">Docházka</h1>` + kompaktní přepínač Den/Týden/Měsíc
+  vpravo (`.doch-head`, na desktopu flex space-between). Duplicitní „Docházka" v topbaru skryta
+  (`core.js`, `ttl=''` i pro `dochazka`, stejně jako `prehled`).
+- **Den — dva panely (`.doch-den` grid 288px + 1fr, desktop ≥900):** levý sticky panel = listování dne
+  (`.stepper`) + počty jako **filtry v mřížce 2×2** (`.doch-counts`); pravý panel = kontext + hledání +
+  roster + souhrn jídel (`.doch-mealsfoot`). Pro **jiný den** levý panel nese stepper + zvláštní den
+  (`.specbar`) + souhrn (přítomno/zámek), pravý roster dne. Celá obrazovka je zabalená v `.doch`
+  (`column-span:all`) → vystupuje z masonry `column-count:2` a řídí si layout sama.
+- **Týden/Měsíc nechány na plnou šířku** (tabulka týdne / kalendář měsíce jsou záměrně široké — to není
+  „roztáhlý mobil"), jen pod novou hlavičkou.
+- **Mobil beze změny chování:** `.doch-den` bez gridu → panely se stohují (nadpis → přepínač → stepper →
+  počty 2×2 → kontext → hledání → roster → jídla). Počty jsou nově 2×2 mřížka místo horizontálního
+  scrollu (čitelnější, nic se neschovává).
+
+**QA (dist):** průvodce 1280 px — Den = dva panely (počty 2×2, roster vpravo), rozbalení řádku/edit
+funguje, jiný den má souhrn vlevo, Týden tabulka + Měsíc kalendář na plnou šířku; 375 px stoh v pořadí.
+Konzole čistá. Rodič/admin nedotčeni. Dist rebuilt.
+
+### 2026-07-18 — Průvodcovská Docházka: potvrzovací toast u dnešních změn
+
+Chybějící potvrzení (proti design-systému „každá mutující akce dává potvrzení přes showToast"):
+dnešní edit panel a checkbox přítomnosti měnily stav v paměti bez zpětné vazby. Doplněno
+`showToast` do `presence`/`setStatus`/`setPlan` („Docházka uložena ✓") a `setSpi` („Uloženo ✓")
+v `pruvodce/screens/dochazka.js`. Změna zůstává okamžitá (bez zvláštního tlačítka Uložit — shodně se
+zbytkem appky, kde toggle = uložení); buňka jiného dne (`setCell`) toast měla už dřív.
+
+**QA (dist):** rozbalení dítěte → přepnutí typu docházky/stavu → vyskočí „Docházka uložena ✓",
+počty se přepočítají, panel zůstane otevřený. Konzole čistá. Dist rebuilt.
+
+### 2026-07-18 — Průvodcovská Docházka: sloučené pole datum+Den/Týden, vyhozen Měsíc
+
+Dle designérky: (1) měsíční pohled u průvodce nedává smysl — průvodce řeší **den a týden**; měsíc
+patří rodiči (přehled, hromadné omluvy) a vedení (statistiky), proto zůstává jen tam. (2) Výběr data
+a přepínač Den/Týden sloučeny do **jednoho pole** v hlavičce.
+
+- **Měsíc odstraněn** z přepínače i větvení (`renderMesicD`, `stepMonth` smazány). Zůstávají Den + Týden.
+  (Rodičovská/admin Docházka nedotčena — měsíc tam zůstává.)
+- **Sloučené pole `renderDochNav()` (`.dfield`)**: malý přepínač `Den | Týden` (`.switch.dsw`) +
+  listování data (`.dnav` — ‹ popisek ›). V režimu Den popisek = „St 3. 6. · dnes" a ‹ › krokují dny;
+  v režimu Týden = „1.–5. 6." a ‹ › krokují týdny. Nahrazuje dřívější samostatný přepínač Den/Týden/Měsíc
+  **i** samostatné steppery uvnitř pohledů (ty z `todayRoster`/`dayRoster`/`renderTydenD` odstraněny).
+- Levý panel Dne tak nese jen počty (filtry); listování je nahoře v poli. Týden = pole + legenda +
+  hledání + tabulka (plná šířka).
+
+**QA (dist):** průvodce 1280 px — hlavička: „Docházka" + `[Den|Týden]` + `‹ datum ›`; přepnutí na Týden
+změní popisek na rozsah a ‹ › krokují týdny (ověřeno „1.–5. 6." → „8.–12. 6."); Měsíc není. 375 px:
+pole se zalomí (přepínač + datum pod sebou), zbytek stoh. Konzole čistá. Dist rebuilt.
