@@ -62,17 +62,18 @@ function renderDashHead(){
     +`<div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button>`
     +`<button class="dh-step" onclick="toggleDashPicker(event)" aria-label="Vybrat den">▾</button>`
     +`<button class="dh-step" onclick="stepDay(1)" aria-label="Další den">›</button>`
-    +(today?'':`<button class="dh-today" onclick="pickDashDay(TODAY)">dnes</button>`)
+    +(today?`<span class="dh-today">dnes</span>`:'')
     +(dashPickerOpen?renderDayPicker():'')+`</div>`;
 }
 // ▾ otevře kompaktní kalendář-dropdown pod šipkami (u datumového nadpisu).
 function renderDayPicker(){
-  // Prototyp běží jen v červnu 2026 → měsíc/rok je pevný popisek bez přepínání (jiné měsíce nejsou).
-  let h=`<div class="daypicker" onclick="event.stopPropagation()"><div class="dp-title">červen 2026</div><div class="dpcal">`;
+  // Šipky měsíců: prototyp má data jen pro červen 2026 → posun dá toast (stejně jako v Docházce).
+  let h=`<div class="daypicker" onclick="event.stopPropagation()"><div class="dp-head"><button class="dp-nav" onclick="stepPickMonth(-1)" aria-label="Předchozí měsíc">‹</button><div class="dp-title">červen 2026</div><button class="dp-nav" onclick="stepPickMonth(1)" aria-label="Další měsíc">›</button></div><div class="dpcal">`;
   ['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);
   for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="dpcell we">${d}</div>`;continue;}h+=`<div class="dpcell${d===TODAY?' today':''}${d===dashDay?' sel':''}" onclick="pickDashDay(${d})">${d}</div>`;}
   return h+`</div></div>`;
 }
 window.stepDay=dir=>{let d=dashDay+dir;while(d>=1&&d<=30&&isWE(d))d+=dir;if(d>=1&&d<=30)dashDay=d;render();};
 window.toggleDashPicker=e=>{e&&e.stopPropagation();dashPickerOpen=!dashPickerOpen;render();};
+window.stepPickMonth=dir=>{showToast('Prototyp pracuje jen s červnem 2026');};
 window.pickDashDay=d=>{dashDay=d;dashPickerOpen=false;dashEdit=false;render();};
