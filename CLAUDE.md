@@ -6,9 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A prototype for **Vhaaji** (Lesní školka Vhaaji), a Czech forest kindergarten. There are three apps, one per role:
 
-- **guide/teacher** ("průvodce", mobile): dashboard (přehled), attendance, program planning, staff shifts, children roster, cultural fund, contacts.
-- **parent** ("rodič", mobile): overview, news, attendance, child profile, payments, calendar, photos, contacts.
-- **management** ("vedení / administrativa", **desktop-first**): dashboard (přehled), news (aktuality), meetings & evaluations (porady), payments (platby), make-up days (náhrady). The **hospodářka** (bursar) role folds into this app — no fourth role. Unlike the mobile apps it is used on a laptop (sidebar shell, not a drawer) and **sees all four sister schools** — Vhaaji, Jaata, Kouzlo lesa, Maata (the mobile apps stay single-school). Phase 3 execution plan: [docs/plan-faze-3.md](docs/plan-faze-3.md).
+- **guide/teacher** ("průvodce", mobile): dashboard (přehled), attendance, news ("novinky" — create + WhatsApp share), program planning, staff shifts, children roster, cultural fund, contacts.
+- **parent** ("rodič", mobile): overview, news ("novinky"), attendance, child profile, payments, calendar, photos, contacts.
+- **management** ("vedení / administrativa", **desktop-first**): dashboard (přehled), news ("novinky", dřív aktuality), meetings & evaluations (porady), payments (platby), make-up days (náhrady). The **hospodářka** (bursar) role folds into this app — no fourth role. Unlike the mobile apps it is used on a laptop (sidebar shell, not a drawer) and **sees all four sister schools** — Vhaaji, Jaata, Kouzlo lesa, Maata (the mobile apps stay single-school). Phase 3 execution plan: [docs/plan-faze-3.md](docs/plan-faze-3.md).
 
 Each app is built from **modular source files in `src/`** and compiled by [build.sh](build.sh) into a **single self-contained file in `dist/`** for sharing with respondents. All UI text and domain vocabulary is **Czech**. No framework, no package manager, no test suite. The only external network dependency is the Google Fonts `<link>` (Bricolage Grotesque + Inter). The logo is an inline PNG `data:` URI (offline).
 

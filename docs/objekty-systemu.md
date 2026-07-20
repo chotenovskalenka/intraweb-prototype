@@ -102,7 +102,7 @@ Zůstatek náhrad se **všude odvozuje** z pole (`dostupne()`), nikde není ulo�
 
 ---
 
-## Aktualita
+## Novinka (dřív „aktualita“)
 
 Oznámení, které vedení/administrativa posílá rodičům konkrétních školek a tříd (Flow 4).
 
@@ -113,7 +113,7 @@ Oznámení, které vedení/administrativa posílá rodičům konkrétních škol
 | Atribut | Význam |
 |---|---|
 | `id` | identifikátor |
-| `text` | text aktuality |
+| `text` | text novinky |
 | `urgent` | příznak „důležité / urgentní" |
 | `stav` | viz níže |
 | `datum` | datum odeslání (u `naplanovana` popisný text „odešle se …") |
@@ -121,7 +121,7 @@ Oznámení, které vedení/administrativa posílá rodičům konkrétních škol
 
 ### Příjemci (povinní)
 
-Aktualitu **nelze odeslat bez určených příjemců** — „bez určených příjemců" (BRIEF kap. 4) je **chyba, ne stav**, v datech se neukládá. Příjemce lze zvolit na úrovni celé školky (`all:true`) nebo výběrem konkrétních tříd (`tridy`). Náhled příjemců (`recipText`) sestaví věty typu „Vhaaji — všichni (25 rodin)" / „Jaata — Sluníčka (12 rodin)"; počet rodin se odvozuje z obsazenosti školky/třídy (`obsazeno(s)` / `t.obs`), nikde není natvrdo. `hasRecip(recip)` je podmínka odeslání. Koncept jde uložit i bez příjemců.
+Novinku **nelze odeslat bez určených příjemců** — „bez určených příjemců" (BRIEF kap. 4) je **chyba, ne stav**, v datech se neukládá. Příjemce lze zvolit na úrovni celé školky (`all:true`) nebo výběrem konkrétních tříd (`tridy`). Náhled příjemců (`recipText`) sestaví věty typu „Vhaaji — všichni (25 rodin)" / „Jaata — Sluníčka (12 rodin)"; počet rodin se odvozuje z obsazenosti školky/třídy (`obsazeno(s)` / `t.obs`), nikde není natvrdo. `hasRecip(recip)` je podmínka odeslání. Koncept jde uložit i bez příjemců.
 
 ### Stavy
 

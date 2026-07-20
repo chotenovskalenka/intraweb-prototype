@@ -128,13 +128,13 @@ Seed data: Eliška pokrývá všech 5 stavů náhrad + 2 omluvenky (budoucí `vc
 
 ---
 
-## Flow 4 — Vedení posílá aktualitu rodičům
+## Flow 4 — Vedení posílá novinku (aktualitu) rodičům
 
-Vedení vytvoří aktualitu a určí příjemce (školka → volitelně třídy). Bez příjemců **nelze odeslat** — tlačítko je neaktivní a doplněné vysvětlením; koncept jde uložit i bez nich. Po odeslání je u aktuality vidět, komu odešla. Zdroj chování: `src/scripts/admin/screens/aktuality.js`, seed `AKTUALITY` v `src/scripts/admin/data.js`. Počty rodin se odvozují z obsazenosti (`obsazeno(s)` / `t.obs`), nejsou natvrdo.
+Vedení vytvoří novinku a určí příjemce (školka → volitelně třídy). Bez příjemců **nelze odeslat** — tlačítko je neaktivní a doplněné vysvětlením; koncept jde uložit i bez nich. Po odeslání je u novinky vidět, komu odešla. Zdroj chování: `src/scripts/admin/screens/aktuality.js`, seed `AKTUALITY` v `src/scripts/admin/data.js`. Počty rodin se odvozují z obsazenosti (`obsazeno(s)` / `t.obs`), nejsou natvrdo.
 
 ```mermaid
 flowchart TD
-  A([Aktuality → seznam<br/>koncept · naplánovaná · odeslaná · archivovaná]):::term --> B["+ Nová aktualita"]
+  A([Aktuality → seznam<br/>koncept · naplánovaná · odeslaná · archivovaná]):::term --> B["+ Nová novinka"]
   B --> C["Text · volitelně „důležité“"]
   C --> D["Výběr příjemců<br/>školka → celá / konkrétní třídy"]
   D --> E{"Vybrán aspoň<br/>jeden příjemce?"}:::dec
@@ -142,8 +142,8 @@ flowchart TD
   F --> G[/"Uložit koncept<br/>(lze i bez příjemců)"/]
   F --> D
   E -->|ano| H["Náhled příjemců<br/>„odešle se rodičům: Vhaaji — všichni (25 rodin)“"]:::hi
-  H --> I[/"Odeslat · toast „Aktualita odeslána“"/]
-  I --> J([Aktualita v seznamu · stav „odeslaná“<br/>s výčtem příjemců]):::term
+  H --> I[/"Odeslat · toast „Novinka odeslána“"/]
+  I --> J([Novinka v seznamu · stav „odeslaná“<br/>s výčtem příjemců]):::term
   G --> K([Koncept v seznamu]):::term
   J --> L["Archivovat → stav „archivovaná“"]
   classDef term fill:#DCE7DC,stroke:#2E5E43,color:#21402F,stroke-width:1.5px;
@@ -151,7 +151,7 @@ flowchart TD
   classDef dec fill:#F0E4CE,stroke:#B07D3A,color:#6f4e1e;
 ```
 
-Stavy aktuality a povinnost příjemců jsou popsané v `docs/objekty-systemu.md` (objekt **Aktualita**). Propsání do rodičovské appky je simulované jen shodou seed dat — appky nesdílejí data.
+Stavy novinky a povinnost příjemců jsou popsané v `docs/objekty-systemu.md` (objekt **Novinka**). Propsání do rodičovské appky je simulované jen shodou seed dat — appky nesdílejí data.
 
 ---
 

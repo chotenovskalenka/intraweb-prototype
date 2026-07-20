@@ -2,7 +2,7 @@
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
-  ['aktuality','Aktuality','✉'],
+  ['aktuality','Novinky','✉'],
   ['porady','Porady a evaluace','▤'],
   ['platby','Platby','₵'],
   ['nahrady','Náhrady','↻'],

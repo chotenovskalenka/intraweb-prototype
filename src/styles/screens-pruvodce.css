@@ -12,6 +12,7 @@
 .rozhd{font-size:11.5px;color:var(--color-primary);font-weight:600;margin-bottom:2px}
 /* Docházka — desktop layout ve stylu Přehledu (hlavička + dva panely), ať to není roztáhlý mobil */
 .doch-head .dh-t{margin:0 0 12px}
+.doch-head .btn-primary{flex:0 0 auto;padding:12px 20px}
 .doch-mealsfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:13px;padding-top:13px;border-top:1px solid var(--color-border)}
 .doch-info .np{font-size:13.5px}
 .doch-counts{display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:visible;padding:0}

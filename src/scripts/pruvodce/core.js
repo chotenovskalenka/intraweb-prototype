@@ -2,6 +2,7 @@
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
   ['dochazka','Docházka','✓'],
+  ['novinky','Novinky','✉'],
   ['plan','Plán & program','✎'],
   ['pruvodci','Docházka průvodců','◷'],
   ['kalendar','Kalendář','▦'],
@@ -16,7 +17,7 @@ let view='den', open=-1, query='', tab='rano';
 let rytOpen=-1, modal=null, shiftM=null;
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:renderPrehled,dochazka:renderDochazka,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
+const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -25,7 +26,7 @@ function renderDrawer(){
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">Vhaaji<small>průvodcovská appka</small></span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${s[2]}</span>${s[1]}</button>`).join('');
 }
 function render(){
-  document.getElementById('ttl').textContent=(section==='prehled'||section==='dochazka')?'':TITLES[section];
+  document.getElementById('ttl').textContent=(section==='prehled'||section==='dochazka'||section==='novinky')?'':TITLES[section];
   renderDrawer();
   document.getElementById('content').innerHTML=RENDER[section]();
 }

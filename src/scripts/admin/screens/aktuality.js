@@ -10,7 +10,7 @@ function renderAktuality(){
 }
 
 function renderAkList(){
-  let h=`<button class="addbig" onclick="akNew()">+ Nová aktualita</button>`;
+  let h=`<button class="addbig" onclick="akNew()">+ Nová novinka</button>`;
   // pořadí: koncepty a naplánované nahoře, pak odeslané, pak archivované
   const order={koncept:0,naplanovana:1,odeslana:2,archivovana:3};
   const items=AKTUALITY.slice().sort((a,b)=>order[a.stav]-order[b.stav]);
@@ -50,7 +50,7 @@ function renderAkForm(){
   const rec=recipText(recip), ok=hasRecip(recip), textOk=f.text.trim().length>0;
   let h=`<button class="back" onclick="akCancel()">‹ Zpět na seznam</button>`;
   h+=`<div class="tile">`;
-  h+=`<div class="field"><div class="l">Text aktuality</div>`
+  h+=`<div class="field"><div class="l">Text novinky</div>`
     +`<textarea class="pta" id="akText" placeholder="Co chcete rodičům oznámit?">${escTa(f.text)}</textarea></div>`;
   // důležité
   h+=`<div class="field"><div class="l">Označení</div><div class="pchips">`
@@ -73,7 +73,7 @@ function renderAkForm(){
   if(ok){
     h+=`<div class="tile note-info ak-preview"><b>Odešle se rodičům:</b><br>${rec.map(escTa).join('<br>')}</div>`;
   }else{
-    h+=`<div class="ak-warn">⚠ Bez určených příjemců nelze aktualitu odeslat — vyberte alespoň jednu školku nebo třídu.</div>`;
+    h+=`<div class="ak-warn">⚠ Bez určených příjemců nelze novinku odeslat — vyberte alespoň jednu školku nebo třídu.</div>`;
   }
   // tlačítka
   h+=`<div class="mbtns">`;
@@ -83,7 +83,7 @@ function renderAkForm(){
     ? `<button class="btn-primary" onclick="akSend()">Odeslat</button>`
     : `<button class="btn-primary" disabled>Odeslat</button>`;
   h+=`</div>`;
-  if(ok&&!textOk)h+=`<div class="ak-warn" style="margin-top:8px">Doplňte text aktuality.</div>`;
+  if(ok&&!textOk)h+=`<div class="ak-warn" style="margin-top:8px">Doplňte text novinky.</div>`;
   h+=`</div>`;
   return h;
 }
@@ -110,8 +110,8 @@ function akCommit(stav){
   }
 }
 window.akSaveDraft=()=>{akSyncText();akCommit('koncept');akView='list';formA=null;akEditId=null;showToast('Koncept uložen');render();};
-window.akSend=()=>{akSyncText();if(!hasRecip(formA.recip)||!formA.text.trim())return;akCommit('odeslana');akView='list';formA=null;akEditId=null;showToast('Aktualita odeslána');render();};
+window.akSend=()=>{akSyncText();if(!hasRecip(formA.recip)||!formA.text.trim())return;akCommit('odeslana');akView='list';formA=null;akEditId=null;showToast('Novinka odeslána');render();};
 
 // odeslání přímo ze seznamu (koncept s vybranými příjemci)
-window.akSendId=id=>{const a=AKTUALITY.find(x=>x.id===id);if(!hasRecip(a.recip)||!a.text.trim())return;a.stav='odeslana';a.datum=`${TODAYD}. 6. 2026`;showToast('Aktualita odeslána');render();};
-window.akArchive=id=>{const a=AKTUALITY.find(x=>x.id===id);a.stav='archivovana';showToast('Aktualita archivována');render();};
+window.akSendId=id=>{const a=AKTUALITY.find(x=>x.id===id);if(!hasRecip(a.recip)||!a.text.trim())return;a.stav='odeslana';a.datum=`${TODAYD}. 6. 2026`;showToast('Novinka odeslána');render();};
+window.akArchive=id=>{const a=AKTUALITY.find(x=>x.id===id);a.stav='archivovana';showToast('Novinka archivována');render();};

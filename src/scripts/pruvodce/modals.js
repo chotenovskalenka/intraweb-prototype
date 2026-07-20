@@ -6,6 +6,8 @@ function renderModalRoot(){
   if(shiftM){r.innerHTML=shiftModalHTML();return;}
   if(cellM){r.innerHTML=cellModalHTML();return;}
   if(detailA){r.innerHTML=akceDetailHTML();return;}
+  if(novM){r.innerHTML=novModalHTML();return;}
+  if(novForm){r.innerHTML=novFormHTML();return;}
   r.innerHTML='';
 }
 function akceDetailHTML(){
