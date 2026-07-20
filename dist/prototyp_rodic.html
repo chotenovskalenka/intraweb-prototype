@@ -272,6 +272,32 @@ table.wt td.pastc{opacity:.45}
 }
 @media (min-width:1200px){.dash3{grid-template-columns:repeat(3,1fr)}}
 
+/* Novinky — sdílené karty se seznamem/detailem (rodič: sekce Novinky + overlay detail;
+   průvodce: sekce Novinky + modal detail). Foto = placeholder tint jako sekce Fotky. */
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.ph{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38)}
+.newsurg{display:inline-block;font-size:10px;font-weight:700;color:var(--state-danger-ink);background:var(--state-danger-bg);border-radius:6px;padding:2px 8px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
+.news-grid{display:grid;gap:12px}
+/* flex sloupec (ne display:block): <button> jinak obsah vertikálně centruje — karta bez fotky
+   má začínat odshora; zároveň drží patičku „Celá novinka" u spodní hrany karty */
+.newscard{display:flex;flex-direction:column;align-items:stretch;width:100%;text-align:left;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;font-family:var(--font-sans);padding:0}
+.newscard.urgent{border-color:rgba(176,73,47,.35)}
+.nc-hero{height:120px;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38)}
+.nc-body{padding:12px 14px;display:flex;flex-direction:column;align-items:flex-start;flex:1;min-height:0;width:100%}
+.nc-t{font-family:var(--font-serif);font-size:15.5px;font-weight:600;color:var(--color-primary-strong);line-height:1.35}
+.nc-x{font-size:13px;color:var(--color-text);line-height:1.5;margin:8px 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* patička karty — tenká linka + odkaz dole (vzor .cardlink z Docházky) */
+.nc-foot{margin-top:auto;width:100%;padding-top:11px;border-top:1px solid var(--color-border);font-size:13px;font-weight:600;color:var(--color-primary)}
+.nc-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.wabtn{font-size:12.5px;font-weight:600;color:var(--color-primary);border:1px solid var(--color-primary);border-radius:8px;padding:6px 11px;text-decoration:none;background:var(--color-surface)}
+.nd-hero{height:170px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38);margin-bottom:11px}
+.nd-t{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--color-primary-strong);line-height:1.3}
+.nd-p{font-size:13.5px;line-height:1.6;color:var(--color-text);margin:0 0 10px}
+.nd-p:last-child{margin-bottom:0}
+@media (min-width:900px){.news-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+@media (min-width:1200px){.news-grid{grid-template-columns:repeat(3,1fr)}}
+
 /* Hover feedback — jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
 @media (hover:hover){
   a,button{transition:background-color .15s ease,color .15s ease,border-color .15s ease,filter .15s ease}
@@ -315,7 +341,8 @@ table.wt td.pastc{opacity:.45}
 .dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
 .dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
 .dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:10px;font-size:18px;color:var(--color-primary);cursor:pointer}
-.dh-today{min-height:44px;border:none;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;cursor:pointer;font-family:var(--font-sans)}
+/* „dnes" — pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
+.dh-today{display:inline-flex;align-items:center;min-height:32px;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;font-family:var(--font-sans)}
 .doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}
 .doch-code{font-family:var(--font-serif);font-size:24px;font-weight:700}
 .doch-day{font-size:12.5px;color:var(--color-text-muted)}
@@ -371,8 +398,7 @@ table.wt td.pastc{opacity:.45}
 .agtag.org{color:var(--color-text-muted);background:rgba(92,101,96,.12)}
 
 /* fotky */
-.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.ph{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38)}
+/* .gal/.ph (foto placeholder mřížka) přesunuty do components.css — používá je i průvodce (novinky). */
 .bulktoggle{width:auto;border:1px solid var(--color-primary);background:var(--color-surface);color:var(--color-primary);font-family:var(--font-sans);font-size:13px;font-weight:600;padding:11px 18px;border-radius:10px;cursor:pointer;margin-bottom:10px}
 /* nadpis pohledu + listování období (šipky jako na Přehledu) */
 .vhrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -431,11 +457,18 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .newsline{flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .newsarr{color:var(--color-text-hint);flex-shrink:0}
 .newsmore{min-height:44px;width:100%;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0 3px;font-family:var(--font-sans);font-size:12.5px;font-weight:600;color:var(--color-primary);cursor:pointer}
-.newsitem{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:9px}
-.newsitem.urgent{border-color:rgba(176,73,47,.35);background:rgba(176,73,47,.05)}
-.newsurg{display:inline-block;font-size:10px;font-weight:700;color:var(--color-danger);background:rgba(176,73,47,.12);border-radius:6px;padding:2px 8px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
-.newstext{font-size:13.5px;line-height:1.5}
-.newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
+/* Karty novinek (news-grid, newscard, nc-…, nd-…) jsou sdílené v components.css. */
+/* Detail novinky — článek: omezená čtecí šířka, na desktopu vycentrovaný, bez boxů */
+.novdet .back{display:block;width:100%;text-align:left}
+.novdet .nd-t{font-size:23px;line-height:1.25;margin-top:12px}
+.novdet .nd-body{margin-top:14px;padding-top:14px;border-top:1px solid var(--color-border)}
+.novdet .nd-p{font-size:14.5px;line-height:1.65;margin:0 0 12px}
+.novdet .nd-gal{margin-top:18px;padding-top:14px;border-top:1px solid var(--color-border)}
+.novdet .nd-hero{height:200px;margin-bottom:14px}
+@media (min-width:900px){
+  #content > .novdet{column-span:all;max-width:720px;margin:0 auto}
+  .novdet .nd-hero{height:260px}
+}
 .sbalit{margin-top:9px;padding:8px 11px;background:rgba(200,188,133,.10);border-radius:9px;font-size:12.5px;color:var(--color-accent-ink)}
 .sbalit b{font-weight:600}
 .tilelink{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
@@ -463,7 +496,9 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 /* Dashboard výběr dne — kompaktní dropdown pod ▾ v topbaru (ne přes celou šířku). */
 .daypicker{position:absolute;right:0;top:calc(100% + 6px);z-index:9;width:236px;background:var(--color-surface);border:1px solid var(--color-border-strong);border-radius:12px;box-shadow:0 8px 26px rgba(31,83,68,.18);padding:10px;margin:0}
 .daypicker .dpcell{aspect-ratio:1;font-size:11.5px;border-radius:6px}
-.dp-title{font-family:var(--font-serif);font-size:13.5px;font-weight:600;color:var(--color-primary-strong);text-align:center;margin:0 0 8px}
+.dp-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 8px}
+.dp-nav{min-width:36px;min-height:36px;border:none;background:none;font-size:16px;color:var(--color-primary);cursor:pointer;border-radius:8px;font-family:var(--font-serif);line-height:1}
+.dp-title{font-family:var(--font-serif);font-size:13.5px;font-weight:600;color:var(--color-primary-strong);text-align:center;margin:0}
 .dpcal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .dph{font-size:10px;color:var(--color-text-muted);text-align:center;font-weight:600;padding-bottom:2px}
 .dpcell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12.5px;border-radius:8px;cursor:pointer;color:var(--color-text);background:var(--color-surface-2)}
@@ -699,12 +734,20 @@ const TYDEN={
   pisnicka:{t:'Šel zahradník do zahrady s motykou, s motykou. Vykopal tam rozmarýnu velikou, velikou.',
     url:'https://www.youtube.com/results?search_query=%C5%A0el+zahradn%C3%ADk+do+zahrady+p%C3%ADsni%C4%8Dka'}
 };
+/* Novinky (dřív aktuality): t = titulek do seznamů, full = celý text (detail),
+   img = úvodní foto (placeholder tint jako sekce Fotky), imgs = fotky v detailu.
+   from/time se rodiči nezobrazují (vidí je průvodce ve své appce). */
 const NEWS=[
-  {t:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',from:'Táňa',date:'2. 6.',until:5,urgent:true},
-  {t:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada). Prosíme o dřívější vyzvednutí.',from:'Táňa',date:'1. 6.',until:5,urgent:true},
-  {t:'Sbíráme víčka od PET lahví na výtvarku — sběrný koš je u vchodu do maringotky.',from:'Helča',date:'28. 5.',until:30},
-  {t:'Fotky z výpravy na Okoř najdete ve složce Fotky.',from:'Honza',date:'26. 5.',until:12},
-  {t:'Brigáda na zahradě 13. 6. — hlaste se prosím v tabulce, ať víme počty.',from:'Míša',date:'25. 5.',until:13},
+  {id:'nw1',t:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',from:'Táňa',time:'7:40',date:'2. 6.',until:5,urgent:true,
+   full:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dnes večer dítě — svědění, neklidný spánek. Pokud roupy najdete, nechte prosím dítě doma do přeléčení (přípravek poradí každá lékárna, léčba je rychlá).\n\nVe školce jsme vyměnili ručníky i povlečení a vše vyprali na 90 °C. Prosíme také o krátké ostříhání nehtíků. Kdybyste si nebyli jistí, ozvěte se Táně — děkujeme za spolupráci.'},
+  {id:'nw2',t:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada).',from:'Táňa',time:'16:12',date:'1. 6.',until:5,urgent:true,
+   full:'V pátek 5. 6. končí provoz školky už ve 14:00 — máme celotýmovou pedagogickou poradu.\n\nProsíme, vyzvedněte si děti nejpozději do 14:00. Odpolední svačinu dostanou děti s sebou v krabičce. Pokud by vyzvednutí do 14:00 bylo neřešitelné, napište nám prosím co nejdřív, domluvíme se individuálně. Děkujeme za pochopení.'},
+  {id:'nw3',t:'Sbíráme víčka od PET lahví na výtvarku.',from:'Helča',time:'9:05',date:'28. 5.',until:30,img:'#E7E0CE',
+   full:'Od června sbíráme víčka od PET lahví — budeme z nich s dětmi tvořit velkou letní mozaiku na plot zahrady.\n\nSběrný koš najdete u vchodu do maringotky. Hodí se všechny barvy, čím pestřejší, tím lepší. Sbíráme do konce června; hotovou mozaiku pak slavnostně odhalíme na zahradní slavnosti.',imgs:['#E7E0CE','#DCE3D6']},
+  {id:'nw4',t:'Fotky z výpravy na Okoř najdete ve složce Fotky.',from:'Honza',time:'18:30',date:'26. 5.',until:12,img:'#D8E0E4',
+   full:'Výprava na Okoř se vydařila — počasí nám přálo, děti zvládly celou trasu a zřícenina sklidila obrovský úspěch (stejně jako svačiny od vás, děkujeme!).\n\nFotky z celého dne najdete ve složce Fotky. Pokud byste některou chtěli v plném rozlišení, napište Honzovi.',imgs:['#D8E0E4','#E3D9C6','#DCE3D6','#E8DCD2']},
+  {id:'nw5',t:'Brigáda na zahradě 13. 6. — hlaste se prosím v tabulce.',from:'Míša',time:'20:15',date:'25. 5.',until:13,img:'#DCE3D6',
+   full:'V sobotu 13. 6. od 9:00 chystáme brigádu na zahradě — čeká nás stavba nového záhonu, oprava vrbového tunelu a nátěr herních prvků.\n\nHlaste se prosím v tabulce (odkaz jsme posílali e-mailem), ať víme počty na občerstvení. Nářadí máme, hodí se ale vlastní rukavice. Děti jsou vítané — pro malé pomocníky bude připravený dětský koutek.',imgs:['#DCE3D6']},
 ];
 const ALERTS=[
   {text:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',until:5},
@@ -844,31 +887,57 @@ function renderDashHead(){
     +`<div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button>`
     +`<button class="dh-step" onclick="toggleDashPicker(event)" aria-label="Vybrat den">▾</button>`
     +`<button class="dh-step" onclick="stepDay(1)" aria-label="Další den">›</button>`
-    +(today?'':`<button class="dh-today" onclick="pickDashDay(TODAY)">dnes</button>`)
+    +(today?`<span class="dh-today">dnes</span>`:'')
     +(dashPickerOpen?renderDayPicker():'')+`</div>`;
 }
 // ▾ otevře kompaktní kalendář-dropdown pod šipkami (u datumového nadpisu).
 function renderDayPicker(){
-  // Prototyp běží jen v červnu 2026 → měsíc/rok je pevný popisek bez přepínání (jiné měsíce nejsou).
-  let h=`<div class="daypicker" onclick="event.stopPropagation()"><div class="dp-title">červen 2026</div><div class="dpcal">`;
+  // Šipky měsíců: prototyp má data jen pro červen 2026 → posun dá toast (stejně jako v Docházce).
+  let h=`<div class="daypicker" onclick="event.stopPropagation()"><div class="dp-head"><button class="dp-nav" onclick="stepPickMonth(-1)" aria-label="Předchozí měsíc">‹</button><div class="dp-title">červen 2026</div><button class="dp-nav" onclick="stepPickMonth(1)" aria-label="Další měsíc">›</button></div><div class="dpcal">`;
   ['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);
   for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="dpcell we">${d}</div>`;continue;}h+=`<div class="dpcell${d===TODAY?' today':''}${d===dashDay?' sel':''}" onclick="pickDashDay(${d})">${d}</div>`;}
   return h+`</div></div>`;
 }
 window.stepDay=dir=>{let d=dashDay+dir;while(d>=1&&d<=30&&isWE(d))d+=dir;if(d>=1&&d<=30)dashDay=d;render();};
 window.toggleDashPicker=e=>{e&&e.stopPropagation();dashPickerOpen=!dashPickerOpen;render();};
+window.stepPickMonth=dir=>{showToast('Prototyp pracuje jen s červnem 2026');};
 window.pickDashDay=d=>{dashDay=d;dashPickerOpen=false;dashEdit=false;render();};
 </script>
 <script>
-/* SCREEN: RODIC_AKTUALITY */
+/* SCREEN: RODIC_AKTUALITY — Novinky ze školky.
+   Seznam = karty s úvodní fotkou a proklikem na celou novinku (overlay detail
+   s celým textem + fotkami). Rodič nevidí autora (jméno průvodce jen v průvodcovské appce).
+   Desktop: mřížka karet (.news-grid), mobil: stoh. */
+function novinkaExcerpt(n){const p=(n.full||n.t).split('\n')[0];return p.length>140?p.slice(0,140)+'…':p;}
 function renderAktuality(){
-  let h='';
+  let h=`<div class="doch"><div class="doch-head"><h1 class="dh-t">Novinky ze školky</h1></div>`;
+  h+=`<div class="news-grid">`;
   NEWS.filter(n=>TODAY<=n.until).forEach(n=>{
-    h+=`<div class="newsitem${n.urgent?' urgent':''}">${n.urgent?'<span class="newsurg">Důležité</span>':''}<div class="newstext">${n.t}</div><div class="newsmeta">${n.from} · ${n.date} · platí do ${n.until}. 6.</div></div>`;
+    h+=`<button class="newscard${n.urgent?' urgent':''}" onclick="openNovinka('${n.id}')">`;
+    if(n.img)h+=`<div class="nc-hero" style="background:${n.img}">foto</div>`;
+    h+=`<div class="nc-body">${n.urgent?'<span class="newsurg">Důležité</span>':''}<div class="nc-t">${n.t}</div>`;
+    h+=`<div class="newsmeta" style="margin-top:3px">${n.date} · platí do ${n.until}. 6.</div>`;
+    h+=`<div class="nc-x">${novinkaExcerpt(n)}</div>`;
+    h+=`<div class="nc-foot">Celá novinka ›</div></div></button>`;
   });
-  h+=`<div class="note2">Aktuality píší průvodci do intrawebu; důležité mohou zároveň sdílet do WhatsAppu. Po datu platnosti aktualita zmizí.</div>`;
-  return h;
+  h+=`</div>`;
+  h+=`<div class="note2">Novinky píší průvodci; důležité mohou zároveň sdílet do WhatsAppu. Po datu platnosti novinka ze seznamu zmizí.</div>`;
+  return h+`</div>`;
 }
+// Detail novinky — overlay do #content jako „článek": omezená čtecí šířka, hero → titulek →
+// datum → vlasová linka → text → fotky. Bez boxů (prostor a linky, ne rámečky).
+function renderNovinka(){
+  const n=NEWS.find(x=>x.id===overlay.id);if(!n)return '';
+  let h=`<div class="novdet"><button class="back" onclick="closeOverlay()">← Zpět na novinky</button>`;
+  if(n.img)h+=`<div class="nd-hero" style="background:${n.img}">foto</div>`;
+  h+=`${n.urgent?'<span class="newsurg">Důležité</span>':''}`;
+  h+=`<h1 class="nd-t">${n.t}</h1>`;
+  h+=`<div class="newsmeta" style="margin-top:4px">${n.date} · platí do ${n.until}. 6.</div>`;
+  h+=`<div class="nd-body">`+(n.full||'').split('\n\n').map(p=>`<p class="nd-p">${p}</p>`).join('')+`</div>`;
+  if(n.imgs&&n.imgs.length)h+=`<div class="nd-gal"><div class="ch">Fotky</div><div class="gal">`+n.imgs.map(c=>`<div class="ph" style="background:${c}">foto</div>`).join('')+`</div></div>`;
+  return h+`</div>`;
+}
+window.openNovinka=id=>{overlay={type:'novinka',id};render();};
 </script>
 <script>
 /* SCREEN: RODIC_DOCHAZKA */
@@ -1215,7 +1284,7 @@ function renderAbsModal(){
 </script>
 <script>
 /* CORE: RODIC — stav, sekce, drawer/hlavička, render(), go(), toast, úvodní spuštění */
-const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Aktuality','▲'],['dochazka','Docházka a náhrady','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
+const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Novinky','▲'],['dochazka','Docházka a náhrady','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
   ['kalendar','Kalendář','▦'],['plan','Tématický plán','✎'],['fotky','Fotky','▢'],['kontakty','Kontakty','✆']];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 const PERCHILD=['prehled','dochazka','profil','platby','fotky'];
@@ -1247,10 +1316,10 @@ function renderHead(){
 }
 function render(){
   /* Dashboard: velký datumový nadpis je titulek → v topbaru „Přehled" neopakujeme. */
-  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':'Akce'):((section==='prehled'||section==='dochazka')?'':TITLES[section]);
+  document.getElementById('ttl').textContent=overlay?(overlay.type==='guide'?'Průvodce':overlay.type==='fond'?'Kulturní fond':overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':overlay.type==='novinka'?'Novinka':'Akce'):((section==='prehled'||section==='dochazka'||section==='aktuality')?'':TITLES[section]);
   renderHead();renderDrawer();
   document.getElementById('modalRoot').innerHTML = (typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
-  document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():renderAkceDetail(overlay.idx)):RENDER[section]();
+  document.getElementById('content').innerHTML = overlay?(overlay.type==='guide'?renderGuide(overlay.idx):overlay.type==='fond'?renderFond():overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():overlay.type==='novinka'?renderNovinka():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;if(!PERCHILD.includes(s)){} render();};
 window.openDrawer=()=>{drawerOpen=true;render();};

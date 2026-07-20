@@ -258,6 +258,32 @@ table.wt td.pastc{opacity:.45}
 }
 @media (min-width:1200px){.dash3{grid-template-columns:repeat(3,1fr)}}
 
+/* Novinky — sdílené karty se seznamem/detailem (rodič: sekce Novinky + overlay detail;
+   průvodce: sekce Novinky + modal detail). Foto = placeholder tint jako sekce Fotky. */
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.ph{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38)}
+.newsurg{display:inline-block;font-size:10px;font-weight:700;color:var(--state-danger-ink);background:var(--state-danger-bg);border-radius:6px;padding:2px 8px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
+.news-grid{display:grid;gap:12px}
+/* flex sloupec (ne display:block): <button> jinak obsah vertikálně centruje — karta bez fotky
+   má začínat odshora; zároveň drží patičku „Celá novinka" u spodní hrany karty */
+.newscard{display:flex;flex-direction:column;align-items:stretch;width:100%;text-align:left;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;font-family:var(--font-sans);padding:0}
+.newscard.urgent{border-color:rgba(176,73,47,.35)}
+.nc-hero{height:120px;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38)}
+.nc-body{padding:12px 14px;display:flex;flex-direction:column;align-items:flex-start;flex:1;min-height:0;width:100%}
+.nc-t{font-family:var(--font-serif);font-size:15.5px;font-weight:600;color:var(--color-primary-strong);line-height:1.35}
+.nc-x{font-size:13px;color:var(--color-text);line-height:1.5;margin:8px 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* patička karty — tenká linka + odkaz dole (vzor .cardlink z Docházky) */
+.nc-foot{margin-top:auto;width:100%;padding-top:11px;border-top:1px solid var(--color-border);font-size:13px;font-weight:600;color:var(--color-primary)}
+.nc-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.wabtn{font-size:12.5px;font-weight:600;color:var(--color-primary);border:1px solid var(--color-primary);border-radius:8px;padding:6px 11px;text-decoration:none;background:var(--color-surface)}
+.nd-hero{height:170px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38);margin-bottom:11px}
+.nd-t{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--color-primary-strong);line-height:1.3}
+.nd-p{font-size:13.5px;line-height:1.6;color:var(--color-text);margin:0 0 10px}
+.nd-p:last-child{margin-bottom:0}
+@media (min-width:900px){.news-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+@media (min-width:1200px){.news-grid{grid-template-columns:repeat(3,1fr)}}
+
 /* Hover feedback — jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
 @media (hover:hover){
   a,button{transition:background-color .15s ease,color .15s ease,border-color .15s ease,filter .15s ease}
@@ -695,7 +721,7 @@ function renderAktuality(){
 }
 
 function renderAkList(){
-  let h=`<button class="addbig" onclick="akNew()">+ Nová aktualita</button>`;
+  let h=`<button class="addbig" onclick="akNew()">+ Nová novinka</button>`;
   // pořadí: koncepty a naplánované nahoře, pak odeslané, pak archivované
   const order={koncept:0,naplanovana:1,odeslana:2,archivovana:3};
   const items=AKTUALITY.slice().sort((a,b)=>order[a.stav]-order[b.stav]);
@@ -735,7 +761,7 @@ function renderAkForm(){
   const rec=recipText(recip), ok=hasRecip(recip), textOk=f.text.trim().length>0;
   let h=`<button class="back" onclick="akCancel()">‹ Zpět na seznam</button>`;
   h+=`<div class="tile">`;
-  h+=`<div class="field"><div class="l">Text aktuality</div>`
+  h+=`<div class="field"><div class="l">Text novinky</div>`
     +`<textarea class="pta" id="akText" placeholder="Co chcete rodičům oznámit?">${escTa(f.text)}</textarea></div>`;
   // důležité
   h+=`<div class="field"><div class="l">Označení</div><div class="pchips">`
@@ -758,7 +784,7 @@ function renderAkForm(){
   if(ok){
     h+=`<div class="tile note-info ak-preview"><b>Odešle se rodičům:</b><br>${rec.map(escTa).join('<br>')}</div>`;
   }else{
-    h+=`<div class="ak-warn">⚠ Bez určených příjemců nelze aktualitu odeslat — vyberte alespoň jednu školku nebo třídu.</div>`;
+    h+=`<div class="ak-warn">⚠ Bez určených příjemců nelze novinku odeslat — vyberte alespoň jednu školku nebo třídu.</div>`;
   }
   // tlačítka
   h+=`<div class="mbtns">`;
@@ -768,7 +794,7 @@ function renderAkForm(){
     ? `<button class="btn-primary" onclick="akSend()">Odeslat</button>`
     : `<button class="btn-primary" disabled>Odeslat</button>`;
   h+=`</div>`;
-  if(ok&&!textOk)h+=`<div class="ak-warn" style="margin-top:8px">Doplňte text aktuality.</div>`;
+  if(ok&&!textOk)h+=`<div class="ak-warn" style="margin-top:8px">Doplňte text novinky.</div>`;
   h+=`</div>`;
   return h;
 }
@@ -795,11 +821,11 @@ function akCommit(stav){
   }
 }
 window.akSaveDraft=()=>{akSyncText();akCommit('koncept');akView='list';formA=null;akEditId=null;showToast('Koncept uložen');render();};
-window.akSend=()=>{akSyncText();if(!hasRecip(formA.recip)||!formA.text.trim())return;akCommit('odeslana');akView='list';formA=null;akEditId=null;showToast('Aktualita odeslána');render();};
+window.akSend=()=>{akSyncText();if(!hasRecip(formA.recip)||!formA.text.trim())return;akCommit('odeslana');akView='list';formA=null;akEditId=null;showToast('Novinka odeslána');render();};
 
 // odeslání přímo ze seznamu (koncept s vybranými příjemci)
-window.akSendId=id=>{const a=AKTUALITY.find(x=>x.id===id);if(!hasRecip(a.recip)||!a.text.trim())return;a.stav='odeslana';a.datum=`${TODAYD}. 6. 2026`;showToast('Aktualita odeslána');render();};
-window.akArchive=id=>{const a=AKTUALITY.find(x=>x.id===id);a.stav='archivovana';showToast('Aktualita archivována');render();};
+window.akSendId=id=>{const a=AKTUALITY.find(x=>x.id===id);if(!hasRecip(a.recip)||!a.text.trim())return;a.stav='odeslana';a.datum=`${TODAYD}. 6. 2026`;showToast('Novinka odeslána');render();};
+window.akArchive=id=>{const a=AKTUALITY.find(x=>x.id===id);a.stav='archivovana';showToast('Novinka archivována');render();};
 </script>
 <script>
 /* SCREEN: ADMIN_PORADY — Flow 5: vedení hledá podklady pro inspekci.
@@ -951,7 +977,7 @@ window.poSave=()=>{nzSync();if(!newZ.nazev.trim()||!newZ.text.trim())return;
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
-  ['aktuality','Aktuality','✉'],
+  ['aktuality','Novinky','✉'],
   ['porady','Porady a evaluace','▤'],
   ['platby','Platby','₵'],
   ['nahrady','Náhrady','↻'],

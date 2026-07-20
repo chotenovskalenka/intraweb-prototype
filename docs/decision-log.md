@@ -818,3 +818,141 @@ Dle designérky:
 **QA (dist):** rodič 1280 i 375 px — Týden: „Týdenní přehled" + `‹ 1.–5. 6. ›`, krok mění týden
 (ověřeno 1.–5. → 8.–12.), ‹ disabled na prvním týdnu; Měsíc: „Měsíční přehled" + `‹ Červen 2026 ›`,
 šipka → toast; nadpisy sedí, hint pryč, tlačítko kompaktní. Konzole čistá. Dist rebuilt.
+
+### 2026-07-18 — Průvodce: změna docházky přímo v týdenním přehledu (vč. dneška)
+
+Dřív šla v týdenní tabulce upravit jen budoucí buňka; dnešek byl zamčený (dal se měnit jen v Dni).
+Nově je **klikatelný i dnešní sloupec** (`ed=d>=TODAYD`, `openCell` blokuje jen `d<TODAYD`).
+Protože dnešek se řídí **stavem** (ne plánovaným kódem), cell-modal je pro dnešek stavový
+(Přítomen/Omluven/Neomluven → `data[ci].status`), pro budoucí dny zůstává plánovací (C/D/O/OM/N →
+`att[d]`). `setCell` podle dne větví. Změna dneška je tak konzistentní s Dnem i dashboardem (mění tentýž
+`status`). Hint přepsán: „Klepni na buňku dneška nebo budoucího dne a změň docházku. Minulé dny jsou uzavřené."
+
+**QA (dist):** týden — klik na dnešní buňku (St) otevře stavový modal (· DNES), „Omluven" → buňka „om",
+součet Přítomno St 22→21, toast; budoucí buňka dál plánovací modal; minulé (Po/Út) zamčené. Konzole čistá.
+Dist rebuilt.
+
+### 2026-07-18 — Průvodcovská Docházka: změna dneška i v týdenním přehledu
+
+Dle designérky: v týdenním přehledu šly měnit jen budoucí dny, dnešek byl zamčený. Nyní jde klepnout
+i na **dnešní buňku** (`openCell` povoluje `d>=TODAYD`); modal je pro dnešek **stavový**
+(Přítomen / Omluven / Neomluven — dnešek se řídí stavem dítěte, ne plánovaným kódem) a `setCell` pro
+dnešek zapisuje `status` (propíše se do Dne, počtů i dashboardu), pro budoucí dny dál `att[d]`.
+Minulé dny zůstávají uzavřené; hint přeformulován („Klepni na buňku dneška nebo budoucího dne…").
+
+**QA (dist):** klik na dnešní buňku (Meda, St) → stavový modal „St 3. 6. · dnes" → Omluven → buňka
+„om", toast, součet přítomných St 22→21. Budoucí den dál plánovací modal. Konzole čistá.
+
+### 2026-07-19 — Novinky (dřív aktuality): detail s fotkami, desktop, sekce u průvodce, WhatsApp
+
+Velká revize aktualit dle designérky. **ROZHODNUTÍ: terminologie „novinky" úplně všude** — rodič
+i průvodce mají sekci **Novinky**, admin appka přejmenována (sidebar, formulář, toasty), objekt
+v dokumentaci je **Novinka** (`objekty-systemu.md`, `flows.md` Flow 4, `CLAUDE.md`). Kódové
+identifikátory (`AKTUALITY`, `renderAktuality`, klíč sekce `aktuality`) zůstávají — mechanické
+přejmenování bez viditelného dopadu se nedělá.
+
+**Rodič (`rodic/screens/aktuality.js`, seed `NEWS` v `data.js`):**
+- Seed rozšířen: `full` (delší text na odstavce), `time`, `img` (úvodní foto), `imgs` (fotky detailu).
+  Fotky = placeholder tinty jako sekce Fotky (offline single-file, žádné assety).
+- Seznam = **karty s úvodní fotkou** (`.newscard`, desktop mřížka 2/3 sloupce) a **proklikem na celou
+  novinku** („Celá novinka ›" → overlay detail: hero přes celou šířku, celý text, mřížka fotek).
+- **Bez jména průvodce** (rodiče nezajímá; vidí ho průvodce ve své appce). Velký nadpis „Novinky ze
+  školky" (topbar titulek skryt), overlay titulek „Novinka".
+
+**Průvodce — NOVÁ sekce Novinky (`pruvodce/screens/novinky.js`, seed `NEWS` v `data.js`):**
+- Dřív průvodce žádné aktuality neměl (jen admin) — přitom je píše. Sekce zařazena za Docházku (✉).
+- Seznam jako u rodiče, ale **s autorem a časem** (`Táňa · 2. 6. · 7:40 · platí do 5. 6.`).
+- **Tlačítko „Sdílet do WhatsAppu"** na kartě i v detailu — reálný `wa.me/?text=…` odkaz
+  (titulek + text), otevře WhatsApp share.
+- **Formulář „+ Nová novinka"** (modal): titulek, text, platí do, Důležité, úvodní fotka (demo file
+  input → tint). Odeslání: unshift do NEWS + toast „Novinka odeslána rodičům ✓". Detail = modal.
+- Seed shodný s rodičem (simulovaná konzistence, appky nesdílejí data).
+
+**Sdílené CSS:** karty novinek (`.news-grid/.newscard/.nc-*/.nd-*`, `.newsurg`, `.newsmeta`) a foto
+mřížka (`.gal`/`.ph`) přesunuty/založeny v `components.css` (jednou pro obě appky; `.newsurg`
+překlopen na `--state-danger-*` tokeny). V `screens-rodic.css` zbývá jen `#content > .nd-hero
+{column-span:all}` (full-width hero v overlay).
+
+**Nález — CSS komentář s `*/` uvnitř:** komentář „(.nc-*/.nd-*)" předčasně ukončil CSS komentář a
+zahodil následující pravidlo (hero nespanoval). Pozor na hvězdičkové zástupce v CSS komentářích.
+
+**QA (dist):** rodič 1280 — mřížka karet s fotkami, detail s hero přes šířku + fotkami, bez autora;
+375 — stoh karet. Průvodce 1280 — sekce Novinky, karty s autorem+časem, WA odkaz správně enkódovaný,
+detail modal s WA tlačítkem, formulář → nová novinka první v seznamu s toastem. Admin — sidebar
+„Novinky", „+ Nová novinka", toasty. Konzole čistá ve všech třech. Dist rebuilt.
+
+### 2026-07-18 — Průvodcovská Docházka: změna dneška i v týdenním přehledu
+
+Dle designérky: v týdenním přehledu šly měnit jen budoucí dny, dnešek byl zamčený. Nyní jde klepnout
+i na **dnešní buňku** (`openCell` povoluje `d>=TODAYD`); modal je pro dnešek **stavový**
+(Přítomen / Omluven / Neomluven — dnešek se řídí stavem dítěte, ne plánovaným kódem) a `setCell` pro
+dnešek zapisuje `status` (propíše se do Dne, počtů i dashboardu), pro budoucí dny dál `att[d]`.
+Minulé dny zůstávají uzavřené; hint přeformulován („Klepni na buňku dneška nebo budoucího dne…").
+
+**QA (dist):** klik na dnešní buňku (Meda, St) → stavový modal „St 3. 6. · dnes" → Omluven → buňka
+„om", toast, součet přítomných St 22→21. Budoucí den dál plánovací modal. Konzole čistá.
+
+### 2026-07-19 — Novinky (dřív aktuality): detail s fotkami, sekce u průvodce, přejmenování všude
+
+Velká revize aktualit dle designérky. **Rozhodnutí: pojmenování „Novinky" úplně všude** (rodič,
+průvodce, admin i dokumentace — objekt v `objekty-systemu.md` přejmenován na **Novinka**, Flow 4
+v `flows.md` aktualizován; interní identifikátory kódu — `AKTUALITY`, `renderAktuality`, klíč sekce
+`aktuality` — zůstávají, mění se jen viditelné texty).
+
+**Rodič (`rodic/screens/aktuality.js`, seed `NEWS` v `data.js`):**
+- Seed rozšířen: `id`, `full` (delší tělo — víc odstavců), `time`, `img` (úvodní foto), `imgs` (fotky
+  detailu). Fotky = placeholder tinty jako sekce Fotky (offline single-file, žádné assety).
+- Seznam = **karty s úvodní fotkou** v mřížce (`.news-grid`, 2 sloupce ≥900, 3 ≥1200; mobil stoh),
+  velký nadpis „Novinky ze školky" (topbar titulek skryt). Karta: badge Důležité → titulek → **datum
+  pod nadpisem** → perex (line-clamp) → patička **„Celá novinka ›" dole za tenkou linkou** (vzor
+  `.cardlink` z Docházky), zarovnaná k spodní hraně karty. Karty bez fotky začínají odshora
+  (`.newscard` je flex sloupec — `<button>` jinak obsah vertikálně centruje).
+- **Detail = proklik na celou novinku** (overlay `novinka` do `#content`): hero foto, celý text po
+  odstavcích, mřížka fotek. **Rodič nevidí autora** (jméno průvodce vyhozeno i ze seznamu).
+
+**Průvodce — NOVÁ sekce Novinky (`pruvodce/screens/novinky.js`, seed `NEWS` v `data.js`):**
+- Zařazena za Docházku (`✉`). Stejné karty, ale meta **se jménem autora a časem** (`Táňa · 2. 6. ·
+  7:40 · platí do 5. 6.`) a v patičce **tlačítko „Sdílet do WhatsAppu"** (`wa.me` odkaz s textem
+  novinky) — i v detailu (modal s fotkami).
+- **Formulář „+ Nová novinka"** (modal): titulek, text, platí do, Důležité, úvodní fotka (demo file
+  input → tint). Odeslání → novinka první v seznamu, toast „Novinka odeslána rodičům ✓".
+- Seed zrcadlí rodičovský (simulovaná konzistence — appky data nesdílejí).
+
+**Sdílené CSS (`components.css`):** karty novinek (`.news-grid`/`.newscard`/`.nc-*`/`.nd-*`,
+`.newsurg`/`.newsmeta` — teď přes `--state-danger-*`) + `.gal`/`.ph` přesunuty ze `screens-rodic.css`
+(používá je rodič i průvodce). **Nález:** CSS komentář obsahující `*/` uvnitř textu (`.nc-*/`)
+předčasně ukončil komentář a zahodil následující pravidlo — opraveno, pozor na `*/` v komentářích.
+
+**Admin:** viditelné texty přejmenovány (sekce **Novinky**, „+ Nová novinka", „Bez určených příjemců
+nelze novinku odeslat", toasty). Logika Flow 4 beze změny.
+
+**QA (dist, 1280 i 375):** rodič — mřížka karet (obsah odshora, datum pod nadpisem, patička s linkou
+dole), detail s hero + fotkami bez autora, topbar „Novinka"; průvodce — sekce v draweru, karty s
+autorem+časem, WA tlačítko, detail modal, formulář vytvoří novinku (Táňa · 3. 6. · 10:00, Důležité,
+první v seznamu, toast); admin — sidebar/nadpis/tlačítko „Novinky/Nová novinka". Konzole čistá všude.
+Dist rebuilt (všechny tři appky — sdílené components.css).
+
+### 2026-07-19 — Detail novinky (rodič): článkový layout na desktopu
+
+Dle designérky detail „aby na desktopu vypadal lépe" — dřív full-width hero pás + dva boxy vedle sebe
+(masonry). Nyní **článek** (`.novdet`, `rodic/screens/aktuality.js` + `screens-rodic.css`): na desktopu
+vycentrovaný sloupec s čtecí šířkou (max 720 px, `column-span:all` — mimo masonry), pořadí Zpět →
+badge Důležité → hero (260 px, mobil 200 px) → velký titulek (23 px) → datum → **vlasová linka** →
+text (14,5 px / 1.65) → linka → Fotky (mřížka). **Bez boxů** — dle design systému „prostor a vlasové
+linky, ne rámečky". `.back` v článku na vlastním řádku (jinak se badge lepila vedle).
+
+**QA (dist):** 1280 px — článek vycentrovaný, s fotkou (nw4) i bez fotky (nw1, badge nad titulkem);
+375 px — stoh v pořadí. Konzole čistá. Dist rebuilt.
+
+### 2026-07-19 — Dashboard rodiče: chip „dnes" jen u dnešního dne, šipky měsíců v mini kalendáři
+
+Dva nálezy designérky:
+
+- **Chip „dnes" byl obráceně** — fungoval jako tlačítko „návrat na dnešek" a ukazoval se právě tehdy,
+  když zobrazený den NEBYL dnešek (matoucí). Nyní je to **pasivní indikátor**: `<span class="dh-today">`
+  se zobrazí jen když `dashDay===TODAY`. Návrat na dnešek jde přes mini kalendář (▾ → 3).
+- **Mini kalendář (▾) má šipky měsíců** `‹ červen 2026 ›` (`.dp-head`/`.dp-nav`). Posun měsíce je
+  placeholder → toast „Prototyp pracuje jen s červnem 2026" (shodně s Docházkou — data jen červen).
+
+**QA (dist, 1280 i 375):** dnešek → chip svítí; krok na Čt 4. 6. → chip zmizí; ▾ → `‹ červen 2026 ›`,
+šipka → toast (picker zůstane otevřený), klik na 3 → zpět na dnešek + chip. Konzole čistá. Dist rebuilt.
