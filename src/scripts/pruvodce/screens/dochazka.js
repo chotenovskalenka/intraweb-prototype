@@ -110,11 +110,11 @@ function renderTydenD(){
   h+=`<div class="weekbox"><table class="wt"><thead><tr><th class="who">Dítě</th>`+DAYS.map((dn,j)=>`<th class="${weekStart+j===TODAYD?'today':''}">${dn}</th>`).join('')+`</tr></thead><tbody>`;
   const tot=[0,0,0,0,0];
   data.forEach((c,ci)=>{if(wquery&&!norm(full(c)).includes(norm(wquery)))return;h+=`<tr><td class="who">${avatar(c,18)}${full(c)}</td>`;
-    for(let j=0;j<5;j++){const d=weekStart+j;if(d>30){h+=`<td></td>`;continue;}const code=getCode(c,d);if(code&&code!=='OM')tot[j]++;const ed=d>TODAYD,today=d===TODAYD;
+    for(let j=0;j<5;j++){const d=weekStart+j;if(d>30){h+=`<td></td>`;continue;}const code=getCode(c,d);if(code&&code!=='OM')tot[j]++;const ed=d>=TODAYD,today=d===TODAYD;
       h+=`<td class="${today?'today':''}${d<TODAYD?' pastc':''}${ed?' ced':''}" ${ed?`onclick="openCell(${ci},${d})"`:''}>${cellMark(code)}</td>`;}
     h+=`</tr>`;});
   h+=`</tbody><tfoot><tr><td class="who">Přítomno</td>`+tot.map((n,j)=>{const d=weekStart+j;return `<td class="${d===TODAYD?'today':''}">${d>30?'':n}</td>`;}).join('')+`</tr></tfoot></table></div>`;
-  h+=`<div class="hint">Budoucí dny upravíš klepnutím na buňku. Dnešek a minulé dny jsou zamčené.</div>`;
+  h+=`<div class="hint">Klepni na buňku dneška nebo budoucího dne a změň docházku. Minulé dny jsou uzavřené.</div>`;
   return h;
 }
 function renderDenRoster(d){

@@ -18,10 +18,13 @@ function akceDetailHTML(){
   </div></div>`;
 }
 function cellModalHTML(){
-  const c=data[cellM.ci],d=cellM.d,cur=getCode(c,d);
-  const opts=[['C','Celodenní'],['D','Dopolední'],['O','Odpolední'],['OM','Omluven'],['','Nepřítomen']];
+  const c=data[cellM.ci],d=cellM.d,today=d===TODAYD;
+  // dnešek se řídí stavem (přítomen/omluven/neomluven); budoucí dny plánovaným kódem docházky
+  const opts=today?[['pritomen','Přítomen'],['omluveno','Omluven'],['neomluveno','Neomluven']]
+    :[['C','Celodenní'],['D','Dopolední'],['O','Odpolední'],['OM','Omluven'],['','Nepřítomen']];
+  const cur=today?c.status:getCode(c,d);
   return `<div class="modal-scrim" onclick="if(event.target===this)closeCell()"><div class="modal">
-    <h3>Docházka — ${c.n}</h3><div class="pl" style="margin-top:-2px">${DOW[wd(d)]} ${d}. 6.</div>
+    <h3>Docházka — ${c.n}</h3><div class="pl" style="margin-top:-2px">${DOW[wd(d)]} ${d}. 6.${today?' · dnes':''}</div>
     <div class="pchips">${opts.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="setCell('${o[0]}')">${o[1]}</button>`).join('')}</div>
     <div class="mbtns"><button class="btn-ghost" onclick="closeCell()">Zavřít</button></div>
   </div></div>`;
@@ -73,6 +76,6 @@ window.saveShift=()=>{const m=shiftM;GUIDESHIFT[m.gi].days[m.di]=m.on?{s:m.s,e:m
 window.openAkceDetail=id=>{detailA=id;renderModalRoot();};
 window.closeAkceDetail=()=>{detailA=null;renderModalRoot();};
 window.editFromDetail=()=>{const id=detailA;detailA=null;openAkce(id);};
-window.openCell=(ci,d)=>{if(d<=TODAYD)return;cellM={ci,d};renderModalRoot();};
+window.openCell=(ci,d)=>{if(d<TODAYD)return;cellM={ci,d};renderModalRoot();};
 window.closeCell=()=>{cellM=null;renderModalRoot();};
-window.setCell=code=>{data[cellM.ci].att[cellM.d]=code;cellM=null;renderModalRoot();render();showToast('Docházka uložena ✓');};
+window.setCell=code=>{const d=cellM.d;if(d===TODAYD)data[cellM.ci].status=code;else data[cellM.ci].att[d]=code;cellM=null;renderModalRoot();render();showToast('Docházka uložena ✓');};
