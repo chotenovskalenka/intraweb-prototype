@@ -1,21 +1,11 @@
 /* MODALS: RODIC – překryvné obrazovky (overlay) a jejich handlery.
    Kulturní fond už není overlay – vypisuje se rovnou na kartě v sekci Platby (viz platby.js). */
-function renderMenuDetail(){
-  let h=`<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">Jídelníček</div><div class="pfull">tento týden</div>`;
-  for(let d=1;d<=5;d++){
-    h+=`<div class="tile"><div class="tlab">${DOW[wd(d)]} ${d}. 6.${d===TODAY?' · dnes':''}</div>`+MENUS[wd(d)].map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
-  }
-  h+=`<div class="tile"><div class="tlab">Stravné</div><div class="np"><span>Dopolední svačina</span><b>20 Kč</b></div><div class="np"><span>Oběd</span><b>80 Kč</b></div><div class="np"><span>Odpolední svačina</span><b>15 Kč</b></div></div>`;
-  h+=`<div class="note2">Alergeny jsou uvedené čísly dle přílohy vyhlášky. Jídelníček dodává Mamafood. Při omluvě do 20:00 předchozího dne se stravné nepočítá.</div>`;
-  return h;
-}
 function renderAkceDetail(i){const a=akce[i];
   return `<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">${a.title}</div><div class="pfull">${a.date}</div>
    <div class="tile"><div class="np"><span>Kdy</span><b>${a.time}</b></div><div class="np"><span>Kde</span><b>${a.place}</b></div></div>
    <div class="tile"><div class="tlab">Info</div><div class="tval">${a.note}</div></div>`;
 }
 window.openAkce=i=>{overlay={type:'akce',idx:i};render();};
-window.openMenu=()=>{overlay={type:'menu'};render();};
 window.closeOverlay=()=>{overlay=null;render();};
 
 /* --- NASTAVENÍ ÚČTU (dole v menu) --- overlay řízený stavem ucetEdit.
@@ -152,7 +142,7 @@ window.absSubmit=()=>{
   absModal=null; showToast('Absence nahlášena'); render();
 };
 function renderAbsModal(){
-  const c=cur(), menu=MENUS[wd(TODAY)];
+  const c=cur(), menu=jidelnicekDen(TODAY)||[];
   const obedy=menu.filter(it=>/pol|hlavn/i.test(it[0]));
   let h=`<div class="modal-scrim" onclick="absClose()"><div class="modal" onclick="event.stopPropagation()">`;
   h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n} · středa 3. 6.</div>`;

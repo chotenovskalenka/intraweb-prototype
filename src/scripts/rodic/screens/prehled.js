@@ -4,7 +4,7 @@
    Sloupec 1 nese i Průvodce (pod docházkou). Desktop: .dash3 grid, mobil: stoh. */
 const DOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
 function renderDashboard(){
-  const c=cur(), td=code(c,dashDay), unpaid=c.faktury.filter(f=>!f.paid), ev=EVENTS[dashDay], menu=MENUS[wd(dashDay)];
+  const c=cur(), td=code(c,dashDay), unpaid=c.faktury.filter(f=>!f.paid), ev=EVENTS[dashDay], menu=jidelnicekDen(dashDay);
   const today=dashDay===TODAY, absent=(td==='OM'||td==='NE');
   // Hlavička (avatar + jméno/datum + listování ‹ ▾ ›) se vykresluje do topbaru na úroveň přepínače dětí
   // → renderDashHead() volané z renderHead(). Tady začínáme rovnou fakturou.
@@ -45,7 +45,10 @@ function renderDashboard(){
     if(ev.map)h+=`<a class="maplink" href="${ev.map}" target="_blank" rel="noopener">Otevřít mapu</a>`;
     if(ev.gps)h+=`<div class="gps">${ev.gps}</div>`;if(ev.sbalit)h+=`<div class="sbalit">🎒 Nezapomeňte sbalit: <b>${ev.sbalit}</b></div>`;h+=`</div>`;}
   h+=`</div>`;
-  h+=`<div class="tile"><div class="ch">Co bude ${c.n} jíst</div>`+menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
+  h+=`<div class="tile"><div class="ch">Co bude ${c.n} jíst</div>`;
+  if(menu){h+=menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+alergenyLegenda(menu);}
+  else h+=`<div class="empty">Jídelníček pro tento den zatím není k dispozici.</div>`;
+  h+=`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček ›</button></div>`;
   h+=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>
     <div class="bp"><div class="bp-k">Básnička</div><div class="bp-t">${TYDEN.basnicka.t}</div><a class="bp-link" href="${TYDEN.basnicka.url}" target="_blank" rel="noopener">▶ Poslechnout na YouTube ›</a></div>
     <div class="bp"><div class="bp-k">Písnička</div><div class="bp-t">${TYDEN.pisnicka.t}</div><a class="bp-link" href="${TYDEN.pisnicka.url}" target="_blank" rel="noopener">▶ Přehrát na YouTube ›</a></div></div>`;
