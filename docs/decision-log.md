@@ -1147,3 +1147,26 @@ a hlavička s fotkou Elišky; průvodce roster = 2 fotky (Eliška, Matěj) + 20 
 
 QA: patička + SOS ve všech třech appkách (rodič/průvodce/admin), modal se otvírá a zavírá,
 mailto funguje, wash jemně stoupá od patičky. Mobil bez přetečení, konzole čistá. Dist rebuilt.
+
+### 2026-07-21 — Menu: světlejší pozadí + čárové ikony místo emoji
+
+- **Pozadí menu** (drawer/sidebar) změněno z `--color-bg` na `--color-surface` (stejné jako karty,
+  o něco světlejší) — v `layout.css` (`.drawer`) i `layout-admin.css` (`.sidebar`).
+- **Ikony menu**: emoji (◆▲✓…) nahrazeny **čárovými SVG ikonami** (Lucide styl, `stroke=currentColor`
+  → obarví se dle barvy položky: neaktivní tmavá, aktivní zelená; „barevnost přizpůsob"). 8 ikon
+  převzato z `podklady/icon/` (prehled, novinky, dochazka, profil, platby, tematicky-plan, fotky,
+  kontakty), 6 dokresleno ve stejném stylu (kalendar, clock=pruvodci, smile=deti, coins=fond,
+  clipboard=porady, refresh=nahrady). Nový sdílený `src/scripts/icons.js` (`ICON_SVG`, mapa
+  `ICON_KEY` klíč sekce→ikona, `icon(key)`), načtený ve všech třech appkách po `shared.js`.
+  `renderDrawer`/`renderSidebar` volají `icon(s[0])||s[2]` (fallback na emoji). Velikost 20px,
+  neaktivní opacity .72, aktivní 1 (`components.css`).
+
+QA: 9 SVG ikon v menu rodiče i průvodce, 5 u admina; aktivní položka zeleně, ostatní tmavě; drawer/
+sidebar bg = surface (#F9F7F1). Mobil i desktop, konzole čistá ve všech třech. Dist rebuilt.
+
+### 2026-07-21 — Oprava: rozbalený kalendář/přepínač v hlavičce mizel pod obsahem
+
+Regrese z footer-washe: `.scroll>.topbar` i `.scroll>#content` dostaly `z-index:1`, čímž se topbar
+stal stacking kontextem a jeho absolutně poziciovaný `.daypicker` (z-index:9) se „uvěznil" pod
+`#content`. Oprava: topbar má `z-index:5` (nad obsahem), obsah/patička `z-index:1` (nad washem).
+Totéž pro admin `.main>.topbar-a`. Kalendář i přepínač dětí se opět vykreslují nad kartami.
