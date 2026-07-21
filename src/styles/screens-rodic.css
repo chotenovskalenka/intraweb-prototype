@@ -19,6 +19,8 @@
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
 .dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
+/* přisazeno k pravému okraji .dashhead, ať se při změně šířky h1 (jiný název dne) nehýbe – viz plan-head-nav níže */
+.dashhead>.dh-nav{margin-left:auto}
 .dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:10px;font-size:18px;color:var(--color-primary);cursor:pointer}
 .dh-step:disabled{color:var(--color-text-hint);cursor:default}
 /* výběr měsíce v tématickém plánu – na řádku s H1 (dashhead), přisazený úplně doprava */
