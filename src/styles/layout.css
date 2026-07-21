@@ -1,5 +1,7 @@
 .phone{width:100%;background:var(--color-bg)}
-.screen{background:var(--color-bg);min-height:100vh}.scroll{padding:14px 16px 30px}
+.screen{background:var(--color-bg);min-height:100vh}
+.scroll{padding:14px 16px 30px;min-height:100vh;display:flex;flex-direction:column}
+.scroll>#content{flex:1}
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:13px}
 .burger{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;font-size:21px;line-height:1;color:var(--color-primary-strong);cursor:pointer;padding:2px 4px;margin-left:-8px}
 .ttl{font-family:var(--font-serif);font-size:19px;color:var(--color-primary-strong);flex:1}
