@@ -29,6 +29,7 @@ function renderHead(){
   dh.innerHTML = overlay ? ''
     : section==='prehled' ? renderDashHead()
     : section==='profil'  ? `<h1 class="dh-t">Profil dítěte</h1><button class="dh-edit" onclick="openProfEdit()">Upravit údaje</button>`
+    : section==='plan'    ? `<h1 class="dh-t">Tématický plán</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepPlan(-1)" ${planIdx<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">${planLabel()}</span><button class="dh-step" onclick="stepPlan(1)" ${planIdx>=TEMA_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`
     : `<h1 class="dh-t">${PAGEH[section]||''}</h1>`;
   const el=document.getElementById('kidsel');
   if(!PERCHILD.includes(section)||overlay){el.style.display='none';return;}

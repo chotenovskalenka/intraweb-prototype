@@ -1,12 +1,12 @@
 /* SCREEN: RODIC_PLAN — tématický plán: navigace po měsících (jen aktuální školní rok),
    plný obsah (plakát + písničky) má v prototypu jen červen; plakát lze zvětšit i stáhnout.
    Desktop: vlevo téma + písničky (proklik na YouTube), vpravo plakáty. */
+function planLabel(){const t=TEMA_MESICE[planIdx],mName=MONTHS[t.m-1];return mName.charAt(0).toUpperCase()+mName.slice(1)+' '+t.y;}
 function renderPlan(){
   const t=TEMA_MESICE[planIdx], mName=MONTHS[t.m-1], cap=mName.charAt(0).toUpperCase()+mName.slice(1);
   const song=s=>`<div class="song"><div class="song-h"><span class="song-t">${s.t}</span><span class="song-tag">${s.typ}</span><a class="song-yt" href="${s.yt}" target="_blank" rel="noopener">▶ Poslech</a></div><div class="song-week">${s.tyd}</div><div class="song-tx">${s.txt}</div></div>`;
 
-  // stepper měsíců (Září 2025 → Červen 2026), plná šířka
-  let h=`<div class="doch"><div class="dh-nav planstep"><button class="dh-step" onclick="stepPlan(-1)" ${planIdx<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">${cap} ${t.y}</span><button class="dh-step" onclick="stepPlan(1)" ${planIdx>=TEMA_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`;
+  let h=`<div class="doch">`;
   h+=`<div class="page-2col"><div class="pcol">`;
   h+=`<div class="tile"><div class="ch">Téma měsíce · ${t.hodnota}</div>${t.full?`<div class="tval">${t.intro}</div>`:`<div class="note2" style="margin:0">Hodnota měsíce: <b>${t.hodnota}</b>.</div>`}</div>`;
 

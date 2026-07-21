@@ -3,7 +3,8 @@ function renderKalendar(){
   const dim=daysInMonth(kalY,kalM), off=firstOffset(kalY,kalM), isJune=(kalY===2026&&kalM===5);
   if(kalSel>dim)kalSel=1;
   // Desktop: mřížka vlevo, vybraný den vpravo (uvnitř bílého .gcalwrap — Google vzhled zůstává).
-  let h=`<div class="doch"><div class="gcalwrap kal-wrap"><div class="kal-main">`;
+  let h=`<div class="doch"><div class="gcal-note">Sdílený Google Kalendář školky — akce, rozvrh, narozeniny a organizace školního roku. (Simulace; v ostré verzi napojený kalendář školky.)</div>`;
+  h+=`<div class="gcalwrap kal-wrap"><div class="kal-main">`;
   h+=`<div class="gcalnav"><div class="gstep"><button onclick="kalStep(-1,0)">‹</button><span class="gmo">${MONTHS[kalM]}</span><button onclick="kalStep(1,0)">›</button></div><div class="gstep"><button onclick="kalStep(0,-1)">‹</button><span class="gyr">${kalY}</span><button onclick="kalStep(0,1)">›</button></div></div>`;
   h+=`<div class="gcal">`;
   ['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="gh">${x}</div>`);
@@ -16,7 +17,7 @@ function renderKalendar(){
   const sevs=isJune?(EVMAP[kalSel]||[]):[];
   h+=`<div class="gday">${DOW[wdLocal(kalY,kalM,kalSel)]} ${kalSel}. ${MONTHS[kalM]}</div>`;
   h+= sevs.length? sevs.map(e=>`<div class="gev"><span class="gvbar g-${e.type}"></span><span>${e.t}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
-  h+=`</div></div><div class="note2">Sdílený Google Kalendář školky — akce, rozvrh, narozeniny a organizace školního roku. (Simulace; v ostré verzi napojený kalendář školky.)</div>`;
+  h+=`</div></div>`;
   return h+`</div>`;
 }
 window.kalPick=d=>{kalSel=d;render();};

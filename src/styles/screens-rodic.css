@@ -21,9 +21,9 @@
 .dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
 .dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:10px;font-size:18px;color:var(--color-primary);cursor:pointer}
 .dh-step:disabled{color:var(--color-text-hint);cursor:default}
-/* výběr měsíce v tématickém plánu — stejná navigace jako v docházce, vycentrovaná */
-.planstep{justify-content:center;margin:2px 0 16px}
-.planstep .dh-lbl{font-size:16px;min-width:150px;text-align:center}
+/* výběr měsíce v tématickém plánu — na řádku s H1 (dashhead), přisazený úplně doprava */
+.plan-head-nav{margin-left:auto}
+.plan-head-nav .dh-lbl{min-width:130px;text-align:center}
 /* „dnes" — pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
 .dh-today{display:inline-flex;align-items:center;min-height:32px;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;font-family:var(--font-sans)}
 .doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}
@@ -83,10 +83,13 @@
 /* kontakty — průvodci rovnou rozbalení v mřížce */
 .k-sec{font-family:var(--font-serif);font-size:17px;font-weight:600;color:var(--color-primary-strong);margin:0 0 11px}
 .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:0 0 18px}
-/* školkový kontakt s Dubánkem (obrázek po hrudník, ne kolečko) + menší buttony jako u průvodců */
-.skolka{display:flex;gap:16px;align-items:flex-start}
-.dubanek-img{width:92px;border-radius:12px;flex-shrink:0;display:block;align-self:center}
-.skolka-info{flex:1;min-width:0}
+/* školkový kontakt s Dubánkem (vyleze bez pozadí z horního okraje karty) + menší buttony jako u průvodců */
+.k-bottom{display:flex;gap:16px;flex-wrap:wrap;margin-top:44px}
+.k-bottom>.tile{margin-bottom:0}
+.skolka{position:relative;flex:1.2;min-width:280px;padding-top:52px;overflow:visible}
+.dubanek-pop{position:absolute;top:-54px;left:14px;width:96px;height:96px;overflow:hidden;pointer-events:none}
+.dubanek-pop img{width:96px;height:auto;display:block}
+.skolka-info{min-width:0}
 .skolka-info .gcard-n{margin-bottom:9px}
 .skolka-contact{flex-wrap:wrap}
 .skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
