@@ -24,6 +24,9 @@
 /* výběr měsíce v tématickém plánu – na řádku s H1 (dashhead), přisazený úplně doprava */
 .plan-head-nav{margin-left:auto}
 .plan-head-nav .dh-lbl{min-width:130px;text-align:center}
+/* stránkování seznamu neduležitých novinek */
+.novstep{justify-content:center;margin:14px 0 0}
+.novstep .dh-lbl{min-width:110px;text-align:center}
 /* „dnes" – pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
 .dh-today{display:inline-flex;align-items:center;min-height:32px;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;font-family:var(--font-sans)}
 .doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}

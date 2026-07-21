@@ -5,8 +5,12 @@
    při delším provozu se jich nastřádá hodně a karty by zabíraly zbytečně moc místa.
    Rodič nevidí autora (jméno průvodce jen v průvodcovské appce). */
 function novinkaExcerpt(n){const p=(n.full||n.t).split('\n')[0];return p.length>140?p.slice(0,140)+'…':p;}
+const NOV_STRANKA=6;   // řádků na stránku u neduležitých novinek
 function renderAktuality(){
   const vsechny=NEWS.filter(n=>TODAY<=n.until), dulezite=vsechny.filter(n=>n.urgent), ostatni=vsechny.filter(n=>!n.urgent);
+  const stran=Math.max(1,Math.ceil(ostatni.length/NOV_STRANKA));
+  if(novStrana>stran)novStrana=stran;
+  const zacatek=(novStrana-1)*NOV_STRANKA, stranka=ostatni.slice(zacatek,zacatek+NOV_STRANKA);
   let h=`<div class="doch">`;
   if(dulezite.length){
     h+=`<div class="news-grid">`;
@@ -21,11 +25,15 @@ function renderAktuality(){
     h+=`</div>`;
   }
   if(ostatni.length){
-    h+=`<div class="tile newsbox">`+ostatni.map(n=>`<button class="newsrow" onclick="openNovinka('${n.id}')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`).join('')+`</div>`;
+    h+=`<div class="tile newsbox">`+stranka.map(n=>`<button class="newsrow" onclick="openNovinka('${n.id}')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`).join('')+`</div>`;
+    if(stran>1){
+      h+=`<div class="dh-nav novstep"><button class="dh-step" onclick="stepNovStrana(-1)" ${novStrana<=1?'disabled':''} aria-label="Předchozí strana">‹</button><span class="dh-lbl">Strana ${novStrana} z ${stran}</span><button class="dh-step" onclick="stepNovStrana(1)" ${novStrana>=stran?'disabled':''} aria-label="Další strana">›</button></div>`;
+    }
   }
   h+=`<div class="note2">Novinky píší průvodci; důležité mohou zároveň sdílet do WhatsAppu.</div>`;
   return h+`</div>`;
 }
+window.stepNovStrana=d=>{novStrana=Math.max(1,novStrana+d);render();};
 // Detail novinky – overlay do #content jako „článek": omezená čtecí šířka, hero → titulek →
 // datum → vlasová linka → text → fotky. Bez boxů (prostor a linky, ne rámečky).
 function renderNovinka(){
