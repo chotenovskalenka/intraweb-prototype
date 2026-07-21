@@ -9,7 +9,7 @@ const SKOLNI_DOKUMENTY=['Školní vzdělávací program','Školní a provozní �
 function renderKontakty(){
   let h=`<div class="doch"><div class="k-sec">Průvodci</div><div class="gcards">`+guides.map(guideCard).join('')+`</div>`;
   h+=`<div class="k-bottom">`;
-  h+=`<div class="tile skolka"><div class="dubanek-pop"><img src="${DUBANEK}" alt="Dubánek"></div><div class="skolka-info"><div class="gcard-n">${SCHOOL.name}</div>
+  h+=`<div class="tile skolka"><img class="dubanek-pop" src="${DUBANEK}" alt="Dubánek"><div class="skolka-info"><div class="gcard-n">${SCHOOL.name}</div>
     <div class="contact skolka-contact"><a class="cbtn" href="tel:${telnum(SCHOOL.phone)}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div>
     <div class="cinfo">${SCHOOL.phone} · ${SCHOOL.email}<br>${SCHOOL.adresa}</div></div></div>`;
   h+=`<div class="tile k-docs"><div class="ch">Dokumenty ke stažení</div>`+SKOLNI_DOKUMENTY.map((t,i)=>`<button class="doc doc-dl" onclick="downloadSkolniDoc(${i})"><span>${t}</span><span class="pdf">PDF ↓</span></button>`).join('')+`</div>`;

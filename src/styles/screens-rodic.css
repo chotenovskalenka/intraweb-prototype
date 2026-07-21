@@ -84,16 +84,17 @@
 .k-sec{font-family:var(--font-serif);font-size:17px;font-weight:600;color:var(--color-primary-strong);margin:0 0 11px}
 .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:0 0 18px}
 /* školkový kontakt s Dubánkem (vyleze bez pozadí z horního okraje karty) + menší buttony jako u průvodců */
-.k-bottom{display:flex;gap:16px;flex-wrap:wrap;margin-top:44px}
+.k-bottom{display:flex;gap:16px;flex-wrap:wrap;margin-top:56px;align-items:stretch}
 .k-bottom>.tile{margin-bottom:0}
-.skolka{position:relative;flex:1.2;min-width:280px;padding-top:52px;overflow:visible}
-.dubanek-pop{position:absolute;top:-54px;left:14px;width:96px;height:96px;overflow:hidden;pointer-events:none}
-.dubanek-pop img{width:96px;height:auto;display:block}
-.skolka-info{min-width:0}
+.skolka{display:flex;gap:14px;align-items:flex-end;flex:1.3;min-width:300px;overflow:visible}
+.dubanek-pop{width:132px;flex-shrink:0;display:block;margin-top:-56px;pointer-events:none}
+.skolka-info{flex:1;min-width:0;padding-bottom:2px}
 .skolka-info .gcard-n{margin-bottom:9px}
 .skolka-contact{flex-wrap:wrap}
 .skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
 .skolka-info .cinfo{text-align:left;margin-top:9px}
+.k-docs{flex:1;min-width:250px}
+.k-docs .doc{flex-wrap:wrap;row-gap:4px}
 .gcard{border:1px solid var(--color-border);border-radius:12px;padding:12px;background:var(--color-surface)}
 .gcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .gcard-n{font-family:var(--font-serif);font-size:15px;font-weight:600;color:var(--color-primary-strong)}
