@@ -480,7 +480,6 @@ table.wt td.pastc{opacity:.45}
 .pf-lbl{font-size:10.5px;color:var(--color-text-muted);min-width:110px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
 .pf-in{flex:1;min-width:0;border:1px solid var(--color-border-strong);border-radius:8px;padding:8px 10px;font-family:var(--font-sans);font-size:13.5px;color:var(--color-text);background:var(--color-surface)}
 select.pf-in{cursor:pointer}
-.pf-static{flex:1;font-size:13.5px;color:var(--color-text-muted)}
 .pf-check{display:flex;align-items:center;gap:9px;font-size:13.5px;padding:9px 0;border-top:1px solid var(--color-border);cursor:pointer}
 .pf-check input{width:18px;height:18px;accent-color:var(--color-primary);cursor:pointer}
 .pf-sub{padding-left:2px}
@@ -1102,17 +1101,16 @@ const profAlergie=p=>p.alergie.length?p.alergie.join(', '):'žádné';
 const profAno=(flag,text)=>flag?('ano'+(text?' — '+text:'')):'ne';
 
 /* Účet (domácnost) — přihlášený rodič spravuje telefon/e-mail/heslo v Nastavení účtu (core.js overlay 'ucet').
-   Telefon je jediný zdroj pravdy pro oba rodiče napříč dětmi — PROFIL.*.matka/otec už tel nedrží,
-   jen email (ten se pořád edituje v profilu dítěte). */
-const ACCOUNT={jmeno:'Kateřina Dvořáková', email:'k.dvorakova@email.cz',
-  telMatka:'+420 774 512 908', telOtec:'+420 603 847 221'};
+   Telefon i e-mail jsou jediný zdroj pravdy pro oba rodiče napříč dětmi — PROFIL.*.matka/otec je nedrží,
+   profil dítěte je jen zobrazuje (viz renderProfil). */
+const ACCOUNT={jmeno:'Kateřina Dvořáková',
+  telMatka:'+420 774 512 908', telOtec:'+420 603 847 221',
+  emailMatka:'k.dvorakova@email.cz', emailOtec:'j.dvorak@email.cz'};
 
 const PROFIL={
   'Eliška':{
     narozeni:'14. 3. 2021', rc:'215314/1001', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
     jazyky:'čeština', pojistovna:'VZP (111)', spadova:'MŠ Ďáblice', sourozenci:'Adam (2018), Matěj (2019)',
-    matka:{email:'k.dvorakova@email.cz'},
-    otec:{email:'j.dvorak@email.cz'},
     alergie:[], leky:false, lekyText:'', bryle:false, bryleText:'',
     strava:'Zajištěná školkou', dieta:'bez omezení', usinani:'pohlazení po zádech',
     bavi:'Kreslení, malování a modelování, stavění z LEGA, zvířata (hlavně kočky), zpívání písniček.',
@@ -1122,8 +1120,6 @@ const PROFIL={
   'Matěj':{
     narozeni:'2. 9. 2019', rc:'190902/1004', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
     jazyky:'čeština', pojistovna:'VZP (111)', spadova:'MŠ Ďáblice', sourozenci:'Eliška (2021), Adam (2018)',
-    matka:{email:'k.dvorakova@email.cz'},
-    otec:{email:'j.dvorak@email.cz'},
     alergie:['pyl'], leky:false, lekyText:'', bryle:true, bryleText:'na blízko',
     strava:'Zajištěná školkou', dieta:'bez omezení', usinani:'nespí',
     bavi:'Stavby z klacků a kamenů, pozorování brouků, běhání a šplhání.',
@@ -1492,8 +1488,9 @@ window.setNote=(d,v)=>{cur().notes[d]=v;};
 <script>
 /* SCREEN: RODIC_PROFIL — údaje o dítěti, zdraví, dokumenty a záznamy z rozhovorů.
    Desktop: dva sloupce (sloupcový tok, karty jsou různě vysoké).
-   Data v PROFIL / CISELNIK / SOUHLASY (data.js). Rodič si Základní údaje, Kontakty
-   a Zdraví a strava spravuje sám — tlačítko Upravit → overlay renderProfEdit.
+   Data v PROFIL / CISELNIK / SOUHLASY (data.js). Rodič si Základní údaje a Zdraví a strava
+   spravuje sám — tlačítko Upravit → overlay renderProfEdit. Kontakt na rodiče (telefon, e-mail)
+   se čte z ACCOUNT (data.js) a edituje se jen v Nastavení účtu (modals.js renderUcet).
    Doporučení od průvodců, depistáž a rozhovory jsou jen ke čtení (vkládá školka).
    Fotky prací a vlastní poznámky rodiče vypuštěny (dřív nefunkční prvky). */
 function renderProfil(){
@@ -1507,8 +1504,8 @@ function renderProfil(){
     ${row('Režim',rezim)}${row('Sourozenci',p.sourozenci)}</div>`;
 
   h+=`<div class="tile"><div class="ch">Rodiče</div>
-    ${row('Matka',ACCOUNT.telMatka+' · '+p.matka.email)}${row('Otec',ACCOUNT.telOtec+' · '+p.otec.email)}
-    <div class="note2" style="margin:8px 0 0">Telefon spravujete v Nastavení účtu.</div></div>`;
+    ${row('Matka',ACCOUNT.telMatka+' · '+ACCOUNT.emailMatka)}${row('Otec',ACCOUNT.telOtec+' · '+ACCOUNT.emailOtec)}
+    <div class="note2" style="margin:8px 0 0">Telefon i e-mail spravujete v Nastavení účtu.</div></div>`;
 
   h+=`<div class="tile"><div class="ch">Zdraví a strava</div>
     ${row('Alergie',profAlergie(p))}${row('Léky',profAno(p.leky,p.lekyText))}${row('Brýle',profAno(p.bryle,p.bryleText))}
@@ -1560,11 +1557,6 @@ function renderProfEdit(){
     <label class="pf-row"><span class="pf-lbl">Pojišťovna</span>${sel('pojistovna',CISELNIK.pojistovna)}</label>
     <label class="pf-row"><span class="pf-lbl">Sourozenci</span>${inp('sourozenci','jméno (rok)')}</label></div>`;
 
-  h+=`<div class="tile"><div class="ch">Rodiče</div>
-    <label class="pf-row"><span class="pf-lbl">Matka · e-mail</span>${inp('matkaEmail','e-mail')}</label>
-    <label class="pf-row"><span class="pf-lbl">Otec · e-mail</span>${inp('otecEmail','e-mail')}</label>
-    <div class="note2" style="margin:8px 0 0">Telefon se edituje v Nastavení účtu (dole v menu).</div></div>`;
-
   const alergieVolne=CISELNIK.alergie.filter(a=>!d.alergie.includes(a));
   h+=`<div class="tile"><div class="ch">Zdraví a strava</div>
     <label class="pf-row"><span class="pf-lbl">Alergie</span>
@@ -1593,7 +1585,6 @@ function renderProfEdit(){
 window.openProfEdit=()=>{
   const p=PROFIL[cur().n];
   pfEdit={adresa:p.adresa,jazyky:p.jazyky,pojistovna:p.pojistovna,sourozenci:p.sourozenci,
-    matkaEmail:p.matka.email,otecEmail:p.otec.email,
     alergie:p.alergie.slice(),leky:p.leky,lekyText:p.lekyText,bryle:p.bryle,bryleText:p.bryleText,
     strava:p.strava,dieta:p.dieta,usinani:p.usinani,bavi:p.bavi,nesouhlas:p.nesouhlas};
   overlay={type:'profedit'};render();
@@ -1606,7 +1597,6 @@ window.profCancel=()=>{pfEdit=null;overlay=null;render();};
 window.profSave=()=>{
   const p=PROFIL[cur().n], d=pfEdit;
   p.adresa=d.adresa;p.jazyky=d.jazyky;p.pojistovna=d.pojistovna;p.sourozenci=d.sourozenci;
-  p.matka={email:d.matkaEmail};p.otec={email:d.otecEmail};
   p.alergie=d.alergie.slice();p.leky=d.leky;p.lekyText=d.leky?d.lekyText:'';p.bryle=d.bryle;p.bryleText=d.bryle?d.bryleText:'';
   p.strava=d.strava;p.dieta=d.dieta;p.usinani=d.usinani;p.bavi=d.bavi;p.nesouhlas=d.nesouhlas;
   pfEdit=null;overlay=null;showToast('Údaje uloženy ✓');render();
@@ -1807,8 +1797,9 @@ window.openMenu=()=>{overlay={type:'menu'};render();};
 window.closeOverlay=()=>{overlay=null;render();};
 
 /* --- NASTAVENÍ ÚČTU (dole v menu) --- overlay řízený stavem ucetEdit.
-   Telefon je společný pro domácnost (ACCOUNT.telMatka/telOtec) — propisuje se do profilu obou dětí
-   (PROFIL.*.matka/otec už tel nedrží). E-mail a heslo jsou jen demo formuláře, nic reálně neukládají/neověřují. */
+   Telefon i e-mail jsou společné pro domácnost (ACCOUNT.telMatka/telOtec/emailMatka/emailOtec) —
+   propisují se do profilu obou dětí (PROFIL.*.matka/otec je nedrží). Heslo je jen demo formulář,
+   nic reálně neukládá/neověřuje. */
 let ucetEdit=null;
 function renderUcet(){
   const d=ucetEdit;
@@ -1821,9 +1812,9 @@ function renderUcet(){
     <button class="btn-primary" onclick="ucetSaveTel()">Uložit telefon</button></div>`;
 
   h+=`<div class="tile"><div class="ch">Změna e-mailu</div>
-    <label class="pf-row"><span class="pf-lbl">Současný e-mail</span><span class="pf-static">${esc(ACCOUNT.email)}</span></label>
-    <label class="pf-row"><span class="pf-lbl">Nový e-mail</span><input class="pf-in" value="${esc(d.novyEmail)}" placeholder="e-mail" oninput="ucetSet('novyEmail',this.value)"></label>
-    <button class="btn-primary" style="margin-top:10px" onclick="ucetSaveEmail()">Změnit e-mail</button></div>`;
+    ${row('E-mail — matka','emailMatka')}${row('E-mail — otec','emailOtec')}
+    <div class="note2" style="margin:8px 0 10px">Společné pro domácnost — projeví se v profilu obou dětí.</div>
+    <button class="btn-primary" onclick="ucetSaveEmail()">Uložit e-mail</button></div>`;
 
   h+=`<div class="tile"><div class="ch">Změna hesla</div>
     ${row('Současné heslo','hesloSoucasne','password')}${row('Nové heslo','hesloNove','password')}${row('Heslo pro kontrolu','hesloKontrola','password')}
@@ -1831,7 +1822,9 @@ function renderUcet(){
   return h;
 }
 window.openUcet=()=>{
-  ucetEdit={telMatka:ACCOUNT.telMatka,telOtec:ACCOUNT.telOtec,novyEmail:'',hesloSoucasne:'',hesloNove:'',hesloKontrola:''};
+  ucetEdit={telMatka:ACCOUNT.telMatka,telOtec:ACCOUNT.telOtec,
+    emailMatka:ACCOUNT.emailMatka,emailOtec:ACCOUNT.emailOtec,
+    hesloSoucasne:'',hesloNove:'',hesloKontrola:''};
   drawerOpen=false;overlay={type:'ucet'};render();
 };
 window.ucetSet=(f,v)=>{ucetEdit[f]=v;};
@@ -1841,9 +1834,8 @@ window.ucetSaveTel=()=>{
   showToast('Telefon uložen ✓');render();
 };
 window.ucetSaveEmail=()=>{
-  if(!ucetEdit.novyEmail.trim()){showToast('Zadejte nový e-mail');return;}
-  ACCOUNT.email=ucetEdit.novyEmail.trim();ucetEdit.novyEmail='';
-  showToast('E-mail změněn ✓');render();
+  ACCOUNT.emailMatka=ucetEdit.emailMatka;ACCOUNT.emailOtec=ucetEdit.emailOtec;
+  showToast('E-mail uložen ✓');render();
 };
 window.ucetSaveHeslo=()=>{
   if(!ucetEdit.hesloSoucasne||!ucetEdit.hesloNove||!ucetEdit.hesloKontrola){showToast('Vyplňte všechna pole');return;}
@@ -1975,7 +1967,7 @@ function renderDrawer(){
   d.classList.toggle('on',drawerOpen);
   document.getElementById('scrim').classList.toggle('on',drawerOpen);
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')
-    +`<div class="dfoot"><button class="ditem" onclick="openUcet()">${avatar({n:ACCOUNT.jmeno},22)}<span class="dfoot-acc">${ACCOUNT.jmeno}<small>Nastavení účtu</small></span></button>
+    +`<div class="dfoot"><button class="ditem" onclick="openUcet()"><span class="dfoot-acc">${ACCOUNT.jmeno}<small>Nastavení účtu</small></span></button>
       <button class="ditem" onclick="showToast('Odhlášení — jen náhled, v prototypu nefunguje')"><span class="ic">${icon('odhlasit')||'⏻'}</span>Odhlásit se</button></div>`;
 }
 /* Nadpis sekce (H1) se renderuje do topbaru (v řádku s přepínačem dítěte), ne do obsahu. */
