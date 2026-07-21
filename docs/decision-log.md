@@ -956,3 +956,176 @@ Dva nálezy designérky:
 
 **QA (dist, 1280 i 375):** dnešek → chip svítí; krok na Čt 4. 6. → chip zmizí; ▾ → `‹ červen 2026 ›`,
 šipka → toast (picker zůstane otevřený), klik na 3 → zpět na dnešek + chip. Konzole čistá. Dist rebuilt.
+
+### 2026-07-20 — Rodičovská appka dokončena: zbývajících 6 obrazovek na desktop
+
+Přehled, Novinky a Docházka už desktopový layout měly; **Profil, Platby, Kalendář, Tématický plán,
+Fotky a Kontakty zůstávaly netknuté mobilní stohy** — masonry (`#content{column-count:2}`) je na
+desktopu svévolně sekal do sloupců. Sjednoceno stejným vzorem, žádný nový layoutový systém:
+wrapper `.doch` (vystupuje z masonry) + `<h1 class="dh-t">` + vlastní mřížka; nadpisy karet `.tlab`→`.ch`.
+
+- **Profil** — hlavička s avatarem + jméno (`.dh-id`, aby se avatar a titulek nerozutekly kvůli
+  `space-between`), dvousloupcová mřížka. **Smazány karty „Fotky prací dítěte" a „Poznámky"** —
+  byly to nefunkční prvky (tlačítko `onclick="return false"`, textarea bez uložení); práce dětí
+  vkládají průvodci a poznámky rodiče nejsou v rozsahu prototypu.
+- **Platby** — vlevo „K úhradě" (QR) + Kulturní fond (`.pcol`), vpravo Faktury.
+- **Kalendář** — `.kal-wrap`: mřížka vlevo, vybraný den vpravo, obojí uvnitř bílého `.gcalwrap`
+  (Google vzhled zachován; mobil beze změny = stoh).
+- **Tématický plán / Kontakty / Fotky** — dvousloupcová `.page-2col`; Fotky mají širší galerii
+  `.gal-wide` (3 sl. ≥900, 4 ≥1200), zatímco základní `.gal` zůstává 2sloupcová pro fotky v detailu novinky.
+- **Topbar titulek** vyprázdněn pro **všechny** sekce (každá má teď vlastní `h1`); titulky overlayů beze změny.
+
+**Opravené vady:**
+1. **Fotky měly všechny dlaždice stejnou barvu** — `forEach(()=>…)` ignoroval prvek pole.
+2. **„splatnost undefined"** na kartě K úhradě — faktury v seedu neměly pole splatnosti; doplněno
+   `splatnost` (14 dní po vystavení) do obou dětí.
+3. **Kolize názvů tříd v kalendáři** — typ události se dával do třídy přímo (`.gbar akce`), takže
+   `.gbar.akce` chytala i řádkovou třídu `.akce` (`min-height:44px;display:flex`) a z tenkých pruhů
+   dělala bloky. Typové modifikátory přejmenovány na `g-akce/g-naro/g-rozvrh/g-org`.
+4. **Barvy placeholderů mimo tokeny** — nová sada `--photo-1..5` v `tokens.css`; použita ve `fotky.js`
+   i v NEWS obou mobilních appek (`var(--photo-N)` funguje i v inline `style`). Černá/bílá ve `fakeQR()`
+   a Google paleta `.gcal*` zůstávají záměrně natvrdo.
+
+**QA (dist):** všech 9 sekcí na 1280 px — každá má vlastní velký nadpis, prázdný topbar, obsah ve
+sloupcích; kalendář pruhy tenké, boční panel reaguje na výběr dne (24. 6. → Výprava do lesa + narozeniny).
+375 px — žádná sekce nepřetéká (`scrollWidth === clientWidth` u všech 9). Konzole čistá.
+Průvodcovské novinky mají po tokenizaci pořád barevné úvodní fotky. Dist rebuilt.
+
+### 2026-07-20 — Profil dítěte: reálná data z podkladů, editace rodičem, číselníky, stahování dokumentů
+
+Profil dostal skutečný obsah z `podklady/prototyp_dochazka_rodic.html` (dřív jen dvě karty)
+a stal se **rodičem spravovatelný**, aby údaje zůstávaly aktuální.
+
+- **Data z podkladů → `PROFIL` v `data.js`** (ne natvrdo v šabloně, aby každé dítě mělo vlastní
+  hodnoty — starý prototyp ukazoval u obou dětí identické údaje Elišky). Karty: Základní údaje,
+  Rodiče, Zdraví a strava, Co dítě baví / jak reaguje, Doporučení od průvodců. **Režim se neukládá** —
+  odvozuje se z `child.base` přes `CODES` (Eliška Odpolední, Matěj Celodenní).
+- **Celá telefonní čísla a plná adresa** (dřív maskováno `774 ••• •••` a jen „Praha 8"). Vymyšleno:
+  matka `+420 774 512 908`, otec `+420 603 847 221`, adresa „Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň".
+  Sourozenci sdílejí rodiče i adresu. Rodné číslo v prototypu záměrně neuvádíme.
+- **Číselníky (`CISELNIK`)** — pojišťovna, jazyky, alergie, strava (Zajištěná školkou / Vlastní)
+  se v editaci vybírají ze seznamu (`<select>`, resp. chips u alergií), ne volným textem.
+  Alergie/léky/brýle jsou v datech strukturované (`alergie:[]`, `leky:false`, `bryle:true`),
+  zobrazení přes `profAlergie`/`profAno`.
+- **Editace rodičem** — tlačítko „Upravit údaje" v hlavičce → overlay `profedit` (stav `pfEdit`,
+  handler v `profil.js`, dispatch v `core.js`). Spravovatelné jen Základní údaje, Kontakty a Zdraví
+  a strava + textová pole „co baví / když nesouhlasí"; Doporučení, depistáž a rozhovory zůstávají
+  read-only (vkládá školka). **Ano/ne otázky (léky, brýle) jsou checkboxy**; po zaškrtnutí se
+  odkryje detailové pole (Jaké / Poznámka). Uložení mutuje `PROFIL[jméno]` + toast (demo, ztratí se
+  reloadem). Textová pole `oninput` bez re-renderu (drží focus), checkbox/select/chips re-render.
+- **Dokumenty ke stažení** — klik na řádek dokumentu (souhlasy i depistáž) vygeneruje soubor
+  přímo v prohlížeči přes Blob: PDF = validní minimální jednostránkové PDF (`makePDF` — vlastní
+  xref/trailer, text přepsán do ASCII, Helvetica nezná diakritiku), DOCX = textový stub s příponou
+  `.docx`. Ověřeno: `%PDF-1.4` … `%%EOF`, xref přítomen.
+
+**QA (dist):** desktop — profil ukazuje plná čísla, adresu, dokumenty se šipkou ↓; formulář se
+skládá do 2 sloupců, uložení (alergie pyl, léky Zyrtec, pojišťovna OZP) se propíše do zobrazení.
+Mobil 375 px — formulář 1 sloupec, chips/selecty/inputy bez přetečení (`scrollWidth === clientWidth`).
+Konzole čistá. Matěj má odlišná data (brýle, alergie pyl, nespí). Dist rebuilt.
+
+### 2026-07-20 — Platby: filtr faktur, stažení PDF, více neuhrazených, fond bez overlaye
+
+Přestavba sekce Platby po dohodě s designérkou (nejdřív probráno, pak realizace). Struktura:
+**vlevo** QR nejbližší neuhrazené + seznam faktur s filtrem; **vpravo** kulturní fond s rovnou
+vypsaným čerpáním. Faktury i fond jsou **per dítě**.
+
+- **Faktury ~3 roky (generované).** `genFaktury(cvar,cena,unpaid)` + `FAKT_MESICE`
+  (`skolRok()` skládá Září–Červen po školních rocích 2023/24, 2024/25, 2025/26 do května 2026 —
+  „dnes" je 3. 6.). 29 faktur/dítě, newest-first dle `t` (timestamp). Každá má `id`, `rok`,
+  `vs` (variabilní symbol = dítě+měsíc), `splatnost`. Nahradily 3 ručně psané faktury.
+- **Filtr rok + stav** (rozhodnutí: ne číslované stránkování). `<select>` školního roku
+  (default aktuální) + chipy Vše/Neuhrazené/Uhrazené (stav `faktRok`/`faktStav` v core.js).
+  Prázdný průnik → `.fempty`.
+- **Více neuhrazených** (Eliška má 2: Duben + Květen 2026, Matěj 1). **Bez samostatné karty
+  „K úhradě"** (designérka ji po zvážení zrušila jako duplicitu) — místo toho má **každá
+  neuhrazená faktura v seznamu rovnou rozevřený `.pay-box`** (QR + částka + VS + splatnost);
+  žádný toggle, žádný stav `payOpen`. Nad seznamem červený souhrn `.fakt-due`
+  „K úhradě: N neuhrazené faktury · celkem X Kč"; neuhrazené řádky mají červený název (`.frow-due`).
+  Chip **Neuhrazené je červený** (`.filters button.danger`, aktivní = červená výplň) — má nutit zaplatit.
+- **Stažení faktury PDF** u každé faktury (`downloadFaktura` → `makePDF` s částkou/VS/splatností).
+- **Fond ven z overlaye.** `renderFond`/`openFond` a globální `FONDLOG` **smazány**; čerpání je teď
+  `child.fondlog`, zůstatek se **odvozuje** `fondCerpano()` (fond drží jen `rocni`, ne `cerpano` —
+  jeden zdroj pravdy jako u náhrad). Overlay `fond` odstraněn z `core.js` (dispatch i topbar ttl).
+  Fond má **vlastní QR „Přispět do fondu"** (VS `4920<dítě>00`) — rodič může dobrovolně přispět víc,
+  zadá si vlastní částku v bance.
+- **Sdílené PDF helpery.** `makePDF`/`downloadBlob`/`dlName`/`pdfAscii` přesunuty z `profil.js`
+  do `shared.js` (používá profil i platby). `makePDF(title,lines)` teď bere víc řádků. `pdfAscii`
+  navíc převádí úzké/nezlomitelné mezery (nbsp, narrow-nbsp…) na obyčejnou — jinak `kc()`
+  (`toLocaleString`) dělalo v PDF „10-584" místo „10 584".
+
+**QA (dist):** Eliška — souhrn „K úhradě: 2 neuhrazené faktury · celkem 21 168 Kč"; Květen a Duben
+mají rovnou rozevřené QR (VS 4920 01 05 / 04). Fond QR VS 4920 01 00. Chip Neuhrazené aktivní =
+červená výplň `rgb(176,73,47)`. Filtr 2023/24 + Neuhrazené → prázdný stav (vše zaplaceno). Matěj —
+1 neuhrazená (souhrn v jednotném čísle), fond 1500. Faktura PDF ověřena přes pypdf (1 strana),
+`kc()` v PDF ukazuje „10 584" (úzká mezera → obyčejná). Mobil 375 px bez přetečení. Profil dokumenty
+po přesunu helperů dál fungují (8 tlačítek). Konzole čistá.
+
+### 2026-07-20 — Rodič: nadpis sekce (H1) do topbaru, v řádku s přepínačem dítěte
+
+Designérka: H1 sekce má být **v řádku s dropdownem pro výběr dítěte**, ne pod topbarem. Dřív každá
+obrazovka renderovala `<div class="doch-head"><h1 class="dh-t">…</h1></div>` na začátek `#content`,
+takže nadpis seděl pod (na desktopu skoro prázdným) topbarem.
+
+- Nadpis se teď skládá v `renderHead()` (core.js) do topbaru (`#dashhead`, vedle `#kidsel`) — stejný
+  slot, jaký už používal dashboard. Mapa `PAGEH` drží titulky sekcí; Přehled → `renderDashHead()`
+  (datum + navigace), Profil → „Profil dítěte" + tlačítko „Upravit údaje", overlaye → prázdno
+  (mají vlastní hlavičku v obsahu s „← Zpět").
+- `.doch-head` odstraněn ze **všech** obrazovek (fotky, kalendar, platby, kontakty, plan, aktuality,
+  dochazka, profil) — obsah začíná rovnou mřížkou. Profil tím ztratil velké jméno+avatar v obsahu;
+  identita dítěte zůstává v přepínači (`Eliška ▾`), takže žádná duplicita.
+- Desktop: H1 vlevo, přepínač vpravo (mezera přes prázdný `.ttl` flex:1). Mobil: dlouhý titul se
+  zalomí pod řádek burger+přepínač (stejné chování jako dashboardová hlavička) — bez přetečení.
+
+**Dotaženo napříč všemi appkami** (designérka: „H1 má být všude takto vysoko"):
+- **Průvodce** dostal stejný vzor. Do topbaru přidán `#dashhead`, `render()` do něj skládá nadpis
+  sekce (`dh-t`): Přehled → nový `renderPrehledHead()` (datum + kdo slouží), Novinky → „Novinky" +
+  tlačítko „+ Nová novinka", ostatní → `TITLES[section]`. `.doch-head`/`.dash-head` odstraněny
+  z prehled/dochazka/novinky; u Docházky zůstává v obsahu jen sloučené pole datum+Den/Týden
+  (`renderDochNav`). Malý `.ttl` titulek se už nepoužívá (prázdný spacer).
+- **Admin** už H1 v topbaru měl (`.ttl-a`, 22px, žádný nadpis v obsahu) — beze změny.
+- **CSS:** bázové `.dashhead` (+ `:empty` + mobilní zalomení) přesunuto ze `screens-rodic.css`
+  do `components.css` (sdílené oběma mobilními appkami); parent-specifické zůstalo (`.dh-edit`, `.kidsel`).
+
+QA: průvodce — všech 9 sekcí má nadpis v topbaru (Přehled datum+podtitulek, Docházka + nav v obsahu,
+Novinky + tlačítko otevírá formulář), obsah bez `#content h1`, mobil 375 bez přetečení. Rodič po
+přesunu CSS beze změny. Admin „Přehled" v topbaru. Konzole čistá ve všech třech. Dist rebuilt.
+
+### 2026-07-21 — Matěj happy stav, tématický plán z reálných plakátů, rozbalené kontakty
+
+- **Platby Matěj:** `genFaktury('02',10584,[])` — vše uhrazeno (happy stav). Eliška má dál 2 neuhrazené
+  (Duben, Květen) jako druhý, reálný scénář. Demo tak ukazuje oba stavy podle dítěte.
+- **Tématický plán z reálných podkladů.** Designérka nahrála do `podklady/` plakáty, které průvodci
+  vyrábějí a tisknou na nástěnku (`tematicky_plan_cerven_{1,2}.png`). Zmenšeny (720px, JPEG q80,
+  ~66/56 KB) a zakódovány do **`src/scripts/tema-posters.js`** (`TEMA_POSTERS`) — nový sdílený soubor
+  načtený jen mobilními appkami (`<script>` v `pruvodce.html` i `rodic.html`, ne admin). Tamtéž
+  `PISNE_CERVEN` — všechny písničky/básničky z plakátu (text + odkaz na YouTube vyhledávání).
+  - **Rodič Plán** přepsán: vlevo téma + písničky s „▶ Poslech" (proklik na YouTube), vpravo plakáty
+    (`.tema-poster`). Nahradil dřívější placeholder „Teče voda / PDF".
+  - **Průvodce Plán**: tile „Tématický plán v designu" ukazuje rovnou oba plakáty (aktuální vyvěšený
+    plán) + tlačítko nahrát nový. `.tema-poster` je v `components.css` (sdílené).
+- **Rodič Kontakty:** průvodci **rovnou rozbalení** (bez prokliku na overlay) — mřížka karet
+  `.gcard` (avatar, rozvrh, Zavolat/Napsat/E-mail, telefon+e-mail). Overlay `openGuide` zůstává
+  (používá ho dashboard „Průvodci dnes"). Školka jako druhá karta.
+
+QA: rodič Plán 2 plakáty + 4 písničky s YT odkazy; Matěj 0 neuhrazených; kontakty 4 karty × 3 tlačítka;
+plakát 720px validní JPEG (`data:image/jpeg`), mobil bez přetečení (plakát 311px). Konzole čistá. Dist rebuilt.
+
+### 2026-07-21 — Profilové fotky místo avatarů, Helča → Darča
+
+- **Helča → Darča** ve všech třech appkách (guides, GUIDESHIFT, novinka „from", admin porady/účastníci),
+  vč. e-mailu (`darca@haj.cz`), zkratky (`abbr:'Da'`) a odvozených textů („uspává Darča"). Helča ve
+  školce skončila; Darča má i fotku v podkladech.
+- **Profilové fotky.** Designérka potvrdila: děti na fotkách jsou generované (ne reálné), fotky
+  průvodců OK. 8 fotek z `podklady/fotky/` (gitignored) zmenšeno na čtvercové náhledy 220px (JPEG q80,
+  ~9–13 KB, portréty cropnuté blíž k obličeji) a zakódováno do **`src/scripts/photos.js`**
+  (`const PHOTOS`, klíč = křestní jméno). Načítá se jen v mobilních appkách (`<script>` v obou HTML,
+  ne admin). Celkem ~88 KB.
+- **`avatar()` (shared.js)** nově: když `PHOTOS[c.n]` existuje → `<img>` (kulatý přes `.av`
+  `border-radius:50%`+`overflow:hidden`, `object-fit:cover`), jinak spadne zpět na generovaný SVG.
+  Guard `typeof PHOTOS!=='undefined'` kvůli adminovi (fotky nenačítá). Mapuje se podle jména —
+  ověřeno, že žádné dítě v rosteru se nejmenuje jako průvodce (kolize vyloučena); Eliška a Matěj
+  v rosteru fotku dostanou (záměr).
+
+QA: rodič kontakty 4 průvodci s fotkami (Darča/Gabča/Honza/Táňa), dashboard „Průvodci dnes" i přepínač
+a hlavička s fotkou Elišky; průvodce roster = 2 fotky (Eliška, Matěj) + 20 generovaných (fallback).
+Žádná „Helča" nikde (grep čistý). Mobil bez přetečení, konzole čistá ve všech appkách. Dist rebuilt.

@@ -36,6 +36,13 @@
   --tint-rose:#F1E1DC;
   --tint-ochre:#F1EAD2;
   --tint-blue:#DEE7EA;
+  /* Placeholdery fotek (galerie, úvodní fotky novinek) — v ostré verzi je nahradí reálné snímky.
+     Tlumené odstíny z akvarelové palety, aby prototyp nepůsobil jako rozbitý obrázek. */
+  --photo-1:#E3D9C6;
+  --photo-2:#DCE3D6;
+  --photo-3:#D8E0E4;
+  --photo-4:#E8DCD2;
+  --photo-5:#E7E0CE;
   /* Stavová paleta — jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
      Každý stav má -ink (text) a -bg (světlá výplň). */
   --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.11);
@@ -165,6 +172,7 @@ footer{margin-top:var(--space-lg);padding-top:13px;border-top:1px solid var(--co
 .pwa{font-size:11.5px;color:var(--color-text-hint)}
 .hint{font-size:12.5px;color:var(--color-text-hint);text-align:center;margin-top:14px;line-height:1.45}
 .av{display:inline-flex;border-radius:50%;overflow:hidden;flex-shrink:0;line-height:0}.av svg{display:block}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
 .works{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);margin-top:var(--space-xs)}
 .work{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(31,42,46,.4)}
 .weekbox{max-height:430px;overflow-y:auto;border:1px solid var(--color-border);border-radius:12px;background:var(--color-surface)}
@@ -249,6 +257,14 @@ table.wt td.pastc{opacity:.45}
 .dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:0 0 16px}
 .dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
 .dh-sub{width:100%;font-size:13.5px;color:var(--color-text-muted);margin-top:-8px}
+/* Nadpis sekce (H1) v topbaru — na úrovni role/přepínače. Prázdná (overlay) → skrytá.
+   Sdílené oběma mobilními appkami; na mobilu se zalomí pod řádek burger+role/přepínač. */
+.dashhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.dashhead:empty{display:none}
+@media (max-width:899px){.topbar{flex-wrap:wrap} .dashhead{order:3;flex-basis:100%;margin-top:6px}}
+/* plakát tématického plánu (reálný obrázek z nástěnky) — sdílené oběma appkami */
+.tema-poster{display:block;width:100%;max-width:520px;border:1px solid var(--color-border);border-radius:10px;margin:0 auto 10px}
+.tema-poster:last-of-type{margin-bottom:0}
 .ch{font-family:var(--font-serif);font-size:16px;font-weight:600;color:var(--color-primary-strong);margin-bottom:9px}
 .prog-day{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--color-primary);margin:0 0 4px}
 .cardlink{display:block;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);margin-top:12px;padding:12px 0 2px;color:var(--color-primary);font-weight:600;font-size:13px;font-family:var(--font-sans);cursor:pointer}
@@ -477,6 +493,9 @@ const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
 
 function avHash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function avatar(c,size){
+  // profilová fotka podle jména (PHOTOS z photos.js — jen mobilní appky); jinak generovaný SVG
+  var ph=(typeof PHOTOS!=='undefined')&&c&&PHOTOS[c.n];
+  if(ph)return '<span class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+ph+'" alt=""></span>';
   var SKIN=['#F2C9A0','#E8B07D','#C98A5E','#A56A40','#8A5A3B','#F5D6B8'],HAIR=['#3B2A20','#6B4423','#A6702E','#1F1B17','#C9A24B','#7A4A2A'],BG=['#E7E4DA','#E3EDE7','#F1EAD2','#DEE7EA','#F1E1DC'];
   var h=avHash(c.n+(c.sur||'')),skin=SKIN[h%6],hair=HAIR[(h>>3)%6],bg=BG[(h>>6)%5],st=h%4;
   var hcy=[53,50,54,56][st],hr=[30,31,30,29][st],bun=st===2?'<circle cx="50" cy="26" r="7" fill="'+hair+'"/>':'';
@@ -485,6 +504,37 @@ function avatar(c,size){
 }
 function renderKeepFocus(){const a=document.activeElement;const pos=a&&a.selectionStart;render();const inp=document.querySelector('#content .search');if(inp){inp.focus();try{inp.setSelectionRange(pos,pos);}catch(e){}}}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),1500);}
+
+/* --- Stažení souboru vygenerovaného v prohlížeči (demo dokumenty a faktury) --- */
+function downloadBlob(name,data,mime){
+  const b=new Blob([data],{type:mime}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),1500);
+}
+const dlName=t=>t.replace(/[\/\\:*?"<>|]/g,'-');
+// text pro PDF stream musí být čisté ASCII — Helvetica nezná diakritiku a hlavně:
+// byte-offsety v xref se počítají z délky řetězce, takže vícebajtový znak by je rozhodil.
+const pdfAscii=s=>(s||'').replace(/[    ]/g,' ').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x20-\x7e]/g,'-').replace(/[()\\]/g,' ');
+function makePDF(title,lines){
+  const body=[[title,22]].concat((lines||['Demo dokument - Lesni skolka Vhaaji']).map(l=>[l,12]));
+  let stream='BT 60 780 Td';
+  body.forEach(([txt,sz],i)=>{stream+=` /F1 ${sz} Tf${i?' 0 -28 Td':''} (${pdfAscii(txt)}) Tj`;});
+  stream+=' ET';
+  const objs=[
+    '<</Type/Catalog/Pages 2 0 R>>',
+    '<</Type/Pages/Kids[3 0 R]/Count 1>>',
+    '<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Resources<</Font<</F1 5 0 R>>>>/Contents 4 0 R>>',
+    `<</Length ${stream.length}>>\nstream\n${stream}\nendstream`,
+    '<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>',
+  ];
+  let pdf='%PDF-1.4\n';const off=[];
+  objs.forEach((o,i)=>{off.push(pdf.length);pdf+=`${i+1} 0 obj\n${o}\nendobj\n`;});
+  const xref=pdf.length;
+  pdf+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`;
+  off.forEach(o=>{pdf+=String(o).padStart(10,'0')+' 00000 n \n';});
+  pdf+=`trailer\n<</Size ${objs.length+1}/Root 1 0 R>>\nstartxref\n${xref}\n%%EOF`;
+  return pdf;
+}
 </script>
 <script>
 /* DATA: ADMIN — seed pro appku vedení/administrativy (čtyři školky).
@@ -600,7 +650,7 @@ const OBDOBI=[
 ];
 let zapisUid=20;
 let ZAPISY=[
-  {id:'z1',dt:20250910,datum:'10. 9. 2025',typ:'porada',skolka:'Vhaaji',nazev:'Zahájení školního roku',ucastnici:['Táňa','Helča','vedení'],odstavce:[
+  {id:'z1',dt:20250910,datum:'10. 9. 2025',typ:'porada',skolka:'Vhaaji',nazev:'Zahájení školního roku',ucastnici:['Táňa','Darča','vedení'],odstavce:[
     {text:'Adaptace nových dětí proběhla klidně, dvě děti potřebují ještě delší doprovod rodičů při ranním předávání.',stitky:['pedagogika']},
     {text:'Zkontrolovány lékárničky ve všech maringotkách, doplněny náplasti a dezinfekce; evidence úrazů založena na nový rok.',stitky:['hygiena','bezpečnost']},
   ]},
@@ -608,7 +658,7 @@ let ZAPISY=[
     {text:'Revize elektrických spotřebičů proběhla, jeden vařič vyřazen z provozu, objednán nový.',stitky:['bezpečnost','provoz']},
     {text:'Nová posila do týmu nastupuje od listopadu — zajistit zaškolení a rozšíření o BOZP.',stitky:['personál']},
   ]},
-  {id:'z3',dt:20251114,datum:'14. 11. 2025',typ:'evaluace',skolka:'Vhaaji',nazev:'Čtvrtletní evaluace pedagogů',ucastnici:['Táňa','Helča','Honza'],odstavce:[
+  {id:'z3',dt:20251114,datum:'14. 11. 2025',typ:'evaluace',skolka:'Vhaaji',nazev:'Čtvrtletní evaluace pedagogů',ucastnici:['Táňa','Darča','Honza'],odstavce:[
     {text:'Reflexe adaptačního období — děti dobře zvládají rytmus dne, ranní kruh se osvědčil.',stitky:['pedagogika']},
     {text:'Doporučení: v chladném počasí zařadit více pohybových aktivit a zkrátit statické bloky.',stitky:['pedagogika','provoz']},
   ]},
@@ -624,7 +674,7 @@ let ZAPISY=[
     {text:'Hodnocení individuálních plánů předškoláků — tři děti připravené na zápis do školy.',stitky:['pedagogika']},
     {text:'Personální stabilita — bez fluktuace, tým sehraný, rozvrh služeb funguje.',stitky:['personál']},
   ]},
-  {id:'z7',dt:20260318,datum:'18. 3. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Příprava na inspekci ČŠI',ucastnici:['Táňa','Helča','vedení'],odstavce:[
+  {id:'z7',dt:20260318,datum:'18. 3. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Příprava na inspekci ČŠI',ucastnici:['Táňa','Darča','vedení'],odstavce:[
     {text:'Kompletace dokumentace k inspekci — třídnice, evidence úrazů, podepsané souhlasy GDPR.',stitky:['inspekce','provoz']},
     {text:'Kontrola pitného režimu a skladování potravin, teploty lednic zaznamenávány denně.',stitky:['hygiena','inspekce']},
   ]},
