@@ -275,6 +275,15 @@ table.wt td.pastc{opacity:.45}
 /* plakát tématického plánu (reálný obrázek z nástěnky) — sdílené oběma appkami */
 .tema-poster{display:block;width:100%;max-width:520px;border:1px solid var(--color-border);border-radius:10px;margin:0 auto 10px}
 .tema-poster:last-of-type{margin-bottom:0}
+/* plakát jako klikací tlačítko (zvětšení) + lightbox */
+.poster-btn{display:block;width:100%;max-width:520px;border:none;background:none;padding:0;margin:0 auto 10px;cursor:pointer;position:relative}
+.poster-btn:last-of-type{margin-bottom:0}
+.poster-btn .tema-poster{margin:0;max-width:100%}
+.poster-zoom{position:absolute;top:8px;right:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:rgba(31,42,46,.55);color:#fff;border-radius:8px;font-size:15px;pointer-events:none}
+.lb-scrim{position:fixed;inset:0;background:rgba(20,26,28,.86);z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px}
+.lb-scrim.on{display:flex}
+.lb-img{max-width:min(96vw,760px);max-height:82vh;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.lb-dl{background:var(--color-surface);color:var(--color-primary);font-family:var(--font-sans);font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;text-decoration:none}
 /* menu ikony (SVG line, stroke=currentColor → barevnost dle položky: neaktivní tmavá, aktivní zelená) */
 .ditem .ic,.sb-item .ic{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;opacity:.72}
 .ditem.on .ic,.sb-item.on .ic{opacity:1}
@@ -534,9 +543,9 @@ table.wt td.pastc{opacity:.45}
 <div class="sos-scrim" id="sosScrim" onclick="closeSos()"><div class="modal sos-modal" role="dialog" aria-modal="true" aria-label="Nahlásit chybu na IS" onclick="event.stopPropagation()">
   <h3>Nahlásit chybu na IS</h3>
   <p class="sos-p">Něco v systému nefunguje nebo se chová divně? Napište nám — čím konkrétnější popis (co se dělalo a co se stalo), tím rychleji to opravíme.</p>
-  <div class="sos-row"><span>E-mail podpory</span><a href="mailto:podpora-is@haj.cz?subject=Chyba v IS Vhaaji">podpora-is@haj.cz</a></div>
+  <div class="sos-row"><span>E-mail podpory</span><a href="mailto:podpora-is@vhaaji.cz?subject=Chyba v IS Vhaaji">podpora-is@vhaaji.cz</a></div>
   <div class="sos-row"><span>Telefon (Po–Pá 9–15 h)</span><a href="tel:+420720999000">+420 720 999 000</a></div>
-  <div class="mbtns"><button class="btn-ghost" onclick="closeSos()">Zavřít</button><a class="btn-primary" href="mailto:podpora-is@haj.cz?subject=Chyba v IS Vhaaji">Napsat e-mail</a></div>
+  <div class="mbtns"><button class="btn-ghost" onclick="closeSos()">Zavřít</button><a class="btn-primary" href="mailto:podpora-is@vhaaji.cz?subject=Chyba v IS Vhaaji">Napsat e-mail</a></div>
 </div></div>
 <div id="toast" class="toast"></div>
 
@@ -561,7 +570,7 @@ const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
 function avHash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function avatar(c,size){
   // profilová fotka podle jména (PHOTOS z photos.js — jen mobilní appky); jinak generovaný SVG
-  var ph=(typeof PHOTOS!=='undefined')&&c&&PHOTOS[c.n];
+  var ph=(typeof PHOTOS!=='undefined')&&c&&PHOTOS[c.photo||c.n];
   if(ph)return '<span class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+ph+'" alt=""></span>';
   var SKIN=['#F2C9A0','#E8B07D','#C98A5E','#A56A40','#8A5A3B','#F5D6B8'],HAIR=['#3B2A20','#6B4423','#A6702E','#1F1B17','#C9A24B','#7A4A2A'],BG=['#E7E4DA','#E3EDE7','#F1EAD2','#DEE7EA','#F1E1DC'];
   var h=avHash(c.n+(c.sur||'')),skin=SKIN[h%6],hair=HAIR[(h>>3)%6],bg=BG[(h>>6)%5],st=h%4;
@@ -575,7 +584,12 @@ function showToast(m){const t=document.getElementById('toast');t.textContent=m;t
 /* Patičkový SOS modal (nahlášení chyby na IS) — statické markup v *.html, přepínané přes .on */
 window.openSos=()=>{const s=document.getElementById('sosScrim');if(s)s.classList.add('on');};
 window.closeSos=()=>{const s=document.getElementById('sosScrim');if(s)s.classList.remove('on');};
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSos();});
+
+/* Lightbox (zvětšení + stažení obrázku, např. plakát tématického plánu) — statický #lbScrim */
+window.openLightbox=(src,name)=>{const s=document.getElementById('lbScrim');if(!s)return;
+  s.querySelector('#lbImg').src=src;const d=s.querySelector('#lbDl');d.href=src;d.download=name||'obrazek.jpg';s.classList.add('on');};
+window.closeLightbox=()=>{const s=document.getElementById('lbScrim');if(s)s.classList.remove('on');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSos();closeLightbox();}});
 
 /* --- Stažení souboru vygenerovaného v prohlížeči (demo dokumenty a faktury) --- */
 function downloadBlob(name,data,mime){

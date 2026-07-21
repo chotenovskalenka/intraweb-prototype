@@ -1170,3 +1170,47 @@ Regrese z footer-washe: `.scroll>.topbar` i `.scroll>#content` dostaly `z-index:
 stal stacking kontextem a jeho absolutně poziciovaný `.daypicker` (z-index:9) se „uvěznil" pod
 `#content`. Oprava: topbar má `z-index:5` (nad obsahem), obsah/patička `z-index:1` (nad washem).
 Totéž pro admin `.main>.topbar-a`. Kalendář i přepínač dětí se opět vykreslují nad kartami.
+
+### 2026-07-21 — Tématický plán: navigace po měsících + zvětšení/stažení plakátu
+
+- **Navigace po měsících** (rodič): stepper ‹ Měsíc Rok › omezený na **aktuální školní rok**
+  (Září 2025 → Červen 2026; `TEMA_MESICE` v `tema-posters.js`, stav `planIdx`, `stepPlan`).
+  Plný obsah (plakát + písničky) má v prototypu jen **červen** (`full:true`); ostatní měsíce ukážou
+  hodnotu měsíce (demo) + prázdný stav „plakát není v prototypu k dispozici". Hranice: na začátku/konci
+  roku je šipka disabled.
+- **Plakát ke zvětšení i stažení**: `.poster-btn` (klik → `openPoster(i)` → `openLightbox`) s odznakem
+  ⤢. Lightbox (`#lbScrim` v HTML, `openLightbox/closeLightbox` v `shared.js`, styl v `components.css`)
+  ukáže plakát přes celou obrazovku + tlačítko „Stáhnout ↓" (download data-URI). Zavření klikem/Esc.
+  Zapojeno i v průvodcovském plánu (plakáty tamtéž).
+
+QA: rodič plán default Červen 2026; krok zpět Květen → prázdný stav; hranice Září (prev)/Červen (next)
+disabled; lightbox otevře plakát + stažení `tematicky-plan-cerven-1.jpg`. Mobil bez přetečení, konzole
+čistá. Dist rebuilt.
+
+### 2026-07-21 — Kontakty: reálná jména, bez boxu v boxu, Dubánek, @vhaaji.cz; zrušen detail průvodce
+
+- **Bez vnějšího boxu.** Sekce „Průvodci" už není `.tile` obalující karty (bylo „boxy v boxu") —
+  nadpis `.k-sec` + přímo mřížka `.gcards` s kartami `.gcard`.
+- **Skuteční průvodci** (9): plná jména + telefony dle reality (Tereza Vavrečková, Gabriela
+  Vašíčková, Darina Mikolášová, Helena Peterková, Honza Kolář, Ksenia Andramanova, Eva Sionová,
+  Michaela Hrubínová, Táňa Kynclová). `GUIDES_TODAY` přemapován (Táňa/Darina/Honza/Gabriela),
+  „uspává" se derivuje (Darina). Ze schedule/abbr sešrotováno — karta ukazuje jen jméno + kontakt.
+- **Fotky per jméno přes `photo`.** `avatar()` bere `PHOTOS[c.photo||c.n]` (jméno se v kontaktech
+  změnilo na plné, foto se drží klíčem). Kdo nemá fotku (Tereza, Helena, Eva) → generovaný avatar.
+- **Školkový kontakt s Dubánkem** (maskot): avatar z `podklady/fotky/dubanek.png` (crop hlavy,
+  `DUBANEK` v `photos.js`). Mail **jsme@vhaaji.cz**, telefon **+420 603 200 512**.
+- **Všechny e-maily → doména `@vhaaji.cz`** (parent guides, průvodce guides/SCHOOL, SOS podpora).
+- **Detail průvodce zrušen.** `renderGuide`/`openGuide`/overlay `guide` odstraněny; dashboard
+  „Průvodci dnes" nově prokliká na sekci Kontakty (`go('kontakty')`), ne na neexistující detail.
+
+QA: 9 karet reálných jmen, 6 fotek + 3 generované avatary, Dubánek u školky, jsme@vhaaji.cz /
+603 200 512; „Průvodci" bez vnějšího boxu; dashboard uspává Darina, proklik → Kontakty. Grep na
+@haj.cz čistý. Mobil bez přetečení, konzole čistá. Dist rebuilt.
+
+### 2026-07-21 — Kontakty doladění: bez Heleny, Dubánek jako obrázek, menší buttony u školky
+
+- **Helena Peterková** odebrána z průvodců (8 karet); `GUIDES_TODAY` přemapován na [7,2,3,1].
+- **Dubánek** už není v kolečku — vložen jako **obrázek po hrudník** (`.dubanek-img`, portrét, nový
+  crop hlava→hrudník v `photos.js`); podtitulek „Dubánek · školkový skřítek" **smazán**.
+- **Buttony u školky** (Zavolat/E-mail) zmenšeny (`flex:0 0 auto`) na velikost jako u průvodců;
+  školková karta je flex řádek [obrázek | jméno + kontakt].
