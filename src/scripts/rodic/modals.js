@@ -9,17 +9,11 @@ function renderMenuDetail(){
   h+=`<div class="note2">Alergeny jsou uvedené čísly dle přílohy vyhlášky. Jídelníček dodává Mamafood. Při omluvě do 20:00 předchozího dne se stravné nepočítá.</div>`;
   return h;
 }
-function renderGuide(i){const g=guides[i];
-  return `<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pav">${avatar(g,76)}</div><div class="pname">${g.n}${g.uspava?' ☾':''}</div><div class="pfull">průvodce${g.uspava?' · dnes uspává':''}</div>
-   <div class="tile"><div class="tlab">Kdy je ve školce</div><div class="tval">${g.schedule}</div></div>
-   <div class="tile"><div class="tlab">Kontakt</div><div class="contact"><a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a></div><div class="cinfo">${g.phone} · ${g.email}</div></div>`;
-}
 function renderAkceDetail(i){const a=akce[i];
   return `<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">${a.title}</div><div class="pfull">${a.date}</div>
    <div class="tile"><div class="np"><span>Kdy</span><b>${a.time}</b></div><div class="np"><span>Kde</span><b>${a.place}</b></div></div>
    <div class="tile"><div class="tlab">Info</div><div class="tval">${a.note}</div></div>`;
 }
-window.openGuide=i=>{overlay={type:'guide',idx:i};render();};
 window.openAkce=i=>{overlay={type:'akce',idx:i};render();};
 window.openMenu=()=>{overlay={type:'menu'};render();};
 window.closeOverlay=()=>{overlay=null;render();};

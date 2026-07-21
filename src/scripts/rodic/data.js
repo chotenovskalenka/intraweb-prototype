@@ -151,14 +151,20 @@ const EVENTS={
 /* Denní program (činnost) dle dne v týdnu — zdroj: Pro rodiče 25_26 vhaaji.xlsx, tab ČERVEN.
    Každý pracovní den má téma; speciální akce (výlety, sraz) navíc v EVENTS. */
 const DENNI=['Rytmika','Putování','Pohyb','Tvorba','Hrátky s pohádkou'];
+/* Průvodci — skutečná jména a telefony. photo = klíč do PHOTOS (kdo nemá, dostane generovaný avatar).
+   h = dnešní hodiny (jen u těch v GUIDES_TODAY, pro dashboard „Průvodci dnes"). */
 const guides=[
-  {n:'Darča',sur:'K',abbr:'Da',h:'7:30–16:00',schedule:'Po, St, Pá · 7:30–16:00',phone:'+420 720 111 222',email:'darca@haj.cz',uspava:true},
-  {n:'Gabča',sur:'N',abbr:'G',h:'8:20–15:00',schedule:'Út, Čt · 7:30–16:00',phone:'+420 720 333 444',email:'gabca@haj.cz'},
-  {n:'Honza',sur:'P',abbr:'Ho',h:'8:00–13:00',schedule:'St, Pá · 8:00–16:30',phone:'+420 720 555 666',email:'honza@haj.cz'},
-  {n:'Táňa',sur:'V',abbr:'T',h:'8:20–17:00',schedule:'Po–Pá · 7:30–16:00',phone:'+420 720 777 888',email:'tana@haj.cz'},
+  {n:'Tereza',sur:'Vavrečková',phone:'+420 603 200 512',email:'tereza@vhaaji.cz'},
+  {n:'Gabriela',sur:'Vašíčková',photo:'Gabča',h:'7:30–16:00',phone:'+420 604 553 246',email:'gabca@vhaaji.cz'},
+  {n:'Darina',sur:'Mikolášová',photo:'Darča',h:'7:30–16:00',phone:'+420 603 290 593',email:'darina@vhaaji.cz',uspava:true},
+  {n:'Honza',sur:'Kolář',photo:'Honza',h:'8:00–16:30',phone:'+420 605 426 333',email:'honza@vhaaji.cz'},
+  {n:'Ksenia',sur:'Andramanova',photo:'Ksenia',phone:'+420 721 472 219',email:'ksenia@vhaaji.cz'},
+  {n:'Eva',sur:'Sionová',phone:'+420 777 752 533',email:'eva@vhaaji.cz'},
+  {n:'Michaela',sur:'Hrubínová',photo:'Míša',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
+  {n:'Táňa',sur:'Kynclová',photo:'Táňa',h:'7:30–16:00',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
 ];
-const GUIDES_TODAY=[0,1,2,3];
-const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@haj.cz',phone:'+420 720 000 111',adresa:'Ďáblický háj, Praha 8'};
+const GUIDES_TODAY=[7,2,3,1];   // dnes ve školce (Táňa, Darina, Honza, Gabriela) — dashboard „Průvodci dnes"
+const SCHOOL={name:'Lesní školka Vhaaji',email:'jsme@vhaaji.cz',phone:'+420 603 200 512',adresa:'Ďáblický háj, Praha 8'};
 const WEATHER={
   3:{icon:'🌦',t9:14,t17:19,desc:'přeháňky během dne',nightRain:true},
   4:{icon:'☀️',t9:15,t17:23,desc:'slunečno',nightRain:false},

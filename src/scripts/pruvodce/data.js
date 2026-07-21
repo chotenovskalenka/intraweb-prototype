@@ -44,12 +44,12 @@ function rozhovoryFor(i){if(!rozhovoryMap[i])rozhovoryMap[i]=[
 let worksMap={3:2,9:3}, dopoMap={};
 
 const guides=[
-  {n:'Darča',sur:'K.',phone:'+420 720 111 222',email:'darca@haj.cz'},
-  {n:'Gabča',sur:'N.',phone:'+420 720 333 444',email:'gabca@haj.cz'},
-  {n:'Honza',sur:'P.',phone:'+420 720 555 666',email:'honza@haj.cz'},
-  {n:'Táňa',sur:'V.',phone:'+420 720 777 888',email:'tana@haj.cz'},
+  {n:'Darča',sur:'K.',phone:'+420 720 111 222',email:'darca@vhaaji.cz'},
+  {n:'Gabča',sur:'N.',phone:'+420 720 333 444',email:'gabca@vhaaji.cz'},
+  {n:'Honza',sur:'P.',phone:'+420 720 555 666',email:'honza@vhaaji.cz'},
+  {n:'Táňa',sur:'V.',phone:'+420 720 777 888',email:'tana@vhaaji.cz'},
 ];
-const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@haj.cz',phone:'+420 720 000 111'};
+const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@vhaaji.cz',phone:'+420 720 000 111'};
 
 let RYTMUS=[
   {d:0,prog:'Rytmika',krouzek:'Tanečky s Niki'},

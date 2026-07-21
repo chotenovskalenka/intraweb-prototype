@@ -18,7 +18,7 @@ const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
 function avHash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function avatar(c,size){
   // profilová fotka podle jména (PHOTOS z photos.js — jen mobilní appky); jinak generovaný SVG
-  var ph=(typeof PHOTOS!=='undefined')&&c&&PHOTOS[c.n];
+  var ph=(typeof PHOTOS!=='undefined')&&c&&PHOTOS[c.photo||c.n];
   if(ph)return '<span class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+ph+'" alt=""></span>';
   var SKIN=['#F2C9A0','#E8B07D','#C98A5E','#A56A40','#8A5A3B','#F5D6B8'],HAIR=['#3B2A20','#6B4423','#A6702E','#1F1B17','#C9A24B','#7A4A2A'],BG=['#E7E4DA','#E3EDE7','#F1EAD2','#DEE7EA','#F1E1DC'];
   var h=avHash(c.n+(c.sur||'')),skin=SKIN[h%6],hair=HAIR[(h>>3)%6],bg=BG[(h>>6)%5],st=h%4;

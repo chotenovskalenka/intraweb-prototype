@@ -1,13 +1,14 @@
-/* SCREEN: RODIC_KONTAKTY — průvodci rovnou rozbalení (bez prokliku) + kontakt na školku.
-   Desktop: karty průvodců v mřížce (je na to místo), pod tím školka. */
+/* SCREEN: RODIC_KONTAKTY — průvodci rovnou rozbalení v mřížce karet (bez vnějšího boxu),
+   dole kontakt na školku s maskotem Dubánkem. */
 function guideCard(g){
-  return `<div class="gcard"><div class="gcard-top">${avatar(g,42)}<div class="gcard-id"><div class="gcard-n">${g.n}${g.uspava?' <span class="moon">☾</span>':''}</div><div class="gcard-sch">${g.schedule}</div></div></div>
+  return `<div class="gcard"><div class="gcard-top">${avatar(g,42)}<div class="gcard-id"><div class="gcard-n">${g.n} ${g.sur}${g.uspava?' <span class="moon">☾</span>':''}</div></div></div>
     <div class="contact"><a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a></div>
     <div class="cinfo">${g.phone} · ${g.email}</div></div>`;
 }
 function renderKontakty(){
-  let h=`<div class="doch">`;
-  h+=`<div class="tile"><div class="ch">Průvodci</div><div class="gcards">`+guides.map(guideCard).join('')+`</div></div>`;
-  h+=`<div class="tile"><div class="ch">${SCHOOL.name}</div><div class="contact"><a class="cbtn" href="tel:${telnum(SCHOOL.phone)}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div><div class="cinfo">${SCHOOL.phone} · ${SCHOOL.email}<br>${SCHOOL.adresa}</div></div>`;
+  let h=`<div class="doch"><div class="k-sec">Průvodci</div><div class="gcards">`+guides.map(guideCard).join('')+`</div>`;
+  h+=`<div class="tile skolka"><img class="dubanek-img" src="${DUBANEK}" alt="Dubánek"><div class="skolka-info"><div class="gcard-n">${SCHOOL.name}</div>
+    <div class="contact skolka-contact"><a class="cbtn" href="tel:${telnum(SCHOOL.phone)}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div>
+    <div class="cinfo">${SCHOOL.phone} · ${SCHOOL.email}<br>${SCHOOL.adresa}</div></div></div>`;
   return h+`</div>`;
 }
