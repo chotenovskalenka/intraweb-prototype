@@ -44,6 +44,7 @@ const fondCerpano=c=>c.fondlog.reduce((s,x)=>s+x[2],0);
 
 const children=[
   {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',spi:true,att:{2:'NE',11:'OM'},notes:{11:'rodinná oslava'},
+    wa:'https://chat.whatsapp.com/D8pQz1cVsX0Bm4Kr7NyT2A',
     fond:{rocni:2000},
     fondlog:[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]],
     faktury:genFaktury('01',10584,['Duben 2026','Květen 2026']),
@@ -61,6 +62,7 @@ const children=[
       {id:'omE-2',od:2,do:2,duvod:'nemoc',pozn:'',stav:'po-deadlinu',nahradaIds:['nE-nev']},
     ]},
   {n:'Matěj',sur:'Dvořák',ak:'Matěje',dat:'Matějovi',base:'C',spi:false,att:{},notes:{},
+    wa:'https://chat.whatsapp.com/S3fLk9uWpH6Qc1Tz8VbM4E',
     /* celodenní = odpolední docházka + úterý do 17:00; samostatná cena v podkladech není, použita odpolední sazba */
     fond:{rocni:2000},
     fondlog:[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200],['Muzeum a dílna','březen 2026',350],['Jarní výprava','duben 2026',350]],
@@ -71,7 +73,7 @@ const children=[
 
 /* Profil dítěte — údaje z onboarding dotazníku a souhlasů (převzato ze staršího prototypu
    podklady/prototyp_dochazka_rodic.html). Rodič si část údajů spravuje sám (editace v profilu),
-   aby zůstávaly aktuální. Rodné číslo v prototypu neuvádíme.
+   aby zůstávaly aktuální. Jméno/příjmení se nedrží tady — jsou v child.n/child.sur (data.js).
    Režim se nedrží tady — odvozuje se z child.base přes CODES. */
 /* Číselníky (výběr z pevného seznamu, ne volný text). */
 const CISELNIK={
@@ -86,7 +88,7 @@ const profAno=(flag,text)=>flag?('ano'+(text?' — '+text:'')):'ne';
 
 const PROFIL={
   'Eliška':{
-    narozeni:'14. 3. 2021 · Praha', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
+    narozeni:'14. 3. 2021', rc:'215314/1001', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
     jazyky:'čeština', pojistovna:'VZP (111)', spadova:'MŠ Ďáblice', sourozenci:'Adam (2018), Matěj (2019)',
     matka:{tel:'+420 774 512 908', email:'k.dvorakova@email.cz'},
     otec:{tel:'+420 603 847 221', email:'j.dvorak@email.cz'},
@@ -97,7 +99,7 @@ const PROFIL={
     doporuceni:['Trénovat samostatné oblékání (bunda, boty).',
                 'Krátké, jasné loučení u brány — pomáhá hladšímu příchodu.']},
   'Matěj':{
-    narozeni:'2. 9. 2019 · Praha', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
+    narozeni:'2. 9. 2019', rc:'190902/1004', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
     jazyky:'čeština', pojistovna:'VZP (111)', spadova:'MŠ Ďáblice', sourozenci:'Eliška (2021), Adam (2018)',
     matka:{tel:'+420 774 512 908', email:'k.dvorakova@email.cz'},
     otec:{tel:'+420 603 847 221', email:'j.dvorak@email.cz'},
@@ -176,7 +178,8 @@ const guides=[
   {n:'Táňa',sur:'Kynclová',photo:'Táňa',h:'7:30–16:00',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
 ];
 const GUIDES_TODAY=[7,2,3,1];   // dnes ve školce (Táňa, Darina, Honza, Gabriela) — dashboard „Průvodci dnes"
-const SCHOOL={name:'Lesní školka Vhaaji',email:'jsme@vhaaji.cz',phone:'+420 603 200 512',adresa:'Ďáblický háj, Praha 8'};
+const SCHOOL={name:'Lesní školka Vhaaji',email:'jsme@vhaaji.cz',phone:'+420 603 200 512',adresa:'Ďáblický háj, Praha 8',
+  wa:'https://chat.whatsapp.com/K7mQx2vLpR4Nt9wYh3Jd6F'};
 const WEATHER={
   3:{icon:'🌦',t9:14,t17:19,desc:'přeháňky během dne',nightRain:true},
   4:{icon:'☀️',t9:15,t17:23,desc:'slunečno',nightRain:false},

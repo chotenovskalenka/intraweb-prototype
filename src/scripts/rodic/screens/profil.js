@@ -10,7 +10,7 @@ function renderProfil(){
   let h=`<div class="doch"><div class="page-cols">`;
 
   h+=`<div class="tile"><div class="ch">Základní údaje</div>
-    ${row('Oslovení',c.n)}${row('Narození',p.narozeni)}${row('Bydliště',p.adresa)}
+    ${row('Jméno',c.n)}${row('Příjmení',c.sur)}${row('Narození',p.narozeni)}${row('Rodné číslo',p.rc)}${row('Bydliště',p.adresa)}
     ${row('Jazyky doma',p.jazyky)}${row('Pojišťovna',p.pojistovna)}${row('Spádová MŠ',p.spadova)}
     ${row('Režim',rezim)}${row('Sourozenci',p.sourozenci)}</div>`;
 
