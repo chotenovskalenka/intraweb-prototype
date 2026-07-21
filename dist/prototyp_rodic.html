@@ -706,7 +706,8 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .cal .cell.today{outline:2px solid var(--color-primary);outline-offset:-2px}
 .cal .cell.sel{box-shadow:0 0 0 2px var(--color-accent) inset}
 .cal .dnum{font-size:11px;color:var(--color-text-muted)}
-.cal .mk{font-size:10px;font-weight:700}
+.cal .mk{font-size:8px;font-weight:700;line-height:1.15;text-align:center;word-break:break-word;hyphens:auto}
+@media (min-width:900px){.cal .mk{font-size:10.5px}}
 .edlock{font-size:12.5px;color:var(--color-text-muted);font-style:italic}
 .pay2{border-color:var(--color-accent);background:rgba(200,188,133,.07)}
 .wkrow.locked .wkmain .d{color:var(--color-text-hint)}
@@ -1313,7 +1314,6 @@ const dayLabel=d=>d===TODAY?'Dnes · St 3. 6.':DOW[wd(d)]+' '+d+'. 6.';
 // celodenní docházka je jen v úterý – v ostatní dny platí odpolední
 const code=(c,d)=>c.att[d]||(c.base==='C'&&wd(d)!==1?'O':c.base);
 const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${CODES[cd][1]}">${CODES[cd][0]}</span>`;
-const mark=cd=>cd==='OM'?'Om':cd==='NE'?'Ne':cd;
 const cur=()=>children[ci];
 const plural=n=>n===1?'den':(n>=2&&n<=4?'dny':'dní');
 const telnum=p=>p.replace(/ /g,'');
@@ -1530,7 +1530,7 @@ function renderTyden(){
 function renderMesic(){let h=`<div class="vhead vhrow"><span>Měsíční přehled</span><div class="dh-nav"><button class="dh-step" onclick="stepMonth(-1)" aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">Červen 2026</span><button class="dh-step" onclick="stepMonth(1)" aria-label="Další měsíc">›</button></div></div>`+bulkControls()+'<div class="cal">';
   DOW.forEach(x=>h+=`<div class="h">${x}</div>`);
   for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="cell we"><span class="dnum">${d}</span></div>`;continue;}const cd=code(cur(),d),s=bulk?selSet.has(d):sel===d;
-    h+=`<div class="cell${d===TODAY?' today':''}${!editable(d)?' lock':''}${s?' sel':''}" onclick="pick(${d})"><span class="dnum">${d}</span><span class="mk" style="color:${CODES[cd][1]}">${mark(cd)}</span></div>`;}
+    h+=`<div class="cell${d===TODAY?' today':''}${!editable(d)?' lock':''}${s?' sel':''}" onclick="pick(${d})"><span class="dnum">${d}</span><span class="mk" style="color:${CODES[cd][1]}">${CODES[cd][0].toLowerCase()}</span></div>`;}
   h+='</div>';
   return h;}
 // Modal docházky/omluvy pro vybraný den (editor je uvnitř). Otevírá se z kalendáře přes pick(d).
