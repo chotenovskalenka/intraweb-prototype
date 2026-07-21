@@ -27,8 +27,6 @@ function renderProfil(){
     <div class="rozhov"><div class="rd">Co ${c.ak} baví</div>${p.bavi}</div>
     <div class="rozhov"><div class="rd">Když nesouhlasí</div>${p.nesouhlas}</div></div>`;
 
-  h+=`<div class="tile"><div class="ch">Doporučení od průvodců – na doma</div>
-    ${p.doporuceni.map(d=>`<div class="rec"><span class="recdot"></span>${d}</div>`).join('')}</div>`;
 
   h+=`<div class="tile"><div class="ch">Dokumenty a souhlasy</div>
     ${SOUHLASY.map((d,i)=>`<button class="doc doc-dl" onclick="downloadDoc(${i})"><span>${d.t}</span><span class="pdf">${d.f} ↓</span></button>`).join('')}</div>`;
@@ -39,6 +37,8 @@ function renderProfil(){
     <button class="doc doc-dl" onclick="downloadDepistaz('Pololetní hodnocení')"><span>Pololetní hodnocení <span class="dt2">1/2026</span></span><span class="pdf">PDF ↓</span></button></div>`;
 
   h+=`<div class="tile"><div class="ch">Z rozhovorů s rodiči</div>
+    <div class="rozhov"><div class="rd">Doporučení od průvodců – na doma</div>
+      ${p.doporuceni.map(d=>`<div class="rec"><span class="recdot"></span>${d}</div>`).join('')}</div>
     <div class="rozhov"><div class="rd">Úvodní schůzka · 2. 9. 2025</div>Adaptace v pořádku, dítě se těší. Doma řeší usínání.</div>
     <div class="rozhov"><div class="rd">Konzultace · 20. 1. 2026</div>Velký pokrok v jemné motorice, baví ho práce se dřevem.</div></div>`;
 
