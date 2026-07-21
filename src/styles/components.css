@@ -160,6 +160,10 @@ table.wt td.pastc{opacity:.45}
 /* plakát tématického plánu (reálný obrázek z nástěnky) — sdílené oběma appkami */
 .tema-poster{display:block;width:100%;max-width:520px;border:1px solid var(--color-border);border-radius:10px;margin:0 auto 10px}
 .tema-poster:last-of-type{margin-bottom:0}
+/* menu ikony (SVG line, stroke=currentColor → barevnost dle položky: neaktivní tmavá, aktivní zelená) */
+.ditem .ic,.sb-item .ic{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;opacity:.72}
+.ditem.on .ic,.sb-item.on .ic{opacity:1}
+.ic svg{width:20px;height:20px;display:block}
 .ch{font-family:var(--font-serif);font-size:16px;font-weight:600;color:var(--color-primary-strong);margin-bottom:9px}
 .prog-day{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--color-primary);margin:0 0 4px}
 .cardlink{display:block;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);margin-top:12px;padding:12px 0 2px;color:var(--color-primary);font-weight:600;font-size:13px;font-family:var(--font-sans);cursor:pointer}

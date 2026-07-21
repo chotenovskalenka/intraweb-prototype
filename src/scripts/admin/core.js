@@ -21,7 +21,7 @@ const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorad
 function renderSidebar(){
   const el=document.getElementById('sidebar');
   el.innerHTML=`<div class="sb-brand"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`
-    +`<div class="sb-nav">`+SECTIONS.map(s=>`<button class="sb-item ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${s[2]}</span>${s[1]}</button>`).join('')+`</div>`;
+    +`<div class="sb-nav">`+SECTIONS.map(s=>`<button class="sb-item ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')+`</div>`;
 }
 function render(){
   document.getElementById('ttl').textContent=TITLES[section];
