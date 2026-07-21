@@ -19,7 +19,9 @@ function renderDrawer(){
   const d=document.getElementById('drawer');
   d.classList.toggle('on',drawerOpen);
   document.getElementById('scrim').classList.toggle('on',drawerOpen);
-  d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('');
+  d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')
+    +`<div class="dfoot"><button class="ditem" onclick="openUcet()">${avatar({n:ACCOUNT.jmeno},22)}<span class="dfoot-acc">${ACCOUNT.jmeno}<small>Nastavení účtu</small></span></button>
+      <button class="ditem" onclick="showToast('Odhlášení — jen náhled, v prototypu nefunguje')"><span class="ic">${icon('odhlasit')||'⏻'}</span>Odhlásit se</button></div>`;
 }
 /* Nadpis sekce (H1) se renderuje do topbaru (v řádku s přepínačem dítěte), ne do obsahu. */
 const PAGEH={dochazka:'Docházka a náhrady',platby:'Platby',kalendar:'Kalendář',plan:'Tématický plán',fotky:'Fotky',aktuality:'Novinky ze školky',kontakty:'Kontakty'};
@@ -41,10 +43,10 @@ function renderHead(){
 function render(){
   /* Každá sekce má vlastní velký nadpis (h1.dh-t) → v topbaru ho neopakujeme.
      Titulek zůstává jen u overlayů, které vlastní nadpis nemají. */
-  document.getElementById('ttl').textContent=overlay?(overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':overlay.type==='novinka'?'Novinka':overlay.type==='profedit'?'':'Akce'):'';
+  document.getElementById('ttl').textContent=overlay?(overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':overlay.type==='novinka'?'Novinka':(overlay.type==='profedit'||overlay.type==='ucet')?'':'Akce'):'';
   renderHead();renderDrawer();
   document.getElementById('modalRoot').innerHTML = (typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
-  document.getElementById('content').innerHTML = overlay?(overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():overlay.type==='novinka'?renderNovinka():overlay.type==='profedit'?renderProfEdit():renderAkceDetail(overlay.idx)):RENDER[section]();
+  document.getElementById('content').innerHTML = overlay?(overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():overlay.type==='novinka'?renderNovinka():overlay.type==='profedit'?renderProfEdit():overlay.type==='ucet'?renderUcet():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;render();};
 window.openDrawer=()=>{drawerOpen=true;render();};

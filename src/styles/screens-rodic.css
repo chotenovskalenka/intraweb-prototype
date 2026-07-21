@@ -118,6 +118,7 @@
 .pf-lbl{font-size:10.5px;color:var(--color-text-muted);min-width:110px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
 .pf-in{flex:1;min-width:0;border:1px solid var(--color-border-strong);border-radius:8px;padding:8px 10px;font-family:var(--font-sans);font-size:13.5px;color:var(--color-text);background:var(--color-surface)}
 select.pf-in{cursor:pointer}
+.pf-static{flex:1;font-size:13.5px;color:var(--color-text-muted)}
 .pf-check{display:flex;align-items:center;gap:9px;font-size:13.5px;padding:9px 0;border-top:1px solid var(--color-border);cursor:pointer}
 .pf-check input{width:18px;height:18px;accent-color:var(--color-primary);cursor:pointer}
 .pf-sub{padding-left:2px}

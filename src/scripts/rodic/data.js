@@ -86,12 +86,18 @@ const CISELNIK={
 const profAlergie=p=>p.alergie.length?p.alergie.join(', '):'žádné';
 const profAno=(flag,text)=>flag?('ano'+(text?' — '+text:'')):'ne';
 
+/* Účet (domácnost) — přihlášený rodič spravuje telefon/e-mail/heslo v Nastavení účtu (core.js overlay 'ucet').
+   Telefon je jediný zdroj pravdy pro oba rodiče napříč dětmi — PROFIL.*.matka/otec už tel nedrží,
+   jen email (ten se pořád edituje v profilu dítěte). */
+const ACCOUNT={jmeno:'Kateřina Dvořáková', email:'k.dvorakova@email.cz',
+  telMatka:'+420 774 512 908', telOtec:'+420 603 847 221'};
+
 const PROFIL={
   'Eliška':{
     narozeni:'14. 3. 2021', rc:'215314/1001', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
     jazyky:'čeština', pojistovna:'VZP (111)', spadova:'MŠ Ďáblice', sourozenci:'Adam (2018), Matěj (2019)',
-    matka:{tel:'+420 774 512 908', email:'k.dvorakova@email.cz'},
-    otec:{tel:'+420 603 847 221', email:'j.dvorak@email.cz'},
+    matka:{email:'k.dvorakova@email.cz'},
+    otec:{email:'j.dvorak@email.cz'},
     alergie:[], leky:false, lekyText:'', bryle:false, bryleText:'',
     strava:'Zajištěná školkou', dieta:'bez omezení', usinani:'pohlazení po zádech',
     bavi:'Kreslení, malování a modelování, stavění z LEGA, zvířata (hlavně kočky), zpívání písniček.',
@@ -101,8 +107,8 @@ const PROFIL={
   'Matěj':{
     narozeni:'2. 9. 2019', rc:'190902/1004', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
     jazyky:'čeština', pojistovna:'VZP (111)', spadova:'MŠ Ďáblice', sourozenci:'Eliška (2021), Adam (2018)',
-    matka:{tel:'+420 774 512 908', email:'k.dvorakova@email.cz'},
-    otec:{tel:'+420 603 847 221', email:'j.dvorak@email.cz'},
+    matka:{email:'k.dvorakova@email.cz'},
+    otec:{email:'j.dvorak@email.cz'},
     alergie:['pyl'], leky:false, lekyText:'', bryle:true, bryleText:'na blízko',
     strava:'Zajištěná školkou', dieta:'bez omezení', usinani:'nespí',
     bavi:'Stavby z klacků a kamenů, pozorování brouků, běhání a šplhání.',

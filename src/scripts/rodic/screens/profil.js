@@ -15,7 +15,8 @@ function renderProfil(){
     ${row('Režim',rezim)}${row('Sourozenci',p.sourozenci)}</div>`;
 
   h+=`<div class="tile"><div class="ch">Rodiče</div>
-    ${row('Matka',p.matka.tel+' · '+p.matka.email)}${row('Otec',p.otec.tel+' · '+p.otec.email)}</div>`;
+    ${row('Matka',ACCOUNT.telMatka+' · '+p.matka.email)}${row('Otec',ACCOUNT.telOtec+' · '+p.otec.email)}
+    <div class="note2" style="margin:8px 0 0">Telefon spravujete v Nastavení účtu.</div></div>`;
 
   h+=`<div class="tile"><div class="ch">Zdraví a strava</div>
     ${row('Alergie',profAlergie(p))}${row('Léky',profAno(p.leky,p.lekyText))}${row('Brýle',profAno(p.bryle,p.bryleText))}
@@ -68,10 +69,9 @@ function renderProfEdit(){
     <label class="pf-row"><span class="pf-lbl">Sourozenci</span>${inp('sourozenci','jméno (rok)')}</label></div>`;
 
   h+=`<div class="tile"><div class="ch">Rodiče</div>
-    <label class="pf-row"><span class="pf-lbl">Matka · telefon</span>${inp('matkaTel','+420 …')}</label>
     <label class="pf-row"><span class="pf-lbl">Matka · e-mail</span>${inp('matkaEmail','e-mail')}</label>
-    <label class="pf-row"><span class="pf-lbl">Otec · telefon</span>${inp('otecTel','+420 …')}</label>
-    <label class="pf-row"><span class="pf-lbl">Otec · e-mail</span>${inp('otecEmail','e-mail')}</label></div>`;
+    <label class="pf-row"><span class="pf-lbl">Otec · e-mail</span>${inp('otecEmail','e-mail')}</label>
+    <div class="note2" style="margin:8px 0 0">Telefon se edituje v Nastavení účtu (dole v menu).</div></div>`;
 
   const alergieVolne=CISELNIK.alergie.filter(a=>!d.alergie.includes(a));
   h+=`<div class="tile"><div class="ch">Zdraví a strava</div>
@@ -101,7 +101,7 @@ function renderProfEdit(){
 window.openProfEdit=()=>{
   const p=PROFIL[cur().n];
   pfEdit={adresa:p.adresa,jazyky:p.jazyky,pojistovna:p.pojistovna,sourozenci:p.sourozenci,
-    matkaTel:p.matka.tel,matkaEmail:p.matka.email,otecTel:p.otec.tel,otecEmail:p.otec.email,
+    matkaEmail:p.matka.email,otecEmail:p.otec.email,
     alergie:p.alergie.slice(),leky:p.leky,lekyText:p.lekyText,bryle:p.bryle,bryleText:p.bryleText,
     strava:p.strava,dieta:p.dieta,usinani:p.usinani,bavi:p.bavi,nesouhlas:p.nesouhlas};
   overlay={type:'profedit'};render();
@@ -114,7 +114,7 @@ window.profCancel=()=>{pfEdit=null;overlay=null;render();};
 window.profSave=()=>{
   const p=PROFIL[cur().n], d=pfEdit;
   p.adresa=d.adresa;p.jazyky=d.jazyky;p.pojistovna=d.pojistovna;p.sourozenci=d.sourozenci;
-  p.matka={tel:d.matkaTel,email:d.matkaEmail};p.otec={tel:d.otecTel,email:d.otecEmail};
+  p.matka={email:d.matkaEmail};p.otec={email:d.otecEmail};
   p.alergie=d.alergie.slice();p.leky=d.leky;p.lekyText=d.leky?d.lekyText:'';p.bryle=d.bryle;p.bryleText=d.bryle?d.bryleText:'';
   p.strava=d.strava;p.dieta=d.dieta;p.usinani=d.usinani;p.bavi=d.bavi;p.nesouhlas=d.nesouhlas;
   pfEdit=null;overlay=null;showToast('Údaje uloženy ✓');render();

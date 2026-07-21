@@ -18,6 +18,52 @@ window.openAkce=i=>{overlay={type:'akce',idx:i};render();};
 window.openMenu=()=>{overlay={type:'menu'};render();};
 window.closeOverlay=()=>{overlay=null;render();};
 
+/* --- NASTAVENÍ ÚČTU (dole v menu) --- overlay řízený stavem ucetEdit.
+   Telefon je společný pro domácnost (ACCOUNT.telMatka/telOtec) — propisuje se do profilu obou dětí
+   (PROFIL.*.matka/otec už tel nedrží). E-mail a heslo jsou jen demo formuláře, nic reálně neukládají/neověřují. */
+let ucetEdit=null;
+function renderUcet(){
+  const d=ucetEdit;
+  const row=(lbl,f,type)=>`<label class="pf-row"><span class="pf-lbl">${lbl}</span><input class="pf-in" type="${type||'text'}" value="${esc(d[f])}" oninput="ucetSet('${f}',this.value)"></label>`;
+  let h=`<div class="pf-head"><button class="back" onclick="ucetCancel()">← Zpět</button><h1 class="dh-t">Nastavení účtu</h1><div class="dh-sub">${ACCOUNT.jmeno}</div></div>`;
+
+  h+=`<div class="tile"><div class="ch">Změna telefonu</div>
+    ${row('Telefon — matka','telMatka','tel')}${row('Telefon — otec','telOtec','tel')}
+    <div class="note2" style="margin:8px 0 10px">Společné pro domácnost — projeví se v profilu obou dětí.</div>
+    <button class="btn-primary" onclick="ucetSaveTel()">Uložit telefon</button></div>`;
+
+  h+=`<div class="tile"><div class="ch">Změna e-mailu</div>
+    <label class="pf-row"><span class="pf-lbl">Současný e-mail</span><span class="pf-static">${esc(ACCOUNT.email)}</span></label>
+    <label class="pf-row"><span class="pf-lbl">Nový e-mail</span><input class="pf-in" value="${esc(d.novyEmail)}" placeholder="e-mail" oninput="ucetSet('novyEmail',this.value)"></label>
+    <button class="btn-primary" style="margin-top:10px" onclick="ucetSaveEmail()">Změnit e-mail</button></div>`;
+
+  h+=`<div class="tile"><div class="ch">Změna hesla</div>
+    ${row('Současné heslo','hesloSoucasne','password')}${row('Nové heslo','hesloNove','password')}${row('Heslo pro kontrolu','hesloKontrola','password')}
+    <button class="btn-primary" style="margin-top:10px" onclick="ucetSaveHeslo()">Změnit heslo</button></div>`;
+  return h;
+}
+window.openUcet=()=>{
+  ucetEdit={telMatka:ACCOUNT.telMatka,telOtec:ACCOUNT.telOtec,novyEmail:'',hesloSoucasne:'',hesloNove:'',hesloKontrola:''};
+  drawerOpen=false;overlay={type:'ucet'};render();
+};
+window.ucetSet=(f,v)=>{ucetEdit[f]=v;};
+window.ucetCancel=()=>{ucetEdit=null;overlay=null;render();};
+window.ucetSaveTel=()=>{
+  ACCOUNT.telMatka=ucetEdit.telMatka;ACCOUNT.telOtec=ucetEdit.telOtec;
+  showToast('Telefon uložen ✓');render();
+};
+window.ucetSaveEmail=()=>{
+  if(!ucetEdit.novyEmail.trim()){showToast('Zadejte nový e-mail');return;}
+  ACCOUNT.email=ucetEdit.novyEmail.trim();ucetEdit.novyEmail='';
+  showToast('E-mail změněn ✓');render();
+};
+window.ucetSaveHeslo=()=>{
+  if(!ucetEdit.hesloSoucasne||!ucetEdit.hesloNove||!ucetEdit.hesloKontrola){showToast('Vyplňte všechna pole');return;}
+  if(ucetEdit.hesloNove!==ucetEdit.hesloKontrola){showToast('Nové heslo se neshoduje s kontrolou');return;}
+  ucetEdit.hesloSoucasne='';ucetEdit.hesloNove='';ucetEdit.hesloKontrola='';
+  showToast('Heslo změněno ✓');render();
+};
+
 /* --- OMLUVENKA (Flow 2) --- overlay řízený stavem omDraft */
 let omDraft=null;
 const omDays=()=>{const a=[];for(let d=omDraft.od;d<=omDraft.do;d++)if(!isWE(d))a.push(d);return a;};
