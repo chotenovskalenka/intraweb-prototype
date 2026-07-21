@@ -411,6 +411,9 @@ table.wt td.pastc{opacity:.45}
 .mk2{font-size:10.5px;color:var(--color-text-muted);min-width:72px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
 .mv{flex:1}
 .alerg{font-size:10px;color:var(--color-accent-ink);background:rgba(200,188,133,.12);border-radius:6px;padding:1px 6px;flex-shrink:0;align-self:center}
+/* kompaktní vysvětlivky alergenů – jen čísla, která se v daném dni/týdnu reálně objeví */
+.alerg-legend{font-size:11.5px;color:var(--color-text-muted);margin-top:8px;line-height:1.5}
+.alerg-legend b{color:var(--color-accent-ink);font-weight:700}
 .akce{min-height:44px;display:flex;justify-content:space-between;gap:10px;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
 .akce:first-of-type{border-top:none;padding-top:0}
 .akce .when{color:var(--color-text-muted);font-size:12.5px;font-weight:400;flex-shrink:0;white-space:nowrap}
@@ -938,11 +941,12 @@ const ICON_SVG={
   smile:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 14a3.8 3.8 0 0 0 7 0"/><path d="M9 9.5h.01"/><path d="M15 9.5h.01"/>',
   coins:'<ellipse cx="12" cy="7" rx="6.5" ry="2.5"/><path d="M5.5 7v5c0 1.38 2.9 2.5 6.5 2.5s6.5-1.12 6.5-2.5V7"/><path d="M5.5 12c0 1.38 2.9 2.5 6.5 2.5s6.5-1.12 6.5-2.5"/>',
   clipboard:'<rect x="5.5" y="5" width="13" height="16" rx="2.5"/><path d="M9 5V3.5h6V5"/><path d="M8.5 10.5h.01"/><path d="M11 10.5h4"/><path d="M8.5 14h.01"/><path d="M11 14h4"/><path d="M8.5 17.5h.01"/><path d="M11 17.5h3"/>',
-  refresh:'<path d="M20 11.5A8 8 0 0 0 6.3 6L4 8"/><path d="M4 4.5V8h3.5"/><path d="M4 12.5A8 8 0 0 0 17.7 18L20 16"/><path d="M20 19.5V16h-3.5"/>'
+  refresh:'<path d="M20 11.5A8 8 0 0 0 6.3 6L4 8"/><path d="M4 4.5V8h3.5"/><path d="M4 12.5A8 8 0 0 0 17.7 18L20 16"/><path d="M20 19.5V16h-3.5"/>',
+  jidelnicek:'<path d="M4 12h16a8 8 0 0 1-16 0Z"/><path d="M12 3.5c-1 1-1 2 0 3s1 2 0 3"/>'
 };
 /* klíč sekce (napříč appkami) → ikona */
 const ICON_KEY={prehled:'prehled',aktuality:'news',novinky:'news',dochazka:'dochazka',profil:'profil',
-  platby:'platby',kalendar:'kalendar',plan:'plan',fotky:'fotky',kontakty:'kontakty',
+  platby:'platby',kalendar:'kalendar',plan:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
   pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh'};
 function icon(key){const k=ICON_KEY[key];return k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_SVG[k]}</svg>`:'';}
 </script>
@@ -1225,15 +1229,58 @@ const WEATHER={
   8:{icon:'🌧',t9:12,t17:16,desc:'déšť',nightRain:true},
 };
 const WDEF={icon:'⛅',t9:14,t17:21,desc:'polojasno',nightRain:false};
-/* Jídelníček převzatý z reálného týdenníku Vhaaji (Pro rodiče 25_26): obědy veganské
-   z bistra Mamafood, živočišná složka jen ve svačinkách. */
-const MENUS=[
-  [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Mrkvová s pomerančem',''],['Hlavní jídlo','Čočka na kyselo s cibulkou a tofu „vajíčky", rajčatovo-okurkový salátek','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
-  [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Ochucená mléčná kaše, ovoce','7'],['Hlavní jídlo','Pečená zelenina s bramborami, křupavým tofu a domácí tatarkou','6'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
-  [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Batátový krém s karamelizovanými hruškami',''],['Hlavní jídlo','Květákové placičky s cizrnou, bramborovo-hráškové pyré a salátek',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
-  [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s květákem, mrkví a bramborami',''],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
-  [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Zeleninová minestrone s bylinkovým pestem',''],['Hlavní jídlo','Chana masala s jasmínovou rýží a cizrnou',''],['Svačinka 2','Domácí bublanina','1']],
+/* Jídelníček převzatý z reálného týdenníku Vhaaji (list „Jídelníček cerven", Pro rodiče 25_26.xlsx):
+   obědy veganské z bistra Mamafood, živočišná složka jen ve svačinkách. Alergeny číslované dle
+   přílohy vyhlášky – viz ALERGENY_NAZVY níže. Zdroj má svačinky u 1. týdne (1.–5. 6.) prázdné,
+   doplněny stejnou skladbou jako u 2. týdne (reálné recepty, jen z jiného týdne).
+   JIDELNICEK = 4 celé týdny (červen 2026 má jen 26 pracovních dní do konce 4. týdne;
+   5. týden 29.–30. 6. je ve zdroji nedodaný – viz jidelnicekDen(), vrací null → zobrazí se prázdný stav). */
+const JIDELNICEK=[
+  {od:1,do:5,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Žampiónový krém se sušenými švestkami',''],['Hlavní jídlo','Luštěninové karbanátky s bramborovou kaší a mrkvovým salátkem',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Fazolačka s kořenovou zeleninou','9'],['Hlavní jídlo','Zeleninová smetanová omáčka s hrachovými koulemi, bramborami a karamelizovanou mrkví',''],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Krém z červené čočky s mrkví a kokosovým mlékem',''],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Hrstková s kořenovou zeleninou',''],['Hlavní jídlo','Koprová omáčka s pečenými sójovými plátky a bramborami (hrachovými kuličkami nebo lupinovým tempehem)','6'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Květákový krém',''],['Hlavní jídlo','Zeleninové rizoto s fazolkami a kedlubnovým salátkem s granátovým jablíčkem',''],['Svačinka 2','Domácí bublanina','1']],
+  ]},
+  {od:8,do:12,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Mrkvová s pomerančem',''],['Hlavní jídlo','Čočka na kyselo s cibulkou a tofu „vajíčky", rajčatovo-okurkový salátek','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Ochucená mléčná kaše, ovoce','7'],['Hlavní jídlo','Pečená zelenina s bramborami, křupavým tofu a domácí tatarkou','6'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Batátový krém s karamelizovanými hruškami',''],['Hlavní jídlo','Květákové placičky s cizrnou, bramborovo-hráškové pyré a salátek',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s květákem, mrkví a bramborami',''],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Zeleninová minestrone s bylinkovým pestem',''],['Hlavní jídlo','Chana masala s jasmínovou rýží a cizrnou',''],['Svačinka 2','Domácí bublanina','1']],
+  ]},
+  {od:15,do:19,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Petrželový krém s bylinkovým pestem',''],['Hlavní jídlo','Zeleninové kung pao s tempehem, arašídy a jasmínovou rýží','5, 6'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), salámová pomazánka, zelenina',''],['Polévka','Zeleninová s květákem, hráškem a kapustou',''],['Hlavní jídlo','Cuketové bramboráčky se zeleninovou omáčkou a pečenými hrachovými nudličkami','1'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Bramboračka s kořenovou zeleninou','9'],['Hlavní jídlo','Mac and cheese (krémová sýrová omáčka ze zeleniny a kešu oříšků s kolínky)','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninový vývar s nudličkami','1, 9'],['Hlavní jídlo','Buchtičky se šodó, vanilkovým krémem a ovocem','1'],['Svačinka 2','Smetanový jogurt s vločkami, rozinkami, mákem a ořechy, ovoce','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Pórkový krém s pečenou cizrnou',''],['Hlavní jídlo','Tomatová omáčka s těstovinami, hrachovými kuličkami a oříškovou posypkou','1, 8'],['Svačinka 2','Domácí maková buchta, ovoce','']],
+  ]},
+  {od:22,do:26,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Cuketový krém',''],['Hlavní jídlo','Znojemská omáčka s pečenými sójovými/hrachovými nudličkami s jasmínovou rýží','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), pomazánka s pažitkou, zelenina',''],['Polévka','Kukuřičná s cherry rajčaty a kokosovým mlékem',''],['Hlavní jídlo','Boloňské špagety s mrkví, červenou čočkou a oříšky','1, 8'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Čočková s kořenovou zeleninou','9'],['Hlavní jídlo','Cizrnovo-řepné karbanátky s bramborovo-mrkvovým pyré, čerstvá zelenina',''],['Svačinka 2','Pečivo (1× bez sóji), domácí guacamole, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s ječnými kroupami','1, 9'],['Hlavní jídlo','Plněné bramborové knedlíky se zelím a cibulkou, plněné hrachovým granulátem','1'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Tomatová s rýžovými hvězdičkami',''],['Hlavní jídlo','Zeleninové kari s květákem, batáty, dýní a cizrnou, jasmínová rýže',''],['Svačinka 2','Croissant, sýr, salátek, zelenina','']],
+  ]},
 ];
+/* Vrátí jídelníček dne (5 položek: svačinky/polévka/hlavní) podle dne v měsíci, nebo null,
+   pokud pro daný den (víkend, nebo mimo dodané 4 týdny – 27.–30. 6.) žádný není. */
+function jidelnicekTyden(den){return JIDELNICEK.find(t=>den>=t.od&&den<=t.do);}
+function jidelnicekDen(den){const t=jidelnicekTyden(den);return t?t.dny[wd(den)]:null;}
+/* Alergeny dle přílohy vyhlášky (jen ty, které se v jídelníčku Vhaaji reálně objevují). */
+const ALERGENY_NAZVY={1:'lepek',4:'ryby',5:'arašídy',6:'sója',7:'mléko',8:'skořápkové plody',9:'celer'};
+function alergenyZDne(dny){
+  const s=new Set();
+  dny.forEach(it=>{if(it[2])it[2].split(',').forEach(c=>{c=c.trim();if(c)s.add(Number(c));});});
+  return [...s].sort((a,b)=>a-b);
+}
+function alergenyLegenda(dny){
+  const cisla=alergenyZDne(dny);
+  if(!cisla.length)return '';
+  return `<div class="alerg-legend">Alergeny: `+cisla.map(c=>`<b>${c}</b> ${ALERGENY_NAZVY[c]||''}`).join(', ')+`</div>`;
+}
 /* Výlet předškoláků je každý měsíc 1. čtvrtek (v červnu horolezení v Letňanech). */
 const akce=[
   {title:'Výlet předškoláků – horolezení',date:'čt 4. 6.',time:'8:00–8:30',place:'Jungle Sport park, Letňany',note:'Sraz na místě, na oběd zpět do školky. Děti odpoledne nespí.'},
@@ -1279,7 +1326,7 @@ const kc=n=>n.toLocaleString('cs-CZ');
    Sloupec 1 nese i Průvodce (pod docházkou). Desktop: .dash3 grid, mobil: stoh. */
 const DOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
 function renderDashboard(){
-  const c=cur(), td=code(c,dashDay), unpaid=c.faktury.filter(f=>!f.paid), ev=EVENTS[dashDay], menu=MENUS[wd(dashDay)];
+  const c=cur(), td=code(c,dashDay), unpaid=c.faktury.filter(f=>!f.paid), ev=EVENTS[dashDay], menu=jidelnicekDen(dashDay);
   const today=dashDay===TODAY, absent=(td==='OM'||td==='NE');
   // Hlavička (avatar + jméno/datum + listování ‹ ▾ ›) se vykresluje do topbaru na úroveň přepínače dětí
   // → renderDashHead() volané z renderHead(). Tady začínáme rovnou fakturou.
@@ -1320,7 +1367,10 @@ function renderDashboard(){
     if(ev.map)h+=`<a class="maplink" href="${ev.map}" target="_blank" rel="noopener">Otevřít mapu</a>`;
     if(ev.gps)h+=`<div class="gps">${ev.gps}</div>`;if(ev.sbalit)h+=`<div class="sbalit">🎒 Nezapomeňte sbalit: <b>${ev.sbalit}</b></div>`;h+=`</div>`;}
   h+=`</div>`;
-  h+=`<div class="tile"><div class="ch">Co bude ${c.n} jíst</div>`+menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
+  h+=`<div class="tile"><div class="ch">Co bude ${c.n} jíst</div>`;
+  if(menu){h+=menu.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+alergenyLegenda(menu);}
+  else h+=`<div class="empty">Jídelníček pro tento den zatím není k dispozici.</div>`;
+  h+=`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček ›</button></div>`;
   h+=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>
     <div class="bp"><div class="bp-k">Básnička</div><div class="bp-t">${TYDEN.basnicka.t}</div><a class="bp-link" href="${TYDEN.basnicka.url}" target="_blank" rel="noopener">▶ Poslechnout na YouTube ›</a></div>
     <div class="bp"><div class="bp-k">Písnička</div><div class="bp-t">${TYDEN.pisnicka.t}</div><a class="bp-link" href="${TYDEN.pisnicka.url}" target="_blank" rel="noopener">▶ Přehrát na YouTube ›</a></div></div>`;
@@ -1746,6 +1796,29 @@ window.kalPick=d=>{kalSel=d;render();};
 window.kalStep=(dm,dy)=>{kalM+=dm;if(kalM>11){kalM=0;kalY++;}if(kalM<0){kalM=11;kalY--;}kalY+=dy;render();};
 </script>
 <script>
+/* SCREEN: RODIC_JIDELNICEK – celý jídelníček, navigace po týdnech (JIDELNICEK v data.js).
+   H1 + stepper týdnů se renderuje do topbaru (core.js renderHead, stejný vzor jako Tématický plán).
+   Desktop: sloupcový tok karet dní (.page-cols), stejně jako Profil dítěte. */
+function jidLabel(){const t=JIDELNICEK[jidTyden];return `${t.od}.–${t.do}. 6.`;}
+function renderJidelnicek(){
+  const t=JIDELNICEK[jidTyden];
+  let h=`<div class="doch"><div class="page-cols">`;
+  t.dny.forEach((den,i)=>{
+    const d=t.od+i, dnes=d===TODAY;
+    h+=`<div class="tile"><div class="tlab">${DOW[wd(d)]} ${d}. 6.${dnes?' · dnes':''}</div>`
+      +den.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')
+      +`</div>`;
+  });
+  h+=`</div>`;
+  const vsechnyDny=t.dny.flat();
+  h+=`<div class="tile"><div class="tlab">Stravné</div><div class="np"><span>Dopolední svačina</span><b>20 Kč</b></div><div class="np"><span>Oběd</span><b>80 Kč</b></div><div class="np"><span>Odpolední svačina</span><b>15 Kč</b></div></div>`;
+  h+=alergenyLegenda(vsechnyDny);
+  h+=`<div class="note2">Jídelníček dodává Mamafood. Alergeny jsou uvedené čísly dle přílohy vyhlášky. Při omluvě do 20:00 předchozího dne se stravné nepočítá.</div>`;
+  return h+`</div>`;
+}
+window.stepJidTyden=d=>{jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};
+</script>
+<script>
 /* SCREEN: RODIC_PLAN – tématický plán: navigace po měsících (jen aktuální školní rok),
    plný obsah (plakát + písničky) má v prototypu jen červen; plakát lze zvětšit i stáhnout.
    Desktop: vlevo téma + písničky (proklik na YouTube), vpravo plakáty. */
@@ -1819,22 +1892,12 @@ window.downloadSkolniDoc=i=>{const t=SKOLNI_DOKUMENTY[i];downloadBlob(dlName(t)+
 <script>
 /* MODALS: RODIC – překryvné obrazovky (overlay) a jejich handlery.
    Kulturní fond už není overlay – vypisuje se rovnou na kartě v sekci Platby (viz platby.js). */
-function renderMenuDetail(){
-  let h=`<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">Jídelníček</div><div class="pfull">tento týden</div>`;
-  for(let d=1;d<=5;d++){
-    h+=`<div class="tile"><div class="tlab">${DOW[wd(d)]} ${d}. 6.${d===TODAY?' · dnes':''}</div>`+MENUS[wd(d)].map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')+`</div>`;
-  }
-  h+=`<div class="tile"><div class="tlab">Stravné</div><div class="np"><span>Dopolední svačina</span><b>20 Kč</b></div><div class="np"><span>Oběd</span><b>80 Kč</b></div><div class="np"><span>Odpolední svačina</span><b>15 Kč</b></div></div>`;
-  h+=`<div class="note2">Alergeny jsou uvedené čísly dle přílohy vyhlášky. Jídelníček dodává Mamafood. Při omluvě do 20:00 předchozího dne se stravné nepočítá.</div>`;
-  return h;
-}
 function renderAkceDetail(i){const a=akce[i];
   return `<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">${a.title}</div><div class="pfull">${a.date}</div>
    <div class="tile"><div class="np"><span>Kdy</span><b>${a.time}</b></div><div class="np"><span>Kde</span><b>${a.place}</b></div></div>
    <div class="tile"><div class="tlab">Info</div><div class="tval">${a.note}</div></div>`;
 }
 window.openAkce=i=>{overlay={type:'akce',idx:i};render();};
-window.openMenu=()=>{overlay={type:'menu'};render();};
 window.closeOverlay=()=>{overlay=null;render();};
 
 /* --- NASTAVENÍ ÚČTU (dole v menu) --- overlay řízený stavem ucetEdit.
@@ -1971,7 +2034,7 @@ window.absSubmit=()=>{
   absModal=null; showToast('Absence nahlášena'); render();
 };
 function renderAbsModal(){
-  const c=cur(), menu=MENUS[wd(TODAY)];
+  const c=cur(), menu=jidelnicekDen(TODAY)||[];
   const obedy=menu.filter(it=>/pol|hlavn/i.test(it[0]));
   let h=`<div class="modal-scrim" onclick="absClose()"><div class="modal" onclick="event.stopPropagation()">`;
   h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n} · středa 3. 6.</div>`;
@@ -1988,7 +2051,7 @@ function renderAbsModal(){
 <script>
 /* CORE: RODIC – stav, sekce, drawer/hlavička, render(), go(), toast, úvodní spuštění */
 const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Novinky','▲'],['dochazka','Docházka a náhrady','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
-  ['kalendar','Kalendář','▦'],['plan','Tématický plán','✎'],['fotky','Fotky','▢'],['kontakty','Kontakty','✆']];
+  ['kalendar','Kalendář','▦'],['jidelnicek','Jídelníček','🍽'],['plan','Tématický plán','✎'],['fotky','Fotky','▢'],['kontakty','Kontakty','✆']];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 
 let ci=0, section='prehled', view='tyden', sel=-1, bulk=false, selSet=new Set(), overlay=null, drawerOpen=false, dashDay=TODAY, kalSel=TODAY, weekStart=1;
@@ -2001,8 +2064,9 @@ let pfEdit=null;   // rozpracovaná editace profilu (overlay 'profedit')
 let faktRok='2025/26', faktStav='vse';   // filtr faktur (rok/stav)
 let planIdx=9;   // vybraný měsíc v tématickém plánu (index do TEMA_MESICE; 9 = červen)
 let novStrana=1;   // stránka v seznamu ostatních (neduležitých) novinek
+let jidTyden=0;   // vybraný týden v Jídelníčku (index do JIDELNICEK; 0 = 1.–5. 6.)
 
-const RENDER={prehled:renderDashboard,aktuality:renderAktuality,dochazka:renderDochazka,profil:renderProfil,platby:renderPlatby,kalendar:renderKalendar,plan:renderPlan,fotky:renderFotky,kontakty:renderKontakty};
+const RENDER={prehled:renderDashboard,aktuality:renderAktuality,dochazka:renderDochazka,profil:renderProfil,platby:renderPlatby,kalendar:renderKalendar,jidelnicek:renderJidelnicek,plan:renderPlan,fotky:renderFotky,kontakty:renderKontakty};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -2020,6 +2084,7 @@ function renderHead(){
     : section==='prehled' ? renderDashHead()
     : section==='profil'  ? `<h1 class="dh-t">Profil dítěte</h1><button class="dh-edit" onclick="openProfEdit()">Upravit údaje</button>`
     : section==='plan'    ? `<h1 class="dh-t">Tématický plán</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepPlan(-1)" ${planIdx<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">${planLabel()}</span><button class="dh-step" onclick="stepPlan(1)" ${planIdx>=TEMA_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`
+    : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${jidLabel()}</span><button class="dh-step" onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${PAGEH[section]||''}</h1>`;
   const el=document.getElementById('kidsel');
   if(overlay){el.style.display='none';return;}
@@ -2032,10 +2097,10 @@ function renderHead(){
 function render(){
   /* Každá sekce má vlastní velký nadpis (h1.dh-t) → v topbaru ho neopakujeme.
      Titulek zůstává jen u overlayů, které vlastní nadpis nemají. */
-  document.getElementById('ttl').textContent=overlay?(overlay.type==='menu'?'Jídelníček':overlay.type==='omluvenka'?'Omluvenka':overlay.type==='novinka'?'Novinka':(overlay.type==='profedit'||overlay.type==='ucet')?'':'Akce'):'';
+  document.getElementById('ttl').textContent=overlay?(overlay.type==='omluvenka'?'Omluvenka':overlay.type==='novinka'?'Novinka':(overlay.type==='profedit'||overlay.type==='ucet')?'':'Akce'):'';
   renderHead();renderDrawer();
   document.getElementById('modalRoot').innerHTML = (typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
-  document.getElementById('content').innerHTML = overlay?(overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():overlay.type==='novinka'?renderNovinka():overlay.type==='profedit'?renderProfEdit():overlay.type==='ucet'?renderUcet():renderAkceDetail(overlay.idx)):RENDER[section]();
+  document.getElementById('content').innerHTML = overlay?(overlay.type==='omluvenka'?renderOmluvenka():overlay.type==='novinka'?renderNovinka():overlay.type==='profedit'?renderProfEdit():overlay.type==='ucet'?renderUcet():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;render();};
 window.openDrawer=()=>{drawerOpen=true;render();};
