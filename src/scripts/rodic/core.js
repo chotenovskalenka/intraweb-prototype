@@ -2,7 +2,6 @@
 const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Novinky','▲'],['dochazka','Docházka a náhrady','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
   ['kalendar','Kalendář','▦'],['plan','Tématický plán','✎'],['fotky','Fotky','▢'],['kontakty','Kontakty','✆']];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
-const PERCHILD=['prehled','dochazka','profil','platby','fotky'];
 
 let ci=0, section='prehled', view='tyden', sel=-1, bulk=false, selSet=new Set(), overlay=null, drawerOpen=false, dashDay=TODAY, kalSel=TODAY, weekStart=1;
 let kalY=2026, kalM=5;
@@ -32,7 +31,7 @@ function renderHead(){
     : section==='plan'    ? `<h1 class="dh-t">Tématický plán</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepPlan(-1)" ${planIdx<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">${planLabel()}</span><button class="dh-step" onclick="stepPlan(1)" ${planIdx>=TEMA_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`
     : `<h1 class="dh-t">${PAGEH[section]||''}</h1>`;
   const el=document.getElementById('kidsel');
-  if(!PERCHILD.includes(section)||overlay){el.style.display='none';return;}
+  if(overlay){el.style.display='none';return;}
   el.style.display='block';
   const c=cur();
   let h=`<button class="kbtn" onclick="toggleKidMenu(event)">${avatar(c,24)}<span>${c.n}</span><span class="kcaret">▾</span></button>`;
@@ -47,7 +46,7 @@ function render(){
   document.getElementById('modalRoot').innerHTML = (typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
   document.getElementById('content').innerHTML = overlay?(overlay.type==='menu'?renderMenuDetail():overlay.type==='omluvenka'?renderOmluvenka():overlay.type==='novinka'?renderNovinka():overlay.type==='profedit'?renderProfEdit():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
-window.go=s=>{section=s;overlay=null;drawerOpen=false;if(!PERCHILD.includes(s)){} render();};
+window.go=s=>{section=s;overlay=null;drawerOpen=false;render();};
 window.openDrawer=()=>{drawerOpen=true;render();};
 window.toggleKidMenu=e=>{e.stopPropagation();kidMenuOpen=!kidMenuOpen;render();};
 window.pickKid=i=>{ci=i;kidMenuOpen=false;render();};
