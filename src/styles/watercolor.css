@@ -30,7 +30,8 @@
   -webkit-mask-image:linear-gradient(to top,#000 0,#000 18%,transparent 100%);
           mask-image:linear-gradient(to top,#000 0,#000 18%,transparent 100%);
   pointer-events:none;z-index:0}
-.scroll>.topbar,.scroll>#content,.scroll>.appfoot{position:relative;z-index:1}
+.scroll>#content,.scroll>.appfoot{position:relative;z-index:1}
+.scroll>.topbar{position:relative;z-index:5}   /* nad obsahem, ať rozbalené menu/kalendář v hlavičce nezmizí pod kartami */
 /* admin */
 .main{position:relative}
 .main::after{content:"";position:absolute;left:0;right:0;bottom:0;height:210px;
@@ -38,4 +39,5 @@
   -webkit-mask-image:linear-gradient(to top,#000 0,#000 18%,transparent 100%);
           mask-image:linear-gradient(to top,#000 0,#000 18%,transparent 100%);
   pointer-events:none;z-index:0}
-.main>.topbar-a,.main>.content-wrap,.main>.appfoot{position:relative;z-index:1}
+.main>.content-wrap,.main>.appfoot{position:relative;z-index:1}
+.main>.topbar-a{position:relative;z-index:5}
