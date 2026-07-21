@@ -4,13 +4,17 @@
    Sloupec 1 nese i Průvodce (pod docházkou). Desktop: .dash3 grid, mobil: stoh. */
 const DOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
 function renderDashboard(){
-  const c=cur(), td=code(c,dashDay), due=c.faktury.find(f=>!f.paid), ev=EVENTS[dashDay], menu=MENUS[wd(dashDay)];
+  const c=cur(), td=code(c,dashDay), unpaid=c.faktury.filter(f=>!f.paid), ev=EVENTS[dashDay], menu=MENUS[wd(dashDay)];
   const today=dashDay===TODAY, absent=(td==='OM'||td==='NE');
   // Hlavička (avatar + jméno/datum + listování ‹ ▾ ›) se vykresluje do topbaru na úroveň přepínače dětí
   // → renderDashHead() volané z renderHead(). Tady začínáme rovnou fakturou.
   let h='';
-  // 1) Faktura po splatnosti — plná šířka, nejvyšší priorita
-  if(due)h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>Faktura po splatnosti · ${due.obdobi}</span><b>${kc(due.cena-due.sleva)} Kč ›</b></div></button>`;
+  // 1) Faktury po splatnosti — plná šířka, nejvyšší priorita (souhrn shodný s Platbami)
+  if(unpaid.length){
+    const dluh=unpaid.reduce((s,f)=>s+(f.cena-f.sleva),0);
+    const lbl=unpaid.length===1?`Faktura po splatnosti · ${unpaid[0].obdobi}`:`${unpaid.length} ${unpaid.length<5?'faktury':'faktur'} po splatnosti`;
+    h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>${lbl}</span><b>${kc(dluh)} Kč ›</b></div></button>`;
+  }
   h+=`<div class="dash3">`;
   // 2) Sloupec 1 — docházka + průvodci
   h+=`<div class="dcol"><div class="tile"><div class="ch">Docházka</div>`;
