@@ -19,7 +19,7 @@ function renderDashboard(){
   }
 
   // Docházka (mobil: 1.)
-  let blkDochazka=`<div class="tile"><div class="ch">Docházka</div>`;
+  let blkDochazka=`<div class="tile"><div class="ch">${c.n} dnes</div>`;
   blkDochazka+=`<div class="doch-line"><span class="doch-code" style="color:${CODES[td][1]}">${CODES[td][0]}</span>${today?'<span class="doch-day">dnes</span>':''}</div>`;
   if(!absent){const us=guides.find(g=>g.uspava);
     blkDochazka+=`<div class="doch-sleep">${c.spi?`☾ Spinká${us?` · uspává <b>${us.n}</b>`:''}`:'Nespinká'}</div>`;}
@@ -66,14 +66,14 @@ function renderDashboard(){
   let blkMesicni='';
   {const rows=[];Object.keys(EVMAP).map(Number).sort((a,b)=>a-b).forEach(d=>{EVMAP[d].forEach(e=>{if(e.type!=='naro')rows.push([d,e.t]);});});
    // řádek: datum · čas · název aktuality (čas se odděluje z názvu, pokud v něm je „ · HH:MM")
-   blkMesicni=`<div class="tile"><div class="ch"><button class="tlabbtn" onclick="go('kalendar')">Měsíční program<span class="tarr">›</span></button></div>`
+   blkMesicni=`<div class="tile"><div class="ch"><button class="tlabbtn" onclick="go('kalendar')">Co se děje v ${MONTHS_V[TODAY_M]}<span class="tarr">›</span></button></div>`
      +rows.map(([d,t])=>{const m=t.match(/^(.*?) · (\d{1,2}:\d{2})$/);const nm=m?m[1]:t,tm=m?m[2]:'';return `<button class="newsrow" onclick="go('kalendar')"><span class="newsdate">${d}. 6.</span><span class="newsline">${tm?`<b>${tm}</b> · `:''}${nm}</span><span class="newsarr">›</span></button>`;}).join('')+`</div>`;}
 
   // Narozeniny tento měsíc (mobil: 8., poslední)
   let blkNarozeniny='';
   {const vekLab=n=>n===1?'rok':(n>=2&&n<=4?'roky':'let');
    const bday=[];Object.keys(EVMAP).map(Number).sort((a,b)=>a-b).forEach(d=>{EVMAP[d].forEach(e=>{if(e.type==='naro')bday.push([d,e]);});});
-   if(bday.length){blkNarozeniny=`<div class="tile"><div class="ch">Narozeniny tento měsíc</div>`
+   if(bday.length){blkNarozeniny=`<div class="tile"><div class="ch">Narozeniny v ${MONTHS_V[TODAY_M]}</div>`
      +bday.map(([d,e])=>{const jmeno=e.t.split(' – ')[1]||e.t;return `<div class="mrow"><span class="mk2">${d}. 6.</span><span class="mv">${jmeno} · ${e.vek} ${vekLab(e.vek)}</span></div>`;}).join('')+`</div>`;}}
 
   // Sloupce (mobil stohuje A, pak B, pak C → dá přesně požadované pořadí 1–8 výše).

@@ -282,7 +282,10 @@ const EVMAP={
 const TYPELAB={akce:'akce',naro:'narozeniny',rozvrh:'rozvrh',org:'organizace'};
 
 const TODAY=3;
+const TODAY_M=5;   // měsíc „dneška" (0=leden … 5=červen) – zdroj pro dynamické nadpisy „…v červnu"
 const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+// 6. pád (lokativ) pro nadpisy typu „Co se děje v červnu / Narozeniny v červnu"
+const MONTHS_V=['lednu','únoru','březnu','dubnu','květnu','červnu','červenci','srpnu','září','říjnu','listopadu','prosinci'];
 const daysInMonth=(y,m)=>new Date(y,m+1,0).getDate();
 const firstOffset=(y,m)=>(new Date(y,m,1).getDay()+6)%7;
 const wdLocal=(y,m,d)=>(new Date(y,m,d).getDay()+6)%7;
