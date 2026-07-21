@@ -5,9 +5,18 @@ function guideCard(g){
     <div class="contact"><a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a></div>
     <div class="cinfo">${g.phone} · ${g.email}</div></div>`;
 }
+function waCard(name,sub,photo,link){
+  return `<a class="gcard wa-card" href="${link}" target="_blank" rel="noopener"><div class="gcard-top"><span class="av" style="width:42px;height:42px"><img src="${photo}" alt=""></span><div class="gcard-id"><div class="gcard-n">${name}</div><div class="wa-sub">${sub}</div></div></div>
+    <span class="wa-open">Otevřít ve WhatsAppu ↗</span></a>`;
+}
 const SKOLNI_DOKUMENTY=['Školní vzdělávací program','Školní a provozní řád'];
 function renderKontakty(){
+  const c=cur();
   let h=`<div class="doch"><div class="k-sec">Průvodci</div><div class="gcards">`+guides.map(guideCard).join('')+`</div>`;
+  h+=`<div class="k-sec">WhatsApp skupiny</div><div class="gcards">`
+    +waCard('Rodiče vhaaji 🌳','Společná skupina všech rodičů',WA_SKUPINA,SCHOOL.wa)
+    +waCard(`${c.n} ${c.sur} – vhaaji`,'Třídní skupina',PHOTOS[c.n]||WA_SKUPINA,c.wa)
+    +`</div>`;
   h+=`<div class="k-bottom">`;
   h+=`<div class="tile skolka"><img class="dubanek-pop" src="${DUBANEK}" alt="Dubánek"><div class="skolka-info"><div class="gcard-n">${SCHOOL.name}</div>
     <div class="contact skolka-contact"><a class="cbtn" href="tel:${telnum(SCHOOL.phone)}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div>
