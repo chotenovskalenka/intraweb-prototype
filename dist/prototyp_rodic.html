@@ -381,6 +381,8 @@ table.wt td.pastc{opacity:.45}
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
 .dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
+/* přisazeno k pravému okraji .dashhead, ať se při změně šířky h1 (jiný název dne) nehýbe – viz plan-head-nav níže */
+.dashhead>.dh-nav{margin-left:auto}
 .dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:10px;font-size:18px;color:var(--color-primary);cursor:pointer}
 .dh-step:disabled{color:var(--color-text-hint);cursor:default}
 /* výběr měsíce v tématickém plánu – na řádku s H1 (dashhead), přisazený úplně doprava */
@@ -1354,7 +1356,7 @@ function renderDashboard(){
   if(c.notes[dashDay])blkDochazka+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;
   if(c.obed&&c.obed[dashDay]!==undefined&&absent)blkDochazka+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
   if(today&&td!=='NE')blkDochazka+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
-  else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
+  else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="goEditDay(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
   else if(!today&&!editable(dashDay))blkDochazka+=`<div class="edlock">Proběhlý den – jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
   blkDochazka+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
@@ -1416,10 +1418,10 @@ function renderDashboard(){
 function renderDashHead(){
   const c=cur(), today=dashDay===TODAY;
   return `${avatar(c,44)}<h1 class="dh-t">${c.n} · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>`
+    +(today?`<span class="dh-today">dnes</span>`:'')
     +`<div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button>`
     +`<button class="dh-step" onclick="toggleDashPicker(event)" aria-label="Vybrat den">▾</button>`
     +`<button class="dh-step" onclick="stepDay(1)" aria-label="Další den">›</button>`
-    +(today?`<span class="dh-today">dnes</span>`:'')
     +(dashPickerOpen?renderDayPicker():'')+`</div>`;
 }
 // ▾ otevře kompaktní kalendář-dropdown pod šipkami (u datumového nadpisu).
@@ -1582,7 +1584,7 @@ function renderDochazka(){
   h+=`</div></div>`;
   return h;
 }
-window.goEditDay=d=>{section='dochazka';if(d<=5){view='tyden';}else{view='mesic';}sel=d;overlay=null;drawerOpen=false;render();};
+window.goEditDay=d=>{section='dochazka';if(d<=5){view='tyden';}else{view='mesic';}sel=d;dayModal=d;overlay=null;drawerOpen=false;render();};
 window.setView=v=>{view=v;sel=(v==='den')?TODAY:sel;bulk=false;selSet.clear();bulkCode=null;render();};
 window.pick=d=>{if(bulk){if(!editable(d))return;selSet.has(d)?selSet.delete(d):selSet.add(d);render();return;}if(editable(d)||d===TODAY){dayModal=d;render();}};
 window.closeDayModal=()=>{dayModal=null;render();};
