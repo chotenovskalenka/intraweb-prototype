@@ -14,3 +14,21 @@ const PISNE_CERVEN=[
   {typ:'píseň',t:'Na tom pražským mostě',txt:'Na tom pražským mostě, rozmarýnka roste. Žádnej ji tam nezalejvá, ona sama roste. Až tam tudy půjdu, zalévat ji budu. Ona se mi zazelená, já ji trhat budu.',yt:'https://www.youtube.com/results?search_query=Na+tom+pražským+mostě+rozmarýnka',tyd:'3. týden'},
   {typ:'píseň',t:'Pletla v kytku rozmarýnku',txt:'Pletla v kytku rozmarýnku, devatero divý květ, házela jí po voděnce, aby plula v šírý svět. Po voděnce nehluboké, která teče v tu stranu, pověz ty mě má panenko, kam až já se dostanu.',yt:'https://www.youtube.com/results?search_query=Pletla+v+kytku+rozmarýnku',tyd:'4.–5. týden'},
 ];
+
+/* Měsíce aktuálního školního roku (2025/26, Září→Červen) pro navigaci v tématickém plánu.
+   Hodnota měsíce je demo; plný obsah (plakát + písničky) má v prototypu jen červen (full:true). */
+const TEMA_MESICE=[
+  {m:9, y:2025, hodnota:'důvěra'},
+  {m:10,y:2025, hodnota:'odvaha'},
+  {m:11,y:2025, hodnota:'vděčnost'},
+  {m:12,y:2025, hodnota:'klid'},
+  {m:1, y:2026, hodnota:'trpělivost'},
+  {m:2, y:2026, hodnota:'přátelství'},
+  {m:3, y:2026, hodnota:'probouzení'},
+  {m:4, y:2026, hodnota:'radost'},
+  {m:5, y:2026, hodnota:'péče'},
+  {m:6, y:2026, hodnota:'nadšení', full:true,
+    intro:'Radujeme se ze slunečních dnů, sklízíme první jahody, hrášek, třešně, poznáváme sílu bylinek. Při pletení věnečků se těšíme na závěrečnou svatojánskou slavnost.'},
+];
+/* otevře plakát ve zvětšení (lightbox); i = index v TEMA_POSTERS */
+function openPoster(i){openLightbox(TEMA_POSTERS[i],'tematicky-plan-cerven-'+(i+1)+'.jpg');}

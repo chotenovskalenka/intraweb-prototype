@@ -32,7 +32,12 @@ function showToast(m){const t=document.getElementById('toast');t.textContent=m;t
 /* Patičkový SOS modal (nahlášení chyby na IS) — statické markup v *.html, přepínané přes .on */
 window.openSos=()=>{const s=document.getElementById('sosScrim');if(s)s.classList.add('on');};
 window.closeSos=()=>{const s=document.getElementById('sosScrim');if(s)s.classList.remove('on');};
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSos();});
+
+/* Lightbox (zvětšení + stažení obrázku, např. plakát tématického plánu) — statický #lbScrim */
+window.openLightbox=(src,name)=>{const s=document.getElementById('lbScrim');if(!s)return;
+  s.querySelector('#lbImg').src=src;const d=s.querySelector('#lbDl');d.href=src;d.download=name||'obrazek.jpg';s.classList.add('on');};
+window.closeLightbox=()=>{const s=document.getElementById('lbScrim');if(s)s.classList.remove('on');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSos();closeLightbox();}});
 
 /* --- Stažení souboru vygenerovaného v prohlížeči (demo dokumenty a faktury) --- */
 function downloadBlob(name,data,mime){
