@@ -101,6 +101,16 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
   .modal-scrim{align-items:center}
   .modal{max-width:460px;border-radius:18px;max-height:84vh}
 }
+/* Patička (jeden řádek, všechny appky) + SOS modal (nahlášení chyby na IS) */
+.appfoot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;margin-top:20px;padding:14px 0 4px;border-top:1px solid var(--color-border);font-size:12px;color:var(--color-text-muted)}
+.appfoot .sos-link{background:none;border:none;font-family:var(--font-sans);font-size:12px;font-weight:600;color:var(--color-primary);cursor:pointer;padding:4px 2px}
+.sos-scrim{position:fixed;inset:0;background:rgba(31,42,46,.5);z-index:40;display:none;align-items:center;justify-content:center;padding:16px}
+.sos-scrim.on{display:flex}
+.sos-modal{max-width:420px;border-radius:18px}
+.sos-p{font-size:13.5px;line-height:1.5;color:var(--color-text);margin:4px 0 12px}
+.sos-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--color-border);font-size:13px;color:var(--color-text-muted)}
+.sos-row a{color:var(--color-primary);font-weight:600;text-decoration:none;white-space:nowrap}
+.sos-modal .btn-primary{display:flex;align-items:center;justify-content:center;text-decoration:none}
 .mrow2{display:flex;gap:9px}
 .mbtns{display:flex;gap:9px;margin-top:var(--space-lg)}
 .btn-primary{flex:1;background:var(--color-primary);color:var(--color-on-primary);border:none;font-family:var(--font-sans);font-size:15px;font-weight:600;padding:13px;border-radius:11px;cursor:pointer}

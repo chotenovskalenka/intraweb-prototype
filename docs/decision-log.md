@@ -1129,3 +1129,21 @@ plakát 720px validní JPEG (`data:image/jpeg`), mobil bez přetečení (plakát
 QA: rodič kontakty 4 průvodci s fotkami (Darča/Gabča/Honza/Táňa), dashboard „Průvodci dnes" i přepínač
 a hlavička s fotkou Elišky; průvodce roster = 2 fotky (Eliška, Matěj) + 20 generovaných (fallback).
 Žádná „Helča" nikde (grep čistý). Mobil bez přetečení, konzole čistá ve všech appkách. Dist rebuilt.
+
+### 2026-07-21 — Patička + SOS modal (hlášení chyb IS), akvarel přesunut k patičce
+
+- **Patička** (jeden řádek, všechny tři appky): „IS Vhaaji · prototyp" + odkaz „Nahlásit chybu na IS".
+  Statické markup v `*.html` (rodič/průvodce uvnitř `.scroll` za `#content`, admin v `.main` za
+  `.content-wrap`). Styl `.appfoot` v `components.css`.
+- **SOS modal** (nahlášení chyby na IS): statický `#sosScrim` v každém HTML, přepínaný `.on` přes
+  `openSos()`/`closeSos()` v `shared.js` (+ Esc). Obsah: výzva k popisu, e-mail podpory
+  `podpora-is@haj.cz` (mailto s předmětem), telefon, tlačítka Zavřít / Napsat e-mail. Nezávislé na
+  per-app modal systému (admin žádný neměl). Mikrocopy dle appky: rodič vyká, průvodce tyká, admin
+  impersonální. Styl `.sos-*` v `components.css`, vizuál sdílí `.modal`.
+- **Akvarel přesunut nahoru → k patičce.** Jemný pruh, který byl dřív za horní hlavičkou (a byl
+  odstraněn), je teď jako `.scroll::after` / `.main::after` **u patičky, stmívaný odspoda nahoru**
+  (opacity .36, maska). Plný měkký hero (`--wc-band`, 42 KB) přidán do `watercolor.css` vedle
+  brand cropu. Data (obsah) zůstávají nad washem (`z-index`), text patičky čitelný.
+
+QA: patička + SOS ve všech třech appkách (rodič/průvodce/admin), modal se otvírá a zavírá,
+mailto funguje, wash jemně stoupá od patičky. Mobil bez přetečení, konzole čistá. Dist rebuilt.

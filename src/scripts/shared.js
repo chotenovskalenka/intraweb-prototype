@@ -29,6 +29,11 @@ function avatar(c,size){
 function renderKeepFocus(){const a=document.activeElement;const pos=a&&a.selectionStart;render();const inp=document.querySelector('#content .search');if(inp){inp.focus();try{inp.setSelectionRange(pos,pos);}catch(e){}}}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),1500);}
 
+/* Patičkový SOS modal (nahlášení chyby na IS) — statické markup v *.html, přepínané přes .on */
+window.openSos=()=>{const s=document.getElementById('sosScrim');if(s)s.classList.add('on');};
+window.closeSos=()=>{const s=document.getElementById('sosScrim');if(s)s.classList.remove('on');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSos();});
+
 /* --- Stažení souboru vygenerovaného v prohlížeči (demo dokumenty a faktury) --- */
 function downloadBlob(name,data,mime){
   const b=new Blob([data],{type:mime}),u=URL.createObjectURL(b),a=document.createElement('a');
