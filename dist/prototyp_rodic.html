@@ -324,7 +324,7 @@ table.wt td.pastc{opacity:.45}
 .nc-hero img,.nd-hero img,.ph img{width:100%;height:100%;object-fit:cover}
 .newsurg{display:inline-block;font-size:10px;font-weight:700;color:var(--state-danger-ink);background:var(--state-danger-bg);border-radius:6px;padding:2px 8px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
 .newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
-.news-grid{display:grid;gap:12px}
+.news-grid{display:grid;gap:12px;margin-bottom:16px}
 /* flex sloupec (ne display:block): <button> jinak obsah vertikálně centruje – karta bez fotky
    má začínat odshora; zároveň drží patičku „Celá novinka" u spodní hrany karty */
 .newscard{display:flex;flex-direction:column;align-items:stretch;width:100%;text-align:left;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;font-family:var(--font-sans);padding:0}
@@ -386,6 +386,9 @@ table.wt td.pastc{opacity:.45}
 /* výběr měsíce v tématickém plánu – na řádku s H1 (dashhead), přisazený úplně doprava */
 .plan-head-nav{margin-left:auto}
 .plan-head-nav .dh-lbl{min-width:130px;text-align:center}
+/* stránkování seznamu neduležitých novinek */
+.novstep{justify-content:center;margin:14px 0 0}
+.novstep .dh-lbl{min-width:110px;text-align:center}
 /* „dnes" – pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
 .dh-today{display:inline-flex;align-items:center;min-height:32px;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;font-family:var(--font-sans)}
 .doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}
@@ -1171,6 +1174,24 @@ const NEWS=[
    full:'Výprava na Okoř se vydařila – počasí nám přálo, děti zvládly celou trasu a zřícenina sklidila obrovský úspěch (stejně jako svačiny od vás, děkujeme!).\n\nFotky z celého dne najdete ve složce Fotky. Pokud byste některou chtěli v plném rozlišení, napište Honzovi.'},
   {id:'nw5',t:'Brigáda na zahradě 13. 6. – hlaste se prosím v tabulce.',from:'Míša',time:'20:15',date:'25. 5.',until:13,img:NEWSFOTO.BRIGADA,
    full:'V sobotu 13. 6. od 9:00 chystáme brigádu na zahradě – čeká nás stavba nového záhonu, oprava vrbového tunelu a nátěr herních prvků.\n\nHlaste se prosím v tabulce (odkaz jsme posílali e-mailem), ať víme počty na občerstvení. Nářadí máme, hodí se ale vlastní rukavice. Děti jsou vítané – pro malé pomocníky bude připravený dětský koutek.'},
+  {id:'nw6',t:'Nový jídelníček na červen je ke stažení v appce.',from:'Míša',time:'8:10',date:'23. 5.',until:30,
+   full:'Jídelníček na červen najdete v appce v sekci Přehled → Co bude dítě jíst, případně přímo v Jídelníčku (proklik z dnešního dne).\n\nDodává ho stále Mamafood, alergeny jsou uvedené čísly dle přílohy vyhlášky.'},
+  {id:'nw7',t:'Preventivní prohlídka zoubků s dentální hygienistkou 6. 6.',from:'Táňa',time:'15:40',date:'22. 5.',until:6,
+   full:'V pátek 6. 6. dopoledne k nám přijede dentální hygienistka na krátkou preventivní prohlídku a povídání o čištění zoubků.\n\nNejde o lékařský zákrok, jen o motivační program – kdo nechce, nemusí se účastnit. Dejte prosím vědět Táně, pokud dítě účast nechcete.'},
+  {id:'nw8',t:'Kurz plavání pro předškoláky startuje 9. 6.',from:'Honza',time:'19:20',date:'21. 5.',until:9,
+   full:'Od pondělí 9. 6. začíná čtyřtýdenní kurz plavání pro předškoláky v bazénu na Šutce. Odjezd vždy v 9:00, návrat do oběda.\n\nPřihlášené děti už máme v seznamu, plavky a ručník stačí přibalit v pondělí ráno.'},
+  {id:'nw9',t:'Upozornění: dočasná uzavírka příjezdové cesty 27.–28. 5.',from:'Darča',time:'17:05',date:'20. 5.',until:28,
+   full:'Kvůli opravě vodovodu bude 27. a 28. 5. uzavřená příjezdová cesta k maringotce od hlavní silnice. Objízdná trasa vede přes cestu od hřiště.\n\nPočítejte prosím s pár minutami navíc při ranním předávání.'},
+  {id:'nw10',t:'Sbírka pro útulek pokračuje, děkujeme za darované konzervy.',from:'Míša',time:'16:00',date:'19. 5.',until:20,
+   full:'Sbírka krmiva a konzerv pro místní útulek stále běží, sběrná krabice je u vstupu. Za dosavadní příspěvky moc děkujeme, útulek už si jednu dávku vyzvedl.\n\nSbíráme až do konce června, poslední odvoz plánujeme na začátku prázdnin.'},
+  {id:'nw11',t:'Výsledky sběru starého papíru – děkujeme za 340 kg!',from:'Honza',time:'14:30',date:'16. 5.',until:25,
+   full:'Za dubnovo-květnové kolo sběru papíru jsme dohromady odevzdali 340 kg. Výtěžek půjde na doplnění výtvarných potřeb a nářadí na zahradu.\n\nDěkujeme všem, kdo nosili – zvlášť rodinám, které to táhly ve velkém.'},
+  {id:'nw12',t:'Focení na zahradní slavnost bude 20. 6. odpoledne.',from:'Táňa',time:'13:15',date:'15. 5.',until:20,
+   full:'Fotografka k nám dorazí 20. 6. odpoledne, kdy proběhne i společné focení tříd. Pokud nechcete, aby bylo vaše dítě na společné fotce, dejte prosím vědět předem.\n\nJednotlivé portréty dětí budou k objednání zvlášť, informace pošleme s předstihem.'},
+  {id:'nw13',t:'Noví průvodci: od září posílíme tým o jednoho kolegu.',from:'Darča',time:'11:50',date:'14. 5.',until:30,
+   full:'Od září k nám nastoupí nový průvodce, momentálně dokončuje kurz lesní pedagogiky. Během června se s dětmi postupně seznámí na pár návštěvách.\n\nVíc informací pošleme, jakmile bude jasný rozvrh na příští školní rok.'},
+  {id:'nw14',t:'Dětský den se povedl, foto galerie brzy ve Fotkách.',from:'Míša',time:'18:45',date:'2. 5.',until:15,
+   full:'Děkujeme všem, kdo pomohli s přípravou i průběhem dětského dne – soutěžní stanoviště, opékání i hledání pokladu se moc povedly.\n\nFotky z akce zpracováváme, album přidáme do sekce Fotky v nejbližších dnech.'},
 ];
 const ALERTS=[
   {text:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',until:5},
@@ -1348,8 +1369,12 @@ window.pickDashDay=d=>{dashDay=d;dashPickerOpen=false;dashEdit=false;render();};
    při delším provozu se jich nastřádá hodně a karty by zabíraly zbytečně moc místa.
    Rodič nevidí autora (jméno průvodce jen v průvodcovské appce). */
 function novinkaExcerpt(n){const p=(n.full||n.t).split('\n')[0];return p.length>140?p.slice(0,140)+'…':p;}
+const NOV_STRANKA=6;   // řádků na stránku u neduležitých novinek
 function renderAktuality(){
   const vsechny=NEWS.filter(n=>TODAY<=n.until), dulezite=vsechny.filter(n=>n.urgent), ostatni=vsechny.filter(n=>!n.urgent);
+  const stran=Math.max(1,Math.ceil(ostatni.length/NOV_STRANKA));
+  if(novStrana>stran)novStrana=stran;
+  const zacatek=(novStrana-1)*NOV_STRANKA, stranka=ostatni.slice(zacatek,zacatek+NOV_STRANKA);
   let h=`<div class="doch">`;
   if(dulezite.length){
     h+=`<div class="news-grid">`;
@@ -1364,11 +1389,15 @@ function renderAktuality(){
     h+=`</div>`;
   }
   if(ostatni.length){
-    h+=`<div class="tile newsbox">`+ostatni.map(n=>`<button class="newsrow" onclick="openNovinka('${n.id}')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`).join('')+`</div>`;
+    h+=`<div class="tile newsbox">`+stranka.map(n=>`<button class="newsrow" onclick="openNovinka('${n.id}')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`).join('')+`</div>`;
+    if(stran>1){
+      h+=`<div class="dh-nav novstep"><button class="dh-step" onclick="stepNovStrana(-1)" ${novStrana<=1?'disabled':''} aria-label="Předchozí strana">‹</button><span class="dh-lbl">Strana ${novStrana} z ${stran}</span><button class="dh-step" onclick="stepNovStrana(1)" ${novStrana>=stran?'disabled':''} aria-label="Další strana">›</button></div>`;
+    }
   }
   h+=`<div class="note2">Novinky píší průvodci; důležité mohou zároveň sdílet do WhatsAppu.</div>`;
   return h+`</div>`;
 }
+window.stepNovStrana=d=>{novStrana=Math.max(1,novStrana+d);render();};
 // Detail novinky – overlay do #content jako „článek": omezená čtecí šířka, hero → titulek →
 // datum → vlasová linka → text → fotky. Bez boxů (prostor a linky, ne rámečky).
 function renderNovinka(){
@@ -1971,6 +2000,7 @@ let dashPickerOpen=false;
 let pfEdit=null;   // rozpracovaná editace profilu (overlay 'profedit')
 let faktRok='2025/26', faktStav='vse';   // filtr faktur (rok/stav)
 let planIdx=9;   // vybraný měsíc v tématickém plánu (index do TEMA_MESICE; 9 = červen)
+let novStrana=1;   // stránka v seznamu ostatních (neduležitých) novinek
 
 const RENDER={prehled:renderDashboard,aktuality:renderAktuality,dochazka:renderDochazka,profil:renderProfil,platby:renderPlatby,kalendar:renderKalendar,plan:renderPlan,fotky:renderFotky,kontakty:renderKontakty};
 
