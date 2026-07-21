@@ -50,8 +50,12 @@ function renderDashboard(){
     <div class="bp"><div class="bp-k">Básnička</div><div class="bp-t">${TYDEN.basnicka.t}</div><a class="bp-link" href="${TYDEN.basnicka.url}" target="_blank" rel="noopener">▶ Poslechnout na YouTube ›</a></div>
     <div class="bp"><div class="bp-k">Písnička</div><div class="bp-t">${TYDEN.pisnicka.t}</div><a class="bp-link" href="${TYDEN.pisnicka.url}" target="_blank" rel="noopener">▶ Přehrát na YouTube ›</a></div></div>`;
   h+=`</div>`;
-  // 4) Sloupec 3 – výhled: měsíční program (bez narozenin) + aktuality školky
+  // 4) Sloupec 3 – výhled: narozeniny tento měsíc + měsíční program (bez narozenin) + aktuality školky
   h+=`<div class="dcol">`;
+  {const vekLab=n=>n===1?'rok':(n>=2&&n<=4?'roky':'let');
+   const bday=[];Object.keys(EVMAP).map(Number).sort((a,b)=>a-b).forEach(d=>{EVMAP[d].forEach(e=>{if(e.type==='naro')bday.push([d,e]);});});
+   if(bday.length){h+=`<div class="tile"><div class="ch">Narozeniny tento měsíc</div>`
+     +bday.map(([d,e])=>{const jmeno=e.t.split(' – ')[1]||e.t;return `<div class="mrow"><span class="mk2">${d}. 6.</span><span class="mv">${jmeno} · ${e.vek} ${vekLab(e.vek)}</span></div>`;}).join('')+`</div>`;}}
   {const rows=[];Object.keys(EVMAP).map(Number).sort((a,b)=>a-b).forEach(d=>{EVMAP[d].forEach(e=>{if(e.type!=='naro')rows.push([d,e.t]);});});
    // řádek: datum · čas · název aktuality (čas se odděluje z názvu, pokud v něm je „ · HH:MM")
    h+=`<div class="tile"><div class="ch"><button class="tlabbtn" onclick="go('kalendar')">Měsíční program<span class="tarr">›</span></button></div>`
