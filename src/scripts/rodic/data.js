@@ -118,6 +118,18 @@ const SOUHLASY=[
   {t:'Potvrzení od lékaře',f:'DOCX'},
 ];
 
+/* Fotky — alba na Google Drive (mimo IS), nepravidelná perioda (týden až měsíc).
+   IS jen odkazuje ven; přístup řídí sdílení na Drive (viditelné pro všechny rodiče). Nejnovější první.
+   od/do jako [den,měsíc,rok] — zobrazení řeší fmtAlbum() ve fotky.js (zkracuje shodný měsíc/rok). */
+const FOTO_ALBA=[
+  {nazev:'Červnový týden',od:[2,6,2026],do:[13,6,2026],url:'https://drive.google.com/drive/folders/1a2B3c4D5e6F7g8H9iJkLmNoPqRsTuVw'},
+  {nazev:'Výlet k rybníku',od:[18,5,2026],do:[22,5,2026],url:'https://drive.google.com/drive/folders/2b3C4d5E6f7G8h9I0jKlMnOpQrStUvXy'},
+  {nazev:'Duben v lese',od:[1,4,2026],do:[30,4,2026],url:'https://drive.google.com/drive/folders/3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ'},
+  {nazev:'Zimní dny',od:[12,1,2026],do:[6,2,2026],url:'https://drive.google.com/drive/folders/4d5E6f7G8h9I0j1KlMnOpQrStUvWxYz1'},
+  {nazev:'Vánoční čas',od:[1,12,2025],do:[19,12,2025],url:'https://drive.google.com/drive/folders/5e6F7g8H9i0J1k2LmNoPqRsTuVwXyZ12'},
+  {nazev:'Podzimní putování',od:[6,10,2025],do:[24,10,2025],url:'https://drive.google.com/drive/folders/6f7G8h9I0j1K2l3MnOpQrStUvWxYz123'},
+];
+
 /* Básnička a písnička aktuálního týdne (texty shodné s průvodcovskou appkou).
    url = proklik (YouTube / jiný odkaz) — reálné vyhledávací odkazy, žádná smyšlená videa. */
 const TYDEN={

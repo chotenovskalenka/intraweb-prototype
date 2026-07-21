@@ -417,6 +417,7 @@ table.wt td.pastc{opacity:.45}
 .ubadge.ne{color:var(--color-danger);background:rgba(176,73,47,.12)}
 .ubadge.ano{color:var(--color-success);background:rgba(60,122,78,.12)}
 .pdf{font-size:9.5px;font-weight:700;color:var(--color-danger);border:1px solid rgba(176,73,47,.4);border-radius:5px;padding:2px 5px}
+.drivelink{font-size:11.5px;font-weight:600;color:var(--color-primary);white-space:nowrap}
 
 /* profil */
 .doc{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--color-border);font-size:13px}
@@ -456,7 +457,7 @@ table.wt td.pastc{opacity:.45}
 /* tlačítko Upravit v hlavičce profilu */
 .dh-edit{background:none;border:1px solid var(--color-primary);color:var(--color-primary);font-family:var(--font-sans);font-size:13px;font-weight:600;padding:8px 15px;border-radius:9px;cursor:pointer;flex-shrink:0}
 /* dokument jako klikací řádek ke stažení (button = full width, jako .doc) */
-.doc-dl{width:100%;background:none;border:none;border-top:1px solid var(--color-border);font-family:var(--font-sans);color:var(--color-text);cursor:pointer;text-align:left}
+.doc-dl{width:100%;background:none;border:none;border-top:1px solid var(--color-border);font-family:var(--font-sans);color:var(--color-text);cursor:pointer;text-align:left;text-decoration:none}
 .doc-dl:first-of-type{border-top:none}
 .doc-dl .pdf{white-space:nowrap}
 /* editační formulář profilu */
@@ -557,15 +558,12 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
   /* Profil má hodně různě vysokých karet — mřížka by nechávala díry, proto sloupcový tok. */
   .page-cols{column-count:2;column-gap:20px}
   .page-cols>.tile{break-inside:avoid;margin:0 0 20px}
-  /* galerie Fotek širší než výchozí .gal (ta zůstává 2sl. pro fotky v detailu novinky) */
-  .gal-wide{grid-template-columns:repeat(3,1fr)}
   /* Kalendář: mřížka vlevo, vybraný den vpravo — uvnitř bílého .gcalwrap */
   .kal-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:20px;align-items:start}
   .kal-main{min-width:0}
   .kal-side{min-width:0;border-left:1px solid #f1f3f4;padding-left:18px}
   .kal-side .gday{margin-top:0}
 }
-@media (min-width:1200px){.gal-wide{grid-template-columns:repeat(4,1fr)}}
 /* Karty novinek (news-grid, newscard, nc-…, nd-…) jsou sdílené v components.css. */
 /* Detail novinky — článek: omezená čtecí šířka, na desktopu vycentrovaný, bez boxů */
 .novdet .back{display:block;width:100%;text-align:left}
@@ -1104,6 +1102,18 @@ const SOUHLASY=[
   {t:'Plná moc',f:'DOCX'},
   {t:'Souhlas s pořizováním fotografií',f:'DOCX'},
   {t:'Potvrzení od lékaře',f:'DOCX'},
+];
+
+/* Fotky — alba na Google Drive (mimo IS), nepravidelná perioda (týden až měsíc).
+   IS jen odkazuje ven; přístup řídí sdílení na Drive (viditelné pro všechny rodiče). Nejnovější první.
+   od/do jako [den,měsíc,rok] — zobrazení řeší fmtAlbum() ve fotky.js (zkracuje shodný měsíc/rok). */
+const FOTO_ALBA=[
+  {nazev:'Červnový týden',od:[2,6,2026],do:[13,6,2026],url:'https://drive.google.com/drive/folders/1a2B3c4D5e6F7g8H9iJkLmNoPqRsTuVw'},
+  {nazev:'Výlet k rybníku',od:[18,5,2026],do:[22,5,2026],url:'https://drive.google.com/drive/folders/2b3C4d5E6f7G8h9I0jKlMnOpQrStUvXy'},
+  {nazev:'Duben v lese',od:[1,4,2026],do:[30,4,2026],url:'https://drive.google.com/drive/folders/3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ'},
+  {nazev:'Zimní dny',od:[12,1,2026],do:[6,2,2026],url:'https://drive.google.com/drive/folders/4d5E6f7G8h9I0j1KlMnOpQrStUvWxYz1'},
+  {nazev:'Vánoční čas',od:[1,12,2025],do:[19,12,2025],url:'https://drive.google.com/drive/folders/5e6F7g8H9i0J1k2LmNoPqRsTuVwXyZ12'},
+  {nazev:'Podzimní putování',od:[6,10,2025],do:[24,10,2025],url:'https://drive.google.com/drive/folders/6f7G8h9I0j1K2l3MnOpQrStUvWxYz123'},
 ];
 
 /* Básnička a písnička aktuálního týdne (texty shodné s průvodcovskou appkou).
@@ -1692,12 +1702,18 @@ function renderPlan(){
 window.stepPlan=d=>{planIdx=Math.max(0,Math.min(TEMA_MESICE.length-1,planIdx+d));render();};
 </script>
 <script>
-/* SCREEN: RODIC_FOTKY — galerie ze školky. Desktop: širší mřížka (3–4 sloupce). */
-const FOTKY=['var(--photo-1)','var(--photo-2)','var(--photo-3)','var(--photo-4)','var(--photo-5)','var(--photo-2)'];
+/* SCREEN: RODIC_FOTKY — fotky žijí na Google Drive (mimo IS), sem se jen odkazuje.
+   Jedno album = jeden časový úsek (nepravidelně týden až měsíc), FOTO_ALBA v data.js. Nejnovější první. */
+function fmtAlbum(a){
+  const [d1,m1,y1]=a.od,[d2,m2,y2]=a.do;
+  if(m1===m2&&y1===y2)return `${d1}.–${d2}. ${m1}. ${y1}`;
+  if(y1===y2)return `${d1}. ${m1}. – ${d2}. ${m2}. ${y1}`;
+  return `${d1}. ${m1}. ${y1} – ${d2}. ${m2}. ${y2}`;
+}
 function renderFotky(){
-  let h=`<div class="doch">`;
-  h+=`<div class="gal gal-wide">`+FOTKY.map(c=>`<div class="ph" style="background:${c}">foto</div>`).join('')+`</div>`;
-  h+=`<div class="note2">Galerie ze školky. Fotky vkládají průvodci; v ostré verzi reálné fotky se souhlasem rodičů, viditelné jen rodičům dané třídy.</div>`;
+  let h=`<div class="doch"><div class="tile">`;
+  h+=FOTO_ALBA.map(a=>`<a class="doc doc-dl" href="${a.url}" target="_blank" rel="noopener"><span>${a.nazev}<span class="dt2"> · ${fmtAlbum(a)}</span></span><span class="drivelink">Otevřít na Drive ↗</span></a>`).join('');
+  h+=`</div><div class="note2">Fotky ze školky jsou v albech na Google Drive. Alba zakládají průvodci; odkaz je viditelný pro všechny rodiče.</div>`;
   return h+`</div>`;
 }
 </script>

@@ -62,6 +62,7 @@
 .ubadge.ne{color:var(--color-danger);background:rgba(176,73,47,.12)}
 .ubadge.ano{color:var(--color-success);background:rgba(60,122,78,.12)}
 .pdf{font-size:9.5px;font-weight:700;color:var(--color-danger);border:1px solid rgba(176,73,47,.4);border-radius:5px;padding:2px 5px}
+.drivelink{font-size:11.5px;font-weight:600;color:var(--color-primary);white-space:nowrap}
 
 /* profil */
 .doc{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--color-border);font-size:13px}
@@ -101,7 +102,7 @@
 /* tlačítko Upravit v hlavičce profilu */
 .dh-edit{background:none;border:1px solid var(--color-primary);color:var(--color-primary);font-family:var(--font-sans);font-size:13px;font-weight:600;padding:8px 15px;border-radius:9px;cursor:pointer;flex-shrink:0}
 /* dokument jako klikací řádek ke stažení (button = full width, jako .doc) */
-.doc-dl{width:100%;background:none;border:none;border-top:1px solid var(--color-border);font-family:var(--font-sans);color:var(--color-text);cursor:pointer;text-align:left}
+.doc-dl{width:100%;background:none;border:none;border-top:1px solid var(--color-border);font-family:var(--font-sans);color:var(--color-text);cursor:pointer;text-align:left;text-decoration:none}
 .doc-dl:first-of-type{border-top:none}
 .doc-dl .pdf{white-space:nowrap}
 /* editační formulář profilu */
@@ -202,15 +203,12 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
   /* Profil má hodně různě vysokých karet — mřížka by nechávala díry, proto sloupcový tok. */
   .page-cols{column-count:2;column-gap:20px}
   .page-cols>.tile{break-inside:avoid;margin:0 0 20px}
-  /* galerie Fotek širší než výchozí .gal (ta zůstává 2sl. pro fotky v detailu novinky) */
-  .gal-wide{grid-template-columns:repeat(3,1fr)}
   /* Kalendář: mřížka vlevo, vybraný den vpravo — uvnitř bílého .gcalwrap */
   .kal-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:20px;align-items:start}
   .kal-main{min-width:0}
   .kal-side{min-width:0;border-left:1px solid #f1f3f4;padding-left:18px}
   .kal-side .gday{margin-top:0}
 }
-@media (min-width:1200px){.gal-wide{grid-template-columns:repeat(4,1fr)}}
 /* Karty novinek (news-grid, newscard, nc-…, nd-…) jsou sdílené v components.css. */
 /* Detail novinky — článek: omezená čtecí šířka, na desktopu vycentrovaný, bez boxů */
 .novdet .back{display:block;width:100%;text-align:left}
