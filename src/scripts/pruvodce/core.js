@@ -26,7 +26,11 @@ function renderDrawer(){
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">Vhaaji<small>průvodcovská appka</small></span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${s[2]}</span>${s[1]}</button>`).join('');
 }
 function render(){
-  document.getElementById('ttl').textContent=(section==='prehled'||section==='dochazka'||section==='novinky')?'':TITLES[section];
+  // Nadpis sekce (H1) do topbaru — v řádku s rolí, ne pod ním v obsahu.
+  document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
+    : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
+    : `<h1 class="dh-t">${TITLES[section]}</h1>`;
+  document.getElementById('ttl').textContent='';
   renderDrawer();
   document.getElementById('content').innerHTML=RENDER[section]();
 }

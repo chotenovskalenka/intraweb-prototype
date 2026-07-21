@@ -6,7 +6,7 @@ let novForm=null; // rozepsaná nová novinka (modal formuláře)
 function waLink(n){return 'https://wa.me/?text='+encodeURIComponent(n.t+'\n\n'+(n.full||''));}
 function novExcerpt(n){const p=(n.full||n.t).split('\n')[0];return p.length>140?p.slice(0,140)+'…':p;}
 function renderNovinky(){
-  let h=`<div class="doch"><div class="doch-head"><h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button></div>`;
+  let h=`<div class="doch">`;
   h+=`<div class="news-grid">`;
   NEWS.forEach(n=>{
     h+=`<div class="newscard${n.urgent?' urgent':''}" onclick="openNov('${n.id}')">`;
@@ -53,7 +53,7 @@ window.closeNovForm=()=>{novForm=null;renderModalRoot();};
 window.setNovF=(k,v)=>{novForm[k]=v;};
 window.setNovUntil=v=>{novForm.until=v?+v.split('-')[2]:30;};
 window.toggleNovUrg=()=>{novForm.urgent=!novForm.urgent;renderModalRoot();};
-window.setNovImg=inp=>{if(inp.files&&inp.files[0]){novForm.img='#E7E0CE';renderModalRoot();showToast('Fotka přidána ✓');}};
+window.setNovImg=inp=>{if(inp.files&&inp.files[0]){novForm.img='var(--photo-5)';renderModalRoot();showToast('Fotka přidána ✓');}};
 window.saveNov=()=>{const f=novForm;
   if(!f.t.trim()&&!f.full.trim()){showToast('Napiš text novinky');return;}
   NEWS.unshift({id:'nw'+Date.now(),t:f.t.trim()||f.full.trim().split('\n')[0].slice(0,80),full:f.full.trim()||f.t.trim(),

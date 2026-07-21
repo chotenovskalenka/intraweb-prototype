@@ -111,7 +111,7 @@ const OBDOBI=[
 ];
 let zapisUid=20;
 let ZAPISY=[
-  {id:'z1',dt:20250910,datum:'10. 9. 2025',typ:'porada',skolka:'Vhaaji',nazev:'Zahájení školního roku',ucastnici:['Táňa','Helča','vedení'],odstavce:[
+  {id:'z1',dt:20250910,datum:'10. 9. 2025',typ:'porada',skolka:'Vhaaji',nazev:'Zahájení školního roku',ucastnici:['Táňa','Darča','vedení'],odstavce:[
     {text:'Adaptace nových dětí proběhla klidně, dvě děti potřebují ještě delší doprovod rodičů při ranním předávání.',stitky:['pedagogika']},
     {text:'Zkontrolovány lékárničky ve všech maringotkách, doplněny náplasti a dezinfekce; evidence úrazů založena na nový rok.',stitky:['hygiena','bezpečnost']},
   ]},
@@ -119,7 +119,7 @@ let ZAPISY=[
     {text:'Revize elektrických spotřebičů proběhla, jeden vařič vyřazen z provozu, objednán nový.',stitky:['bezpečnost','provoz']},
     {text:'Nová posila do týmu nastupuje od listopadu — zajistit zaškolení a rozšíření o BOZP.',stitky:['personál']},
   ]},
-  {id:'z3',dt:20251114,datum:'14. 11. 2025',typ:'evaluace',skolka:'Vhaaji',nazev:'Čtvrtletní evaluace pedagogů',ucastnici:['Táňa','Helča','Honza'],odstavce:[
+  {id:'z3',dt:20251114,datum:'14. 11. 2025',typ:'evaluace',skolka:'Vhaaji',nazev:'Čtvrtletní evaluace pedagogů',ucastnici:['Táňa','Darča','Honza'],odstavce:[
     {text:'Reflexe adaptačního období — děti dobře zvládají rytmus dne, ranní kruh se osvědčil.',stitky:['pedagogika']},
     {text:'Doporučení: v chladném počasí zařadit více pohybových aktivit a zkrátit statické bloky.',stitky:['pedagogika','provoz']},
   ]},
@@ -135,7 +135,7 @@ let ZAPISY=[
     {text:'Hodnocení individuálních plánů předškoláků — tři děti připravené na zápis do školy.',stitky:['pedagogika']},
     {text:'Personální stabilita — bez fluktuace, tým sehraný, rozvrh služeb funguje.',stitky:['personál']},
   ]},
-  {id:'z7',dt:20260318,datum:'18. 3. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Příprava na inspekci ČŠI',ucastnici:['Táňa','Helča','vedení'],odstavce:[
+  {id:'z7',dt:20260318,datum:'18. 3. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Příprava na inspekci ČŠI',ucastnici:['Táňa','Darča','vedení'],odstavce:[
     {text:'Kompletace dokumentace k inspekci — třídnice, evidence úrazů, podepsané souhlasy GDPR.',stitky:['inspekce','provoz']},
     {text:'Kontrola pitného režimu a skladování potravin, teploty lednic zaznamenávány denně.',stitky:['hygiena','inspekce']},
   ]},

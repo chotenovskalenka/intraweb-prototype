@@ -3,16 +3,18 @@
    Sloupec 1 docházka (počty, akce, kdo nepřijde, zdravotní/provozní poznámky) · sloupec 2 dnešek
    (program, básnička, akce) · sloupec 3 tým (průvodci dnes). */
 const PDOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
-function renderPrehled(){
-  const c=counts();
-  // hlavička: velký datumový nadpis + kdo dnes slouží/otevírá (odvozeno z GUIDESHIFT)
+// Hlavička dashboardu (datum + kdo dnes slouží) — renderuje se do topbaru (viz core.js).
+function renderPrehledHead(){
   const den=PDOWFULL[wd(TODAYD)];
   const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
   const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
+  return `<h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. června 2026</h1><div class="dh-sub">Dnes ve školce · ${todays.length?todays.map(x=>`${x.g.n}${opener&&x.i===opener.i?' (otevírá)':''}`).join(' · '):'nikdo nemá službu'}</div>`;
+}
+function renderPrehled(){
+  const c=counts();
+  const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
   const usIdx=todays.some(x=>x.i===uspavaToday)?uspavaToday:(todays[0]?todays[0].i:-1);
-  let h=`<div class="dash-head"><h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. června 2026</h1><div class="dh-sub">Dnes ve školce · ${todays.length?todays.map(x=>`${x.g.n}${opener&&x.i===opener.i?' (otevírá)':''}`).join(' · '):'nikdo nemá službu'}</div></div>`;
-
-  h+=`<div class="dash3">`;
+  let h=`<div class="dash3">`;
 
   // ── Sloupec 1: docházka (počty + akce + kdo nepřijde) ──
   h+=`<div class="dcol">`;
