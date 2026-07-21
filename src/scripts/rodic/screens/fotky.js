@@ -9,6 +9,5 @@ function fmtAlbum(a){
 function renderFotky(){
   let h=`<div class="doch"><div class="tile">`;
   h+=FOTO_ALBA.map(a=>`<a class="doc doc-dl" href="${a.url}" target="_blank" rel="noopener"><span>${a.nazev}<span class="dt2"> · ${fmtAlbum(a)}</span></span><span class="drivelink">Otevřít na Drive ↗</span></a>`).join('');
-  h+=`</div><div class="note2">Fotky ze školky jsou v albech na Google Drive. Alba zakládají průvodci; odkaz je viditelný pro všechny rodiče.</div>`;
-  return h+`</div>`;
+  return h+`</div></div>`;
 }
