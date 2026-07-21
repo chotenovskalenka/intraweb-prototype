@@ -1798,18 +1798,17 @@ window.kalStep=(dm,dy)=>{kalM+=dm;if(kalM>11){kalM=0;kalY++;}if(kalM<0){kalM=11;
 <script>
 /* SCREEN: RODIC_JIDELNICEK – celý jídelníček, navigace po týdnech (JIDELNICEK v data.js).
    H1 + stepper týdnů se renderuje do topbaru (core.js renderHead, stejný vzor jako Tématický plán).
-   Desktop: sloupcový tok karet dní (.page-cols), stejně jako Profil dítěte. */
+   Řádkově: dny pod sebou v chronologickém pořadí (ne mřížka/sloupce – ty řadí dny nepřehledně). */
 function jidLabel(){const t=JIDELNICEK[jidTyden];return `${t.od}.–${t.do}. 6.`;}
 function renderJidelnicek(){
   const t=JIDELNICEK[jidTyden];
-  let h=`<div class="doch"><div class="page-cols">`;
+  let h=`<div class="doch">`;
   t.dny.forEach((den,i)=>{
     const d=t.od+i, dnes=d===TODAY;
     h+=`<div class="tile"><div class="tlab">${DOW[wd(d)]} ${d}. 6.${dnes?' · dnes':''}</div>`
       +den.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')
       +`</div>`;
   });
-  h+=`</div>`;
   const vsechnyDny=t.dny.flat();
   h+=`<div class="tile"><div class="tlab">Stravné</div><div class="np"><span>Dopolední svačina</span><b>20 Kč</b></div><div class="np"><span>Oběd</span><b>80 Kč</b></div><div class="np"><span>Odpolední svačina</span><b>15 Kč</b></div></div>`;
   h+=alergenyLegenda(vsechnyDny);
