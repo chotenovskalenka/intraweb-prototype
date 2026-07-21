@@ -8,7 +8,7 @@ Simulovaný čas je **středa 3. 6. 2026, 10:00**; omluvit lze do **20:00 předc
 
 ---
 
-## Flow 1 — Průvodce zapisuje docházku
+## Flow 1 – Průvodce zapisuje docházku
 
 Průvodce otevře appku a rovnou vidí dnešek; do denního rosteru je jedním klepnutím. Zdroj chování: `src/scripts/pruvodce/screens/prehled.js` (dashboard), `src/scripts/pruvodce/screens/dochazka.js` (roster). Počty se odvozují ze stejných funkcí jako docházka (`counts()`), nejsou natvrdo.
 
@@ -29,13 +29,13 @@ flowchart TD
   classDef dec fill:#F0E4CE,stroke:#B07D3A,color:#6f4e1e;
 ```
 
-**Odloženo z Flow 1 (vědomě):** offline režim a stavy synchronizace (žádná fronta změn, žádný indikátor „bez signálu“) — potvrzení uložení je jen toast. Třídnice / zápis dne (čtení a doplňování zápisů z předchozího dne na dashboardu) je budoucí objekt, zatím není ani placeholder. Viz decision-log, fáze 2.
+**Odloženo z Flow 1 (vědomě):** offline režim a stavy synchronizace (žádná fronta změn, žádný indikátor „bez signálu“) – potvrzení uložení je jen toast. Třídnice / zápis dne (čtení a doplňování zápisů z předchozího dne na dashboardu) je budoucí objekt, zatím není ani placeholder. Viz decision-log, fáze 2.
 
 Ověřovací otázky briefu: průvodce po otevření vidí počty bez jediného kliku · do docházky je jedním klepnutím · je jasné, kdo nepřijde a proč.
 
 ---
 
-## Flow 2 — Rodič omlouvá dítě
+## Flow 2 – Rodič omlouvá dítě
 
 Z dashboardu jedním klikem. Deadline i vznik náhrady jsou vysvětlené před odesláním a znovu na potvrzení.
 
@@ -59,19 +59,19 @@ flowchart TD
   classDef bad fill:#F4E1D9,stroke:#B0492F,color:#7c3320;
 ```
 
-**Pravidlo:** Vícedenní omluvenka počítá náhradu **za každý den zvlášť** — včasné dny → `dostupna`, dny po deadlinu → `nevznikla`. Stav celé omluvenky se řídí prvním dnem (`vcas` / `po-deadlinu`).
+**Pravidlo:** Vícedenní omluvenka počítá náhradu **za každý den zvlášť** – včasné dny → `dostupna`, dny po deadlinu → `nevznikla`. Stav celé omluvenky se řídí prvním dnem (`vcas` / `po-deadlinu`).
 
 Ověřovací otázky briefu: rodič funkci nehledá v menu (je na dashboardu) · rozumí deadlinu (box před odesláním) · ví, jestli vznikla náhrada (potvrzení) · ví, co bude dál.
 
 ---
 
-## Flow 3 — Rodič kontroluje náhrady
+## Flow 3 – Rodič kontroluje náhrady
 
-Zůstatek a seznam na jednom místě — bez dohledávání na faktuře nebo ve zprávách.
+Zůstatek a seznam na jednom místě – bez dohledávání na faktuře nebo ve zprávách.
 
 ```mermaid
 flowchart TD
-  A([Dashboard — dlaždice Náhrady]):::term --> C
+  A([Dashboard – dlaždice Náhrady]):::term --> C
   B([Drawer → „Docházka a náhrady“]):::term --> C
   C["Zůstatek dostupných náhrad<br/>(odvozený z pole · + nejbližší expirace)"]:::hi
   C --> D["Seznam náhrad<br/>(původ · vznik · expirace 30. 6. · stav)"]
@@ -91,7 +91,7 @@ Ověřovací otázky briefu: rodič chápe počet dostupných náhrad · rozumí
 
 ## Stavové modely objektů
 
-Stavy, ze kterých později vzniknou badge, potvrzení a empty states. Plánování/čerpání náhrady (výběr náhradního dne) je zatím mimo rozsah — stav `naplanovana` je jen v seed datech.
+Stavy, ze kterých později vzniknou badge, potvrzení a empty states. Plánování/čerpání náhrady (výběr náhradního dne) je zatím mimo rozsah – stav `naplanovana` je jen v seed datech.
 
 ### Omluvenka
 
@@ -122,15 +122,15 @@ stateDiagram-v2
   expirovana --> [*]
 ```
 
-Do zůstatku se počítá jen stav `dostupna` — počet se všude odvozuje z pole (`dostupne()`), nikde není uložený jako číslo.
+Do zůstatku se počítá jen stav `dostupna` – počet se všude odvozuje z pole (`dostupne()`), nikde není uložený jako číslo.
 
 Seed data: Eliška pokrývá všech 5 stavů náhrad + 2 omluvenky (budoucí `vcas`, minulá `po-deadlinu`); Matěj 1 dostupnou.
 
 ---
 
-## Flow 4 — Vedení posílá novinku (aktualitu) rodičům
+## Flow 4 – Vedení posílá novinku (aktualitu) rodičům
 
-Vedení vytvoří novinku a určí příjemce (školka → volitelně třídy). Bez příjemců **nelze odeslat** — tlačítko je neaktivní a doplněné vysvětlením; koncept jde uložit i bez nich. Po odeslání je u novinky vidět, komu odešla. Zdroj chování: `src/scripts/admin/screens/aktuality.js`, seed `AKTUALITY` v `src/scripts/admin/data.js`. Počty rodin se odvozují z obsazenosti (`obsazeno(s)` / `t.obs`), nejsou natvrdo.
+Vedení vytvoří novinku a určí příjemce (školka → volitelně třídy). Bez příjemců **nelze odeslat** – tlačítko je neaktivní a doplněné vysvětlením; koncept jde uložit i bez nich. Po odeslání je u novinky vidět, komu odešla. Zdroj chování: `src/scripts/admin/screens/aktuality.js`, seed `AKTUALITY` v `src/scripts/admin/data.js`. Počty rodin se odvozují z obsazenosti (`obsazeno(s)` / `t.obs`), nejsou natvrdo.
 
 ```mermaid
 flowchart TD
@@ -141,7 +141,7 @@ flowchart TD
   E -->|ne| F["Odeslat neaktivní<br/>„Bez určených příjemců nelze odeslat“"]
   F --> G[/"Uložit koncept<br/>(lze i bez příjemců)"/]
   F --> D
-  E -->|ano| H["Náhled příjemců<br/>„odešle se rodičům: Vhaaji — všichni (25 rodin)“"]:::hi
+  E -->|ano| H["Náhled příjemců<br/>„odešle se rodičům: Vhaaji – všichni (25 rodin)“"]:::hi
   H --> I[/"Odeslat · toast „Novinka odeslána“"/]
   I --> J([Novinka v seznamu · stav „odeslaná“<br/>s výčtem příjemců]):::term
   G --> K([Koncept v seznamu]):::term
@@ -151,13 +151,13 @@ flowchart TD
   classDef dec fill:#F0E4CE,stroke:#B07D3A,color:#6f4e1e;
 ```
 
-Stavy novinky a povinnost příjemců jsou popsané v `docs/objekty-systemu.md` (objekt **Novinka**). Propsání do rodičovské appky je simulované jen shodou seed dat — appky nesdílejí data.
+Stavy novinky a povinnost příjemců jsou popsané v `docs/objekty-systemu.md` (objekt **Novinka**). Propsání do rodičovské appky je simulované jen shodou seed dat – appky nesdílejí data.
 
 ---
 
-## Flow 5 — Vedení hledá podklady pro inspekci
+## Flow 5 – Vedení hledá podklady pro inspekci
 
-Vedení potřebuje z porad a evaluací rychle najít konkrétní podklad k tématu (např. hygiena) za dané období — a mít z toho použitelný tištěný/PDF výstup. Jádrem je **filtrovaný výpis**: štítek + období vypíše jen relevantní odstavce napříč zápisy, ne celé dlouhé zápisy. Zdroj chování: `src/scripts/admin/screens/porady.js`, seed `ZAPISY` v `src/scripts/admin/data.js`. Výpis se skládá odvozeně z odstavců, nikde není uložený.
+Vedení potřebuje z porad a evaluací rychle najít konkrétní podklad k tématu (např. hygiena) za dané období – a mít z toho použitelný tištěný/PDF výstup. Jádrem je **filtrovaný výpis**: štítek + období vypíše jen relevantní odstavce napříč zápisy, ne celé dlouhé zápisy. Zdroj chování: `src/scripts/admin/screens/porady.js`, seed `ZAPISY` v `src/scripts/admin/data.js`. Výpis se skládá odvozeně z odstavců, nikde není uložený.
 
 ```mermaid
 flowchart TD

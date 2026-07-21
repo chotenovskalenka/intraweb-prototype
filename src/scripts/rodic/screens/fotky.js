@@ -1,4 +1,4 @@
-/* SCREEN: RODIC_FOTKY — fotky žijí na Google Drive (mimo IS), sem se jen odkazuje.
+/* SCREEN: RODIC_FOTKY – fotky žijí na Google Drive (mimo IS), sem se jen odkazuje.
    Jedno album = jeden časový úsek (nepravidelně týden až měsíc), FOTO_ALBA v data.js. Nejnovější první. */
 function fmtAlbum(a){
   const [d1,m1,y1]=a.od,[d2,m2,y2]=a.do;

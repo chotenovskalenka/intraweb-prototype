@@ -1,4 +1,4 @@
-/* SCREEN: RODIC_PREHLED — „soupis dne" dle priorit rodiče:
+/* SCREEN: RODIC_PREHLED – „soupis dne" dle priorit rodiče:
    1) faktura po splatnosti  2) docházka (stav, spinkání, poznámka) + nahlášení absence
    3) dnešek (program, jídlo, básnička)  4) výhled (měsíční program, aktuality školky).
    Sloupec 1 nese i Průvodce (pod docházkou). Desktop: .dash3 grid, mobil: stoh. */
@@ -9,14 +9,14 @@ function renderDashboard(){
   // Hlavička (avatar + jméno/datum + listování ‹ ▾ ›) se vykresluje do topbaru na úroveň přepínače dětí
   // → renderDashHead() volané z renderHead(). Tady začínáme rovnou fakturou.
   let h='';
-  // 1) Faktury po splatnosti — plná šířka, nejvyšší priorita (souhrn shodný s Platbami)
+  // 1) Faktury po splatnosti – plná šířka, nejvyšší priorita (souhrn shodný s Platbami)
   if(unpaid.length){
     const dluh=unpaid.reduce((s,f)=>s+(f.cena-f.sleva),0);
     const lbl=unpaid.length===1?`Faktura po splatnosti · ${unpaid[0].obdobi}`:`${unpaid.length} ${unpaid.length<5?'faktury':'faktur'} po splatnosti`;
     h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>${lbl}</span><b>${kc(dluh)} Kč ›</b></div></button>`;
   }
   h+=`<div class="dash3">`;
-  // 2) Sloupec 1 — docházka + průvodci
+  // 2) Sloupec 1 – docházka + průvodci
   h+=`<div class="dcol"><div class="tile"><div class="ch">Docházka</div>`;
   h+=`<div class="doch-line"><span class="doch-code" style="color:${CODES[td][1]}">${CODES[td][0]}</span>${today?'<span class="doch-day">dnes</span>':''}</div>`;
   if(!absent){const us=guides.find(g=>g.uspava);
@@ -25,19 +25,19 @@ function renderDashboard(){
   if(c.obed&&c.obed[dashDay]!==undefined&&absent)h+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
   if(today&&td!=='NE')h+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
   else if(!today&&editable(dashDay)&&!absent)h+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
-  else if(!today&&!editable(dashDay))h+=`<div class="edlock">Proběhlý den — jen ke čtení</div>`;
+  else if(!today&&!editable(dashDay))h+=`<div class="edlock">Proběhlý den – jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)h+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
   h+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
   h+=`<div class="tile"><div class="ch">Průvodci dnes</div><div class="glist">`+GUIDES_TODAY.map(i=>{const g=guides[i];return `<button class="grow" onclick="go('kontakty')">${avatar(g,30)}<span class="grow-n">${g.n}${g.uspava?' <span class="moon">☾</span>':''}</span><span class="grow-h">${g.h||''}</span></button>`;}).join('')+`</div>`;
   if(guides.some(g=>g.uspava))h+=`<div class="doch-note" style="margin-top:8px">☾ = dnes uspává</div>`;
   h+=`</div>`;
-  // Aktuality školky — sloupec 1, pod Průvodci (na desktopu pod nimi; na mobilu ve stohu hned za Průvodci)
+  // Aktuality školky – sloupec 1, pod Průvodci (na desktopu pod nimi; na mobilu ve stohu hned za Průvodci)
   {const nws=NEWS.filter(n=>TODAY<=n.until).slice(0,5);
    if(nws.length){h+=`<div class="tile newsbox"><div class="ch"><button class="tlabbtn" onclick="go('aktuality')">Novinky ze školky<span class="tarr">›</span></button></div>`;
      nws.forEach(n=>{h+=`<button class="newsrow" onclick="go('aktuality')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`;});
      h+=`<button class="newsmore" onclick="go('aktuality')">Všechny novinky ›</button></div>`;}}
   h+=`</div>`;
-  // 3) Sloupec 2 — dnešek: program, jídlo, básnička+písnička
+  // 3) Sloupec 2 – dnešek: program, jídlo, básnička+písnička
   h+=`<div class="dcol">`;
   h+=`<div class="tile"><div class="ch">Co bude ${c.n} dělat</div>`;
   h+=`<div class="prog-day">${DENNI[wd(dashDay)]||'Volný program'}</div>`;
@@ -50,7 +50,7 @@ function renderDashboard(){
     <div class="bp"><div class="bp-k">Básnička</div><div class="bp-t">${TYDEN.basnicka.t}</div><a class="bp-link" href="${TYDEN.basnicka.url}" target="_blank" rel="noopener">▶ Poslechnout na YouTube ›</a></div>
     <div class="bp"><div class="bp-k">Písnička</div><div class="bp-t">${TYDEN.pisnicka.t}</div><a class="bp-link" href="${TYDEN.pisnicka.url}" target="_blank" rel="noopener">▶ Přehrát na YouTube ›</a></div></div>`;
   h+=`</div>`;
-  // 4) Sloupec 3 — výhled: měsíční program (bez narozenin) + aktuality školky
+  // 4) Sloupec 3 – výhled: měsíční program (bez narozenin) + aktuality školky
   h+=`<div class="dcol">`;
   {const rows=[];Object.keys(EVMAP).map(Number).sort((a,b)=>a-b).forEach(d=>{EVMAP[d].forEach(e=>{if(e.type!=='naro')rows.push([d,e.t]);});});
    // řádek: datum · čas · název aktuality (čas se odděluje z názvu, pokud v něm je „ · HH:MM")

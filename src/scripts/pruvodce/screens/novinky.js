@@ -1,6 +1,6 @@
-/* SCREEN: PRUVODCE_NOVINKY — novinky pro rodiče: seznam s autorem a časem,
+/* SCREEN: PRUVODCE_NOVINKY – novinky pro rodiče: seznam s autorem a časem,
    detail s fotkami (modal), sdílení do WhatsApp skupiny, formulář nové novinky.
-   Rodičovská appka ukazuje tytéž novinky bez autora (appky nesdílejí data — jen shodný seed). */
+   Rodičovská appka ukazuje tytéž novinky bez autora (appky nesdílejí data – jen shodný seed). */
 let novM=null;    // id novinky otevřené v detailu (modal)
 let novForm=null; // rozepsaná nová novinka (modal formuláře)
 function waLink(n){return 'https://wa.me/?text='+encodeURIComponent(n.t+'\n\n'+(n.full||''));}

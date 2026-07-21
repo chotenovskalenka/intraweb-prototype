@@ -1,4 +1,4 @@
-/* SCREENS: ADMIN — obrazovkové styly (dashboard vedení). Skládá z existujících komponent
+/* SCREENS: ADMIN – obrazovkové styly (dashboard vedení). Skládá z existujících komponent
    (.tile, .tlab, .bdg, .note2); nové jen tam, kde není co znovupoužít. */
 
 .dash-head{font-size:13px;color:var(--color-text-muted);margin:0 2px 14px}
@@ -74,7 +74,7 @@
 .bdg.sent{color:var(--state-brand-ink);background:var(--state-brand-bg)}
 .bdg.arch{color:var(--state-muted-ink);background:var(--state-muted-bg)}
 
-/* aktuality — seznam */
+/* aktuality – seznam */
 .ak-item{padding:14px 16px}
 .ak-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .ak-date{margin-left:auto;font-size:12.5px;color:var(--color-text-muted)}
@@ -89,7 +89,7 @@
 .btn-s.primary{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .btn-s:disabled{opacity:.4;cursor:not-allowed}
 
-/* aktuality — formulář */
+/* aktuality – formulář */
 .rec-sk{margin-bottom:11px}
 .rec-sk:last-child{margin-bottom:0}
 .rec-nm{font-size:13.5px;font-weight:600;color:var(--color-primary-strong);margin-bottom:6px}
@@ -99,26 +99,26 @@
 .ak-warn{font-size:13px;color:var(--color-danger);background:rgba(176,73,47,.08);border:1px solid rgba(176,73,47,.20);border-radius:10px;padding:10px 12px;line-height:1.45}
 .btn-primary:disabled{opacity:.45;cursor:not-allowed}
 
-/* porady — štítek chip */
+/* porady – štítek chip */
 .stitek{display:inline-block;font-size:11px;font-weight:500;color:var(--color-text-muted);background:var(--color-surface-2);border:1px solid var(--color-border);padding:2px 9px;border-radius:999px;margin:0 5px 5px 0}
 .stitek.hi{color:var(--color-primary);background:rgba(43,112,89,.12);border-color:rgba(43,112,89,.22);font-weight:600}
 .za-tags{margin-top:9px}
 
-/* porady — seznam zápisů */
+/* porady – seznam zápisů */
 .za-item{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
 .za-sk{font-size:12.5px;color:var(--color-text-muted)}
 .za-nz{font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong);margin-top:8px}
 .za-nz-lg{font-size:20px}
 .za-ucast{font-size:12.5px;color:var(--color-text-muted);margin-top:4px}
 
-/* porady — detail odstavce */
+/* porady – detail odstavce */
 .odst{border-top:1px solid var(--color-border);padding:13px 0}
 .odst:first-of-type{border-top:none;margin-top:10px}
 .odst-tx{font-size:14.5px;color:var(--color-text);line-height:1.55}
 .odst-chips{margin-top:9px}
 .odst-chips button{font-size:11.5px;padding:5px 10px}
 
-/* porady — filtrovaný výpis */
+/* porady – filtrovaný výpis */
 .vypis-head{margin:2px 2px 12px}
 .vh-t{font-family:var(--font-serif);font-size:18px;color:var(--color-primary-strong)}
 .vh-s{font-size:12.5px;color:var(--color-text-muted);margin-top:2px}
@@ -131,7 +131,7 @@
   .caps,.nh-grid{grid-template-columns:1fr}
 }
 
-/* tisk / PDF export výpisu — skryje shell a ovládací prvky, nechá jen obsah */
+/* tisk / PDF export výpisu – skryje shell a ovládací prvky, nechá jen obsah */
 @media print{
   .sidebar,.topbar-a,.switch,.no-print,.toast{display:none!important}
   .print-only{display:block}

@@ -1,4 +1,4 @@
-/* Design tokens — sémantická vrstva. Hodnoty odvozené z vhaaji.cz (fáze 4.2, redesign).
+/* Design tokens – sémantická vrstva. Hodnoty odvozené z vhaaji.cz (fáze 4.2, redesign).
    Viz docs/design-system.md. Komponenty čerpají z tokenů, nikdy natvrdo. */
 :root{
   /* Povrchy / text */
@@ -11,9 +11,9 @@
   /* Značkové barvy */
   --color-primary:#2B7059;
   --color-primary-strong:#1F5344;
-  --color-accent:#C8BC85;          /* okrová — výplň (tmavý text) */
+  --color-accent:#C8BC85;          /* okrová – výplň (tmavý text) */
   --color-accent-ink:#6F5F1C;      /* okrová jako text (AA na světlé) */
-  --color-accent-soft:#C99C93;     /* tlumená růžová — dekor */
+  --color-accent-soft:#C99C93;     /* tlumená růžová – dekor */
   --color-info:#496D7E;
   --color-on-primary:#F4EEDF;      /* text/prvky na primární ploše */
   /* Ohraničení / stavy */
@@ -21,19 +21,19 @@
   --color-border-strong:rgba(31,42,46,.16);
   --color-danger:#B0492F;
   --color-success:#387349;
-  /* UI tinty (směr whitespace + barva) — světlé kategorie/stavy */
+  /* UI tinty (směr whitespace + barva) – světlé kategorie/stavy */
   --tint-green:#E3EDE7;
   --tint-rose:#F1E1DC;
   --tint-ochre:#F1EAD2;
   --tint-blue:#DEE7EA;
-  /* Placeholdery fotek (galerie, úvodní fotky novinek) — v ostré verzi je nahradí reálné snímky.
+  /* Placeholdery fotek (galerie, úvodní fotky novinek) – v ostré verzi je nahradí reálné snímky.
      Tlumené odstíny z akvarelové palety, aby prototyp nepůsobil jako rozbitý obrázek. */
   --photo-1:#E3D9C6;
   --photo-2:#DCE3D6;
   --photo-3:#D8E0E4;
   --photo-4:#E8DCD2;
   --photo-5:#E7E0CE;
-  /* Stavová paleta — jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
+  /* Stavová paleta – jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
      Každý stav má -ink (text) a -bg (světlá výplň). */
   --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.11);
   --state-info-ink:var(--color-info);        --state-info-bg:rgba(73,109,126,.10);
@@ -43,11 +43,11 @@
   --state-muted-ink:var(--color-text-hint);  --state-muted-bg:rgba(31,42,46,.07);
   --state-brand-ink:var(--color-primary);    --state-brand-bg:rgba(43,112,89,.12);
   --radius-md:14px;
-  /* Typografie — nadpisy Bricolage Grotesque, tělo/UI Inter (univerzální pro všechny 4 školky).
+  /* Typografie – nadpisy Bricolage Grotesque, tělo/UI Inter (univerzální pro všechny 4 školky).
      Token --font-serif drží nadpisový font (historický název; hodnota je bezpatková). */
   --font-serif:"Bricolage Grotesque",system-ui,sans-serif;
   --font-sans:"Inter",system-ui,sans-serif;
-  /* spacing škála — aktivace v komponentách proběhne ve 4.3 */
+  /* spacing škála – aktivace v komponentách proběhne ve 4.3 */
   --space-xs:4px;
   --space-sm:8px;
   --space-md:12px;

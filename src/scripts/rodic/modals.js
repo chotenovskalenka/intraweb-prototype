@@ -1,5 +1,5 @@
-/* MODALS: RODIC — překryvné obrazovky (overlay) a jejich handlery.
-   Kulturní fond už není overlay — vypisuje se rovnou na kartě v sekci Platby (viz platby.js). */
+/* MODALS: RODIC – překryvné obrazovky (overlay) a jejich handlery.
+   Kulturní fond už není overlay – vypisuje se rovnou na kartě v sekci Platby (viz platby.js). */
 function renderMenuDetail(){
   let h=`<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">Jídelníček</div><div class="pfull">tento týden</div>`;
   for(let d=1;d<=5;d++){
@@ -19,7 +19,7 @@ window.openMenu=()=>{overlay={type:'menu'};render();};
 window.closeOverlay=()=>{overlay=null;render();};
 
 /* --- NASTAVENÍ ÚČTU (dole v menu) --- overlay řízený stavem ucetEdit.
-   Telefon i e-mail jsou společné pro domácnost (ACCOUNT.telMatka/telOtec/emailMatka/emailOtec) —
+   Telefon i e-mail jsou společné pro domácnost (ACCOUNT.telMatka/telOtec/emailMatka/emailOtec) –
    propisují se do profilu obou dětí (PROFIL.*.matka/otec je nedrží). Heslo je jen demo formulář,
    nic reálně neukládá/neověřuje. */
 let ucetEdit=null;
@@ -29,13 +29,13 @@ function renderUcet(){
   let h=`<div class="pf-head"><button class="back" onclick="ucetCancel()">← Zpět</button><h1 class="dh-t">Nastavení účtu</h1><div class="dh-sub">${ACCOUNT.jmeno}</div></div>`;
 
   h+=`<div class="tile"><div class="ch">Změna telefonu</div>
-    ${row('Telefon — matka','telMatka','tel')}${row('Telefon — otec','telOtec','tel')}
-    <div class="note2" style="margin:8px 0 10px">Společné pro domácnost — projeví se v profilu obou dětí.</div>
+    ${row('Telefon – matka','telMatka','tel')}${row('Telefon – otec','telOtec','tel')}
+    <div class="note2" style="margin:8px 0 10px">Společné pro domácnost – projeví se v profilu obou dětí.</div>
     <button class="btn-primary" onclick="ucetSaveTel()">Uložit telefon</button></div>`;
 
   h+=`<div class="tile"><div class="ch">Změna e-mailu</div>
-    ${row('E-mail — matka','emailMatka')}${row('E-mail — otec','emailOtec')}
-    <div class="note2" style="margin:8px 0 10px">Společné pro domácnost — projeví se v profilu obou dětí.</div>
+    ${row('E-mail – matka','emailMatka')}${row('E-mail – otec','emailOtec')}
+    <div class="note2" style="margin:8px 0 10px">Společné pro domácnost – projeví se v profilu obou dětí.</div>
     <button class="btn-primary" onclick="ucetSaveEmail()">Uložit e-mail</button></div>`;
 
   h+=`<div class="tile"><div class="ch">Změna hesla</div>
@@ -83,7 +83,7 @@ function omDeadline(){
   let h=`<div class="tile note-info"><div class="tlab" style="color:var(--color-primary);margin-bottom:5px">Než odešleš</div>`;
   h+=`<div class="omdrow">Omluvit lze do <b>20:00 předchozího dne</b>.</div>`;
   if(timely.length)h+=`<div class="omdrow ok">✓ Vznikne <b>${timely.length} ${nplural(timely.length)}</b> (za ${timely.length} včas omluvený ${plural(timely.length)}).</div>`;
-  if(late.length)h+=`<div class="omdrow bad">⚠ Omluva na ${late.map(d=>d+'. 6.').join(', ')} je po deadlinu — <b>náhrada nevznikne</b>. Dítě je omluvené.</div>`;
+  if(late.length)h+=`<div class="omdrow bad">⚠ Omluva na ${late.map(d=>d+'. 6.').join(', ')} je po deadlinu – <b>náhrada nevznikne</b>. Dítě je omluvené.</div>`;
   return h+`</div>`;
 }
 function renderOmluvenka(){
@@ -102,7 +102,7 @@ function renderOmluvenka(){
 function renderOmluvenkaDone(c){
   const r=omDraft.result;
   let h=`<div class="tile omdone"><div class="omcheck">✓</div><div class="omdt">Omluvenka odeslána</div><div class="omsub">${c.n} · ${fmtRange(omDraft.od,omDraft.do)} · ${DUVODLAB[omDraft.duvod]}</div>`;
-  if(r.timely)h+=`<div class="omres ok">Vznikl${r.timely===1?'a':'y'} <b>${r.timely} ${nplural(r.timely)}</b> — najdeš ${r.timely===1?'ji':'je'} níže v Docházce a náhradách.</div>`;
+  if(r.timely)h+=`<div class="omres ok">Vznikl${r.timely===1?'a':'y'} <b>${r.timely} ${nplural(r.timely)}</b> – najdeš ${r.timely===1?'ji':'je'} níže v Docházce a náhradách.</div>`;
   if(r.late)h+=`<div class="omres bad">Za ${r.late} ${plural(r.late)} po deadlinu <b>náhrada nevznikla</b>.</div>`;
   h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce. ${r.timely?'Včas omluvené dny jsme označili jako omluvené (OM).':''}${r.late?' Dny po deadlinu jsou neomluvené (NE).':''}</div></div>`;
   h+=`<button class="omluvbtn" onclick="go('dochazka')">Zobrazit náhrady</button>`;
@@ -123,7 +123,7 @@ window.omSubmit=()=>{
   timely.forEach(d=>{c.att[d]='OM';});late.forEach(d=>{c.att[d]='NE';});
   days.forEach(d=>{if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
   timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id});c.nahrady.push(n);om.nahradaIds.push(n.id);});
-  late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'—',expT:Infinity});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'–',expT:Infinity});c.nahrady.push(n);om.nahradaIds.push(n.id);});
   c.omluvenky.unshift(om);
   omDraft.step='done';omDraft.result={timely:timely.length,late:late.length};
   render();
@@ -147,7 +147,7 @@ window.absSubmit=()=>{
   c.att[TODAY]='NE'; if(absModal.pozn)c.notes[TODAY]=absModal.pozn;
   c.obed=c.obed||{}; c.obed[TODAY]=absModal.obed===true;
   const om={id:uid(),od:TODAY,do:TODAY,duvod:'jiné',pozn:absModal.pozn,stav:'po-deadlinu',nahradaIds:[]};
-  const n=nahFrom(juneDate(TODAY),'nevznikla',{den:TODAY,omId:om.id,exp:'—',expT:Infinity});
+  const n=nahFrom(juneDate(TODAY),'nevznikla',{den:TODAY,omId:om.id,exp:'–',expT:Infinity});
   c.nahrady.push(n); om.nahradaIds.push(n.id); c.omluvenky.unshift(om);
   absModal=null; showToast('Absence nahlášena'); render();
 };
@@ -157,7 +157,7 @@ function renderAbsModal(){
   let h=`<div class="modal-scrim" onclick="absClose()"><div class="modal" onclick="event.stopPropagation()">`;
   h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n} · středa 3. 6.</div>`;
   h+=`<div class="abs-warn">⚠ Je po deadlinu (20:00 včera). Den bude <b>neomluvený</b> a náhrada nevznikne.</div>`;
-  h+=`<div class="notelab">Důvod absence — nepovinné</div><textarea class="note" placeholder="např. nemoc, rodinný důvod…" oninput="absPozn(this.value)">${escTa(absModal.pozn)}</textarea>`;
+  h+=`<div class="notelab">Důvod absence – nepovinné</div><textarea class="note" placeholder="např. nemoc, rodinný důvod…" oninput="absPozn(this.value)">${escTa(absModal.pozn)}</textarea>`;
   h+=`<div class="notelab">Vyzvednete si oběd?</div>`;
   h+=`<div class="abs-menu">`+obedy.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span></div>`).join('')+`</div>`;
   h+=`<div class="choices"><button class="${absModal.obed===true?'on':''}" onclick="absObed(true)">Ano, vyzvedneme</button><button class="${absModal.obed===false?'on':''}" onclick="absObed(false)">Ne</button></div>`;

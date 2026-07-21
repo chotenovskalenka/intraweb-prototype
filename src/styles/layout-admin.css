@@ -1,4 +1,4 @@
-/* LAYOUT: ADMIN — desktopový shell (stálý levý sidebar + obsah s max šířkou ~980 px).
+/* LAYOUT: ADMIN – desktopový shell (stálý levý sidebar + obsah s max šířkou ~980 px).
    Skládá se ze stejných tokenů jako mobilní appky; mobil jen „nerozbité". */
 .admin{display:flex;min-height:100vh;background:var(--color-bg)}
 .sidebar{width:236px;flex-shrink:0;background:var(--color-surface);border-right:1px solid var(--color-border);padding:22px 0 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
@@ -16,7 +16,7 @@
 .content-wrap{padding:24px 32px 48px;flex:1}
 .content-wrap #content{max-width:980px;margin:0 auto}
 
-/* Mobil: shell se nerozbije — sidebar nahoře jako vodorovná lišta. */
+/* Mobil: shell se nerozbije – sidebar nahoře jako vodorovná lišta. */
 @media(max-width:720px){
   .admin{flex-direction:column}
   .sidebar{width:auto;height:auto;position:static;border-right:none;border-bottom:1px solid var(--color-border);padding:12px 0}

@@ -1,4 +1,4 @@
-/* CORE: ADMIN — stav, sekce, sidebar, render(), go(), úvodní spuštění.
+/* CORE: ADMIN – stav, sekce, sidebar, render(), go(), úvodní spuštění.
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
 const SECTIONS=[
   ['prehled','Přehled','⌂'],

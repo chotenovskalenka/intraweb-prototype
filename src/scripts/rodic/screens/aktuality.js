@@ -1,4 +1,4 @@
-/* SCREEN: RODIC_AKTUALITY — Novinky ze školky.
+/* SCREEN: RODIC_AKTUALITY – Novinky ze školky.
    Seznam = karty s úvodní fotkou a proklikem na celou novinku (overlay detail
    s celým textem + fotkami). Rodič nevidí autora (jméno průvodce jen v průvodcovské appce).
    Desktop: mřížka karet (.news-grid), mobil: stoh. */
@@ -18,7 +18,7 @@ function renderAktuality(){
   h+=`<div class="note2">Novinky píší průvodci; důležité mohou zároveň sdílet do WhatsAppu. Po datu platnosti novinka ze seznamu zmizí.</div>`;
   return h+`</div>`;
 }
-// Detail novinky — overlay do #content jako „článek": omezená čtecí šířka, hero → titulek →
+// Detail novinky – overlay do #content jako „článek": omezená čtecí šířka, hero → titulek →
 // datum → vlasová linka → text → fotky. Bez boxů (prostor a linky, ne rámečky).
 function renderNovinka(){
   const n=NEWS.find(x=>x.id===overlay.id);if(!n)return '';

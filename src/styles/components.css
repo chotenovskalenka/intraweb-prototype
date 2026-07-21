@@ -147,18 +147,18 @@ table.wt td.pastc{opacity:.45}
 .ccount{font-size:11px;font-weight:600;color:var(--color-primary);margin-top:1px}.ccount.lk{color:var(--color-text-hint)}
 .calcell.sel .cdot{background:var(--color-on-primary)}
 
-/* Dashboard — sdílený „soupis dne" (rodič i průvodce): velký datumový nadpis,
+/* Dashboard – sdílený „soupis dne" (rodič i průvodce): velký datumový nadpis,
    prioritní sloupce, nadpisy karet .ch, program dne. Parent-specifické (listování
    dnů .dh-nav/.dh-step, day-picker) zůstávají v screens-rodic.css. */
 .dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:0 0 16px}
 .dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
 .dh-sub{width:100%;font-size:13.5px;color:var(--color-text-muted);margin-top:-8px}
-/* Nadpis sekce (H1) v topbaru — na úrovni role/přepínače. Prázdná (overlay) → skrytá.
+/* Nadpis sekce (H1) v topbaru – na úrovni role/přepínače. Prázdná (overlay) → skrytá.
    Sdílené oběma mobilními appkami; na mobilu se zalomí pod řádek burger+role/přepínač. */
 .dashhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0;flex:1}
 .dashhead:empty{display:none}
 @media (max-width:899px){.topbar{flex-wrap:wrap} .dashhead{order:3;flex-basis:100%;margin-top:6px}}
-/* plakát tématického plánu (reálný obrázek z nástěnky) — sdílené oběma appkami */
+/* plakát tématického plánu (reálný obrázek z nástěnky) – sdílené oběma appkami */
 .tema-poster{display:block;width:100%;max-width:520px;border:1px solid var(--color-border);border-radius:10px;margin:0 auto 10px}
 .tema-poster:last-of-type{margin-bottom:0}
 /* plakát jako klikací tlačítko (zvětšení) + lightbox */
@@ -183,7 +183,7 @@ table.wt td.pastc{opacity:.45}
 }
 @media (min-width:1200px){.dash3{grid-template-columns:repeat(3,1fr)}}
 
-/* Novinky — sdílené karty se seznamem/detailem (rodič: sekce Novinky + overlay detail;
+/* Novinky – sdílené karty se seznamem/detailem (rodič: sekce Novinky + overlay detail;
    průvodce: sekce Novinky + modal detail). Foto = placeholder tint jako sekce Fotky. */
 .gal{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
 .ph{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38);overflow:hidden}
@@ -191,7 +191,7 @@ table.wt td.pastc{opacity:.45}
 .newsurg{display:inline-block;font-size:10px;font-weight:700;color:var(--state-danger-ink);background:var(--state-danger-bg);border-radius:6px;padding:2px 8px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
 .newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
 .news-grid{display:grid;gap:12px}
-/* flex sloupec (ne display:block): <button> jinak obsah vertikálně centruje — karta bez fotky
+/* flex sloupec (ne display:block): <button> jinak obsah vertikálně centruje – karta bez fotky
    má začínat odshora; zároveň drží patičku „Celá novinka" u spodní hrany karty */
 .newscard{display:flex;flex-direction:column;align-items:stretch;width:100%;text-align:left;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;font-family:var(--font-sans);padding:0}
 .newscard.urgent{border-color:rgba(176,73,47,.35)}
@@ -199,7 +199,7 @@ table.wt td.pastc{opacity:.45}
 .nc-body{padding:12px 14px;display:flex;flex-direction:column;align-items:flex-start;flex:1;min-height:0;width:100%}
 .nc-t{font-family:var(--font-serif);font-size:15.5px;font-weight:600;color:var(--color-primary-strong);line-height:1.35}
 .nc-x{font-size:13px;color:var(--color-text);line-height:1.5;margin:8px 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-/* patička karty — tenká linka + odkaz dole (vzor .cardlink z Docházky) */
+/* patička karty – tenká linka + odkaz dole (vzor .cardlink z Docházky) */
 .nc-foot{margin-top:auto;width:100%;padding-top:11px;border-top:1px solid var(--color-border);font-size:13px;font-weight:600;color:var(--color-primary)}
 .nc-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .wabtn{font-size:12.5px;font-weight:600;color:var(--color-primary);border:1px solid var(--color-primary);border-radius:8px;padding:6px 11px;text-decoration:none;background:var(--color-surface)}
@@ -210,16 +210,16 @@ table.wt td.pastc{opacity:.45}
 @media (min-width:900px){.news-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
 @media (min-width:1200px){.news-grid{grid-template-columns:repeat(3,1fr)}}
 
-/* Hover feedback — jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
+/* Hover feedback – jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
 @media (hover:hover){
   a,button{transition:background-color .15s ease,color .15s ease,border-color .15s ease,filter .15s ease}
   /* navigace (drawer i admin sidebar) */
   .ditem:hover:not(.on),.sb-item:hover:not(.on){background:rgba(43,112,89,.07)}
-  /* plné (primární) akce — jemné projasnění */
+  /* plné (primární) akce – jemné projasnění */
   .btn-primary:hover,.omluvbtn:hover,.addbig:hover,.savebtn:hover,.odbtn:hover,.fondbtn:hover,.btn-s.primary:hover,.omcheck:hover{filter:brightness(1.08)}
-  /* ghost / outline / segment tlačítka — jemný tint */
+  /* ghost / outline / segment tlačítka – jemný tint */
   .cbtn:hover,.addbtn:hover,.bulktoggle:hover,.omx:hover,.filters button:hover:not(.on),.switch button:hover:not(.on),.mini button:hover:not(.on),.temanav button:hover:not(.on),.kids button:hover:not(.on),.choices button:hover{background:rgba(43,112,89,.06);border-color:var(--color-primary)}
-  /* klikací karty / řádky — zvýraznění povrchu */
+  /* klikací karty / řádky – zvýraznění povrchu */
   button.tile:hover,.akce:hover,.newsrow:hover,.kbtn:hover,.prehl-abs:hover,.stepper button:hover:not(:disabled),.dh-step:hover{background:var(--color-surface-2)}
   /* textové odkazy */
   .clink:hover,.newsmore:hover,.cardlink:hover,.tlabbtn:hover{text-decoration:underline}

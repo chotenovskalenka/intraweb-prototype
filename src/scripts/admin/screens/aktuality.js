@@ -1,4 +1,4 @@
-/* SCREEN: ADMIN_AKTUALITY — Flow 4: vedení vytváří aktualitu, kterou NELZE odeslat
+/* SCREEN: ADMIN_AKTUALITY – Flow 4: vedení vytváří aktualitu, kterou NELZE odeslat
    bez určení příjemců; u odeslaných vidí, komu odešla. */
 
 let akView='list';   // 'list' | 'new'
@@ -26,7 +26,7 @@ function renderAkList(){
     if(rec.length){
       h+=`<div class="ak-rec"><span class="ak-rlab">Příjemci:</span> ${rec.map(escTa).join(' · ')}</div>`;
     }else if(a.stav==='koncept'){
-      h+=`<div class="ak-rec ak-norec">Bez určených příjemců — před odesláním je nutné je vybrat.</div>`;
+      h+=`<div class="ak-rec ak-norec">Bez určených příjemců – před odesláním je nutné je vybrat.</div>`;
     }
     // akce dle stavu
     h+=`<div class="ak-acts">`;
@@ -55,7 +55,7 @@ function renderAkForm(){
   // důležité
   h+=`<div class="field"><div class="l">Označení</div><div class="pchips">`
     +`<button class="${f.urgent?'on':''}" onclick="akToggleUrgent()">Důležité (urgentní)</button></div></div>`;
-  // příjemci — povinné
+  // příjemci – povinné
   h+=`<div class="field"><div class="l">Příjemci · povinné</div>`;
   SKOLKY.forEach(s=>{
     const r=recip[s.id]||{all:false,tridy:[]};
@@ -73,7 +73,7 @@ function renderAkForm(){
   if(ok){
     h+=`<div class="tile note-info ak-preview"><b>Odešle se rodičům:</b><br>${rec.map(escTa).join('<br>')}</div>`;
   }else{
-    h+=`<div class="ak-warn">⚠ Bez určených příjemců nelze novinku odeslat — vyberte alespoň jednu školku nebo třídu.</div>`;
+    h+=`<div class="ak-warn">⚠ Bez určených příjemců nelze novinku odeslat – vyberte alespoň jednu školku nebo třídu.</div>`;
   }
   // tlačítka
   h+=`<div class="mbtns">`;

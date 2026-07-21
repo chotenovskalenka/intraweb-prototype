@@ -17,7 +17,7 @@ function renderPruvodci(){
   h+=`<div class="vhead">Týden · služby</div>`;
   h+=`<div class="weekbox"><table class="wt"><thead><tr><th class="who">Průvodce</th>`+DAYS.map((d,j)=>`<th class="${j===TODAY?'today':''}">${d}</th>`).join('')+`</tr></thead><tbody>`;
   GUIDESHIFT.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>`<td class="${di===TODAY?'today':''}">${shiftCell(d)}</td>`).join('')+`</tr>`;});
-  h+=`</tbody></table></div><div class="hint">Služby jen ke čtení — rozpis se řeší mimo appku.</div>`;
+  h+=`</tbody></table></div><div class="hint">Služby jen ke čtení – rozpis se řeší mimo appku.</div>`;
   return h;
 }
 window.setUspava=v=>{uspavaToday=Number(v);};

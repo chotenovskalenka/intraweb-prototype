@@ -1,4 +1,4 @@
-/* SCREEN: RODIC_PLAN — tématický plán: navigace po měsících (jen aktuální školní rok),
+/* SCREEN: RODIC_PLAN – tématický plán: navigace po měsících (jen aktuální školní rok),
    plný obsah (plakát + písničky) má v prototypu jen červen; plakát lze zvětšit i stáhnout.
    Desktop: vlevo téma + písničky (proklik na YouTube), vpravo plakáty. */
 function planLabel(){const t=TEMA_MESICE[planIdx],mName=MONTHS[t.m-1];return mName.charAt(0).toUpperCase()+mName.slice(1)+' '+t.y;}
@@ -11,12 +11,12 @@ function renderPlan(){
   h+=`<div class="tile"><div class="ch">Téma měsíce · ${t.hodnota}</div>${t.full?`<div class="tval">${t.intro}</div>`:`<div class="note2" style="margin:0">Hodnota měsíce: <b>${t.hodnota}</b>.</div>`}</div>`;
 
   if(t.full){
-    h+=`<div class="tile"><div class="ch">Písničky a básničky</div><div class="note2" style="margin:0 0 8px">Klepnutím na „Poslech" se přehraje na YouTube — můžete si je zazpívat i doma.</div>${PISNE_CERVEN.map(song).join('')}</div>`;
+    h+=`<div class="tile"><div class="ch">Písničky a básničky</div><div class="note2" style="margin:0 0 8px">Klepnutím na „Poslech" se přehraje na YouTube – můžete si je zazpívat i doma.</div>${PISNE_CERVEN.map(song).join('')}</div>`;
     h+=`</div><div class="pcol">`;
     h+=`<div class="tile"><div class="ch">Plán měsíce · nástěnka</div><div class="note2" style="margin:0 0 10px">Tak, jak ho průvodci vyrábějí a věší ve školce. Klepnutím plakát zvětšíte nebo stáhnete.</div>`+TEMA_POSTERS.map((p,i)=>`<button class="poster-btn" onclick="openPoster(${i})" aria-label="Zvětšit plakát"><img class="tema-poster" src="${p}" alt="Tématický plán ${cap}" loading="lazy"><span class="poster-zoom">⤢</span></button>`).join('')+`</div>`;
   }else{
     h+=`</div><div class="pcol">`;
-    h+=`<div class="tile"><div class="ch">Plán měsíce · nástěnka</div><div class="empty" style="margin:0">Plakát a písničky pro ${mName} ${t.y} nejsou v prototypu k dispozici — ukázku najdete na červnu.</div></div>`;
+    h+=`<div class="tile"><div class="ch">Plán měsíce · nástěnka</div><div class="empty" style="margin:0">Plakát a písničky pro ${mName} ${t.y} nejsou v prototypu k dispozici – ukázku najdete na červnu.</div></div>`;
   }
   h+=`</div></div></div>`;
   return h;

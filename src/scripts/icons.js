@@ -1,4 +1,4 @@
-/* SHARED: ikony menu — čárové (Lucide styl, stroke=currentColor, takže se obarví podle
+/* SHARED: ikony menu – čárové (Lucide styl, stroke=currentColor, takže se obarví podle
    barvy položky: neaktivní tmavá, aktivní zelená). 8 převzato z podklady/icon/,
    6 dokresleno ve stejném stylu (kalendar, clock=pruvodci, smile=deti, coins=fond,
    clipboard=porady, refresh=nahrady). */

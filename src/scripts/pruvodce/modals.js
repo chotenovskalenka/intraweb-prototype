@@ -1,4 +1,4 @@
-/* MODALS: PRUVODCE — renderModalRoot + HTML modálů a jejich handlery */
+/* MODALS: PRUVODCE – renderModalRoot + HTML modálů a jejich handlery */
 function d2date(day){return day?`2026-06-${String(day).padStart(2,'0')}`:'';}
 function renderModalRoot(){
   const r=document.getElementById('modalRoot');
@@ -26,7 +26,7 @@ function cellModalHTML(){
     :[['C','Celodenní'],['D','Dopolední'],['O','Odpolední'],['OM','Omluven'],['','Nepřítomen']];
   const cur=today?c.status:getCode(c,d);
   return `<div class="modal-scrim" onclick="if(event.target===this)closeCell()"><div class="modal">
-    <h3>Docházka — ${c.n}</h3><div class="pl" style="margin-top:-2px">${DOW[wd(d)]} ${d}. 6.${today?' · dnes':''}</div>
+    <h3>Docházka – ${c.n}</h3><div class="pl" style="margin-top:-2px">${DOW[wd(d)]} ${d}. 6.${today?' · dnes':''}</div>
     <div class="pchips">${opts.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="setCell('${o[0]}')">${o[1]}</button>`).join('')}</div>
     <div class="mbtns"><button class="btn-ghost" onclick="closeCell()">Zavřít</button></div>
   </div></div>`;
@@ -38,7 +38,7 @@ function akceModalHTML(){
     <label class="pl">Datum (od – do)</label><div class="mrow2"><input class="pin" type="date" min="2026-06-01" max="2026-06-30" value="${d2date(modal.day)}" oninput="setMDate('day',this.value)"><input class="pin" type="date" min="2026-06-01" max="2026-06-30" value="${d2date(modal.dayEnd)}" oninput="setMDate('dayEnd',this.value)"></div>
     <label class="pl">Čas</label><input class="pin" value="${esc(modal.time)}" oninput="setMF('time',this.value)" placeholder="nepovinné, např. 15:30">
     <label class="pl">Místo</label><input class="pin" value="${esc(modal.place)}" oninput="setMF('place',this.value)" placeholder="nepovinné">
-    <label class="pl">Cena z fondu (Kč/dítě)</label><input class="pin" type="number" min="0" value="${modal.paid||''}" oninput="setMF('paid',this.value)" placeholder="nepovinné — když je akce placená">
+    <label class="pl">Cena z fondu (Kč/dítě)</label><input class="pin" type="number" min="0" value="${modal.paid||''}" oninput="setMF('paid',this.value)" placeholder="nepovinné – když je akce placená">
     <label class="pl">Poznámka</label><textarea class="pta" oninput="setMF('note',this.value)" placeholder="nepovinné">${escTa(modal.note)}</textarea>
     <div class="mbtns"><button class="btn-ghost" onclick="closeModal()">Zrušit</button><button class="btn-primary" onclick="saveAkce()">Uložit</button></div>
     ${modal.id?`<button class="btn-del" onclick="delAkce()">Smazat akci</button>`:''}
@@ -47,10 +47,10 @@ function akceModalHTML(){
 function shiftModalHTML(){
   const m=shiftM,g=GUIDESHIFT[m.gi];
   return `<div class="modal-scrim" onclick="if(event.target===this)closeShift()"><div class="modal">
-    <h3>Služba — ${g.n}, ${DOW[m.di]}</h3>
+    <h3>Služba – ${g.n}, ${DOW[m.di]}</h3>
     <div class="mini" style="margin-bottom:6px"><button class="${m.on?'on':''}" onclick="setShiftOn(true)">Slouží</button><button class="${!m.on?'on':''}" onclick="setShiftOn(false)">Neslouží</button></div>
     ${m.on?`<label class="pl">Příchod</label><input class="pin" type="time" value="${m.s}" oninput="setShiftF('s',this.value)"><label class="pl">Odchod</label><input class="pin" type="time" value="${m.e}" oninput="setShiftF('e',this.value)">`
-    :`<label class="pl">Důvod (nepovinné)</label><select class="selin" style="width:100%" onchange="setShiftF('reason',this.value)"><option value="">—</option>${OFFREASONS.map(o=>`<option value="${o}" ${m.reason===o?'selected':''}>${o}</option>`).join('')}</select>`}
+    :`<label class="pl">Důvod (nepovinné)</label><select class="selin" style="width:100%" onchange="setShiftF('reason',this.value)"><option value="">–</option>${OFFREASONS.map(o=>`<option value="${o}" ${m.reason===o?'selected':''}>${o}</option>`).join('')}</select>`}
     <div class="mbtns"><button class="btn-ghost" onclick="closeShift()">Zrušit</button><button class="btn-primary" onclick="saveShift()">Uložit</button></div>
   </div></div>`;
 }

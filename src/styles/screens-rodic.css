@@ -1,4 +1,4 @@
-/* SCREENS: RODIC — rodičovské obrazovky + rodičovské varianty sdílených tříd.
+/* SCREENS: RODIC – rodičovské obrazovky + rodičovské varianty sdílených tříd.
    Sdílené třídy shodné s components/layout se sem NEkopírují (viz decision-log).
    Rozdíly proti průvodci se sjednotí ve fázi 0.3. */
 .kids{display:flex;gap:7px;margin-bottom:13px}
@@ -14,17 +14,17 @@
 .kitem.on{background:rgba(43,112,89,.08);font-weight:600}
 .kchk{margin-left:auto;color:var(--color-primary);font-weight:700}
 
-/* dashboard — parent-specifické (velké jméno + datum s listováním dnů).
+/* dashboard – parent-specifické (velké jméno + datum s listováním dnů).
    Sdílené třídy .dash-head/.dh-t/.ch/.dash3/.dcol/.cardlink/.prog-day jsou v components.css. */
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:14px;color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
 .dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
 .dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:10px;font-size:18px;color:var(--color-primary);cursor:pointer}
 .dh-step:disabled{color:var(--color-text-hint);cursor:default}
-/* výběr měsíce v tématickém plánu — na řádku s H1 (dashhead), přisazený úplně doprava */
+/* výběr měsíce v tématickém plánu – na řádku s H1 (dashhead), přisazený úplně doprava */
 .plan-head-nav{margin-left:auto}
 .plan-head-nav .dh-lbl{min-width:130px;text-align:center}
-/* „dnes" — pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
+/* „dnes" – pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
 .dh-today{display:inline-flex;align-items:center;min-height:32px;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;font-family:var(--font-sans)}
 .doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}
 .doch-code{font-family:var(--font-serif);font-size:24px;font-weight:700}
@@ -80,7 +80,7 @@
 .song-yt{margin-left:auto;font-size:12px;font-weight:600;color:var(--color-danger);text-decoration:none;white-space:nowrap}
 .song-week{font-size:11.5px;color:var(--color-text-muted);margin:2px 0 4px}
 .song-tx{font-size:13px;line-height:1.5;color:var(--color-text)}
-/* kontakty — průvodci rovnou rozbalení v mřížce */
+/* kontakty – průvodci rovnou rozbalení v mřížce */
 .k-sec{font-family:var(--font-serif);font-size:17px;font-weight:600;color:var(--color-primary-strong);margin:0 0 11px}
 .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:0 0 18px}
 /* školkový kontakt s Dubánkem (vyleze bez pozadí z horního okraje karty) + menší buttony jako u průvodců */
@@ -140,7 +140,7 @@ select.pf-in{cursor:pointer}
 .agtag.org{color:var(--color-text-muted);background:rgba(92,101,96,.12)}
 
 /* fotky */
-/* .gal/.ph (foto placeholder mřížka) přesunuty do components.css — používá je i průvodce (novinky). */
+/* .gal/.ph (foto placeholder mřížka) přesunuty do components.css – používá je i průvodce (novinky). */
 .bulktoggle{width:auto;border:1px solid var(--color-primary);background:var(--color-surface);color:var(--color-primary);font-family:var(--font-sans);font-size:13px;font-weight:600;padding:11px 18px;border-radius:10px;cursor:pointer;margin-bottom:10px}
 /* nadpis pohledu + listování období (šipky jako na Přehledu) */
 .vhrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -207,17 +207,17 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 @media (min-width:900px){
   .page-2col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
   .page-2col>.tile{margin-bottom:0}
-  /* Profil má hodně různě vysokých karet — mřížka by nechávala díry, proto sloupcový tok. */
+  /* Profil má hodně různě vysokých karet – mřížka by nechávala díry, proto sloupcový tok. */
   .page-cols{column-count:2;column-gap:20px}
   .page-cols>.tile{break-inside:avoid;margin:0 0 20px}
-  /* Kalendář: mřížka vlevo, vybraný den vpravo — uvnitř bílého .gcalwrap */
+  /* Kalendář: mřížka vlevo, vybraný den vpravo – uvnitř bílého .gcalwrap */
   .kal-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:20px;align-items:start}
   .kal-main{min-width:0}
   .kal-side{min-width:0;border-left:1px solid #f1f3f4;padding-left:18px}
   .kal-side .gday{margin-top:0}
 }
 /* Karty novinek (news-grid, newscard, nc-…, nd-…) jsou sdílené v components.css. */
-/* Detail novinky — článek: omezená čtecí šířka, na desktopu vycentrovaný, bez boxů */
+/* Detail novinky – článek: omezená čtecí šířka, na desktopu vycentrovaný, bez boxů */
 .novdet .back{display:block;width:100%;text-align:left}
 .novdet .nd-t{font-size:23px;line-height:1.25;margin-top:12px}
 .novdet .nd-body{margin-top:14px;padding-top:14px;border-top:1px solid var(--color-border)}
@@ -252,7 +252,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .wkmain .d span{color:var(--color-text-muted);font-weight:400}
 .wkmain .cur{margin-left:auto;display:flex;align-items:center;gap:7px}
 .lockflag{font-size:10px;color:var(--color-text-muted);white-space:nowrap}
-/* Dashboard výběr dne — kompaktní dropdown pod ▾ v topbaru (ne přes celou šířku). */
+/* Dashboard výběr dne – kompaktní dropdown pod ▾ v topbaru (ne přes celou šířku). */
 .daypicker{position:absolute;right:0;top:calc(100% + 6px);z-index:9;width:236px;background:var(--color-surface);border:1px solid var(--color-border-strong);border-radius:12px;box-shadow:0 8px 26px rgba(31,83,68,.18);padding:10px;margin:0}
 .daypicker .dpcell{aspect-ratio:1;font-size:11.5px;border-radius:6px}
 .dp-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 8px}
@@ -292,7 +292,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .filters button.danger.on{background:var(--color-danger);border-color:var(--color-danger);color:var(--color-on-primary)}
 /* stažení PDF u faktury */
 .fbtn{flex:0 0 auto;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:11.5px;font-weight:600;color:var(--color-text-muted);padding:5px 10px;border-radius:8px;cursor:pointer;white-space:nowrap}
-/* neuhrazená faktura — zvýrazněný řádek + rovnou rozevřená platba s QR */
+/* neuhrazená faktura – zvýrazněný řádek + rovnou rozevřená platba s QR */
 .frow-due .fo{color:var(--color-danger)}
 .pay-box{display:flex;flex-wrap:wrap;gap:16px;align-items:center;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:12px;padding:14px;margin:2px 0 8px}
 .pay-box .qrbox svg{width:130px;height:130px}
@@ -315,7 +315,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .notelab{font-size:11px;color:var(--color-text-muted);margin-top:10px}
 .chip{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:7px}
 .deadline{font-size:11.5px;color:var(--color-accent-ink);font-style:italic;margin-top:10px}
-/* Docházka a náhrady — desktop layout ve stylu Přehledu (velký nadpis + dva sloupce). Mobil: stoh. */
+/* Docházka a náhrady – desktop layout ve stylu Přehledu (velký nadpis + dva sloupce). Mobil: stoh. */
 .doch-head .dh-t{margin:0 0 12px}
 @media (min-width:900px){
   #content > .doch{column-span:all;margin-bottom:0}

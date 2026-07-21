@@ -17,9 +17,9 @@ const TABS_BY=()=>mode==='bezny'?TABS_BEZNY:TABS_SPEC(mode==='pred'?'Předškol�
 const CTX={rano:['Kdo dnes přišel',''],
   skolka:['Ráno ve školce',''],
   vyprava:['Na výpravě',''],
-  obed:['Oběd — všichni',''],
+  obed:['Oběd – všichni',''],
   spi:['Maringotka · spáči',''],
-  poobede:['Po obědě domů','Dopolední děti — odcházejí po obědě.'],
+  poobede:['Po obědě domů','Dopolední děti – odcházejí po obědě.'],
   neprit:['Nepřítomní','']};
 function counts(){const o={};TABS_BY().forEach(([k])=>o[k]=data.filter(c=>inTab(c,k)).length);o.pres=data.filter(here).length;return o;}
 function planPill(c){return c.plan==='celodenní'?'<span class="pill p-cel">celodenní</span>':c.plan==='dopolední'?'<span class="pill p-dop">dopolední</span>':'<span class="pill p-odp">odpolední</span>';}
@@ -59,7 +59,7 @@ function rosterHTML(){
 }
 function renderDochazka(){
   // Desktop: hlavička (nadpis + sloučené pole datum+Den/Týden) + dva panely (styl Přehledu). Mobil: stoh.
-  // Měsíc záměrně jen v rodičovské/admin appce (přehled, hromadné omluvy, statistiky) — průvodce řeší den a týden.
+  // Měsíc záměrně jen v rodičovské/admin appce (přehled, hromadné omluvy, statistiky) – průvodce řeší den a týden.
   let h=`<div class="doch">${renderDochNav()}`;
   h+=(view==='tyden')?renderTydenD():renderDen();
   return h+`</div>`;
@@ -75,7 +75,7 @@ function renderDochNav(){
 function renderDen(){return denDay===TODAYD?todayRoster():dayRoster(denDay);}
 function todayRoster(){
   const c=counts();
-  // levý panel: počty (filtry) — listování dne je nahoře ve sloučeném poli
+  // levý panel: počty (filtry) – listování dne je nahoře ve sloučeném poli
   let side=`<div class="tabs wrap doch-counts">`+TABS_BY().map(([k,l])=>`<div class="tab${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
   // pravý panel: kontext + hledání + roster + souhrn jídel
   let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${c.pres}</b> / ${data.length}</span></div>`;
@@ -97,9 +97,9 @@ function dayRoster(d){
   const locked=d<TODAYD;
   // levý panel: zvláštní den + souhrn; pravý: roster dne (listování dne je nahoře ve sloučeném poli)
   let side=specialBar(d);
-  side+=`<div class="tile doch-info"><div class="np"><span>Přítomno</span><b>${presentCount(d)} / ${data.length}</b></div><div class="pwa" style="margin-top:6px">${locked?'Proběhlý den — jen ke čtení.':'Budoucí den — editovatelný.'}</div></div>`;
+  side+=`<div class="tile doch-info"><div class="np"><span>Přítomno</span><b>${presentCount(d)} / ${data.length}</b></div><div class="pwa" style="margin-top:6px">${locked?'Proběhlý den – jen ke čtení.':'Budoucí den – editovatelný.'}</div></div>`;
   let main=`<div class="ctxhead"><span class="t">Docházka dne</span><span class="pres">přítomno <b>${presentCount(d)}</b> / ${data.length}</span></div>`;
-  main+=`<div class="sectip">${locked?'Proběhlý den — jen ke čtení.':'Klepni na dítě a nastav docházku na tento den.'}</div>`;
+  main+=`<div class="sectip">${locked?'Proběhlý den – jen ke čtení.':'Klepni na dítě a nastav docházku na tento den.'}</div>`;
   main+=`<div class="rosterbox">`+data.map((c,ci)=>{const code=getCode(c,d);return `<div class="row"><div class="rmain" ${locked?'style="cursor:default"':`onclick="openCell(${ci},${d})"`}>${avatar(c,30)}<span class="nm">${full(c)}</span><span class="ind" style="margin-left:auto;font-weight:500">${codeLabel(code)}</span></div></div>`;}).join('')+`</div>`;
   return `<div class="doch-den"><aside class="doch-side">${side}</aside><div class="doch-main">${main}</div></div>`;
 }

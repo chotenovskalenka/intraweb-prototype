@@ -21,7 +21,7 @@
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--color-primary-strong);color:var(--color-on-primary);font-size:14px;font-weight:600;padding:11px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:40;box-shadow:0 6px 20px rgba(0,0,0,.22)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* Desktop (≥900px): responzivní shell — trvalý levý sidebar + obsah, který plyne
+/* Desktop (≥900px): responzivní shell – trvalý levý sidebar + obsah, který plyne
    do více sloupců (masonry). Full-width prvky (hero, akce, hlavičky sekcí, řádky
    docházky) jdou přes celou šířku. Na mobilu (<900px) zůstává drawer + jeden sloupec.
    Admin má vlastní layout-admin.css a tímto není dotčen. */
@@ -44,6 +44,6 @@
   #content > .switch,#content > .mini,#content > .bulktoggle,#content > .hint,#content > .note2,
   #content > .sectip,#content > .selinfo,#content > .choices,#content > .wkrow,#content > .legend,
   #content > .stepper,#content > .filters,#content > .back,#content > .temanav,
-  /* široké seznamy/tabulky (docházka apod.) — jeden sloupec, ne masonry rozdělení */
+  /* široké seznamy/tabulky (docházka apod.) – jeden sloupec, ne masonry rozdělení */
   #content > .search,#content > .weekbox,#content > .rosterbox,#content > .ctxhead,#content > .tabs{column-span:all;margin-bottom:12px}
 }

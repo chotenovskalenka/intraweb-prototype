@@ -1,4 +1,4 @@
-/* DATA: RODIC — seed data + čisté datové helpery sdílené více obrazovkami */
+/* DATA: RODIC – seed data + čisté datové helpery sdílené více obrazovkami */
 const ORDER=['D','O','C','OM','NE'];
 
 /* --- Simulovaný čas + omluvenka/náhrada model (fáze 1) --- */
@@ -39,7 +39,7 @@ function genFaktury(cvar,cena,unpaid){
     paid:!unpaid.includes(`${mn} ${y}`),vs:`4920${cvar}${String(m).padStart(2,'0')}`,
     t:+new Date(y,m-1,9)})).sort((a,b)=>b.t-a.t);
 }
-/* Kulturní fond — čerpání per dítě (dřív společné FONDLOG). Zůstatek se odvozuje součtem. */
+/* Kulturní fond – čerpání per dítě (dřív společné FONDLOG). Zůstatek se odvozuje součtem. */
 const fondCerpano=c=>c.fondlog.reduce((s,x)=>s+x[2],0);
 
 const children=[
@@ -54,8 +54,8 @@ const children=[
       nahFrom(juneDate(11),'dostupna',{id:'nE-fut',den:11,omId:'omE-fut'}),
       nahFrom(new Date(2026,4,26),'naplanovana',{plan:'Náhradní den · 18. 6.'}),
       nahFrom(new Date(2026,3,8),'vyuzita',{pouzita:'15. 5. 2026'}),
-      nahFrom(new Date(2025,4,20),'expirovana'),   // z minulého šk. roku — propadla 30. 6. 2025
-      nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'—',expT:Infinity}),
+      nahFrom(new Date(2025,4,20),'expirovana'),   // z minulého šk. roku – propadla 30. 6. 2025
+      nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'–',expT:Infinity}),
     ],
     omluvenky:[
       {id:'omE-fut',od:11,do:11,duvod:'rodinné důvody',pozn:'rodinná oslava',stav:'vcas',nahradaIds:['nE-fut']},
@@ -66,15 +66,15 @@ const children=[
     /* celodenní = odpolední docházka + úterý do 17:00; samostatná cena v podkladech není, použita odpolední sazba */
     fond:{rocni:2000},
     fondlog:[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200],['Muzeum a dílna','březen 2026',350],['Jarní výprava','duben 2026',350]],
-    faktury:genFaktury('02',10584,[]),   // happy stav — vše uhrazeno
+    faktury:genFaktury('02',10584,[]),   // happy stav – vše uhrazeno
     nahrady:[ nahFrom(new Date(2026,4,15),'dostupna') ],
     omluvenky:[]},
 ];
 
-/* Profil dítěte — údaje z onboarding dotazníku a souhlasů (převzato ze staršího prototypu
+/* Profil dítěte – údaje z onboarding dotazníku a souhlasů (převzato ze staršího prototypu
    podklady/prototyp_dochazka_rodic.html). Rodič si část údajů spravuje sám (editace v profilu),
-   aby zůstávaly aktuální. Jméno/příjmení se nedrží tady — jsou v child.n/child.sur (data.js).
-   Režim se nedrží tady — odvozuje se z child.base přes CODES. */
+   aby zůstávaly aktuální. Jméno/příjmení se nedrží tady – jsou v child.n/child.sur (data.js).
+   Režim se nedrží tady – odvozuje se z child.base přes CODES. */
 /* Číselníky (výběr z pevného seznamu, ne volný text). */
 const CISELNIK={
   pojistovna:['VZP (111)','VoZP (201)','ČPZP (205)','OZP (207)','ZPŠ (209)','ZPMV (211)','RBP (213)'],
@@ -84,10 +84,10 @@ const CISELNIK={
 };
 /* Odvozené zobrazení hodnot z profilu. */
 const profAlergie=p=>p.alergie.length?p.alergie.join(', '):'žádné';
-const profAno=(flag,text)=>flag?('ano'+(text?' — '+text:'')):'ne';
+const profAno=(flag,text)=>flag?('ano'+(text?' – '+text:'')):'ne';
 
-/* Účet (domácnost) — přihlášený rodič spravuje telefon/e-mail/heslo v Nastavení účtu (core.js overlay 'ucet').
-   Telefon i e-mail jsou jediný zdroj pravdy pro oba rodiče napříč dětmi — PROFIL.*.matka/otec je nedrží,
+/* Účet (domácnost) – přihlášený rodič spravuje telefon/e-mail/heslo v Nastavení účtu (core.js overlay 'ucet').
+   Telefon i e-mail jsou jediný zdroj pravdy pro oba rodiče napříč dětmi – PROFIL.*.matka/otec je nedrží,
    profil dítěte je jen zobrazuje (viz renderProfil). */
 const ACCOUNT={jmeno:'Kateřina Dvořáková',
   telMatka:'+420 774 512 908', telOtec:'+420 603 847 221',
@@ -102,7 +102,7 @@ const PROFIL={
     bavi:'Kreslení, malování a modelování, stavění z LEGA, zvířata (hlavně kočky), zpívání písniček.',
     nesouhlas:'Hlasitě si vynucuje, co chce. Doma se snažíme neustoupit.',
     doporuceni:['Trénovat samostatné oblékání (bunda, boty).',
-                'Krátké, jasné loučení u brány — pomáhá hladšímu příchodu.']},
+                'Krátké, jasné loučení u brány – pomáhá hladšímu příchodu.']},
   'Matěj':{
     narozeni:'2. 9. 2019', rc:'190902/1004', adresa:'Nad Rokoskou 1230/8, 182 00 Praha 8 – Libeň',
     jazyky:'čeština', pojistovna:'VZP (111)', spadova:'MŠ Ďáblice', sourozenci:'Eliška (2021), Adam (2018)',
@@ -111,10 +111,10 @@ const PROFIL={
     bavi:'Stavby z klacků a kamenů, pozorování brouků, běhání a šplhání.',
     nesouhlas:'Stáhne se a mlčí. Pomáhá dát mu chvíli a pak se vrátit.',
     doporuceni:['Podpořit samostatné stolování.',
-                'Připomínat pití během dne — sám se nehlásí.']},
+                'Připomínat pití během dne – sám se nehlásí.']},
 };
 
-/* Dokumenty a souhlasy — společné pro celou školku (stejná sada pro každé dítě). */
+/* Dokumenty a souhlasy – společné pro celou školku (stejná sada pro každé dítě). */
 const SOUHLASY=[
   {t:'Žádost o přijetí',f:'PDF'},
   {t:'Smlouva s rodiči 2025/26',f:'PDF'},
@@ -123,9 +123,9 @@ const SOUHLASY=[
   {t:'Potvrzení od lékaře',f:'DOCX'},
 ];
 
-/* Fotky — alba na Google Drive (mimo IS), nepravidelná perioda (týden až měsíc).
+/* Fotky – alba na Google Drive (mimo IS), nepravidelná perioda (týden až měsíc).
    IS jen odkazuje ven; přístup řídí sdílení na Drive (viditelné pro všechny rodiče). Nejnovější první.
-   od/do jako [den,měsíc,rok] — zobrazení řeší fmtAlbum() ve fotky.js (zkracuje shodný měsíc/rok). */
+   od/do jako [den,měsíc,rok] – zobrazení řeší fmtAlbum() ve fotky.js (zkracuje shodný měsíc/rok). */
 const FOTO_ALBA=[
   {nazev:'Červnový týden',od:[2,6,2026],do:[13,6,2026],url:'https://drive.google.com/drive/folders/1a2B3c4D5e6F7g8H9iJkLmNoPqRsTuVw'},
   {nazev:'Výlet k rybníku',od:[18,5,2026],do:[22,5,2026],url:'https://drive.google.com/drive/folders/2b3C4d5E6f7G8h9I0jKlMnOpQrStUvXy'},
@@ -136,7 +136,7 @@ const FOTO_ALBA=[
 ];
 
 /* Básnička a písnička aktuálního týdne (texty shodné s průvodcovskou appkou).
-   url = proklik (YouTube / jiný odkaz) — reálné vyhledávací odkazy, žádná smyšlená videa. */
+   url = proklik (YouTube / jiný odkaz) – reálné vyhledávací odkazy, žádná smyšlená videa. */
 const TYDEN={
   basnicka:{t:'Uvijeme věneček ze všech našich kytiček. Kvítek, lístek i větvičku, uvijeme do věnečku. Jaké jméno máš? Tak pojď mezi nás.',
     url:'https://www.youtube.com/results?search_query=Uvijeme+v%C4%9Bne%C4%8Dek+%C5%99%C3%ADkanka'},
@@ -148,27 +148,27 @@ const TYDEN={
    from/time se rodiči nezobrazují (vidí je průvodce ve své appce). */
 const NEWS=[
   {id:'nw1',t:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',from:'Táňa',time:'7:40',date:'2. 6.',until:5,urgent:true,
-   full:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dnes večer dítě — svědění, neklidný spánek. Pokud roupy najdete, nechte prosím dítě doma do přeléčení (přípravek poradí každá lékárna, léčba je rychlá).\n\nVe školce jsme vyměnili ručníky i povlečení a vše vyprali na 90 °C. Prosíme také o krátké ostříhání nehtíků. Kdybyste si nebyli jistí, ozvěte se Táně — děkujeme za spolupráci.'},
+   full:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dnes večer dítě – svědění, neklidný spánek. Pokud roupy najdete, nechte prosím dítě doma do přeléčení (přípravek poradí každá lékárna, léčba je rychlá).\n\nVe školce jsme vyměnili ručníky i povlečení a vše vyprali na 90 °C. Prosíme také o krátké ostříhání nehtíků. Kdybyste si nebyli jistí, ozvěte se Táně – děkujeme za spolupráci.'},
   {id:'nw2',t:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada).',from:'Táňa',time:'16:12',date:'1. 6.',until:5,urgent:true,
-   full:'V pátek 5. 6. končí provoz školky už ve 14:00 — máme celotýmovou pedagogickou poradu.\n\nProsíme, vyzvedněte si děti nejpozději do 14:00. Odpolední svačinu dostanou děti s sebou v krabičce. Pokud by vyzvednutí do 14:00 bylo neřešitelné, napište nám prosím co nejdřív, domluvíme se individuálně. Děkujeme za pochopení.'},
+   full:'V pátek 5. 6. končí provoz školky už ve 14:00 – máme celotýmovou pedagogickou poradu.\n\nProsíme, vyzvedněte si děti nejpozději do 14:00. Odpolední svačinu dostanou děti s sebou v krabičce. Pokud by vyzvednutí do 14:00 bylo neřešitelné, napište nám prosím co nejdřív, domluvíme se individuálně. Děkujeme za pochopení.'},
   {id:'nw3',t:'Sbíráme víčka od PET lahví na výtvarku.',from:'Darča',time:'9:05',date:'28. 5.',until:30,img:NEWSFOTO.VICKA,
-   full:'Od června sbíráme víčka od PET lahví — budeme z nich s dětmi tvořit velkou letní mozaiku na plot zahrady.\n\nSběrný koš najdete u vchodu do maringotky. Hodí se všechny barvy, čím pestřejší, tím lepší. Sbíráme do konce června; hotovou mozaiku pak slavnostně odhalíme na zahradní slavnosti.'},
+   full:'Od června sbíráme víčka od PET lahví – budeme z nich s dětmi tvořit velkou letní mozaiku na plot zahrady.\n\nSběrný koš najdete u vchodu do maringotky. Hodí se všechny barvy, čím pestřejší, tím lepší. Sbíráme do konce června; hotovou mozaiku pak slavnostně odhalíme na zahradní slavnosti.'},
   {id:'nw4',t:'Fotky z výpravy na Okoř najdete ve složce Fotky.',from:'Honza',time:'18:30',date:'26. 5.',until:12,img:NEWSFOTO.OKOR,
-   full:'Výprava na Okoř se vydařila — počasí nám přálo, děti zvládly celou trasu a zřícenina sklidila obrovský úspěch (stejně jako svačiny od vás, děkujeme!).\n\nFotky z celého dne najdete ve složce Fotky. Pokud byste některou chtěli v plném rozlišení, napište Honzovi.'},
-  {id:'nw5',t:'Brigáda na zahradě 13. 6. — hlaste se prosím v tabulce.',from:'Míša',time:'20:15',date:'25. 5.',until:13,img:NEWSFOTO.BRIGADA,
-   full:'V sobotu 13. 6. od 9:00 chystáme brigádu na zahradě — čeká nás stavba nového záhonu, oprava vrbového tunelu a nátěr herních prvků.\n\nHlaste se prosím v tabulce (odkaz jsme posílali e-mailem), ať víme počty na občerstvení. Nářadí máme, hodí se ale vlastní rukavice. Děti jsou vítané — pro malé pomocníky bude připravený dětský koutek.'},
+   full:'Výprava na Okoř se vydařila – počasí nám přálo, děti zvládly celou trasu a zřícenina sklidila obrovský úspěch (stejně jako svačiny od vás, děkujeme!).\n\nFotky z celého dne najdete ve složce Fotky. Pokud byste některou chtěli v plném rozlišení, napište Honzovi.'},
+  {id:'nw5',t:'Brigáda na zahradě 13. 6. – hlaste se prosím v tabulce.',from:'Míša',time:'20:15',date:'25. 5.',until:13,img:NEWSFOTO.BRIGADA,
+   full:'V sobotu 13. 6. od 9:00 chystáme brigádu na zahradě – čeká nás stavba nového záhonu, oprava vrbového tunelu a nátěr herních prvků.\n\nHlaste se prosím v tabulce (odkaz jsme posílali e-mailem), ať víme počty na občerstvení. Nářadí máme, hodí se ale vlastní rukavice. Děti jsou vítané – pro malé pomocníky bude připravený dětský koutek.'},
 ];
 const ALERTS=[
   {text:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',until:5},
 ];
 const EVENTS={
   3:{title:'Společné putování Ďábličákem',place:'Vozovna Kobylisy',time:'8:00–8:30',note:'Na oběd jsme zpět ve školce.',sbalit:'pláštěnku a náhradní ponožky',map:'https://mapy.com/s/papobonuzu',gps:'50.1339225N, 14.4545787E'},
-  4:{title:'Výlet předškoláků — horolezení',place:'Jungle Sport park, Letňany',time:'8:00–8:30',note:'Na oběd zpět do školky. Děti odpoledne nespí.',sbalit:'sportovní boty a pití',map:'',gps:''},
+  4:{title:'Výlet předškoláků – horolezení',place:'Jungle Sport park, Letňany',time:'8:00–8:30',note:'Na oběd zpět do školky. Děti odpoledne nespí.',sbalit:'sportovní boty a pití',map:'',gps:''},
 };
-/* Denní program (činnost) dle dne v týdnu — zdroj: Pro rodiče 25_26 vhaaji.xlsx, tab ČERVEN.
+/* Denní program (činnost) dle dne v týdnu – zdroj: Pro rodiče 25_26 vhaaji.xlsx, tab ČERVEN.
    Každý pracovní den má téma; speciální akce (výlety, sraz) navíc v EVENTS. */
 const DENNI=['Rytmika','Putování','Pohyb','Tvorba','Hrátky s pohádkou'];
-/* Průvodci — skutečná jména a telefony. photo = klíč do PHOTOS (kdo nemá, dostane generovaný avatar).
+/* Průvodci – skutečná jména a telefony. photo = klíč do PHOTOS (kdo nemá, dostane generovaný avatar).
    h = dnešní hodiny (jen u těch v GUIDES_TODAY, pro dashboard „Průvodci dnes"). */
 const guides=[
   {n:'Tereza',sur:'Vavrečková',phone:'+420 603 200 512',email:'tereza@vhaaji.cz'},
@@ -180,7 +180,7 @@ const guides=[
   {n:'Michaela',sur:'Hrubínová',photo:'Míša',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
   {n:'Táňa',sur:'Kynclová',photo:'Táňa',h:'7:30–16:00',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
 ];
-const GUIDES_TODAY=[7,2,3,1];   // dnes ve školce (Táňa, Darina, Honza, Gabriela) — dashboard „Průvodci dnes"
+const GUIDES_TODAY=[7,2,3,1];   // dnes ve školce (Táňa, Darina, Honza, Gabriela) – dashboard „Průvodci dnes"
 const SCHOOL={name:'Lesní školka Vhaaji',email:'jsme@vhaaji.cz',phone:'+420 603 200 512',adresa:'Ďáblický háj, Praha 8',
   wa:'https://chat.whatsapp.com/K7mQx2vLpR4Nt9wYh3Jd6F'};
 const WEATHER={
@@ -201,20 +201,20 @@ const MENUS=[
 ];
 /* Výlet předškoláků je každý měsíc 1. čtvrtek (v červnu horolezení v Letňanech). */
 const akce=[
-  {title:'Výlet předškoláků — horolezení',date:'čt 4. 6.',time:'8:00–8:30',place:'Jungle Sport park, Letňany',note:'Sraz na místě, na oběd zpět do školky. Děti odpoledne nespí.'},
+  {title:'Výlet předškoláků – horolezení',date:'čt 4. 6.',time:'8:00–8:30',place:'Jungle Sport park, Letňany',note:'Sraz na místě, na oběd zpět do školky. Děti odpoledne nespí.'},
   {title:'Brigáda na zahradě',date:'so 13. 6.',time:'9:00–12:00',place:'Zahrada školky',note:'Společné hrabání a sázení pro rodiče i děti. Občerstvení zajištěno.'},
 ];
 const EVMAP={
-  4:[{t:'Výlet předškoláků — horolezení',type:'akce'}],
-  5:[{t:'Pedagogická porada — školka zavřená',type:'org'}],
+  4:[{t:'Výlet předškoláků – horolezení',type:'akce'}],
+  5:[{t:'Pedagogická porada – školka zavřená',type:'org'}],
   8:[{t:'Kroužek Tanečky s Niki · 15:15',type:'rozvrh'}],
-  10:[{t:'Narozeniny — Eliška',type:'naro'}],
+  10:[{t:'Narozeniny – Eliška',type:'naro'}],
   11:[{t:'Předškolácký den',type:'rozvrh'}],
   13:[{t:'Brigáda na zahradě',type:'akce'}],
-  17:[{t:'Narozeniny — Tonička',type:'naro'}],
+  17:[{t:'Narozeniny – Tonička',type:'naro'}],
   18:[{t:'Kroužek Živly se Shaunem · 14:00',type:'rozvrh'}],
   20:[{t:'Tatínkovský den',type:'akce'}],
-  24:[{t:'Výprava do lesa',type:'akce'},{t:'Narozeniny — Kuba',type:'naro'}],
+  24:[{t:'Výprava do lesa',type:'akce'},{t:'Narozeniny – Kuba',type:'naro'}],
   27:[{t:'Společné focení tříd',type:'akce'}],
   30:[{t:'Konec školního roku',type:'org'},{t:'Závěrečné posezení s rodiči',type:'akce'}],
 };
@@ -228,7 +228,7 @@ const wdLocal=(y,m,d)=>(new Date(y,m,d).getDay()+6)%7;
 const editable=d=>d>TODAY;
 const dayLabel=d=>d===TODAY?'Dnes · St 3. 6.':DOW[wd(d)]+' '+d+'. 6.';
 
-// celodenní docházka je jen v úterý — v ostatní dny platí odpolední
+// celodenní docházka je jen v úterý – v ostatní dny platí odpolední
 const code=(c,d)=>c.att[d]||(c.base==='C'&&wd(d)!==1?'O':c.base);
 const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${CODES[cd][1]}">${CODES[cd][0]}</span>`;
 const mark=cd=>cd==='OM'?'Om':cd==='NE'?'Ne':cd;

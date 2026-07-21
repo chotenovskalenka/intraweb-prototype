@@ -1,9 +1,9 @@
-/* SCREEN: PRUVODCE_PREHLED — „soupis dne" dle priorit průvodce (stejný přístup jako rodič):
+/* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce (stejný přístup jako rodič):
    velký datumový nadpis, prioritní sloupce (.dash3), nadpisy karet .ch.
    Sloupec 1 docházka (počty, akce, kdo nepřijde, zdravotní/provozní poznámky) · sloupec 2 dnešek
    (program, básnička, akce) · sloupec 3 tým (průvodci dnes). */
 const PDOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
-// Hlavička dashboardu (datum + kdo dnes slouží) — renderuje se do topbaru (viz core.js).
+// Hlavička dashboardu (datum + kdo dnes slouží) – renderuje se do topbaru (viz core.js).
 function renderPrehledHead(){
   const den=PDOWFULL[wd(TODAYD)];
   const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
@@ -18,13 +18,13 @@ function renderPrehled(){
 
   // ── Sloupec 1: docházka (počty + akce + kdo nepřijde) ──
   h+=`<div class="dcol">`;
-  // počty dětí dnes — odvozené z counts() (stejný zdroj jako docházka)
+  // počty dětí dnes – odvozené z counts() (stejný zdroj jako docházka)
   h+=`<div class="tile"><div class="ch">Docházka dnes</div>`;
   const strip=[['Přítomno',c.pres,'rano'],['Obědy',c.pres,'rano'],['Spí',c.spi,'spi'],['Po obědě',c.poobede,'poobede'],['Nepřítomní',c.neprit,'neprit']];
   h+=`<div class="tabs wrap">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`;
   h+=`<button class="addbig" style="margin-top:11px" onclick="go('dochazka')">Otevřít dnešní docházku →</button>`;
   h+=`</div>`;
-  // kdo dnes nepřijde — jmenovitě, s důvodem (barva i text, ne jen barva)
+  // kdo dnes nepřijde – jmenovitě, s důvodem (barva i text, ne jen barva)
   const absent=data.map((c,i)=>({c,i})).filter(x=>x.c.status!=='pritomen');
   h+=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div>`;
   if(absent.length){
@@ -36,7 +36,7 @@ function renderPrehled(){
     h+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
   }
   h+=`</div>`;
-  // zdravotní / provozní poznámky (děti s poznámkou od rodičů) — sloupec 1, pod docházkou
+  // zdravotní / provozní poznámky (děti s poznámkou od rodičů) – sloupec 1, pod docházkou
   {const notes=data.filter(c=>c.note);
    if(notes.length){
      h+=`<div class="tile"><div class="ch">Zdravotní a provozní poznámky</div>`;
@@ -47,7 +47,7 @@ function renderPrehled(){
 
   // ── Sloupec 2: dnešek (program dne, básnička/písnička, dnešní akce) ──
   h+=`<div class="dcol">`;
-  // program dne — činnost dle dne v týdnu (RYTMUS) + případný kroužek
+  // program dne – činnost dle dne v týdnu (RYTMUS) + případný kroužek
   const ryt=RYTMUS[wd(TODAYD)];
   h+=`<div class="tile"><div class="ch">Program dne</div>`;
   h+=`<div class="prog-day">${ryt?ryt.prog:'Volný program'}</div>`;
@@ -63,7 +63,7 @@ function renderPrehled(){
     h+=`<div class="empty" style="padding:6px 0 0;text-align:left;font-style:normal">Pro tento týden zatím nevyplněno.</div>`;
   }
   h+=`<button class="cardlink" onclick="go('plan')">Otevřít tématický plán ›</button></div>`;
-  // dnešní akce (pokud na dnešek nějaká je) — proklik na detail
+  // dnešní akce (pokud na dnešek nějaká je) – proklik na detail
   const akToday=[...AKCE].filter(a=>a.day<=TODAYD&&(a.dayEnd?a.dayEnd>=TODAYD:a.day===TODAYD)).sort((a,b)=>a.day-b.day);
   if(akToday.length){
     h+=`<div class="tile"><div class="ch">Dnešní akce</div>`;

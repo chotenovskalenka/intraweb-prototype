@@ -1,7 +1,7 @@
-/* SCREEN: RODIC_PROFIL — údaje o dítěti, zdraví, dokumenty a záznamy z rozhovorů.
+/* SCREEN: RODIC_PROFIL – údaje o dítěti, zdraví, dokumenty a záznamy z rozhovorů.
    Desktop: dva sloupce (sloupcový tok, karty jsou různě vysoké).
    Data v PROFIL / CISELNIK / SOUHLASY (data.js). Rodič si Základní údaje a Zdraví a strava
-   spravuje sám — tlačítko Upravit → overlay renderProfEdit. Kontakt na rodiče (telefon, e-mail)
+   spravuje sám – tlačítko Upravit → overlay renderProfEdit. Kontakt na rodiče (telefon, e-mail)
    se čte z ACCOUNT (data.js) a edituje se jen v Nastavení účtu (modals.js renderUcet).
    Doporučení od průvodců, depistáž a rozhovory jsou jen ke čtení (vkládá školka).
    Fotky prací a vlastní poznámky rodiče vypuštěny (dřív nefunkční prvky). */
@@ -27,7 +27,7 @@ function renderProfil(){
     <div class="rozhov"><div class="rd">Co ${c.ak} baví</div>${p.bavi}</div>
     <div class="rozhov"><div class="rd">Když nesouhlasí</div>${p.nesouhlas}</div></div>`;
 
-  h+=`<div class="tile"><div class="ch">Doporučení od průvodců — na doma</div>
+  h+=`<div class="tile"><div class="ch">Doporučení od průvodců – na doma</div>
     ${p.doporuceni.map(d=>`<div class="rec"><span class="recdot"></span>${d}</div>`).join('')}</div>`;
 
   h+=`<div class="tile"><div class="ch">Dokumenty a souhlasy</div>
@@ -42,19 +42,19 @@ function renderProfil(){
     <div class="rozhov"><div class="rd">Úvodní schůzka · 2. 9. 2025</div>Adaptace v pořádku, dítě se těší. Doma řeší usínání.</div>
     <div class="rozhov"><div class="rd">Konzultace · 20. 1. 2026</div>Velký pokrok v jemné motorice, baví ho práce se dřevem.</div></div>`;
 
-  h+=`</div><div class="note2">Základní údaje, kontakty a zdraví si spravujete sami — držte je prosím aktuální. Doporučení, depistáž a rozhovory vkládají průvodci. Demo hodnoty.</div>`;
+  h+=`</div><div class="note2">Základní údaje, kontakty a zdraví si spravujete sami – držte je prosím aktuální. Doporučení, depistáž a rozhovory vkládají průvodci. Demo hodnoty.</div>`;
   return h+`</div>`;
 }
 
 /* --- Stahování dokumentů (demo) --- helpery downloadBlob/makePDF/dlName jsou ve shared.js.
    PDF = validní minimální PDF, DOCX = textový stub s příponou .docx. */
 window.downloadDoc=i=>{
-  const d=SOUHLASY[i], c=cur(), title=`${d.t} — ${c.n} ${c.sur}`;
+  const d=SOUHLASY[i], c=cur(), title=`${d.t} – ${c.n} ${c.sur}`;
   if(d.f==='PDF')downloadBlob(dlName(d.t)+'.pdf',makePDF(title),'application/pdf');
   else downloadBlob(dlName(d.t)+'.docx',`${title}\n\nDemo dokument – Lesní školka Vhaaji.`,'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
   showToast('Stahuji '+d.t+' ✓');
 };
-window.downloadDepistaz=t=>{const c=cur();downloadBlob(dlName(t)+'.pdf',makePDF(`${t} — ${c.n} ${c.sur}`),'application/pdf');showToast('Stahuji '+t+' ✓');};
+window.downloadDepistaz=t=>{const c=cur();downloadBlob(dlName(t)+'.pdf',makePDF(`${t} – ${c.n} ${c.sur}`),'application/pdf');showToast('Stahuji '+t+' ✓');};
 
 /* --- Editace profilu (rodič spravuje své údaje) --- overlay řízený stavem pfEdit --- */
 function renderProfEdit(){
@@ -101,8 +101,8 @@ window.openProfEdit=()=>{
     strava:p.strava,dieta:p.dieta,usinani:p.usinani,bavi:p.bavi,nesouhlas:p.nesouhlas};
   overlay={type:'profedit'};render();
 };
-window.pfSet=(f,v)=>{pfEdit[f]=v;};                 // text/textarea/select — bez re-renderu (drží focus)
-window.pfCheck=(f,v)=>{pfEdit[f]=v;render();};      // checkbox — re-render kvůli detailu
+window.pfSet=(f,v)=>{pfEdit[f]=v;};                 // text/textarea/select – bez re-renderu (drží focus)
+window.pfCheck=(f,v)=>{pfEdit[f]=v;render();};      // checkbox – re-render kvůli detailu
 window.pfAddAlergie=a=>{if(a&&!pfEdit.alergie.includes(a))pfEdit.alergie.push(a);render();};
 window.pfDelAlergie=a=>{const i=pfEdit.alergie.indexOf(a);if(i>=0)pfEdit.alergie.splice(i,1);render();};
 window.profCancel=()=>{pfEdit=null;overlay=null;render();};

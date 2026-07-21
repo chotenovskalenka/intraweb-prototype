@@ -2,8 +2,8 @@
 function renderKalendar(){
   const dim=daysInMonth(kalY,kalM), off=firstOffset(kalY,kalM), isJune=(kalY===2026&&kalM===5);
   if(kalSel>dim)kalSel=1;
-  // Desktop: mřížka vlevo, vybraný den vpravo (uvnitř bílého .gcalwrap — Google vzhled zůstává).
-  let h=`<div class="doch"><div class="gcal-note">Sdílený Google Kalendář školky — akce, rozvrh, narozeniny a organizace školního roku. (Simulace; v ostré verzi napojený kalendář školky.)</div>`;
+  // Desktop: mřížka vlevo, vybraný den vpravo (uvnitř bílého .gcalwrap – Google vzhled zůstává).
+  let h=`<div class="doch"><div class="gcal-note">Sdílený Google Kalendář školky – akce, rozvrh, narozeniny a organizace školního roku. (Simulace; v ostré verzi napojený kalendář školky.)</div>`;
   h+=`<div class="gcalwrap kal-wrap"><div class="kal-main">`;
   h+=`<div class="gcalnav"><div class="gstep"><button onclick="kalStep(-1,0)">‹</button><span class="gmo">${MONTHS[kalM]}</span><button onclick="kalStep(1,0)">›</button></div><div class="gstep"><button onclick="kalStep(0,-1)">‹</button><span class="gyr">${kalY}</span><button onclick="kalStep(0,1)">›</button></div></div>`;
   h+=`<div class="gcal">`;

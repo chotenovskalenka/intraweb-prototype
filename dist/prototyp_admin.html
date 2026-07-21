@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* Design tokens — sémantická vrstva. Hodnoty odvozené z vhaaji.cz (fáze 4.2, redesign).
+/* Design tokens – sémantická vrstva. Hodnoty odvozené z vhaaji.cz (fáze 4.2, redesign).
    Viz docs/design-system.md. Komponenty čerpají z tokenů, nikdy natvrdo. */
 :root{
   /* Povrchy / text */
@@ -21,9 +21,9 @@
   /* Značkové barvy */
   --color-primary:#2B7059;
   --color-primary-strong:#1F5344;
-  --color-accent:#C8BC85;          /* okrová — výplň (tmavý text) */
+  --color-accent:#C8BC85;          /* okrová – výplň (tmavý text) */
   --color-accent-ink:#6F5F1C;      /* okrová jako text (AA na světlé) */
-  --color-accent-soft:#C99C93;     /* tlumená růžová — dekor */
+  --color-accent-soft:#C99C93;     /* tlumená růžová – dekor */
   --color-info:#496D7E;
   --color-on-primary:#F4EEDF;      /* text/prvky na primární ploše */
   /* Ohraničení / stavy */
@@ -31,19 +31,19 @@
   --color-border-strong:rgba(31,42,46,.16);
   --color-danger:#B0492F;
   --color-success:#387349;
-  /* UI tinty (směr whitespace + barva) — světlé kategorie/stavy */
+  /* UI tinty (směr whitespace + barva) – světlé kategorie/stavy */
   --tint-green:#E3EDE7;
   --tint-rose:#F1E1DC;
   --tint-ochre:#F1EAD2;
   --tint-blue:#DEE7EA;
-  /* Placeholdery fotek (galerie, úvodní fotky novinek) — v ostré verzi je nahradí reálné snímky.
+  /* Placeholdery fotek (galerie, úvodní fotky novinek) – v ostré verzi je nahradí reálné snímky.
      Tlumené odstíny z akvarelové palety, aby prototyp nepůsobil jako rozbitý obrázek. */
   --photo-1:#E3D9C6;
   --photo-2:#DCE3D6;
   --photo-3:#D8E0E4;
   --photo-4:#E8DCD2;
   --photo-5:#E7E0CE;
-  /* Stavová paleta — jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
+  /* Stavová paleta – jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
      Každý stav má -ink (text) a -bg (světlá výplň). */
   --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.11);
   --state-info-ink:var(--color-info);        --state-info-bg:rgba(73,109,126,.10);
@@ -53,11 +53,11 @@
   --state-muted-ink:var(--color-text-hint);  --state-muted-bg:rgba(31,42,46,.07);
   --state-brand-ink:var(--color-primary);    --state-brand-bg:rgba(43,112,89,.12);
   --radius-md:14px;
-  /* Typografie — nadpisy Bricolage Grotesque, tělo/UI Inter (univerzální pro všechny 4 školky).
+  /* Typografie – nadpisy Bricolage Grotesque, tělo/UI Inter (univerzální pro všechny 4 školky).
      Token --font-serif drží nadpisový font (historický název; hodnota je bezpatková). */
   --font-serif:"Bricolage Grotesque",system-ui,sans-serif;
   --font-sans:"Inter",system-ui,sans-serif;
-  /* spacing škála — aktivace v komponentách proběhne ve 4.3 */
+  /* spacing škála – aktivace v komponentách proběhne ve 4.3 */
   --space-xs:4px;
   --space-sm:8px;
   --space-md:12px;
@@ -81,7 +81,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 }
 </style>
 <style>
-/* LAYOUT: ADMIN — desktopový shell (stálý levý sidebar + obsah s max šířkou ~980 px).
+/* LAYOUT: ADMIN – desktopový shell (stálý levý sidebar + obsah s max šířkou ~980 px).
    Skládá se ze stejných tokenů jako mobilní appky; mobil jen „nerozbité". */
 .admin{display:flex;min-height:100vh;background:var(--color-bg)}
 .sidebar{width:236px;flex-shrink:0;background:var(--color-surface);border-right:1px solid var(--color-border);padding:22px 0 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
@@ -99,7 +99,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .content-wrap{padding:24px 32px 48px;flex:1}
 .content-wrap #content{max-width:980px;margin:0 auto}
 
-/* Mobil: shell se nerozbije — sidebar nahoře jako vodorovná lišta. */
+/* Mobil: shell se nerozbije – sidebar nahoře jako vodorovná lišta. */
 @media(max-width:720px){
   .admin{flex-direction:column}
   .sidebar{width:auto;height:auto;position:static;border-right:none;border-bottom:1px solid var(--color-border);padding:12px 0}
@@ -262,18 +262,18 @@ table.wt td.pastc{opacity:.45}
 .ccount{font-size:11px;font-weight:600;color:var(--color-primary);margin-top:1px}.ccount.lk{color:var(--color-text-hint)}
 .calcell.sel .cdot{background:var(--color-on-primary)}
 
-/* Dashboard — sdílený „soupis dne" (rodič i průvodce): velký datumový nadpis,
+/* Dashboard – sdílený „soupis dne" (rodič i průvodce): velký datumový nadpis,
    prioritní sloupce, nadpisy karet .ch, program dne. Parent-specifické (listování
    dnů .dh-nav/.dh-step, day-picker) zůstávají v screens-rodic.css. */
 .dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:0 0 16px}
 .dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
 .dh-sub{width:100%;font-size:13.5px;color:var(--color-text-muted);margin-top:-8px}
-/* Nadpis sekce (H1) v topbaru — na úrovni role/přepínače. Prázdná (overlay) → skrytá.
+/* Nadpis sekce (H1) v topbaru – na úrovni role/přepínače. Prázdná (overlay) → skrytá.
    Sdílené oběma mobilními appkami; na mobilu se zalomí pod řádek burger+role/přepínač. */
 .dashhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0;flex:1}
 .dashhead:empty{display:none}
 @media (max-width:899px){.topbar{flex-wrap:wrap} .dashhead{order:3;flex-basis:100%;margin-top:6px}}
-/* plakát tématického plánu (reálný obrázek z nástěnky) — sdílené oběma appkami */
+/* plakát tématického plánu (reálný obrázek z nástěnky) – sdílené oběma appkami */
 .tema-poster{display:block;width:100%;max-width:520px;border:1px solid var(--color-border);border-radius:10px;margin:0 auto 10px}
 .tema-poster:last-of-type{margin-bottom:0}
 /* plakát jako klikací tlačítko (zvětšení) + lightbox */
@@ -298,7 +298,7 @@ table.wt td.pastc{opacity:.45}
 }
 @media (min-width:1200px){.dash3{grid-template-columns:repeat(3,1fr)}}
 
-/* Novinky — sdílené karty se seznamem/detailem (rodič: sekce Novinky + overlay detail;
+/* Novinky – sdílené karty se seznamem/detailem (rodič: sekce Novinky + overlay detail;
    průvodce: sekce Novinky + modal detail). Foto = placeholder tint jako sekce Fotky. */
 .gal{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
 .ph{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38);overflow:hidden}
@@ -306,7 +306,7 @@ table.wt td.pastc{opacity:.45}
 .newsurg{display:inline-block;font-size:10px;font-weight:700;color:var(--state-danger-ink);background:var(--state-danger-bg);border-radius:6px;padding:2px 8px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
 .newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
 .news-grid{display:grid;gap:12px}
-/* flex sloupec (ne display:block): <button> jinak obsah vertikálně centruje — karta bez fotky
+/* flex sloupec (ne display:block): <button> jinak obsah vertikálně centruje – karta bez fotky
    má začínat odshora; zároveň drží patičku „Celá novinka" u spodní hrany karty */
 .newscard{display:flex;flex-direction:column;align-items:stretch;width:100%;text-align:left;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;font-family:var(--font-sans);padding:0}
 .newscard.urgent{border-color:rgba(176,73,47,.35)}
@@ -314,7 +314,7 @@ table.wt td.pastc{opacity:.45}
 .nc-body{padding:12px 14px;display:flex;flex-direction:column;align-items:flex-start;flex:1;min-height:0;width:100%}
 .nc-t{font-family:var(--font-serif);font-size:15.5px;font-weight:600;color:var(--color-primary-strong);line-height:1.35}
 .nc-x{font-size:13px;color:var(--color-text);line-height:1.5;margin:8px 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-/* patička karty — tenká linka + odkaz dole (vzor .cardlink z Docházky) */
+/* patička karty – tenká linka + odkaz dole (vzor .cardlink z Docházky) */
 .nc-foot{margin-top:auto;width:100%;padding-top:11px;border-top:1px solid var(--color-border);font-size:13px;font-weight:600;color:var(--color-primary)}
 .nc-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .wabtn{font-size:12.5px;font-weight:600;color:var(--color-primary);border:1px solid var(--color-primary);border-radius:8px;padding:6px 11px;text-decoration:none;background:var(--color-surface)}
@@ -325,23 +325,23 @@ table.wt td.pastc{opacity:.45}
 @media (min-width:900px){.news-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
 @media (min-width:1200px){.news-grid{grid-template-columns:repeat(3,1fr)}}
 
-/* Hover feedback — jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
+/* Hover feedback – jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
 @media (hover:hover){
   a,button{transition:background-color .15s ease,color .15s ease,border-color .15s ease,filter .15s ease}
   /* navigace (drawer i admin sidebar) */
   .ditem:hover:not(.on),.sb-item:hover:not(.on){background:rgba(43,112,89,.07)}
-  /* plné (primární) akce — jemné projasnění */
+  /* plné (primární) akce – jemné projasnění */
   .btn-primary:hover,.omluvbtn:hover,.addbig:hover,.savebtn:hover,.odbtn:hover,.fondbtn:hover,.btn-s.primary:hover,.omcheck:hover{filter:brightness(1.08)}
-  /* ghost / outline / segment tlačítka — jemný tint */
+  /* ghost / outline / segment tlačítka – jemný tint */
   .cbtn:hover,.addbtn:hover,.bulktoggle:hover,.omx:hover,.filters button:hover:not(.on),.switch button:hover:not(.on),.mini button:hover:not(.on),.temanav button:hover:not(.on),.kids button:hover:not(.on),.choices button:hover{background:rgba(43,112,89,.06);border-color:var(--color-primary)}
-  /* klikací karty / řádky — zvýraznění povrchu */
+  /* klikací karty / řádky – zvýraznění povrchu */
   button.tile:hover,.akce:hover,.newsrow:hover,.kbtn:hover,.prehl-abs:hover,.stepper button:hover:not(:disabled),.dh-step:hover{background:var(--color-surface-2)}
   /* textové odkazy */
   .clink:hover,.newsmore:hover,.cardlink:hover,.tlabbtn:hover{text-decoration:underline}
 }
 </style>
 <style>
-/* SCREENS: ADMIN — obrazovkové styly (dashboard vedení). Skládá z existujících komponent
+/* SCREENS: ADMIN – obrazovkové styly (dashboard vedení). Skládá z existujících komponent
    (.tile, .tlab, .bdg, .note2); nové jen tam, kde není co znovupoužít. */
 
 .dash-head{font-size:13px;color:var(--color-text-muted);margin:0 2px 14px}
@@ -417,7 +417,7 @@ table.wt td.pastc{opacity:.45}
 .bdg.sent{color:var(--state-brand-ink);background:var(--state-brand-bg)}
 .bdg.arch{color:var(--state-muted-ink);background:var(--state-muted-bg)}
 
-/* aktuality — seznam */
+/* aktuality – seznam */
 .ak-item{padding:14px 16px}
 .ak-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .ak-date{margin-left:auto;font-size:12.5px;color:var(--color-text-muted)}
@@ -432,7 +432,7 @@ table.wt td.pastc{opacity:.45}
 .btn-s.primary{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .btn-s:disabled{opacity:.4;cursor:not-allowed}
 
-/* aktuality — formulář */
+/* aktuality – formulář */
 .rec-sk{margin-bottom:11px}
 .rec-sk:last-child{margin-bottom:0}
 .rec-nm{font-size:13.5px;font-weight:600;color:var(--color-primary-strong);margin-bottom:6px}
@@ -442,26 +442,26 @@ table.wt td.pastc{opacity:.45}
 .ak-warn{font-size:13px;color:var(--color-danger);background:rgba(176,73,47,.08);border:1px solid rgba(176,73,47,.20);border-radius:10px;padding:10px 12px;line-height:1.45}
 .btn-primary:disabled{opacity:.45;cursor:not-allowed}
 
-/* porady — štítek chip */
+/* porady – štítek chip */
 .stitek{display:inline-block;font-size:11px;font-weight:500;color:var(--color-text-muted);background:var(--color-surface-2);border:1px solid var(--color-border);padding:2px 9px;border-radius:999px;margin:0 5px 5px 0}
 .stitek.hi{color:var(--color-primary);background:rgba(43,112,89,.12);border-color:rgba(43,112,89,.22);font-weight:600}
 .za-tags{margin-top:9px}
 
-/* porady — seznam zápisů */
+/* porady – seznam zápisů */
 .za-item{display:block;width:100%;text-align:left;cursor:pointer;font-family:var(--font-sans)}
 .za-sk{font-size:12.5px;color:var(--color-text-muted)}
 .za-nz{font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong);margin-top:8px}
 .za-nz-lg{font-size:20px}
 .za-ucast{font-size:12.5px;color:var(--color-text-muted);margin-top:4px}
 
-/* porady — detail odstavce */
+/* porady – detail odstavce */
 .odst{border-top:1px solid var(--color-border);padding:13px 0}
 .odst:first-of-type{border-top:none;margin-top:10px}
 .odst-tx{font-size:14.5px;color:var(--color-text);line-height:1.55}
 .odst-chips{margin-top:9px}
 .odst-chips button{font-size:11.5px;padding:5px 10px}
 
-/* porady — filtrovaný výpis */
+/* porady – filtrovaný výpis */
 .vypis-head{margin:2px 2px 12px}
 .vh-t{font-family:var(--font-serif);font-size:18px;color:var(--color-primary-strong)}
 .vh-s{font-size:12.5px;color:var(--color-text-muted);margin-top:2px}
@@ -474,7 +474,7 @@ table.wt td.pastc{opacity:.45}
   .caps,.nh-grid{grid-template-columns:1fr}
 }
 
-/* tisk / PDF export výpisu — skryje shell a ovládací prvky, nechá jen obsah */
+/* tisk / PDF export výpisu – skryje shell a ovládací prvky, nechá jen obsah */
 @media print{
   .sidebar,.topbar-a,.switch,.no-print,.toast{display:none!important}
   .print-only{display:block}
@@ -488,7 +488,7 @@ table.wt td.pastc{opacity:.45}
 }
 </style>
 <style>
-/* Akvarel z vhaaji.cz (hero-hlavicka03) — dvě dekorativní použití, izolovaně v tomto souboru:
+/* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
    1) brand blok pod logem (plný obdélník, jemný krémový závoj), ve všech třech appkách
    2) velmi jemný wash u patičky, stmívaný odspoda nahoru (jako býval nahoře, teď dole)
    Smazat tento soubor + <link> v *.html = pryč. */
@@ -544,7 +544,7 @@ table.wt td.pastc{opacity:.45}
 </div>
 <div class="sos-scrim" id="sosScrim" onclick="closeSos()"><div class="modal sos-modal" role="dialog" aria-modal="true" aria-label="Nahlásit chybu na IS" onclick="event.stopPropagation()">
   <h3>Nahlásit chybu na IS</h3>
-  <p class="sos-p">Něco v systému nefunguje nebo se chová divně? Napište nám — čím konkrétnější popis (co se dělalo a co se stalo), tím rychleji to opravíme.</p>
+  <p class="sos-p">Něco v systému nefunguje nebo se chová divně? Napište nám – čím konkrétnější popis (co se dělalo a co se stalo), tím rychleji to opravíme.</p>
   <div class="sos-row"><span>E-mail podpory</span><a href="mailto:podpora-is@vhaaji.cz?subject=Chyba v IS Vhaaji">podpora-is@vhaaji.cz</a></div>
   <div class="sos-row"><span>Telefon (Po–Pá 9–15 h)</span><a href="tel:+420720999000">+420 720 999 000</a></div>
   <div class="mbtns"><button class="btn-ghost" onclick="closeSos()">Zavřít</button><a class="btn-primary" href="mailto:podpora-is@vhaaji.cz?subject=Chyba v IS Vhaaji">Napsat e-mail</a></div>
@@ -554,7 +554,7 @@ table.wt td.pastc{opacity:.45}
 <script>
 const VHAAJI_LOGO='data:image/png;base64,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';
 /* SHARED: helpery sdílené oběma appkami */
-/* Sdílená mapa docházkových kódů (stavová paleta z tokens.css) — používá rodič i průvodce */
+/* Sdílená mapa docházkových kódů (stavová paleta z tokens.css) – používá rodič i průvodce */
 const CODES={
   C:['Celodenní','var(--state-brand-ink)','var(--state-brand-bg)'],
   D:['Dopolední','var(--state-warn-ink)','var(--state-warn-bg)'],
@@ -573,7 +573,7 @@ function avHash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>
 /* Fotobox pro novinky: val je buď reálná fotka (data: URI, z NEWSFOTO) nebo barevný placeholder (var(--photo-N)). */
 function photoBox(cls,val){return val.slice(0,5)==='data:'?'<div class="'+cls+'"><img src="'+val+'" alt=""></div>':'<div class="'+cls+'" style="background:'+val+'">foto</div>';}
 function avatar(c,size){
-  // profilová fotka podle jména (PHOTOS z photos.js — jen mobilní appky); jinak generovaný SVG
+  // profilová fotka podle jména (PHOTOS z photos.js – jen mobilní appky); jinak generovaný SVG
   var ph=(typeof PHOTOS!=='undefined')&&c&&PHOTOS[c.photo||c.n];
   if(ph)return '<span class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+ph+'" alt=""></span>';
   var SKIN=['#F2C9A0','#E8B07D','#C98A5E','#A56A40','#8A5A3B','#F5D6B8'],HAIR=['#3B2A20','#6B4423','#A6702E','#1F1B17','#C9A24B','#7A4A2A'],BG=['#E7E4DA','#E3EDE7','#F1EAD2','#DEE7EA','#F1E1DC'];
@@ -585,11 +585,11 @@ function avatar(c,size){
 function renderKeepFocus(){const a=document.activeElement;const pos=a&&a.selectionStart;render();const inp=document.querySelector('#content .search');if(inp){inp.focus();try{inp.setSelectionRange(pos,pos);}catch(e){}}}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),1500);}
 
-/* Patičkový SOS modal (nahlášení chyby na IS) — statické markup v *.html, přepínané přes .on */
+/* Patičkový SOS modal (nahlášení chyby na IS) – statické markup v *.html, přepínané přes .on */
 window.openSos=()=>{const s=document.getElementById('sosScrim');if(s)s.classList.add('on');};
 window.closeSos=()=>{const s=document.getElementById('sosScrim');if(s)s.classList.remove('on');};
 
-/* Lightbox (zvětšení + stažení obrázku, např. plakát tématického plánu) — statický #lbScrim */
+/* Lightbox (zvětšení + stažení obrázku, např. plakát tématického plánu) – statický #lbScrim */
 window.openLightbox=(src,name)=>{const s=document.getElementById('lbScrim');if(!s)return;
   s.querySelector('#lbImg').src=src;const d=s.querySelector('#lbDl');d.href=src;d.download=name||'obrazek.jpg';s.classList.add('on');};
 window.closeLightbox=()=>{const s=document.getElementById('lbScrim');if(s)s.classList.remove('on');};
@@ -602,7 +602,7 @@ function downloadBlob(name,data,mime){
   setTimeout(()=>URL.revokeObjectURL(u),1500);
 }
 const dlName=t=>t.replace(/[\/\\:*?"<>|]/g,'-');
-// text pro PDF stream musí být čisté ASCII — Helvetica nezná diakritiku a hlavně:
+// text pro PDF stream musí být čisté ASCII – Helvetica nezná diakritiku a hlavně:
 // byte-offsety v xref se počítají z délky řetězce, takže vícebajtový znak by je rozhodil.
 const pdfAscii=s=>(s||'').replace(/[    ]/g,' ').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x20-\x7e]/g,'-').replace(/[()\\]/g,' ');
 function makePDF(title,lines){
@@ -627,7 +627,7 @@ function makePDF(title,lines){
 }
 </script>
 <script>
-/* SHARED: ikony menu — čárové (Lucide styl, stroke=currentColor, takže se obarví podle
+/* SHARED: ikony menu – čárové (Lucide styl, stroke=currentColor, takže se obarví podle
    barvy položky: neaktivní tmavá, aktivní zelená). 8 převzato z podklady/icon/,
    6 dokresleno ve stejném stylu (kalendar, clock=pruvodci, smile=deti, coins=fond,
    clipboard=porady, refresh=nahrady). */
@@ -654,14 +654,14 @@ const ICON_KEY={prehled:'prehled',aktuality:'news',novinky:'news',dochazka:'doch
 function icon(key){const k=ICON_KEY[key];return k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_SVG[k]}</svg>`:'';}
 </script>
 <script>
-/* DATA: ADMIN — seed pro appku vedení/administrativy (čtyři školky).
+/* DATA: ADMIN – seed pro appku vedení/administrativy (čtyři školky).
    Data se s ostatními appkami NESDÍLEJÍ; kde to dává smysl, čísla sedí s mobilními appkami
-   (např. Eliška Dvořáková má neuhrazenou fakturu za březen — viz rodic/data.js). */
+   (např. Eliška Dvořáková má neuhrazenou fakturu za březen – viz rodic/data.js). */
 
-const TODAYD=3;                    // St 3. 6. 2026 — shodný simulovaný čas jako ostatní appky
+const TODAYD=3;                    // St 3. 6. 2026 – shodný simulovaný čas jako ostatní appky
 
 /* Sesterské školky: obsazenost/kapacita a třídy/skupiny. Vhaaji sedí s průvodcovskou
-   appkou (25 dětí). Názvy převzaty z reálného intrawebu — viz decision-log, revize dle
+   appkou (25 dětí). Názvy převzaty z reálného intrawebu – viz decision-log, revize dle
    reality. Kouzlo lesa je samostatná školka (ne třída Jaaty). Školka s jednou skupinou
    má jednu třídu pojmenovanou po sobě (obsazenost se všude odvozuje z pole tříd). */
 const SKOLKY=[
@@ -682,7 +682,7 @@ const SKOLKY=[
 ];
 const obsazeno=s=>s.tridy.reduce((n,t)=>n+t.obs,0);
 
-/* Stavy platby (BRIEF kap. 4). Fakturační modul se nedělá — dashboard jen přehled
+/* Stavy platby (BRIEF kap. 4). Fakturační modul se nedělá – dashboard jen přehled
    „řeší se mimo appku". Částky dle reálných příruček 2024/25: Vhaaji odpolední docházka
    10 584 Kč (Eliška = shoda s rodic/data.js), Maata 3× týdně do 15:00 = 11 813 Kč. */
 const PLATBASTAVY={
@@ -702,29 +702,29 @@ const PLATBY=[
 const UPOZORNENI=[
   {typ:'data',text:'U 2 dětí chybí kontakt na zákonného zástupce',skolka:'Vhaaji'},
   {typ:'data',text:'U 1 dítěte chybí podepsaný GDPR souhlas',skolka:'Maata'},
-  {typ:'provoz',text:'Jaata je plně obsazená — 3 rodiny v pořadníku',skolka:'Jaata'},
+  {typ:'provoz',text:'Jaata je plně obsazená – 3 rodiny v pořadníku',skolka:'Jaata'},
   {typ:'system',text:'Záloha dat proběhla v pořádku (3. 6. 04:00)',skolka:''},
 ];
 
 /* Souhrn náhrad napříč školkami (detail přijde v sekci Náhrady).
-   Náhrady expirují koncem školního roku (30. 6.), nepřenášejí se — všechny dostupné
+   Náhrady expirují koncem školního roku (30. 6.), nepřenášejí se – všechny dostupné
    tedy propadnou 30. 6. 2026 (proto je to v červnu silný signál pro vedení). */
 const NAHRADY_SUM={dostupne:14,expiruje:14,naplanovane:5};
 
-/* Provozní úkoly — jednoduchý checklist, odškrtávání funguje v paměti (mizí po reloadu). */
+/* Provozní úkoly – jednoduchý checklist, odškrtávání funguje v paměti (mizí po reloadu). */
 let UKOLY=[
   {t:'Objednat sezónní ovoce na červen (všechny školky)',done:false},
-  {t:'Revize lékárniček — Vhaaji a Maata',done:false},
+  {t:'Revize lékárniček – Vhaaji a Maata',done:false},
   {t:'Odeslat účetní podklady za květen',done:true},
   {t:'Připravit rozpis letního provozu',done:false},
   {t:'Potvrdit termín inspekce ČŠI',done:false},
 ];
 
 /* Aktuality (Flow 4). Stavy: koncept / naplanovana / odeslana / archivovana.
-   `naplanovana` jen v seed datech — plánování odeslání se nedělá (viz decision-log).
+   `naplanovana` jen v seed datech – plánování odeslání se nedělá (viz decision-log).
    `recip` = mapa skolkaId → {all:bool, tridy:[názvy tříd]}; příjemci jsou POVINNÍ pro odeslání.
-   „Bez určených příjemců" (BRIEF kap. 4) je chyba, ne stav — v datech se neukládá.
-   Odeslané aktuality sedí s NEWS v rodičovské appce (roupy, dřívější vyzvednutí) — simulace shodou seedu, žádné sdílení. */
+   „Bez určených příjemců" (BRIEF kap. 4) je chyba, ne stav – v datech se neukládá.
+   Odeslané aktuality sedí s NEWS v rodičovské appce (roupy, dřívější vyzvednutí) – simulace shodou seedu, žádné sdílení. */
 const AKSTAV={
   koncept:{lab:'Koncept',cls:'wait'},
   naplanovana:{lab:'Naplánovaná',cls:'part'},
@@ -735,19 +735,19 @@ let akUid=10;
 let AKTUALITY=[
   {id:'ak1',text:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',urgent:true,stav:'odeslana',datum:'2. 6. 2026',recip:{vhaaji:{all:true,tridy:[]}}},
   {id:'ak2',text:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada). Prosíme o dřívější vyzvednutí.',urgent:true,stav:'odeslana',datum:'1. 6. 2026',recip:{vhaaji:{all:true,tridy:[]}}},
-  {id:'ak3',text:'Sbíráme víčka od PET lahví na výtvarku — sběrný koš je u vchodu do maringotky.',urgent:false,stav:'archivovana',datum:'28. 5. 2026',recip:{vhaaji:{all:false,tridy:['Vhaaji žlutá']}}},
+  {id:'ak3',text:'Sbíráme víčka od PET lahví na výtvarku – sběrný koš je u vchodu do maringotky.',urgent:false,stav:'archivovana',datum:'28. 5. 2026',recip:{vhaaji:{all:false,tridy:['Vhaaji žlutá']}}},
   {id:'ak4',text:'Letní provoz: přihlašování na červencové týdny je otevřené do 20. 6.',urgent:false,stav:'naplanovana',datum:'odešle se 10. 6. 2026',recip:{vhaaji:{all:true,tridy:[]},jaata:{all:true,tridy:[]},kouzlo:{all:true,tridy:[]},maata:{all:true,tridy:[]}}},
-  {id:'ak5',text:'Brigáda na zahradě 13. 6. — připravit přihlašovací tabulku a rozeslat rodinám.',urgent:false,stav:'koncept',datum:'',recip:{}},
+  {id:'ak5',text:'Brigáda na zahradě 13. 6. – připravit přihlašovací tabulku a rozeslat rodinám.',urgent:false,stav:'koncept',datum:'',recip:{}},
 ];
-// souhrn příjemců aktuality → pole vět „Školka — všichni/třídy (N rodin)"; počet rodin ~ obsazenost
+// souhrn příjemců aktuality → pole vět „Školka – všichni/třídy (N rodin)"; počet rodin ~ obsazenost
 function recipText(recip){
   const parts=[];
   SKOLKY.forEach(s=>{
     const r=recip[s.id]; if(!r)return;
-    if(r.all){parts.push(`${s.nazev} — všichni (${obsazeno(s)} rodin)`);}
+    if(r.all){parts.push(`${s.nazev} – všichni (${obsazeno(s)} rodin)`);}
     else if(r.tridy&&r.tridy.length){
       const fam=r.tridy.reduce((n,tn)=>{const t=s.tridy.find(x=>x.n===tn);return n+(t?t.obs:0);},0);
-      parts.push(`${s.nazev} — ${r.tridy.join(', ')} (${fam} rodin)`);
+      parts.push(`${s.nazev} – ${r.tridy.join(', ')} (${fam} rodin)`);
     }
   });
   return parts;
@@ -771,48 +771,48 @@ let ZAPISY=[
     {text:'Adaptace nových dětí proběhla klidně, dvě děti potřebují ještě delší doprovod rodičů při ranním předávání.',stitky:['pedagogika']},
     {text:'Zkontrolovány lékárničky ve všech maringotkách, doplněny náplasti a dezinfekce; evidence úrazů založena na nový rok.',stitky:['hygiena','bezpečnost']},
   ]},
-  {id:'z2',dt:20251002,datum:'2. 10. 2025',typ:'porada',skolka:'Jaata',nazev:'Provozní porada — říjen',ucastnici:['Gabča','vedení'],odstavce:[
+  {id:'z2',dt:20251002,datum:'2. 10. 2025',typ:'porada',skolka:'Jaata',nazev:'Provozní porada – říjen',ucastnici:['Gabča','vedení'],odstavce:[
     {text:'Revize elektrických spotřebičů proběhla, jeden vařič vyřazen z provozu, objednán nový.',stitky:['bezpečnost','provoz']},
-    {text:'Nová posila do týmu nastupuje od listopadu — zajistit zaškolení a rozšíření o BOZP.',stitky:['personál']},
+    {text:'Nová posila do týmu nastupuje od listopadu – zajistit zaškolení a rozšíření o BOZP.',stitky:['personál']},
   ]},
   {id:'z3',dt:20251114,datum:'14. 11. 2025',typ:'evaluace',skolka:'Vhaaji',nazev:'Čtvrtletní evaluace pedagogů',ucastnici:['Táňa','Darča','Honza'],odstavce:[
-    {text:'Reflexe adaptačního období — děti dobře zvládají rytmus dne, ranní kruh se osvědčil.',stitky:['pedagogika']},
+    {text:'Reflexe adaptačního období – děti dobře zvládají rytmus dne, ranní kruh se osvědčil.',stitky:['pedagogika']},
     {text:'Doporučení: v chladném počasí zařadit více pohybových aktivit a zkrátit statické bloky.',stitky:['pedagogika','provoz']},
   ]},
   {id:'z4',dt:20251205,datum:'5. 12. 2025',typ:'porada',skolka:'Maata',nazev:'Zimní provoz a bezpečnost',ucastnici:['Míša','vedení'],odstavce:[
     {text:'Kontrola zimního vybavení dětí; upozornit rodiče na chybějící rukavice a náhradní oblečení.',stitky:['provoz']},
     {text:'Nácvik evakuace při požáru proběhl s dětmi hravou formou, únikové cesty volné.',stitky:['bezpečnost']},
   ]},
-  {id:'z5',dt:20260120,datum:'20. 1. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Provozní porada — leden',ucastnici:['Táňa','vedení'],odstavce:[
-    {text:'Chřipková sezóna — zpřísněná hygiena rukou, častější větrání a dezinfekce ploch.',stitky:['hygiena']},
+  {id:'z5',dt:20260120,datum:'20. 1. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Provozní porada – leden',ucastnici:['Táňa','vedení'],odstavce:[
+    {text:'Chřipková sezóna – zpřísněná hygiena rukou, častější větrání a dezinfekce ploch.',stitky:['hygiena']},
     {text:'Revize smlouvy s dodavatelem obědů, cena od února mírně roste; informovat rodiče.',stitky:['provoz']},
   ]},
   {id:'z6',dt:20260211,datum:'11. 2. 2026',typ:'evaluace',skolka:'Jaata',nazev:'Pololetní evaluace',ucastnici:['Gabča','vedení'],odstavce:[
-    {text:'Hodnocení individuálních plánů předškoláků — tři děti připravené na zápis do školy.',stitky:['pedagogika']},
-    {text:'Personální stabilita — bez fluktuace, tým sehraný, rozvrh služeb funguje.',stitky:['personál']},
+    {text:'Hodnocení individuálních plánů předškoláků – tři děti připravené na zápis do školy.',stitky:['pedagogika']},
+    {text:'Personální stabilita – bez fluktuace, tým sehraný, rozvrh služeb funguje.',stitky:['personál']},
   ]},
   {id:'z7',dt:20260318,datum:'18. 3. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Příprava na inspekci ČŠI',ucastnici:['Táňa','Darča','vedení'],odstavce:[
-    {text:'Kompletace dokumentace k inspekci — třídnice, evidence úrazů, podepsané souhlasy GDPR.',stitky:['inspekce','provoz']},
+    {text:'Kompletace dokumentace k inspekci – třídnice, evidence úrazů, podepsané souhlasy GDPR.',stitky:['inspekce','provoz']},
     {text:'Kontrola pitného režimu a skladování potravin, teploty lednic zaznamenávány denně.',stitky:['hygiena','inspekce']},
   ]},
   {id:'z8',dt:20260505,datum:'5. 5. 2026',typ:'porada',skolka:'Maata',nazev:'Bezpečnost a revize prostředí',ucastnici:['Míša','vedení'],odstavce:[
-    {text:'Revize dřevěných herních prvků na zahradě — dva prvky určeny k opravě, dočasně ohrazeny.',stitky:['bezpečnost','provoz']},
+    {text:'Revize dřevěných herních prvků na zahradě – dva prvky určeny k opravě, dočasně ohrazeny.',stitky:['bezpečnost','provoz']},
     {text:'Kontrola lékárniček a expirací léčiv, prošlé položky vyřazeny a doplněny.',stitky:['hygiena','bezpečnost']},
   ]},
-  {id:'z9',dt:20260602,datum:'2. 6. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Provozní porada — červen',ucastnici:['Táňa','vedení'],odstavce:[
+  {id:'z9',dt:20260602,datum:'2. 6. 2026',typ:'porada',skolka:'Vhaaji',nazev:'Provozní porada – červen',ucastnici:['Táňa','vedení'],odstavce:[
     {text:'Uzávěrka docházky a náhrad před koncem školního roku, kontrola nevyčerpaných náhrad.',stitky:['provoz']},
     {text:'Plán letního provozu a personální pokrytí prázdninových týdnů.',stitky:['personál','provoz']},
   ]},
 ];
 </script>
 <script>
-/* SCREEN: ADMIN_PREHLED — dashboard vedení (BRIEF kap. 1):
+/* SCREEN: ADMIN_PREHLED – dashboard vedení (BRIEF kap. 1):
    kapacity školek, chybějící platby, systémová upozornění, souhrn náhrad,
    provozní úkoly, poslední porady/evaluace. */
 function renderPrehled(){
   let h=`<div class="dash-head">${DOW[wd(TODAYD)]} ${TODAYD}. června 2026 · přehled všech školek</div>`;
 
-  // (a) kapacity školek — obsazeno / kapacita, vizuální pruh; u jednoskupinové školky
+  // (a) kapacity školek – obsazeno / kapacita, vizuální pruh; u jednoskupinové školky
   // se rozpis tříd neduplikuje
   h+=`<div class="tile"><div class="tlab">Kapacity školek</div><div class="caps">`;
   SKOLKY.forEach(s=>{
@@ -826,7 +826,7 @@ function renderPrehled(){
   });
   h+=`</div></div>`;
 
-  // (b) chybějící platby — kdo, částka, po splatnosti (badge stavů); řeší se mimo appku
+  // (b) chybějící platby – kdo, částka, po splatnosti (badge stavů); řeší se mimo appku
   h+=`<div class="tile"><div class="tlab">Chybějící platby</div>`;
   PLATBY.forEach(p=>{
     const st=PLATBASTAVY[p.stav];
@@ -834,10 +834,10 @@ function renderPrehled(){
       :p.stav==='castecne'?`uhrazeno ${kc(p.uhrazeno)} z ${kc(p.castka)} Kč`
       :p.stav==='ceka'?'platba přišla, čeká na spárování':`splatnost prošla před ${p.poDnu} dny`;
     h+=`<div class="pay-row"><div class="pay-main"><div class="pay-nm">${p.dite} <span class="pay-sk">· ${p.skolka}</span></div>`
-      +`<div class="pay-sub">${p.obdobi} — ${dodat}</div></div>`
+      +`<div class="pay-sub">${p.obdobi} – ${dodat}</div></div>`
       +`<div class="pay-right"><span class="pay-amt">${kc(p.castka)} Kč</span><span class="bdg ${st.cls}">${st.lab}</span></div></div>`;
   });
-  h+=`<div class="note2">Fakturaci školka řeší mimo appku — zde jen přehled.</div></div>`;
+  h+=`<div class="note2">Fakturaci školka řeší mimo appku – zde jen přehled.</div></div>`;
 
   // (c) systémová upozornění vč. chybějících dat
   h+=`<div class="tile"><div class="tlab">Systémová upozornění</div>`;
@@ -847,7 +847,7 @@ function renderPrehled(){
   });
   h+=`</div>`;
 
-  // (d) souhrn náhrad — dostupné celkem, kolik brzy expiruje, naplánované
+  // (d) souhrn náhrad – dostupné celkem, kolik brzy expiruje, naplánované
   h+=`<button class="tile dash-link" onclick="go('nahrady')"><div class="tlab" style="margin:0">Náhrady <span class="dl-arr">›</span></div>`
     +`<div class="nh-grid">`
     +`<div class="nh-cell"><div class="nh-num">${NAHRADY_SUM.dostupne}</div><div class="nh-lab">dostupných</div></div>`
@@ -855,7 +855,7 @@ function renderPrehled(){
     +`<div class="nh-cell"><div class="nh-num">${NAHRADY_SUM.naplanovane}</div><div class="nh-lab">naplánovaných</div></div>`
     +`</div></button>`;
 
-  // (e) provozní úkoly — checklist, odškrtávání v paměti
+  // (e) provozní úkoly – checklist, odškrtávání v paměti
   const hotovo=UKOLY.filter(u=>u.done).length;
   h+=`<div class="tile"><div class="tlab">Provozní úkoly <span class="tl-count">${hotovo}/${UKOLY.length}</span></div>`;
   UKOLY.forEach((u,i)=>{
@@ -863,7 +863,7 @@ function renderPrehled(){
   });
   h+=`</div>`;
 
-  // (f) poslední porady / evaluace — titulky (odvozené ze ZAPISY), proklik do sekce porad
+  // (f) poslední porady / evaluace – titulky (odvozené ze ZAPISY), proklik do sekce porad
   h+=`<button class="tile dash-link" onclick="go('porady')"><div class="tlab" style="margin:0">Poslední porady a evaluace <span class="dl-arr">›</span></div>`;
   ZAPISY.slice().sort((a,b)=>b.dt-a.dt).slice(0,3).forEach(p=>{
     h+=`<div class="por-row"><span class="por-d">${p.datum}</span><span class="por-t">${p.nazev}<span class="por-sk"> · ${p.skolka}</span></span><span class="por-typ ${p.typ}">${p.typ==='porada'?'porada':'evaluace'}</span></div>`;
@@ -876,7 +876,7 @@ const kc=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
 window.toggleUkol=i=>{UKOLY[i].done=!UKOLY[i].done;render();};
 </script>
 <script>
-/* SCREEN: ADMIN_AKTUALITY — Flow 4: vedení vytváří aktualitu, kterou NELZE odeslat
+/* SCREEN: ADMIN_AKTUALITY – Flow 4: vedení vytváří aktualitu, kterou NELZE odeslat
    bez určení příjemců; u odeslaných vidí, komu odešla. */
 
 let akView='list';   // 'list' | 'new'
@@ -904,7 +904,7 @@ function renderAkList(){
     if(rec.length){
       h+=`<div class="ak-rec"><span class="ak-rlab">Příjemci:</span> ${rec.map(escTa).join(' · ')}</div>`;
     }else if(a.stav==='koncept'){
-      h+=`<div class="ak-rec ak-norec">Bez určených příjemců — před odesláním je nutné je vybrat.</div>`;
+      h+=`<div class="ak-rec ak-norec">Bez určených příjemců – před odesláním je nutné je vybrat.</div>`;
     }
     // akce dle stavu
     h+=`<div class="ak-acts">`;
@@ -933,7 +933,7 @@ function renderAkForm(){
   // důležité
   h+=`<div class="field"><div class="l">Označení</div><div class="pchips">`
     +`<button class="${f.urgent?'on':''}" onclick="akToggleUrgent()">Důležité (urgentní)</button></div></div>`;
-  // příjemci — povinné
+  // příjemci – povinné
   h+=`<div class="field"><div class="l">Příjemci · povinné</div>`;
   SKOLKY.forEach(s=>{
     const r=recip[s.id]||{all:false,tridy:[]};
@@ -951,7 +951,7 @@ function renderAkForm(){
   if(ok){
     h+=`<div class="tile note-info ak-preview"><b>Odešle se rodičům:</b><br>${rec.map(escTa).join('<br>')}</div>`;
   }else{
-    h+=`<div class="ak-warn">⚠ Bez určených příjemců nelze novinku odeslat — vyberte alespoň jednu školku nebo třídu.</div>`;
+    h+=`<div class="ak-warn">⚠ Bez určených příjemců nelze novinku odeslat – vyberte alespoň jednu školku nebo třídu.</div>`;
   }
   // tlačítka
   h+=`<div class="mbtns">`;
@@ -995,7 +995,7 @@ window.akSendId=id=>{const a=AKTUALITY.find(x=>x.id===id);if(!hasRecip(a.recip)|
 window.akArchive=id=>{const a=AKTUALITY.find(x=>x.id===id);a.stav='archivovana';showToast('Novinka archivována');render();};
 </script>
 <script>
-/* SCREEN: ADMIN_PORADY — Flow 5: vedení hledá podklady pro inspekci.
+/* SCREEN: ADMIN_PORADY – Flow 5: vedení hledá podklady pro inspekci.
    Seznam zápisů (filtr školka/typ) · detail se štítky u odstavců ·
    filtrovaný výpis (štítek + období) napříč zápisy · export do tisku. */
 
@@ -1058,7 +1058,7 @@ function renderPoDetail(){
       +`<div class="za-tags print-only">${o.stitky.map(t=>`<span class="stitek">${t}</span>`).join('')}</div>`
       +`</div>`;
   });
-  h+=`<div class="note2 no-print">Štítek u odstavce přidáte/odeberete klepnutím — takto se odstavce zpřístupní filtrovanému výpisu.</div>`;
+  h+=`<div class="note2 no-print">Štítek u odstavce přidáte/odeberete klepnutím – takto se odstavce zpřístupní filtrovanému výpisu.</div>`;
   h+=`</div>`;
   return h;
 }
@@ -1077,7 +1077,7 @@ function renderPoVypis(){
   h+=`<div class="filters no-print">`
     +OBDOBI.map(o=>chip('vObdobi',o.k,o.label,vObdobi)).join('')+`</div>`;
   // hlavička výpisu (užitečná i na papíře)
-  h+=`<div class="vypis-head"><div class="vh-t">Výpis zápisů — štítek „${vStitek}"</div>`
+  h+=`<div class="vypis-head"><div class="vh-t">Výpis zápisů – štítek „${vStitek}"</div>`
     +`<div class="vh-s">${ob.label} · ${hits.length} ${hits.length===1?'odstavec':(hits.length>=2&&hits.length<=4?'odstavce':'odstavců')}</div></div>`;
   h+=`<button class="btn-s primary no-print" style="margin-bottom:12px" onclick="window.print()">Exportovat výpis (tisk / PDF)</button>`;
   if(!hits.length){
@@ -1099,7 +1099,7 @@ function renderPoForm(){
   const f=newZ;
   let h=`<button class="back" onclick="poCancel()">‹ Zpět na seznam</button>`;
   h+=`<div class="tile">`
-    +`<div class="field"><div class="l">Název zápisu</div><input class="pin" id="nzNazev" value="${esc(f.nazev)}" placeholder="Např. Provozní porada — červen"></div>`;
+    +`<div class="field"><div class="l">Název zápisu</div><input class="pin" id="nzNazev" value="${esc(f.nazev)}" placeholder="Např. Provozní porada – červen"></div>`;
   h+=`<div class="field"><div class="l">Typ</div><div class="pchips">`
     +`<button class="${f.typ==='porada'?'on':''}" onclick="poFType('porada')">Porada</button>`
     +`<button class="${f.typ==='evaluace'?'on':''}" onclick="poFType('evaluace')">Evaluace</button></div></div>`;
@@ -1140,7 +1140,7 @@ window.poSave=()=>{nzSync();if(!newZ.nazev.trim()||!newZ.text.trim())return;
   poNew=false;newZ=null;showToast('Zápis uložen');render();};
 </script>
 <script>
-/* CORE: ADMIN — stav, sekce, sidebar, render(), go(), úvodní spuštění.
+/* CORE: ADMIN – stav, sekce, sidebar, render(), go(), úvodní spuštění.
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
 const SECTIONS=[
   ['prehled','Přehled','⌂'],

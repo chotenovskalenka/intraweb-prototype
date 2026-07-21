@@ -1,6 +1,6 @@
-/* SCREEN: RODIC_PLATBY — faktury (filtr rok/stav, PDF, neuhrazené rovnou rozevřené s QR) + kulturní fond s QR.
+/* SCREEN: RODIC_PLATBY – faktury (filtr rok/stav, PDF, neuhrazené rovnou rozevřené s QR) + kulturní fond s QR.
    Desktop: vlevo faktury, vpravo kulturní fond. Faktury i fond jsou per dítě (data.js).
-   Žádná samostatná karta „K úhradě" — QR se ukazuje přímo u neuhrazených faktur v seznamu. */
+   Žádná samostatná karta „K úhradě" – QR se ukazuje přímo u neuhrazených faktur v seznamu. */
 function fakeQR(seed,px){
   const n=25,m=px/n,f=[[0,0],[0,18],[18,0]];
   const inF=(r,c)=>f.some(p=>r>=p[0]&&r<p[0]+7&&c>=p[1]&&c<p[1]+7);

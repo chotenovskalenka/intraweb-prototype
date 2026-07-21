@@ -22,7 +22,7 @@ function temaBlock(){
   if(temaMonth==='kveten'){
     let h=`<div class="temanav"><button class="on" onclick="temaShow('kveten')">Květen</button><button onclick="temaShow('cerven')">Červen</button></div>`;
     h+=`<div class="tile"><div class="tlab">Hodnota měsíce</div><div class="tval">${TEMA_KVETEN.hodnota}</div></div>`;
-    TEMA_KVETEN.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">—</div>`:'')+`</div>`;});
+    TEMA_KVETEN.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">–</div>`:'')+`</div>`;});
     h+=`<button class="btn-primary" style="width:100%" onclick="temaCopy()">Zkopírovat květen do června</button>`;
     return h;
   }

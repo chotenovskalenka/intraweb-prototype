@@ -1,4 +1,4 @@
-/* SCREEN: ADMIN_PORADY — Flow 5: vedení hledá podklady pro inspekci.
+/* SCREEN: ADMIN_PORADY – Flow 5: vedení hledá podklady pro inspekci.
    Seznam zápisů (filtr školka/typ) · detail se štítky u odstavců ·
    filtrovaný výpis (štítek + období) napříč zápisy · export do tisku. */
 
@@ -61,7 +61,7 @@ function renderPoDetail(){
       +`<div class="za-tags print-only">${o.stitky.map(t=>`<span class="stitek">${t}</span>`).join('')}</div>`
       +`</div>`;
   });
-  h+=`<div class="note2 no-print">Štítek u odstavce přidáte/odeberete klepnutím — takto se odstavce zpřístupní filtrovanému výpisu.</div>`;
+  h+=`<div class="note2 no-print">Štítek u odstavce přidáte/odeberete klepnutím – takto se odstavce zpřístupní filtrovanému výpisu.</div>`;
   h+=`</div>`;
   return h;
 }
@@ -80,7 +80,7 @@ function renderPoVypis(){
   h+=`<div class="filters no-print">`
     +OBDOBI.map(o=>chip('vObdobi',o.k,o.label,vObdobi)).join('')+`</div>`;
   // hlavička výpisu (užitečná i na papíře)
-  h+=`<div class="vypis-head"><div class="vh-t">Výpis zápisů — štítek „${vStitek}"</div>`
+  h+=`<div class="vypis-head"><div class="vh-t">Výpis zápisů – štítek „${vStitek}"</div>`
     +`<div class="vh-s">${ob.label} · ${hits.length} ${hits.length===1?'odstavec':(hits.length>=2&&hits.length<=4?'odstavce':'odstavců')}</div></div>`;
   h+=`<button class="btn-s primary no-print" style="margin-bottom:12px" onclick="window.print()">Exportovat výpis (tisk / PDF)</button>`;
   if(!hits.length){
@@ -102,7 +102,7 @@ function renderPoForm(){
   const f=newZ;
   let h=`<button class="back" onclick="poCancel()">‹ Zpět na seznam</button>`;
   h+=`<div class="tile">`
-    +`<div class="field"><div class="l">Název zápisu</div><input class="pin" id="nzNazev" value="${esc(f.nazev)}" placeholder="Např. Provozní porada — červen"></div>`;
+    +`<div class="field"><div class="l">Název zápisu</div><input class="pin" id="nzNazev" value="${esc(f.nazev)}" placeholder="Např. Provozní porada – červen"></div>`;
   h+=`<div class="field"><div class="l">Typ</div><div class="pchips">`
     +`<button class="${f.typ==='porada'?'on':''}" onclick="poFType('porada')">Porada</button>`
     +`<button class="${f.typ==='evaluace'?'on':''}" onclick="poFType('evaluace')">Evaluace</button></div></div>`;

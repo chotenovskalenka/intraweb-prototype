@@ -1,4 +1,4 @@
-/* CORE: RODIC — stav, sekce, drawer/hlavička, render(), go(), toast, úvodní spuštění */
+/* CORE: RODIC – stav, sekce, drawer/hlavička, render(), go(), toast, úvodní spuštění */
 const SECTIONS=[['prehled','Přehled','◆'],['aktuality','Novinky','▲'],['dochazka','Docházka a náhrady','✓'],['profil','Profil dítěte','☺'],['platby','Platby','₵'],
   ['kalendar','Kalendář','▦'],['plan','Tématický plán','✎'],['fotky','Fotky','▢'],['kontakty','Kontakty','✆']];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
@@ -21,7 +21,7 @@ function renderDrawer(){
   document.getElementById('scrim').classList.toggle('on',drawerOpen);
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')
     +`<div class="dfoot"><button class="ditem" onclick="openUcet()"><span class="dfoot-acc">${ACCOUNT.jmeno}<small>Nastavení účtu</small></span></button>
-      <button class="ditem" onclick="showToast('Odhlášení — jen náhled, v prototypu nefunguje')"><span class="ic">${icon('odhlasit')||'⏻'}</span>Odhlásit se</button></div>`;
+      <button class="ditem" onclick="showToast('Odhlášení – jen náhled, v prototypu nefunguje')"><span class="ic">${icon('odhlasit')||'⏻'}</span>Odhlásit se</button></div>`;
 }
 /* Nadpis sekce (H1) se renderuje do topbaru (v řádku s přepínačem dítěte), ne do obsahu. */
 const PAGEH={dochazka:'Docházka a náhrady',platby:'Platby',kalendar:'Kalendář',plan:'Tématický plán',fotky:'Fotky',aktuality:'Novinky ze školky',kontakty:'Kontakty'};

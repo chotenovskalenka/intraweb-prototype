@@ -1,4 +1,4 @@
-/* CORE: PRUVODCE — stav, sekce, drawer, render(), go(), úvodní spuštění */
+/* CORE: PRUVODCE – stav, sekce, drawer, render(), go(), úvodní spuštění */
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
   ['dochazka','Docházka','✓'],
@@ -26,7 +26,7 @@ function renderDrawer(){
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('');
 }
 function render(){
-  // Nadpis sekce (H1) do topbaru — v řádku s rolí, ne pod ním v obsahu.
+  // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
