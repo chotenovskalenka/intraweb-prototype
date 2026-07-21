@@ -8,7 +8,7 @@ function renderAktuality(){
   h+=`<div class="news-grid">`;
   NEWS.filter(n=>TODAY<=n.until).forEach(n=>{
     h+=`<button class="newscard${n.urgent?' urgent':''}" onclick="openNovinka('${n.id}')">`;
-    if(n.img)h+=`<div class="nc-hero" style="background:${n.img}">foto</div>`;
+    if(n.img)h+=photoBox('nc-hero',n.img);
     h+=`<div class="nc-body">${n.urgent?'<span class="newsurg">Důležité</span>':''}<div class="nc-t">${n.t}</div>`;
     h+=`<div class="newsmeta" style="margin-top:3px">${n.date} · platí do ${n.until}. 6.</div>`;
     h+=`<div class="nc-x">${novinkaExcerpt(n)}</div>`;
@@ -23,12 +23,12 @@ function renderAktuality(){
 function renderNovinka(){
   const n=NEWS.find(x=>x.id===overlay.id);if(!n)return '';
   let h=`<div class="novdet"><button class="back" onclick="closeOverlay()">← Zpět na novinky</button>`;
-  if(n.img)h+=`<div class="nd-hero" style="background:${n.img}">foto</div>`;
+  if(n.img)h+=photoBox('nd-hero',n.img);
   h+=`${n.urgent?'<span class="newsurg">Důležité</span>':''}`;
   h+=`<h1 class="nd-t">${n.t}</h1>`;
   h+=`<div class="newsmeta" style="margin-top:4px">${n.date} · platí do ${n.until}. 6.</div>`;
   h+=`<div class="nd-body">`+(n.full||'').split('\n\n').map(p=>`<p class="nd-p">${p}</p>`).join('')+`</div>`;
-  if(n.imgs&&n.imgs.length)h+=`<div class="nd-gal"><div class="ch">Fotky</div><div class="gal">`+n.imgs.map(c=>`<div class="ph" style="background:${c}">foto</div>`).join('')+`</div></div>`;
+  if(n.imgs&&n.imgs.length)h+=`<div class="nd-gal"><div class="ch">Fotky</div><div class="gal">`+n.imgs.map(c=>photoBox('ph',c)).join('')+`</div></div>`;
   return h+`</div>`;
 }
 window.openNovinka=id=>{overlay={type:'novinka',id};render();};

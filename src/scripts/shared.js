@@ -16,6 +16,8 @@ const DOW=['Po','Út','St','Čt','Pá','So','Ne'];
 const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
 
 function avHash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
+/* Fotobox pro novinky: val je buď reálná fotka (data: URI, z NEWSFOTO) nebo barevný placeholder (var(--photo-N)). */
+function photoBox(cls,val){return val.slice(0,5)==='data:'?'<div class="'+cls+'"><img src="'+val+'" alt=""></div>':'<div class="'+cls+'" style="background:'+val+'">foto</div>';}
 function avatar(c,size){
   // profilová fotka podle jména (PHOTOS z photos.js — jen mobilní appky); jinak generovaný SVG
   var ph=(typeof PHOTOS!=='undefined')&&c&&PHOTOS[c.photo||c.n];

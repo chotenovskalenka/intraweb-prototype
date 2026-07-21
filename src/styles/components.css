@@ -3,6 +3,7 @@
 .tval{font-size:14.5px;color:var(--color-text);line-height:1.5}
 .vhead{font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong);margin:4px 2px 9px}
 .note2{font-size:12px;color:var(--color-text-hint);margin-top:10px;line-height:1.5}
+.gcal-note{font-size:13px;font-weight:600;color:var(--color-primary);line-height:1.5;margin:0 0 14px}
 .note-info{background:rgba(43,112,89,.06);border-color:rgba(43,112,89,.18);font-size:13.5px;color:var(--color-text);line-height:1.5}
 .note-info b{color:var(--color-primary);font-weight:600}
 .np{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:5px 0}.np b{font-weight:600}
@@ -154,7 +155,7 @@ table.wt td.pastc{opacity:.45}
 .dh-sub{width:100%;font-size:13.5px;color:var(--color-text-muted);margin-top:-8px}
 /* Nadpis sekce (H1) v topbaru — na úrovni role/přepínače. Prázdná (overlay) → skrytá.
    Sdílené oběma mobilními appkami; na mobilu se zalomí pod řádek burger+role/přepínač. */
-.dashhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.dashhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0;flex:1}
 .dashhead:empty{display:none}
 @media (max-width:899px){.topbar{flex-wrap:wrap} .dashhead{order:3;flex-basis:100%;margin-top:6px}}
 /* plakát tématického plánu (reálný obrázek z nástěnky) — sdílené oběma appkami */
@@ -185,7 +186,8 @@ table.wt td.pastc{opacity:.45}
 /* Novinky — sdílené karty se seznamem/detailem (rodič: sekce Novinky + overlay detail;
    průvodce: sekce Novinky + modal detail). Foto = placeholder tint jako sekce Fotky. */
 .gal{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.ph{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38)}
+.ph{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38);overflow:hidden}
+.nc-hero img,.nd-hero img,.ph img{width:100%;height:100%;object-fit:cover}
 .newsurg{display:inline-block;font-size:10px;font-weight:700;color:var(--state-danger-ink);background:var(--state-danger-bg);border-radius:6px;padding:2px 8px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
 .newsmeta{font-size:11px;color:var(--color-text-hint);margin-top:6px}
 .news-grid{display:grid;gap:12px}
@@ -201,7 +203,7 @@ table.wt td.pastc{opacity:.45}
 .nc-foot{margin-top:auto;width:100%;padding-top:11px;border-top:1px solid var(--color-border);font-size:13px;font-weight:600;color:var(--color-primary)}
 .nc-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .wabtn{font-size:12.5px;font-weight:600;color:var(--color-primary);border:1px solid var(--color-primary);border-radius:8px;padding:6px 11px;text-decoration:none;background:var(--color-surface)}
-.nd-hero{height:170px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38);margin-bottom:11px}
+.nd-hero{height:170px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(31,42,46,.38);margin-bottom:11px;overflow:hidden}
 .nd-t{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--color-primary-strong);line-height:1.3}
 .nd-p{font-size:13.5px;line-height:1.6;color:var(--color-text);margin:0 0 10px}
 .nd-p:last-child{margin-bottom:0}
