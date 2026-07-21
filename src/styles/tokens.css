@@ -26,6 +26,13 @@
   --tint-rose:#F1E1DC;
   --tint-ochre:#F1EAD2;
   --tint-blue:#DEE7EA;
+  /* Placeholdery fotek (galerie, úvodní fotky novinek) — v ostré verzi je nahradí reálné snímky.
+     Tlumené odstíny z akvarelové palety, aby prototyp nepůsobil jako rozbitý obrázek. */
+  --photo-1:#E3D9C6;
+  --photo-2:#DCE3D6;
+  --photo-3:#D8E0E4;
+  --photo-4:#E8DCD2;
+  --photo-5:#E7E0CE;
   /* Stavová paleta — jeden vizuální jazyk stavů napříč appkami (badge/chip/CODES).
      Každý stav má -ink (text) a -bg (světlá výplň). */
   --state-ok-ink:var(--color-success);       --state-ok-bg:rgba(56,115,73,.11);

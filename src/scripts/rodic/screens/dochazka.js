@@ -82,7 +82,7 @@ function renderDochazka(){
   const c=cur();
   // Desktop: velký nadpis + dva sloupce — vlevo kalendář docházky, vpravo náhrady/omluvenky. Mobil: stoh.
   // Omlouvání probíhá přímo v kalendáři (výběr dne/týdne/měsíce → omluva); samostatné tlačítko zrušeno.
-  let h=`<div class="doch"><div class="doch-head"><h1 class="dh-t">Docházka a náhrady</h1></div>`;
+  let h=`<div class="doch">`;
   h+=`<div class="doch-den">`;
   h+=`<div class="doch-main"><div class="ch">Kalendář docházky</div>`;
   h+=`<div class="switch">`+[['den','Den'],['tyden','Týden'],['mesic','Měsíc']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setView('${v[0]}')">${v[1]}</button>`).join('')+`</div>`;

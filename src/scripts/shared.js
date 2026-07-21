@@ -17,6 +17,9 @@ const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
 
 function avHash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function avatar(c,size){
+  // profilová fotka podle jména (PHOTOS z photos.js — jen mobilní appky); jinak generovaný SVG
+  var ph=(typeof PHOTOS!=='undefined')&&c&&PHOTOS[c.n];
+  if(ph)return '<span class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+ph+'" alt=""></span>';
   var SKIN=['#F2C9A0','#E8B07D','#C98A5E','#A56A40','#8A5A3B','#F5D6B8'],HAIR=['#3B2A20','#6B4423','#A6702E','#1F1B17','#C9A24B','#7A4A2A'],BG=['#E7E4DA','#E3EDE7','#F1EAD2','#DEE7EA','#F1E1DC'];
   var h=avHash(c.n+(c.sur||'')),skin=SKIN[h%6],hair=HAIR[(h>>3)%6],bg=BG[(h>>6)%5],st=h%4;
   var hcy=[53,50,54,56][st],hr=[30,31,30,29][st],bun=st===2?'<circle cx="50" cy="26" r="7" fill="'+hair+'"/>':'';
@@ -25,3 +28,34 @@ function avatar(c,size){
 }
 function renderKeepFocus(){const a=document.activeElement;const pos=a&&a.selectionStart;render();const inp=document.querySelector('#content .search');if(inp){inp.focus();try{inp.setSelectionRange(pos,pos);}catch(e){}}}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),1500);}
+
+/* --- Stažení souboru vygenerovaného v prohlížeči (demo dokumenty a faktury) --- */
+function downloadBlob(name,data,mime){
+  const b=new Blob([data],{type:mime}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),1500);
+}
+const dlName=t=>t.replace(/[\/\\:*?"<>|]/g,'-');
+// text pro PDF stream musí být čisté ASCII — Helvetica nezná diakritiku a hlavně:
+// byte-offsety v xref se počítají z délky řetězce, takže vícebajtový znak by je rozhodil.
+const pdfAscii=s=>(s||'').replace(/[    ]/g,' ').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x20-\x7e]/g,'-').replace(/[()\\]/g,' ');
+function makePDF(title,lines){
+  const body=[[title,22]].concat((lines||['Demo dokument - Lesni skolka Vhaaji']).map(l=>[l,12]));
+  let stream='BT 60 780 Td';
+  body.forEach(([txt,sz],i)=>{stream+=` /F1 ${sz} Tf${i?' 0 -28 Td':''} (${pdfAscii(txt)}) Tj`;});
+  stream+=' ET';
+  const objs=[
+    '<</Type/Catalog/Pages 2 0 R>>',
+    '<</Type/Pages/Kids[3 0 R]/Count 1>>',
+    '<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Resources<</Font<</F1 5 0 R>>>>/Contents 4 0 R>>',
+    `<</Length ${stream.length}>>\nstream\n${stream}\nendstream`,
+    '<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>',
+  ];
+  let pdf='%PDF-1.4\n';const off=[];
+  objs.forEach((o,i)=>{off.push(pdf.length);pdf+=`${i+1} 0 obj\n${o}\nendobj\n`;});
+  const xref=pdf.length;
+  pdf+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`;
+  off.forEach(o=>{pdf+=String(o).padStart(10,'0')+' 00000 n \n';});
+  pdf+=`trailer\n<</Size ${objs.length+1}/Root 1 0 R>>\nstartxref\n${xref}\n%%EOF`;
+  return pdf;
+}

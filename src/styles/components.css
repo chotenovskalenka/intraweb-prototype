@@ -57,6 +57,7 @@ footer{margin-top:var(--space-lg);padding-top:13px;border-top:1px solid var(--co
 .pwa{font-size:11.5px;color:var(--color-text-hint)}
 .hint{font-size:12.5px;color:var(--color-text-hint);text-align:center;margin-top:14px;line-height:1.45}
 .av{display:inline-flex;border-radius:50%;overflow:hidden;flex-shrink:0;line-height:0}.av svg{display:block}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
 .works{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);margin-top:var(--space-xs)}
 .work{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(31,42,46,.4)}
 .weekbox{max-height:430px;overflow-y:auto;border:1px solid var(--color-border);border-radius:12px;background:var(--color-surface)}
@@ -141,6 +142,14 @@ table.wt td.pastc{opacity:.45}
 .dash-head{display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;margin:0 0 16px}
 .dh-t{font-family:var(--font-serif);font-size:25px;font-weight:700;color:var(--color-primary-strong);line-height:1.15;margin:0}
 .dh-sub{width:100%;font-size:13.5px;color:var(--color-text-muted);margin-top:-8px}
+/* Nadpis sekce (H1) v topbaru — na úrovni role/přepínače. Prázdná (overlay) → skrytá.
+   Sdílené oběma mobilními appkami; na mobilu se zalomí pod řádek burger+role/přepínač. */
+.dashhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.dashhead:empty{display:none}
+@media (max-width:899px){.topbar{flex-wrap:wrap} .dashhead{order:3;flex-basis:100%;margin-top:6px}}
+/* plakát tématického plánu (reálný obrázek z nástěnky) — sdílené oběma appkami */
+.tema-poster{display:block;width:100%;max-width:520px;border:1px solid var(--color-border);border-radius:10px;margin:0 auto 10px}
+.tema-poster:last-of-type{margin-bottom:0}
 .ch{font-family:var(--font-serif);font-size:16px;font-weight:600;color:var(--color-primary-strong);margin-bottom:9px}
 .prog-day{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--color-primary);margin:0 0 4px}
 .cardlink{display:block;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);margin-top:12px;padding:12px 0 2px;color:var(--color-primary);font-weight:600;font-size:13px;font-family:var(--font-sans);cursor:pointer}

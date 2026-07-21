@@ -4,7 +4,7 @@
    Desktop: mřížka karet (.news-grid), mobil: stoh. */
 function novinkaExcerpt(n){const p=(n.full||n.t).split('\n')[0];return p.length>140?p.slice(0,140)+'…':p;}
 function renderAktuality(){
-  let h=`<div class="doch"><div class="doch-head"><h1 class="dh-t">Novinky ze školky</h1></div>`;
+  let h=`<div class="doch">`;
   h+=`<div class="news-grid">`;
   NEWS.filter(n=>TODAY<=n.until).forEach(n=>{
     h+=`<button class="newscard${n.urgent?' urgent':''}" onclick="openNovinka('${n.id}')">`;
