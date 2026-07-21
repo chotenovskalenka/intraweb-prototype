@@ -292,7 +292,6 @@ const dayLabel=d=>d===TODAY?'Dnes · St 3. 6.':DOW[wd(d)]+' '+d+'. 6.';
 // celodenní docházka je jen v úterý – v ostatní dny platí odpolední
 const code=(c,d)=>c.att[d]||(c.base==='C'&&wd(d)!==1?'O':c.base);
 const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${CODES[cd][1]}">${CODES[cd][0]}</span>`;
-const mark=cd=>cd==='OM'?'Om':cd==='NE'?'Ne':cd;
 const cur=()=>children[ci];
 const plural=n=>n===1?'den':(n>=2&&n<=4?'dny':'dní');
 const telnum=p=>p.replace(/ /g,'');

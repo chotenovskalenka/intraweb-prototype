@@ -46,7 +46,7 @@ function renderTyden(){
 function renderMesic(){let h=`<div class="vhead vhrow"><span>Měsíční přehled</span><div class="dh-nav"><button class="dh-step" onclick="stepMonth(-1)" aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">Červen 2026</span><button class="dh-step" onclick="stepMonth(1)" aria-label="Další měsíc">›</button></div></div>`+bulkControls()+'<div class="cal">';
   DOW.forEach(x=>h+=`<div class="h">${x}</div>`);
   for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="cell we"><span class="dnum">${d}</span></div>`;continue;}const cd=code(cur(),d),s=bulk?selSet.has(d):sel===d;
-    h+=`<div class="cell${d===TODAY?' today':''}${!editable(d)?' lock':''}${s?' sel':''}" onclick="pick(${d})"><span class="dnum">${d}</span><span class="mk" style="color:${CODES[cd][1]}">${mark(cd)}</span></div>`;}
+    h+=`<div class="cell${d===TODAY?' today':''}${!editable(d)?' lock':''}${s?' sel':''}" onclick="pick(${d})"><span class="dnum">${d}</span><span class="mk" style="color:${CODES[cd][1]}">${CODES[cd][0].toLowerCase()}</span></div>`;}
   h+='</div>';
   return h;}
 // Modal docházky/omluvy pro vybraný den (editor je uvnitř). Otevírá se z kalendáře přes pick(d).

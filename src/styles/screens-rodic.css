@@ -344,7 +344,8 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .cal .cell.today{outline:2px solid var(--color-primary);outline-offset:-2px}
 .cal .cell.sel{box-shadow:0 0 0 2px var(--color-accent) inset}
 .cal .dnum{font-size:11px;color:var(--color-text-muted)}
-.cal .mk{font-size:10px;font-weight:700}
+.cal .mk{font-size:8px;font-weight:700;line-height:1.15;text-align:center;word-break:break-word;hyphens:auto}
+@media (min-width:900px){.cal .mk{font-size:10.5px}}
 .edlock{font-size:12.5px;color:var(--color-text-muted);font-style:italic}
 .pay2{border-color:var(--color-accent);background:rgba(200,188,133,.07)}
 .wkrow.locked .wkmain .d{color:var(--color-text-hint)}
