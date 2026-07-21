@@ -87,7 +87,7 @@ function renderDashboard(){
 // Hlavička dashboardu v topbaru (na úrovni přepínače dětí): avatar + jméno/datum + listování ‹ ▾ ›.
 function renderDashHead(){
   const c=cur(), today=dashDay===TODAY;
-  return `${avatar(c,44)}<h1 class="dh-t">${c.n} · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>`
+  return `${avatar(c,44)}<h1 class="dh-t"><button class="dh-name-link" onclick="go('profil')" aria-label="Profil dítěte">${c.n}</button> · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>`
     +(today?`<span class="dh-today">dnes</span>`:'')
     +`<div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button>`
     +`<button class="dh-step" onclick="toggleDashPicker(event)" aria-label="Vybrat den">▾</button>`

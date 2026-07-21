@@ -393,6 +393,8 @@ table.wt td.pastc{opacity:.45}
 .novstep .dh-lbl{min-width:110px;text-align:center}
 /* „dnes" – pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
 .dh-today{display:inline-flex;align-items:center;min-height:32px;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;font-family:var(--font-sans)}
+.dh-name-link{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:text-decoration-color .15s}
+.dh-name-link:hover{text-decoration-color:currentColor}
 .doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}
 .doch-code{font-family:var(--font-serif);font-size:24px;font-weight:700}
 .doch-day{font-size:12.5px;color:var(--color-text-muted)}
@@ -1417,7 +1419,7 @@ function renderDashboard(){
 // Hlavička dashboardu v topbaru (na úrovni přepínače dětí): avatar + jméno/datum + listování ‹ ▾ ›.
 function renderDashHead(){
   const c=cur(), today=dashDay===TODAY;
-  return `${avatar(c,44)}<h1 class="dh-t">${c.n} · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>`
+  return `${avatar(c,44)}<h1 class="dh-t"><button class="dh-name-link" onclick="go('profil')" aria-label="Profil dítěte">${c.n}</button> · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>`
     +(today?`<span class="dh-today">dnes</span>`:'')
     +`<div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button>`
     +`<button class="dh-step" onclick="toggleDashPicker(event)" aria-label="Vybrat den">▾</button>`

@@ -31,6 +31,8 @@
 .novstep .dh-lbl{min-width:110px;text-align:center}
 /* „dnes" – pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
 .dh-today{display:inline-flex;align-items:center;min-height:32px;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:13px;padding:0 14px;border-radius:999px;font-family:var(--font-sans)}
+.dh-name-link{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:text-decoration-color .15s}
+.dh-name-link:hover{text-decoration-color:currentColor}
 .doch-line{display:flex;align-items:baseline;gap:9px;margin:2px 0 12px}
 .doch-code{font-family:var(--font-serif);font-size:24px;font-weight:700}
 .doch-day{font-size:12.5px;color:var(--color-text-muted)}
