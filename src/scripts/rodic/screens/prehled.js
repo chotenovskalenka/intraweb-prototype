@@ -26,7 +26,7 @@ function renderDashboard(){
   if(c.notes[dashDay])blkDochazka+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;
   if(c.obed&&c.obed[dashDay]!==undefined&&absent)blkDochazka+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
   if(today&&td!=='NE')blkDochazka+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
-  else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
+  else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="goEditDay(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
   else if(!today&&!editable(dashDay))blkDochazka+=`<div class="edlock">Proběhlý den – jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
   blkDochazka+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
@@ -88,10 +88,10 @@ function renderDashboard(){
 function renderDashHead(){
   const c=cur(), today=dashDay===TODAY;
   return `${avatar(c,44)}<h1 class="dh-t">${c.n} · ${DOWFULL[wd(dashDay)]} ${dashDay}. 6.</h1>`
+    +(today?`<span class="dh-today">dnes</span>`:'')
     +`<div class="dh-nav"><button class="dh-step" onclick="stepDay(-1)" aria-label="Předchozí den">‹</button>`
     +`<button class="dh-step" onclick="toggleDashPicker(event)" aria-label="Vybrat den">▾</button>`
     +`<button class="dh-step" onclick="stepDay(1)" aria-label="Další den">›</button>`
-    +(today?`<span class="dh-today">dnes</span>`:'')
     +(dashPickerOpen?renderDayPicker():'')+`</div>`;
 }
 // ▾ otevře kompaktní kalendář-dropdown pod šipkami (u datumového nadpisu).

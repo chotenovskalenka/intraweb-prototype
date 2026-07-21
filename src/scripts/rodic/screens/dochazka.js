@@ -92,7 +92,7 @@ function renderDochazka(){
   h+=`</div></div>`;
   return h;
 }
-window.goEditDay=d=>{section='dochazka';if(d<=5){view='tyden';}else{view='mesic';}sel=d;overlay=null;drawerOpen=false;render();};
+window.goEditDay=d=>{section='dochazka';if(d<=5){view='tyden';}else{view='mesic';}sel=d;dayModal=d;overlay=null;drawerOpen=false;render();};
 window.setView=v=>{view=v;sel=(v==='den')?TODAY:sel;bulk=false;selSet.clear();bulkCode=null;render();};
 window.pick=d=>{if(bulk){if(!editable(d))return;selSet.has(d)?selSet.delete(d):selSet.add(d);render();return;}if(editable(d)||d===TODAY){dayModal=d;render();}};
 window.closeDayModal=()=>{dayModal=null;render();};
