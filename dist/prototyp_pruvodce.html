@@ -431,13 +431,16 @@ table.wt td.pastc{opacity:.45}
 .sidebar .brand-txt{color:#141414;font-size:24px;font-weight:800;line-height:1.05}
 
 /* === jemný wash u patičky (odspoda nahoru) === */
-/* rodič + průvodce */
-.scroll{position:relative}
-.scroll::after{content:"";position:absolute;left:0;right:0;bottom:0;height:210px;
+/* rodič + průvodce – wash na .screen (ne .scroll): .scroll má na desktopu
+   max-width:1060px a je vycentrovaný, takže wash na něm by na širokém okně
+   měl ostrý viditelný okraj místo splynutí s pozadím přes celou šířku. */
+.screen{position:relative}
+.screen::after{content:"";position:absolute;left:0;right:0;bottom:0;height:210px;
   background:var(--wc-band) center bottom/cover no-repeat;opacity:.36;
   -webkit-mask-image:linear-gradient(to top,#000 0,#000 18%,transparent 100%);
           mask-image:linear-gradient(to top,#000 0,#000 18%,transparent 100%);
   pointer-events:none;z-index:0}
+.scroll{position:relative}
 .scroll>#content,.scroll>.appfoot{position:relative;z-index:1}
 .scroll>.topbar{position:relative;z-index:5}   /* nad obsahem, ať rozbalené menu/kalendář v hlavičce nezmizí pod kartami */
 /* admin */
