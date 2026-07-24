@@ -13,8 +13,9 @@ function renderDeti(){
 }
 function renderDite(i){
   const c=data[i],w=worksMap[i]||0,recs=recordsFor(c);
-  let h=`<button class="back" onclick="closeDite()">← Zpět na seznam</button>`;
-  h+=`<div class="pav">${avatar(c,72)}</div><div class="pname">${full(c)}</div><div class="pfull">${c.plan}${c.predskolak?' · předškolák':''}</div>`;
+  // hlavička detailu je jeden blok → na desktopu přeskočí masonry sloupce (column-span:all)
+  let h=`<div class="dite-head"><button class="back" onclick="closeDite()">← Zpět na seznam</button>`;
+  h+=`<div class="pav">${avatar(c,72)}</div><div class="pname">${full(c)}</div><div class="pfull">${c.plan}${c.predskolak?' · předškolák':''}</div></div>`;
   h+=`<div class="tile"><div class="tlab">Přehled</div>`+
      `<div class="np"><span>Narozeniny</span><b>${c.nar}</b></div>`+
      `<div class="np"><span>Věk</span><b>${c.vek} let</b></div>`+
@@ -28,7 +29,8 @@ function renderDite(i){
   h+=`<div class="tile"><div class="tlab">Rodiče</div>`+ps.map((p,k)=>`<div style="padding:8px 0${k?';border-top:1px solid var(--color-border)':''}"><div style="font-size:14px"><b>${p.role}</b> · ${p.name}</div><div class="contact" style="margin-top:6px"><a class="cbtn" href="tel:${p.phone.replace(/ /g,'')}">${p.phone}</a><a class="cbtn" href="mailto:${p.email}" style="font-size:11.5px">${p.email}</a></div></div>`).join('')+`</div>`;
   const rz=rozhovoryFor(i);
   h+=`<div class="tile"><div class="tlab">Rozhovory s rodiči (${rz.length})</div>`+rz.map(r=>`<div class="rozh"><div class="rozhd">${r.date}</div>${r.note}</div>`).join('')+`<label class="pl" style="margin-top:10px">Nový záznam</label><textarea class="pta" id="rozh-new" placeholder="zápis z rozhovoru, doporučení na doma…"></textarea><button class="btn-primary" style="width:100%;margin-top:9px" onclick="addRozhovor(${i})">Přidat záznam</button></div>`;
-  h+=`<div class="tile"><div class="tlab">Fotky prací dítěte</div>`+(w?`<div class="works">`+Array.from({length:w}).map(()=>`<div class="work" style="background:#E3D9C6">práce</div>`).join('')+`</div>`:`<div class="note2" style="margin:0">Zatím žádné práce.</div>`)+`<button class="addbtn" onclick="addWork(${i})">+ Nahrát práci dítěte</button></div>`;
+  // placeholdery prací se střídají přes --photo-1..5, ať dlaždice nesplývají v jednu plochu
+  h+=`<div class="tile"><div class="tlab">Fotky prací dítěte</div>`+(w?`<div class="works">`+Array.from({length:w}).map((_,k)=>`<div class="work" style="background:var(--photo-${k%5+1})">práce</div>`).join('')+`</div>`:`<div class="note2" style="margin:0">Zatím žádné práce.</div>`)+`<button class="addbtn" onclick="addWork(${i})">+ Nahrát práci dítěte</button></div>`;
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
