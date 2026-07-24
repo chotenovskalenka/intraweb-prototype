@@ -45,5 +45,7 @@
   #content > .sectip,#content > .selinfo,#content > .choices,#content > .wkrow,#content > .legend,
   #content > .stepper,#content > .filters,#content > .back,#content > .temanav,
   /* široké seznamy/tabulky (docházka apod.) – jeden sloupec, ne masonry rozdělení */
-  #content > .search,#content > .weekbox,#content > .rosterbox,#content > .ctxhead,#content > .tabs{column-span:all;margin-bottom:12px}
+  /* .tlab jako přímý potomek #content = nadpis sekce (ne popisek uvnitř karty) → přes celou šířku */
+  #content > .search,#content > .weekbox,#content > .rosterbox,#content > .ctxhead,#content > .tabs,
+  #content > .tlab,#content > .dite-head{column-span:all;margin-bottom:12px}
 }
