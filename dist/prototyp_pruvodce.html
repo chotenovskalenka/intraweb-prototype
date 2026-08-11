@@ -383,7 +383,10 @@ table.wt td.pastc{opacity:.45}
 .doch-counts{display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:visible;padding:0}
 .doch-counts .tab{flex:none}
 /* sloučené pole: přepínač Den/Týden + listování data v jedné liště */
-.dfield{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* pole přepínač+datum sedělo bez odsazení přímo na obsahu (řada počtů / legenda) – dýchne */
+.dfield{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+/* legenda kódů (týden) měla nulu dole a lepila se na hledání */
+.doch>.legend{margin-bottom:8px}
 .dfield .dsw{margin:0;width:auto;flex:0 0 auto}
 .dfield .dsw button{flex:0 0 auto;padding:10px 18px}
 .dnav{display:flex;align-items:center;gap:2px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:999px;padding:2px}
@@ -1095,8 +1098,8 @@ window.saveNov=()=>{const f=novForm;
 <script>
 /* SCREEN: PRUVODCE_PLAN */
 function renderPlan(){
+  // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
   let h=`<div class="vhead">Akce a výjimky · červen</div>`;
-  h+=`<button class="addbig" onclick="openAkce(null)">+ Vytvořit novou akci</button>`;
   const sorted=[...AKCE].sort((a,b)=>a.day-b.day);
   h+= sorted.length? sorted.map(akceCard).join('') : `<div class="empty">Zatím žádné akce.</div>`;
   h+=`<div class="vhead" style="margin-top:18px">Týdenní rytmus</div>`;
@@ -1163,8 +1166,8 @@ function renderPruvodci(){
   h+=`</div>`;
   h+=`<div class="vhead">Týden · služby</div>`;
   h+=`<div class="weekbox"><table class="wt"><thead><tr><th class="who">Průvodce</th>`+DAYS.map((d,j)=>`<th class="${j===TODAY?'today':''}">${d}</th>`).join('')+`</tr></thead><tbody>`;
-  GUIDESHIFT.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>`<td class="${di===TODAY?'today':''}">${shiftCell(d)}</td>`).join('')+`</tr>`;});
-  h+=`</tbody></table></div><div class="hint">Služby jen ke čtení – rozpis se řeší mimo appku.</div>`;
+  GUIDESHIFT.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>`<td class="ced${di===TODAY?' today':''}" onclick="openShift(${gi},${di})">${shiftCell(d)}</td>`).join('')+`</tr>`;});
+  h+=`</tbody></table></div><div class="hint">Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).</div>`;
   return h;
 }
 window.setUspava=v=>{uspavaToday=Number(v);};
@@ -1430,6 +1433,7 @@ function render(){
   // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
+    : section==='plan' ? `<h1 class="dh-t">Plán &amp; program</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';
   renderDrawer();
