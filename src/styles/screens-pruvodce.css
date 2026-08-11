@@ -46,6 +46,8 @@
 /* Novinky: „+ Nová novinka" v topbaru = kompaktní tlačítko vpravo, ne roztažené přes celou šířku
    (.btn-primary má flex:1, v .dashhead by se natáhlo přes celý řádek) */
 .dashhead>.btn-primary{flex:0 0 auto;margin-left:auto;padding:11px 20px}
+/* „+" u loňské akce – signalizuje, že klik založí letošní akci (ne otevře detail té loňské) */
+.aplus{flex-shrink:0;align-self:center;font-size:19px;line-height:1;color:var(--color-primary);font-family:var(--font-serif)}
 /* Kulturní fond: zůstatky dětí i placené akce ve dvou sloupcích (jinak dlouhý úzký sloupec a spousta prázdna) */
 .fond-big{font-family:var(--font-serif);font-size:34px;font-weight:700;line-height:1.1;margin-top:4px}
 @media (min-width:900px){

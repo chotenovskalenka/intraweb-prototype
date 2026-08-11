@@ -113,6 +113,17 @@ const TEMA_ARCHIV=[
     {b:'',p:''}]},
 ];
 let temaMonth='cerven';
+// Loňské akce (červen 2025) – jen jako inspirace při plánování nového června.
+// Nepřebírají se hromadně (data se rok od roku liší) – klik založí novou akci s předvyplněnými údaji.
+const AKCE_LONI=[
+  {name:'Škola v přírodě',day:2,dayEnd:6,time:'',place:'Sloup v Čechách',note:'Pětidenní pobyt',paid:0},
+  {name:'Výlet předškoláků – lanové centrum',day:5,dayEnd:null,time:'8:00–8:30',place:'Lanový park Praha 6',note:'1. čtvrtek v měsíci',paid:0},
+  {name:'Divadlo na zahradě',day:12,dayEnd:null,time:'10:00',place:'',note:'Přijelo za námi',paid:110},
+  {name:'Výjezd předškoláků',day:16,dayEnd:18,time:'',place:'Bukovina',note:'Vícedenní výjezd',paid:320},
+  {name:'Dědečkovský den',day:20,dayEnd:null,time:'dopoledne',place:'',note:'',paid:0},
+  {name:'Svatojánský jarmark – rozloučení s předškoláky',day:24,dayEnd:null,time:'15:30',place:'s Jaatou a Maatou',note:'',paid:0},
+  {name:'Konec řádného provozu',day:30,dayEnd:null,time:'',place:'',note:'docházka do 15h',paid:0},
+];
 // Loňský týdenní rytmus – k náhledu a převzetí (RYTMUS je aktuální/editovatelný).
 const RYTMUS_LONI=[
   {d:0,prog:'Rytmika',krouzek:'Tanečky s Klárkou'},
