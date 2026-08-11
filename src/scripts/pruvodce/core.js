@@ -34,7 +34,7 @@ function render(){
   renderDrawer();
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{section=s;drawerOpen=false;detiOpen=-1;render();};
+window.go=s=>{section=s;drawerOpen=false;detiOpen=-1;fondChild=-1;render();};
 window.openDrawer=()=>{drawerOpen=true;render();};
 window.closeDrawer=()=>{drawerOpen=false;render();};
 
