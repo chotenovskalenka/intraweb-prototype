@@ -411,6 +411,8 @@ table.wt td.pastc{opacity:.45}
 /* Novinky: „+ Nová novinka" v topbaru = kompaktní tlačítko vpravo, ne roztažené přes celou šířku
    (.btn-primary má flex:1, v .dashhead by se natáhlo přes celý řádek) */
 .dashhead>.btn-primary{flex:0 0 auto;margin-left:auto;padding:11px 20px}
+/* „+" u loňské akce – signalizuje, že klik založí letošní akci (ne otevře detail té loňské) */
+.aplus{flex-shrink:0;align-self:center;font-size:19px;line-height:1;color:var(--color-primary);font-family:var(--font-serif)}
 /* Kulturní fond: zůstatky dětí i placené akce ve dvou sloupcích (jinak dlouhý úzký sloupec a spousta prázdna) */
 .fond-big{font-family:var(--font-serif);font-size:34px;font-weight:700;line-height:1.1;margin-top:4px}
 @media (min-width:900px){
@@ -782,6 +784,17 @@ const TEMA_ARCHIV=[
     {b:'',p:''}]},
 ];
 let temaMonth='cerven';
+// Loňské akce (červen 2025) – jen jako inspirace při plánování nového června.
+// Nepřebírají se hromadně (data se rok od roku liší) – klik založí novou akci s předvyplněnými údaji.
+const AKCE_LONI=[
+  {name:'Škola v přírodě',day:2,dayEnd:6,time:'',place:'Sloup v Čechách',note:'Pětidenní pobyt',paid:0},
+  {name:'Výlet předškoláků – lanové centrum',day:5,dayEnd:null,time:'8:00–8:30',place:'Lanový park Praha 6',note:'1. čtvrtek v měsíci',paid:0},
+  {name:'Divadlo na zahradě',day:12,dayEnd:null,time:'10:00',place:'',note:'Přijelo za námi',paid:110},
+  {name:'Výjezd předškoláků',day:16,dayEnd:18,time:'',place:'Bukovina',note:'Vícedenní výjezd',paid:320},
+  {name:'Dědečkovský den',day:20,dayEnd:null,time:'dopoledne',place:'',note:'',paid:0},
+  {name:'Svatojánský jarmark – rozloučení s předškoláky',day:24,dayEnd:null,time:'15:30',place:'s Jaatou a Maatou',note:'',paid:0},
+  {name:'Konec řádného provozu',day:30,dayEnd:null,time:'',place:'',note:'docházka do 15h',paid:0},
+];
 // Loňský týdenní rytmus – k náhledu a převzetí (RYTMUS je aktuální/editovatelný).
 const RYTMUS_LONI=[
   {d:0,prog:'Rytmika',krouzek:'Tanečky s Klárkou'},
@@ -1121,12 +1134,19 @@ window.saveNov=()=>{const f=novForm;
 </script>
 <script>
 /* SCREEN: PRUVODCE_PLAN */
-let rytLoni=false; // náhled loňského rytmu (k převzetí)
+let rytLoni=false;  // náhled loňského rytmu (k převzetí)
+let akceLoni=false; // náhled loňských akcí (inspirace při plánování)
 function renderPlan(){
   // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
   let h=`<div class="vhead">Akce a výjimky · červen</div>`;
   const sorted=[...AKCE].sort((a,b)=>a.day-b.day);
   h+= sorted.length? sorted.map(akceCard).join('') : `<div class="empty">Zatím žádné akce.</div>`;
+  // Loňské akce – inspirace: klik předvyplní novou akci, datum se doladí v modalu
+  h+=`<button class="addbtn" onclick="togAkceLoni()">${akceLoni?'Skrýt loňské akce':'Zobrazit loňské akce (červen 2025)'}</button>`;
+  if(akceLoni){h+=`<div class="tile"><div class="tlab">Loňské akce · červen 2025</div><div class="note2" style="margin:0 0 9px">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
+    h+=AKCE_LONI.map((a,i)=>{const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
+      return `<button class="acard" onclick="akceFromLoni(${i})"><span class="adate">${a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span><span class="aplus">+</span></button>`;}).join('');
+    h+=`</div>`;}
   h+=`<div class="vhead" style="margin-top:18px">Týdenní rytmus</div>`;
   RYTMUS.forEach((r,i)=>{const opened=rytOpen===i;
     h+=`<div class="prow${opened?' open':''}"><div class="pmain" onclick="rytTog(${i})"><span class="pd">${DOW[r.d]}</span><span class="pp">${r.prog}</span></div>`;
@@ -1183,6 +1203,11 @@ window.setTemaYt=(i,v)=>{TEMA.tydny[i].yt=v;};
 window.setTemaByt=(i,v)=>{TEMA.tydny[i].byt=v;};
 window.temaStep=dir=>{const ps=temaPeriods();let i=ps.findIndex(p=>p.key===temaMonth);i=Math.min(ps.length-1,Math.max(0,i+dir));temaMonth=ps[i].key;render();};
 window.temaAdopt=key=>{const a=TEMA_ARCHIV.find(x=>x.key===key);if(!a)return;TEMA.hodnota=a.hodnota;TEMA.tydny=a.tydny.map(w=>({b:w.b||'',byt:w.byt||'',p:w.p||'',yt:w.yt||''}));temaMonth='cerven';render();showToast('Plán převzat do června 2026 ✓');};
+window.togAkceLoni=()=>{akceLoni=!akceLoni;render();};
+// Loňská akce → nová letošní: převezme vše kromě data (id:null ⇒ uložením vznikne nová akce).
+window.akceFromLoni=i=>{const a=AKCE_LONI[i];if(!a)return;
+  modal={id:null,name:a.name,day:a.day,dayEnd:a.dayEnd||'',time:a.time||'',place:a.place||'',note:a.note||'',paid:a.paid||''};
+  renderModalRoot();};
 window.togRytLoni=()=>{rytLoni=!rytLoni;render();};
 window.rytAdopt=()=>{RYTMUS=RYTMUS_LONI.map(r=>({d:r.d,prog:r.prog,krouzek:r.krouzek}));rytLoni=false;render();showToast('Loňský rytmus převzat ✓');};
 window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){TEMA.file=f.name;render();showToast('Nahráno ✓');}};
