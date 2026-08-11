@@ -18,7 +18,10 @@
 .doch-counts{display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:visible;padding:0}
 .doch-counts .tab{flex:none}
 /* sloučené pole: přepínač Den/Týden + listování data v jedné liště */
-.dfield{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* pole přepínač+datum sedělo bez odsazení přímo na obsahu (řada počtů / legenda) – dýchne */
+.dfield{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+/* legenda kódů (týden) měla nulu dole a lepila se na hledání */
+.doch>.legend{margin-bottom:8px}
 .dfield .dsw{margin:0;width:auto;flex:0 0 auto}
 .dfield .dsw button{flex:0 0 auto;padding:10px 18px}
 .dnav{display:flex;align-items:center;gap:2px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:999px;padding:2px}
