@@ -34,6 +34,9 @@
   .doch-side{display:flex;flex-direction:column;gap:14px;position:sticky;top:20px}
   .doch-side>.stepper,.doch-side>.tabs,.doch-side>.tile,.doch-side>.specbar{margin-bottom:0}
   .doch-main{min-width:0}
+  /* dnešek: počty jako vodorovná řada (stejně široké dlaždice) nad seznamem na plnou šířku */
+  .doch-today>.doch-counts{display:flex;gap:12px;margin-bottom:18px}
+  .doch-today>.doch-counts .tab{flex:1}
   .doch-main>.search{margin-bottom:12px}
   .doch-main .rosterbox{max-height:none}
 }

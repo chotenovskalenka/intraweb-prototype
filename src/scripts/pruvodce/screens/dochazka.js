@@ -75,15 +75,15 @@ function renderDochNav(){
 function renderDen(){return denDay===TODAYD?todayRoster():dayRoster(denDay);}
 function todayRoster(){
   const c=counts();
-  // levý panel: počty (filtry) – listování dne je nahoře ve sloučeném poli
+  // počty (zároveň filtry) – vodorovná řada nad seznamem; listování dne je nahoře ve sloučeném poli
   let side=`<div class="tabs wrap doch-counts">`+TABS_BY().map(([k,l])=>`<div class="tab${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
-  // pravý panel: kontext + hledání + roster + souhrn jídel
+  // pod řadou: kontext + hledání + roster + souhrn jídel na plnou šířku
   let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${c.pres}</b> / ${data.length}</span></div>`;
   main+=`<div class="sectip">${CTX[tab][1]||''}</div>`;
   main+=`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)">`;
   main+=`<div class="rosterbox"><div id="roster">${rosterHTML()}</div></div>`;
   main+=`<div class="doch-mealsfoot"><span class="meals">Obědy <b>${c.pres}</b> · svačiny <b>${c.pres}</b></span><span class="pwa">nainstalovatelné · offline (PWA)</span></div>`;
-  return `<div class="doch-den"><aside class="doch-side">${side}</aside><div class="doch-main">${main}</div></div>`;
+  return `<div class="doch-today">${side}<div class="doch-main">${main}</div></div>`;
 }
 function specialBar(d){
   if(!SPECIAL[d])return '';
