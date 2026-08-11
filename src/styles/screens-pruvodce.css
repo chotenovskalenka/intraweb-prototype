@@ -40,6 +40,17 @@
   .doch-main>.search{margin-bottom:12px}
   .doch-main .rosterbox{max-height:none}
 }
+/* Novinky: „+ Nová novinka" v topbaru = kompaktní tlačítko vpravo, ne roztažené přes celou šířku
+   (.btn-primary má flex:1, v .dashhead by se natáhlo přes celý řádek) */
+.dashhead>.btn-primary{flex:0 0 auto;margin-left:auto;padding:11px 20px}
+/* Kulturní fond: zůstatky dětí i placené akce ve dvou sloupcích (jinak dlouhý úzký sloupec a spousta prázdna) */
+.fond-big{font-family:var(--font-serif);font-size:34px;font-weight:700;line-height:1.1;margin-top:4px}
+@media (min-width:900px){
+  .fond-akce{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .fond-akce .frow{margin-bottom:0}
+  .fond-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
+  .fond-detail{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+}
 /* Přehled (dashboard) */
 .prehl-abs{display:flex;align-items:center;gap:9px;min-height:44px;width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
 .prehl-abs .pa-nm{font-size:14px;font-weight:500;color:var(--color-text)}
