@@ -12,19 +12,19 @@ function renderPlan(){
     h+=AKCE_LONI.map((a,i)=>{const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
       return `<button class="acard" onclick="akceFromLoni(${i})"><span class="adate">${a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span><span class="aplus">+</span></button>`;}).join('');
     h+=`</div>`;}
-  h+=`<div class="vhead" style="margin-top:18px">Týdenní rytmus</div>`;
+  h+=`<div class="vhead">Týdenní rytmus</div>`;
   RYTMUS.forEach((r,i)=>{const opened=rytOpen===i;
     h+=`<div class="prow${opened?' open':''}"><div class="pmain" onclick="rytTog(${i})"><span class="pd">${DOW[r.d]}</span><span class="pp">${r.prog}</span></div>`;
     if(!opened&&r.krouzek)h+=`<div class="psub">Kroužek: ${r.krouzek}</div>`;
-    if(opened){h+=`<div class="pedit"><label class="pl">Program</label><div class="pchips">`+PROGOPTS.map(o=>`<button class="${r.prog===o?'on':''}" onclick="setRyt(${i},'${o}')">${o}</button>`).join('')+`</div><input class="pin" style="margin-top:7px" value="${esc(r.prog)}" oninput="setRytRaw(${i},this.value)"><label class="pl">Kroužek</label><input class="pin" value="${esc(r.krouzek)}" oninput="setRytKr(${i},this.value)" placeholder="nepovinné"><button class="btn-primary" style="width:100%;margin-top:11px" onclick="rytSave(${i})">Uložit</button></div>`;}
+    if(opened){h+=`<div class="pedit"><label class="pl">Program</label><div class="pchips">`+PROGOPTS.map(o=>`<button class="${r.prog===o?'on':''}" onclick="setRyt(${i},'${o}')">${o}</button>`).join('')+`</div><input class="pin" style="margin-top:7px" value="${esc(r.prog)}" oninput="setRytRaw(${i},this.value)"><label class="pl">Kroužek</label><input class="pin" value="${esc(r.krouzek)}" oninput="setRytKr(${i},this.value)" placeholder="nepovinné"><button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytSave(${i})">Uložit</button></div>`;}
     h+=`</div>`;
   });
   // Loňský rytmus – průvodci ho často přebírají do nového roku
   h+=`<button class="addbtn" onclick="togRytLoni()">${rytLoni?'Skrýt loňský rytmus':'Zobrazit loňský rytmus (2024/25)'}</button>`;
   if(rytLoni){h+=`<div class="tile"><div class="tlab">Loňský týdenní rytmus (2024/25)</div>`;
     RYTMUS_LONI.forEach(r=>{h+=`<div class="np"><span><b>${DOW[r.d]}</b> · ${r.prog}</span>${r.krouzek?`<span style="color:var(--color-accent-ink)">${r.krouzek}</span>`:'<span style="color:var(--color-text-hint)">–</span>'}</div>`;});
-    h+=`<button class="btn-primary" style="width:100%;margin-top:11px" onclick="rytAdopt()">Převzít loňský rytmus</button></div>`;}
-  h+=`<div class="vhead" style="margin-top:18px">Tématický plán</div>`+temaBlock();
+    h+=`<button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytAdopt()">Převzít loňský rytmus</button></div>`;}
+  h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
   return h;
 }
 function akceCard(a){
@@ -45,7 +45,7 @@ function temaBlock(){
     let h=temaNav();
     h+=`<div class="tile"><div class="tlab">Hodnota měsíce</div><div class="tval">${a.hodnota}</div></div>`;
     a.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">–</div>`:'')+`</div>`;});
-    h+=`<button class="btn-primary" style="width:100%" onclick="temaAdopt('${a.key}')">Převzít tento plán do června 2026</button>`;
+    h+=`<button class="btn-primary btn-block" onclick="temaAdopt('${a.key}')">Převzít tento plán do června 2026</button>`;
     return h;
   }
   let h=temaNav();
@@ -54,7 +54,7 @@ function temaBlock(){
     `<label class="addbtn" style="display:block;text-align:center;margin-top:9px">+ Nahrát nový plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label></div>`;
   h+=`<div class="tile"><label class="pl">Hodnota měsíce</label><input class="pin" value="${esc(TEMA.hodnota)}" oninput="setTemaH(this.value)" placeholder="např. nadšení"></div>`;
   TEMA.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div><label class="pl">Básnička</label><textarea class="pta" oninput="setTemaB(${i},this.value)" placeholder="text básničky…">${escTa(w.b)}</textarea><label class="pl">Odkaz (básnička)</label><input class="pin" value="${esc(w.byt||'')}" oninput="setTemaByt(${i},this.value)" placeholder="https://…"><label class="pl">Písnička</label><textarea class="pta" oninput="setTemaP(${i},this.value)" placeholder="text písničky…">${escTa(w.p)}</textarea><label class="pl">Odkaz (písnička)</label><input class="pin" value="${esc(w.yt)}" oninput="setTemaYt(${i},this.value)" placeholder="https://youtu.be/…"></div>`;});
-  h+=`<button class="btn-primary" style="width:100%" onclick="showToast('Tématický plán uložen ✓')">Uložit tématický plán</button>`;
+  h+=`<button class="btn-primary btn-block" onclick="showToast('Tématický plán uložen ✓')">Uložit tématický plán</button>`;
   return h;
 }
 window.rytTog=i=>{rytOpen=rytOpen===i?-1:i;render();};
