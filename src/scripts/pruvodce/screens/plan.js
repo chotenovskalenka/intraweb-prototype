@@ -1,4 +1,5 @@
 /* SCREEN: PRUVODCE_PLAN */
+let rytLoni=false; // náhled loňského rytmu (k převzetí)
 function renderPlan(){
   // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
   let h=`<div class="vhead">Akce a výjimky · červen</div>`;
@@ -11,6 +12,11 @@ function renderPlan(){
     if(opened){h+=`<div class="pedit"><label class="pl">Program</label><div class="pchips">`+PROGOPTS.map(o=>`<button class="${r.prog===o?'on':''}" onclick="setRyt(${i},'${o}')">${o}</button>`).join('')+`</div><input class="pin" style="margin-top:7px" value="${esc(r.prog)}" oninput="setRytRaw(${i},this.value)"><label class="pl">Kroužek</label><input class="pin" value="${esc(r.krouzek)}" oninput="setRytKr(${i},this.value)" placeholder="nepovinné"><button class="btn-primary" style="width:100%;margin-top:11px" onclick="rytSave(${i})">Uložit</button></div>`;}
     h+=`</div>`;
   });
+  // Loňský rytmus – průvodci ho často přebírají do nového roku
+  h+=`<button class="addbtn" onclick="togRytLoni()">${rytLoni?'Skrýt loňský rytmus':'Zobrazit loňský rytmus (2024/25)'}</button>`;
+  if(rytLoni){h+=`<div class="tile"><div class="tlab">Loňský týdenní rytmus (2024/25)</div>`;
+    RYTMUS_LONI.forEach(r=>{h+=`<div class="np"><span><b>${DOW[r.d]}</b> · ${r.prog}</span>${r.krouzek?`<span style="color:var(--color-accent-ink)">${r.krouzek}</span>`:'<span style="color:var(--color-text-hint)">–</span>'}</div>`;});
+    h+=`<button class="btn-primary" style="width:100%;margin-top:11px" onclick="rytAdopt()">Převzít loňský rytmus</button></div>`;}
   h+=`<div class="vhead" style="margin-top:18px">Tématický plán</div>`+temaBlock();
   return h;
 }
@@ -18,15 +24,24 @@ function akceCard(a){
   const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
   return `<button class="acard" onclick="openAkce('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;
 }
+// Ordered periods, newest first: aktuální červen 2026 (editovatelný) + archiv zpět do loňska.
+function temaPeriods(){return [{key:'cerven',label:'Červen 2026'},...TEMA_ARCHIV.map(a=>({key:a.key,label:a.label}))];}
+function temaNav(){
+  const ps=temaPeriods(),i=Math.max(0,ps.findIndex(p=>p.key===temaMonth)),cur=ps[i];
+  // stepper ‹ starší · novější › – prochází archiv tématických plánů zpět v čase
+  return `<div class="dfield" style="margin-bottom:12px"><div class="dnav"><button onclick="temaStep(1)" ${i>=ps.length-1?'disabled':''} aria-label="Starší plán">‹</button><span>${cur.label}${i===0?' · aktuální':''}</span><button onclick="temaStep(-1)" ${i<=0?'disabled':''} aria-label="Novější plán">›</button></div></div>`;
+}
 function temaBlock(){
-  if(temaMonth==='kveten'){
-    let h=`<div class="temanav"><button class="on" onclick="temaShow('kveten')">Květen</button><button onclick="temaShow('cerven')">Červen</button></div>`;
-    h+=`<div class="tile"><div class="tlab">Hodnota měsíce</div><div class="tval">${TEMA_KVETEN.hodnota}</div></div>`;
-    TEMA_KVETEN.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">–</div>`:'')+`</div>`;});
-    h+=`<button class="btn-primary" style="width:100%" onclick="temaCopy()">Zkopírovat květen do června</button>`;
+  if(temaMonth!=='cerven'){
+    // archiv = jen ke čtení + převzetí do června
+    const a=TEMA_ARCHIV.find(x=>x.key===temaMonth);if(!a)return temaNav();
+    let h=temaNav();
+    h+=`<div class="tile"><div class="tlab">Hodnota měsíce</div><div class="tval">${a.hodnota}</div></div>`;
+    a.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">–</div>`:'')+`</div>`;});
+    h+=`<button class="btn-primary" style="width:100%" onclick="temaAdopt('${a.key}')">Převzít tento plán do června 2026</button>`;
     return h;
   }
-  let h=`<div class="temanav"><button onclick="temaShow('kveten')">Květen</button><button class="on" onclick="temaShow('cerven')">Červen</button></div>`;
+  let h=temaNav();
   h+=`<div class="tile"><div class="tlab">Tématický plán v designu</div><div class="note2" style="margin:0 0 9px">Aktuální plán vyvěšený ve školce (tiskne se na nástěnku):</div>`+
     TEMA_POSTERS.map((p,i)=>`<button class="poster-btn" onclick="openPoster(${i})" aria-label="Zvětšit plakát"><img class="tema-poster" src="${p}" alt="Tématický plán červen" loading="lazy"><span class="poster-zoom">⤢</span></button>`).join('')+
     `<label class="addbtn" style="display:block;text-align:center;margin-top:9px">+ Nahrát nový plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label></div>`;
@@ -44,7 +59,9 @@ window.setTemaB=(i,v)=>{TEMA.tydny[i].b=v;};
 window.setTemaP=(i,v)=>{TEMA.tydny[i].p=v;};
 window.setTemaYt=(i,v)=>{TEMA.tydny[i].yt=v;};
 window.setTemaByt=(i,v)=>{TEMA.tydny[i].byt=v;};
-window.temaShow=m=>{temaMonth=m;render();};
-window.temaCopy=()=>{TEMA.hodnota=TEMA_KVETEN.hodnota;TEMA.tydny=TEMA_KVETEN.tydny.map(w=>({...w}));temaMonth='cerven';render();showToast('Květen zkopírován do června ✓');};
+window.temaStep=dir=>{const ps=temaPeriods();let i=ps.findIndex(p=>p.key===temaMonth);i=Math.min(ps.length-1,Math.max(0,i+dir));temaMonth=ps[i].key;render();};
+window.temaAdopt=key=>{const a=TEMA_ARCHIV.find(x=>x.key===key);if(!a)return;TEMA.hodnota=a.hodnota;TEMA.tydny=a.tydny.map(w=>({b:w.b||'',byt:w.byt||'',p:w.p||'',yt:w.yt||''}));temaMonth='cerven';render();showToast('Plán převzat do června 2026 ✓');};
+window.togRytLoni=()=>{rytLoni=!rytLoni;render();};
+window.rytAdopt=()=>{RYTMUS=RYTMUS_LONI.map(r=>({d:r.d,prog:r.prog,krouzek:r.krouzek}));rytLoni=false;render();showToast('Loňský rytmus převzat ✓');};
 window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){TEMA.file=f.name;render();showToast('Nahráno ✓');}};
 window.rytSave=i=>{rytOpen=-1;render();showToast('Uloženo ✓');};
