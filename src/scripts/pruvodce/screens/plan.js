@@ -8,7 +8,7 @@ function renderPlan(){
   h+= sorted.length? sorted.map(akceCard).join('') : `<div class="empty">Zatím žádné akce.</div>`;
   // Loňské akce – inspirace: klik předvyplní novou akci, datum se doladí v modalu
   h+=`<button class="addbtn" onclick="togAkceLoni()">${akceLoni?'Skrýt loňské akce':'Zobrazit loňské akce (červen 2025)'}</button>`;
-  if(akceLoni){h+=`<div class="tile"><div class="tlab">Loňské akce · červen 2025</div><div class="note2" style="margin:0 0 9px">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
+  if(akceLoni){h+=`<div class="tile"><div class="ch">Loňské akce · červen 2025</div><div class="note2" style="margin:0 0 9px">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
     h+=AKCE_LONI.map((a,i)=>{const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
       return `<button class="acard" onclick="akceFromLoni(${i})"><span class="adate">${a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span><span class="aplus">+</span></button>`;}).join('');
     h+=`</div>`;}
@@ -21,7 +21,7 @@ function renderPlan(){
   });
   // Loňský rytmus – průvodci ho často přebírají do nového roku
   h+=`<button class="addbtn" onclick="togRytLoni()">${rytLoni?'Skrýt loňský rytmus':'Zobrazit loňský rytmus (2024/25)'}</button>`;
-  if(rytLoni){h+=`<div class="tile"><div class="tlab">Loňský týdenní rytmus (2024/25)</div>`;
+  if(rytLoni){h+=`<div class="tile"><div class="ch">Loňský týdenní rytmus (2024/25)</div>`;
     RYTMUS_LONI.forEach(r=>{h+=`<div class="np"><span><b>${DOW[r.d]}</b> · ${r.prog}</span>${r.krouzek?`<span style="color:var(--color-accent-ink)">${r.krouzek}</span>`:'<span style="color:var(--color-text-hint)">–</span>'}</div>`;});
     h+=`<button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytAdopt()">Převzít loňský rytmus</button></div>`;}
   h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
@@ -43,17 +43,17 @@ function temaBlock(){
     // archiv = jen ke čtení + převzetí do června
     const a=TEMA_ARCHIV.find(x=>x.key===temaMonth);if(!a)return temaNav();
     let h=temaNav();
-    h+=`<div class="tile"><div class="tlab">Hodnota měsíce</div><div class="tval">${a.hodnota}</div></div>`;
-    a.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">–</div>`:'')+`</div>`;});
+    h+=`<div class="tile"><div class="ch">Hodnota měsíce</div><div class="tval">${a.hodnota}</div></div>`;
+    a.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="ch">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">–</div>`:'')+`</div>`;});
     h+=`<button class="btn-primary btn-block" onclick="temaAdopt('${a.key}')">Převzít tento plán do června 2026</button>`;
     return h;
   }
   let h=temaNav();
-  h+=`<div class="tile"><div class="tlab">Tématický plán v designu</div><div class="note2" style="margin:0 0 9px">Aktuální plán vyvěšený ve školce (tiskne se na nástěnku):</div>`+
+  h+=`<div class="tile"><div class="ch">Tématický plán v designu</div><div class="note2" style="margin:0 0 9px">Aktuální plán vyvěšený ve školce (tiskne se na nástěnku):</div>`+
     TEMA_POSTERS.map((p,i)=>`<button class="poster-btn" onclick="openPoster(${i})" aria-label="Zvětšit plakát"><img class="tema-poster" src="${p}" alt="Tématický plán červen" loading="lazy"><span class="poster-zoom">⤢</span></button>`).join('')+
     `<label class="addbtn" style="display:block;text-align:center;margin-top:9px">+ Nahrát nový plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label></div>`;
   h+=`<div class="tile"><label class="pl">Hodnota měsíce</label><input class="pin" value="${esc(TEMA.hodnota)}" oninput="setTemaH(this.value)" placeholder="např. nadšení"></div>`;
-  TEMA.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="tlab">${i+1}. týden</div><label class="pl">Básnička</label><textarea class="pta" oninput="setTemaB(${i},this.value)" placeholder="text básničky…">${escTa(w.b)}</textarea><label class="pl">Odkaz (básnička)</label><input class="pin" value="${esc(w.byt||'')}" oninput="setTemaByt(${i},this.value)" placeholder="https://…"><label class="pl">Písnička</label><textarea class="pta" oninput="setTemaP(${i},this.value)" placeholder="text písničky…">${escTa(w.p)}</textarea><label class="pl">Odkaz (písnička)</label><input class="pin" value="${esc(w.yt)}" oninput="setTemaYt(${i},this.value)" placeholder="https://youtu.be/…"></div>`;});
+  TEMA.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="ch">${i+1}. týden</div><label class="pl">Básnička</label><textarea class="pta" oninput="setTemaB(${i},this.value)" placeholder="text básničky…">${escTa(w.b)}</textarea><label class="pl">Odkaz (básnička)</label><input class="pin" value="${esc(w.byt||'')}" oninput="setTemaByt(${i},this.value)" placeholder="https://…"><label class="pl">Písnička</label><textarea class="pta" oninput="setTemaP(${i},this.value)" placeholder="text písničky…">${escTa(w.p)}</textarea><label class="pl">Odkaz (písnička)</label><input class="pin" value="${esc(w.yt)}" oninput="setTemaYt(${i},this.value)" placeholder="https://youtu.be/…"></div>`;});
   h+=`<button class="btn-primary btn-block" onclick="showToast('Tématický plán uložen ✓')">Uložit tématický plán</button>`;
   return h;
 }
