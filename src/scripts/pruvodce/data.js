@@ -96,7 +96,31 @@ const TEMA_KVETEN={hodnota:'péče',tydny:[
   {b:'Prší, prší, jen se leje…',byt:'',p:'Prší, prší, jen se leje',yt:''},
   {b:'',byt:'',p:'Já do lesa nepojedu',yt:''},
   {b:'Květen končí, léto volá.',byt:'',p:'',yt:''}]};
+// Archiv tématických plánů – nejnovější první. Aktuální (červen 2026) je živé TEMA (editovatelné),
+// archiv je ke čtení a lze ho „převzít" do června. Sahá do loňského školního roku – průvodci
+// často přebírají osvědčené plány/rytmus z minula. Květen 2026 = TEMA_KVETEN.
+const TEMA_ARCHIV=[
+  {key:'2026-05',label:'Květen 2026',hodnota:TEMA_KVETEN.hodnota,tydny:TEMA_KVETEN.tydny},
+  {key:'2025-06',label:'Červen 2025',hodnota:'radost',tydny:[
+    {b:'Sluníčko, sluníčko, popojdi maličko.',p:'Já jsem muzikant a přicházím k vám z české země.'},
+    {b:'Koulím, koulím brambory, ať mám plný komory.',p:'Kalamajka mik mik mik…'},
+    {b:'Léto, léto, kam jsi šlo, kytičky nám nakvetlo.',p:'Šla Nanynka do zelí, natrhala lupení.'},
+    {b:'Rozloučení s předškoláky – básnička na cestu do školy.',p:'Skákal pes přes oves.'}]},
+  {key:'2025-05',label:'Květen 2025',hodnota:'přátelství',tydny:[
+    {b:'Zajíček ve své jamce sedí sám.',p:'Když jsi kamarád, tak pojď si se mnou hrát.'},
+    {b:'Ptáčku, ptáčku, kdepak spinkáš?',p:'Halí, belí, koně v zelí.'},
+    {b:'Maminko, mámo, já tě mám rád.',p:'Měla babka čtyři jabka.'},
+    {b:'',p:''}]},
+];
 let temaMonth='cerven';
+// Loňský týdenní rytmus – k náhledu a převzetí (RYTMUS je aktuální/editovatelný).
+const RYTMUS_LONI=[
+  {d:0,prog:'Rytmika',krouzek:'Tanečky s Klárkou'},
+  {d:1,prog:'Putování',krouzek:''},
+  {d:2,prog:'Tvorba',krouzek:'Keramika s Evou'},
+  {d:3,prog:'Pohyb',krouzek:'Cvičení s Péťou'},
+  {d:4,prog:'Hrátky s pohádkou',krouzek:''},
+];
 
 let GUIDESHIFT=[
   {n:'Táňa',days:[{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'}]},
