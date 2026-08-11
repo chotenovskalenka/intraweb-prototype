@@ -6,7 +6,7 @@ function renderPrehled(){
 
   // (a) kapacity školek – obsazeno / kapacita, vizuální pruh; u jednoskupinové školky
   // se rozpis tříd neduplikuje
-  h+=`<div class="tile"><div class="tlab">Kapacity školek</div><div class="caps">`;
+  h+=`<div class="tile"><div class="ch">Kapacity školek</div><div class="caps">`;
   SKOLKY.forEach(s=>{
     const obs=obsazeno(s), pct=Math.round(obs/s.kapacita*100), full=obs>=s.kapacita;
     const tridy=s.tridy.length>1?s.tridy.map(t=>`${t.n} ${t.obs}/${t.kap}`).join(' · '):'';
@@ -19,7 +19,7 @@ function renderPrehled(){
   h+=`</div></div>`;
 
   // (b) chybějící platby – kdo, částka, po splatnosti (badge stavů); řeší se mimo appku
-  h+=`<div class="tile"><div class="tlab">Chybějící platby</div>`;
+  h+=`<div class="tile"><div class="ch">Chybějící platby</div>`;
   PLATBY.forEach(p=>{
     const st=PLATBASTAVY[p.stav];
     const dodat=p.stav==='po-splatnosti'?`po splatnosti ${p.poDnu} dní`
@@ -32,7 +32,7 @@ function renderPrehled(){
   h+=`<div class="note2">Fakturaci školka řeší mimo appku – zde jen přehled.</div></div>`;
 
   // (c) systémová upozornění vč. chybějících dat
-  h+=`<div class="tile"><div class="tlab">Systémová upozornění</div>`;
+  h+=`<div class="tile"><div class="ch">Systémová upozornění</div>`;
   UPOZORNENI.forEach(u=>{
     const ic=u.typ==='data'?'⚠':u.typ==='provoz'?'●':'✓';
     h+=`<div class="al-row al-${u.typ}"><span class="al-ic">${ic}</span><span class="al-tx">${u.text}${u.skolka?` <span class="al-sk">· ${u.skolka}</span>`:''}</span></div>`;
@@ -40,7 +40,7 @@ function renderPrehled(){
   h+=`</div>`;
 
   // (d) souhrn náhrad – dostupné celkem, kolik brzy expiruje, naplánované
-  h+=`<button class="tile dash-link" onclick="go('nahrady')"><div class="tlab" style="margin:0">Náhrady <span class="dl-arr">›</span></div>`
+  h+=`<button class="tile dash-link" onclick="go('nahrady')"><div class="ch" style="margin:0">Náhrady <span class="dl-arr">›</span></div>`
     +`<div class="nh-grid">`
     +`<div class="nh-cell"><div class="nh-num">${NAHRADY_SUM.dostupne}</div><div class="nh-lab">dostupných</div></div>`
     +`<div class="nh-cell"><div class="nh-num warn">${NAHRADY_SUM.expiruje}</div><div class="nh-lab">propadne 30. 6. (konec šk. roku)</div></div>`
@@ -49,14 +49,14 @@ function renderPrehled(){
 
   // (e) provozní úkoly – checklist, odškrtávání v paměti
   const hotovo=UKOLY.filter(u=>u.done).length;
-  h+=`<div class="tile"><div class="tlab">Provozní úkoly <span class="tl-count">${hotovo}/${UKOLY.length}</span></div>`;
+  h+=`<div class="tile"><div class="ch">Provozní úkoly <span class="tl-count">${hotovo}/${UKOLY.length}</span></div>`;
   UKOLY.forEach((u,i)=>{
     h+=`<button class="task ${u.done?'done':''}" onclick="toggleUkol(${i})"><span class="task-box">${u.done?'✓':''}</span><span class="task-t">${u.t}</span></button>`;
   });
   h+=`</div>`;
 
   // (f) poslední porady / evaluace – titulky (odvozené ze ZAPISY), proklik do sekce porad
-  h+=`<button class="tile dash-link" onclick="go('porady')"><div class="tlab" style="margin:0">Poslední porady a evaluace <span class="dl-arr">›</span></div>`;
+  h+=`<button class="tile dash-link" onclick="go('porady')"><div class="ch" style="margin:0">Poslední porady a evaluace <span class="dl-arr">›</span></div>`;
   ZAPISY.slice().sort((a,b)=>b.dt-a.dt).slice(0,3).forEach(p=>{
     h+=`<div class="por-row"><span class="por-d">${p.datum}</span><span class="por-t">${p.nazev}<span class="por-sk"> · ${p.skolka}</span></span><span class="por-typ ${p.typ}">${p.typ==='porada'?'porada':'evaluace'}</span></div>`;
   });

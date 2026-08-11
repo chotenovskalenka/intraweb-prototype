@@ -11,6 +11,6 @@ function renderKontakty(){
       `<div class="np"><span>E-mail</span><a class="clink" href="mailto:${g.email}">${g.email}</a></div>`+
       `<div class="np"><span>Kdy je vhaaji</span><b style="font-weight:500;text-align:right">${sched}</b></div></div>`;
   });
-  h+=`<div class="tile"><div class="tlab">${SCHOOL.name}</div><div class="contact"><a class="cbtn" href="tel:${SCHOOL.phone.replace(/ /g,'')}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div><div class="note2">${SCHOOL.phone} · ${SCHOOL.email}</div></div>`;
+  h+=`<div class="tile"><div class="ch">${SCHOOL.name}</div><div class="contact"><a class="cbtn" href="tel:${SCHOOL.phone.replace(/ /g,'')}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div><div class="note2">${SCHOOL.phone} · ${SCHOOL.email}</div></div>`;
   return h;
 }

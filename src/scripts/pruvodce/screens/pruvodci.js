@@ -10,7 +10,7 @@ function renderPruvodci(){
   const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
   if(todays.length&&!todays.some(x=>x.i===uspavaToday))uspavaToday=todays[0].i;
   let h='';
-  h+=`<div class="tile"><div class="tlab">Dnes ve školce · středa</div>`;
+  h+=`<div class="tile"><div class="ch">Dnes ve školce · středa</div>`;
   h+= todays.length? todays.map(x=>{const d=x.g.days[TODAY];return `<div class="np"><span>${x.g.n}${opener&&x.i===opener.i?' · <b style="color:var(--color-primary)">otevírá</b>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;}).join('') : '<div class="empty">Dnes nikdo nemá službu.</div>';
   if(todays.length)h+=`<div class="np" style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:9px"><span>Dnes uspává</span><select class="selin" onchange="setUspava(this.value)">`+todays.map(x=>`<option value="${x.i}" ${x.i===uspavaToday?'selected':''}>${x.g.n}</option>`).join('')+`</select></div>`;
   h+=`</div>`;

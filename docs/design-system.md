@@ -209,6 +209,20 @@ Dvojí varianty sdílených tříd (`.tlab`, `.tval`, `.ttl`, `.ditem`, `.hint`,
 na **jednu – průvodcovskou (větší/čitelnější), ať funguje venku na mobilu**; rodičovské přepisy
 smazány. Rodič i průvodce mají teď shodnou typografickou škálu.
 
+**Nadpisy – jedna třída na úroveň (4.7):**
+
+| Úroveň | Třída | Vzhled |
+|---|---|---|
+| stránka | `.dh-t` | 25 px Bricolage, primary-strong, v topbaru vedle role |
+| sekce | `.vhead` | 16 px Bricolage, primary-strong, odsazení sekce nese sama |
+| **karta** | `.ch` | **16 px Bricolage, primary-strong** |
+| mikropopisek | `.tlab` | 12 px Inter, VERZÁLKY, muted – nad polem/skupinou uvnitř karty |
+
+Průvodcovská a admin appka dřív používaly `.tlab` i jako nadpis karty, takže tytéž karty vypadaly
+v každé appce jinak (šedé verzálky vs. zelený Bricolage). Sjednoceno na `.ch` – **rodičovská appka
+ten rozdíl dělala správně už dřív** (`.tlab` tam nese jen popisky polí „Od / Do / Důvod").
+`.tlab` tedy nezaniká, jen se zúžil na svou původní roli.
+
 ### Empty states a potvrzení
 
 - Každý **variabilní** seznam má smysluplný prázdný stav (`.empty`, sdílené v components.css):
