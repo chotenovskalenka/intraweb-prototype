@@ -125,7 +125,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    a tam, kde se zapomnělo, sekce splývaly). První na stránce ho nepotřebuje. */
 .vhead{font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong);margin:var(--space-xl) 2px var(--space-sm)}
 .vhead:first-child{margin-top:0}
-.note2{font-size:12px;color:var(--color-text-hint);margin-top:10px;line-height:1.5}
+/* Vysvětlující poznámka. Odsazení si řeší sama podle okolí (dřív se přepisovalo inline 9×):
+   hned pod nadpisem karty žádné (mezeru už dal nadpis), na konci karty žádné dole. */
+.note2{font-size:12px;color:var(--color-text-hint);margin:var(--space-sm) 0;line-height:1.5}
+.ch+.note2,.tlab+.note2{margin-top:0}
+.note2:last-child{margin-bottom:0}
 .gcal-note{font-size:13px;font-weight:600;color:var(--color-primary);line-height:1.5;margin:0 0 14px}
 .note-info{background:rgba(43,112,89,.06);border-color:rgba(43,112,89,.18);font-size:13.5px;color:var(--color-text);line-height:1.5}
 .note-info b{color:var(--color-primary);font-weight:600}

@@ -146,7 +146,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    a tam, kde se zapomnělo, sekce splývaly). První na stránce ho nepotřebuje. */
 .vhead{font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong);margin:var(--space-xl) 2px var(--space-sm)}
 .vhead:first-child{margin-top:0}
-.note2{font-size:12px;color:var(--color-text-hint);margin-top:10px;line-height:1.5}
+/* Vysvětlující poznámka. Odsazení si řeší sama podle okolí (dřív se přepisovalo inline 9×):
+   hned pod nadpisem karty žádné (mezeru už dal nadpis), na konci karty žádné dole. */
+.note2{font-size:12px;color:var(--color-text-hint);margin:var(--space-sm) 0;line-height:1.5}
+.ch+.note2,.tlab+.note2{margin-top:0}
+.note2:last-child{margin-bottom:0}
 .gcal-note{font-size:13px;font-weight:600;color:var(--color-primary);line-height:1.5;margin:0 0 14px}
 .note-info{background:rgba(43,112,89,.06);border-color:rgba(43,112,89,.18);font-size:13.5px;color:var(--color-text);line-height:1.5}
 .note-info b{color:var(--color-primary);font-weight:600}
@@ -1157,7 +1161,7 @@ function renderPlan(){
   h+= sorted.length? sorted.map(akceCard).join('') : `<div class="empty">Zatím žádné akce.</div>`;
   // Loňské akce – inspirace: klik předvyplní novou akci, datum se doladí v modalu
   h+=`<button class="addbtn" onclick="togAkceLoni()">${akceLoni?'Skrýt loňské akce':'Zobrazit loňské akce (červen 2025)'}</button>`;
-  if(akceLoni){h+=`<div class="tile"><div class="ch">Loňské akce · červen 2025</div><div class="note2" style="margin:0 0 9px">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
+  if(akceLoni){h+=`<div class="tile"><div class="ch">Loňské akce · červen 2025</div><div class="note2">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
     h+=AKCE_LONI.map((a,i)=>{const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
       return `<button class="acard" onclick="akceFromLoni(${i})"><span class="adate">${a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span><span class="aplus">+</span></button>`;}).join('');
     h+=`</div>`;}
@@ -1193,12 +1197,12 @@ function temaBlock(){
     const a=TEMA_ARCHIV.find(x=>x.key===temaMonth);if(!a)return temaNav();
     let h=temaNav();
     h+=`<div class="tile"><div class="ch">Hodnota měsíce</div><div class="tval">${a.hodnota}</div></div>`;
-    a.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="ch">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2" style="margin:0">–</div>`:'')+`</div>`;});
+    a.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="ch">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2">–</div>`:'')+`</div>`;});
     h+=`<button class="btn-primary btn-block" onclick="temaAdopt('${a.key}')">Převzít tento plán do června 2026</button>`;
     return h;
   }
   let h=temaNav();
-  h+=`<div class="tile"><div class="ch">Tématický plán v designu</div><div class="note2" style="margin:0 0 9px">Aktuální plán vyvěšený ve školce (tiskne se na nástěnku):</div>`+
+  h+=`<div class="tile"><div class="ch">Tématický plán v designu</div><div class="note2">Aktuální plán vyvěšený ve školce (tiskne se na nástěnku):</div>`+
     TEMA_POSTERS.map((p,i)=>`<button class="poster-btn" onclick="openPoster(${i})" aria-label="Zvětšit plakát"><img class="tema-poster" src="${p}" alt="Tématický plán červen" loading="lazy"><span class="poster-zoom">⤢</span></button>`).join('')+
     `<label class="addbtn" style="display:block;text-align:center;margin-top:9px">+ Nahrát nový plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label></div>`;
   h+=`<div class="tile"><label class="pl">Hodnota měsíce</label><input class="pin" value="${esc(TEMA.hodnota)}" oninput="setTemaH(this.value)" placeholder="např. nadšení"></div>`;
@@ -1306,7 +1310,7 @@ function renderDite(i){
   const rz=rozhovoryFor(i);
   h+=`<div class="tile"><div class="ch">Rozhovory s rodiči (${rz.length})</div>`+rz.map(r=>`<div class="rozh"><div class="rozhd">${r.date}</div>${r.note}</div>`).join('')+`<label class="pl" style="margin-top:10px">Nový záznam</label><textarea class="pta" id="rozh-new" placeholder="zápis z rozhovoru, doporučení na doma…"></textarea><button class="btn-primary btn-block" style="margin-top:var(--space-sm)" onclick="addRozhovor(${i})">Přidat záznam</button></div>`;
   // placeholdery prací se střídají přes --photo-1..5, ať dlaždice nesplývají v jednu plochu
-  h+=`<div class="tile"><div class="ch">Fotky prací dítěte</div>`+(w?`<div class="works">`+Array.from({length:w}).map((_,k)=>`<div class="work" style="background:var(--photo-${k%5+1})">práce</div>`).join('')+`</div>`:`<div class="note2" style="margin:0">Zatím žádné práce.</div>`)+`<button class="addbtn" onclick="addWork(${i})">+ Nahrát práci dítěte</button></div>`;
+  h+=`<div class="tile"><div class="ch">Fotky prací dítěte</div>`+(w?`<div class="works">`+Array.from({length:w}).map((_,k)=>`<div class="work" style="background:var(--photo-${k%5+1})">práce</div>`).join('')+`</div>`:`<div class="note2">Zatím žádné práce.</div>`)+`<button class="addbtn" onclick="addWork(${i})">+ Nahrát práci dítěte</button></div>`;
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
@@ -1347,7 +1351,7 @@ function renderFondChild(i){
   let h=`<div class="doch"><button class="back" onclick="closeFondChild()">← Zpět na fond</button>`;
   h+=`<div class="dite-head"><div class="pav">${avatar(c,64)}</div><div class="pname">${full(c)}</div><div class="pfull">Kulturní fond</div></div>`;
   h+=`<div class="fond-detail">`;
-  h+=`<div class="tile"><div class="ch">Zůstatek</div><div class="fond-big" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary-strong)'}">${c.fond.toLocaleString('cs-CZ')} Kč</div><div class="note2" style="margin:8px 0 0">Fond je veden per dítě. Po akci se strhne jen dětem, které ten den přišly a šly na akci.</div></div>`;
+  h+=`<div class="tile"><div class="ch">Zůstatek</div><div class="fond-big" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary-strong)'}">${c.fond.toLocaleString('cs-CZ')} Kč</div><div class="note2">Fond je veden per dítě. Po akci se strhne jen dětem, které ten den přišly a šly na akci.</div></div>`;
   h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+(c.fondLog&&c.fondLog.length?c.fondLog.map(l=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b></div>`).join(''):`<div class="empty">Zatím se nic nečerpalo.</div>`)+`</div>`;
   h+=`</div>`;
   return h+`</div>`;
@@ -1357,7 +1361,7 @@ function renderOdecet(){
   const present=isWE(d)?[]:data.map((c,i)=>({c,i})).filter(x=>{const k=getCode(x.c,d);return k&&k!=='OM';});
   let h=`<button class="back" onclick="cancelOdecet()">← Zpět na fond</button>`;
   h+=`<div class="tile"><div class="ch">Odečet po akci</div><div style="font-family:var(--font-serif);font-size:17px;color:var(--color-primary-strong)">${a.name}</div><div class="ameta">${dayLbl(a)} · ${a.paid} Kč/dítě</div></div>`;
-  h+=`<div class="note2" style="margin:0 2px 8px">Přítomných ${d}. 6.: <b>${present.length}</b>. Vyber, kdo se akce zúčastnil – strhne se jen jim.</div>`;
+  h+=`<div class="note2">Přítomných ${d}. 6.: <b>${present.length}</b>. Vyber, kdo se akce zúčastnil – strhne se jen jim.</div>`;
   h+=`<div class="filters">`+[['vse','Celá třída'],['pre','Jen předškoláci'],['vlastni','Vlastní výběr']].map(g=>`<button class="${odecet.group===g[0]?'on':''}" onclick="setOdGroup('${g[0]}')">${g[1]}</button>`).join('')+`</div>`;
   h+=`<input class="search" placeholder="Najít dítě…" value="${esc(odQuery)}" oninput="onOdSearch(this.value)">`;
   h+=`<div class="rosterbox">`+(present.length?present.filter(x=>!odQuery||norm(full(x.c)).includes(norm(odQuery))).sort(byAlpha).map(x=>`<div class="row"><div class="rmain" onclick="togOdChild(${x.i})"><span class="chk ${odecet.sel.has(x.i)?'on':''}">${odecet.sel.has(x.i)?'✓':''}</span>${avatar(x.c,26)}<span class="nm">${full(x.c)}</span>${x.c.predskolak?'<span class="bdg pre">předšk.</span>':''}<span class="ind" style="color:var(--color-text-muted)">${x.c.fond.toLocaleString('cs-CZ')} Kč</span></div></div>`).join('') : '<div class="empty">Ten den nikdo nepřišel.</div>')+`</div>`;
