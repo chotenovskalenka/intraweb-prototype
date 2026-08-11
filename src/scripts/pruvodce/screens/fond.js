@@ -27,7 +27,7 @@ function renderFondChild(i){
   let h=`<div class="doch"><button class="back" onclick="closeFondChild()">← Zpět na fond</button>`;
   h+=`<div class="dite-head"><div class="pav">${avatar(c,64)}</div><div class="pname">${full(c)}</div><div class="pfull">Kulturní fond</div></div>`;
   h+=`<div class="fond-detail">`;
-  h+=`<div class="tile"><div class="ch">Zůstatek</div><div class="fond-big" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary-strong)'}">${c.fond.toLocaleString('cs-CZ')} Kč</div><div class="note2" style="margin:8px 0 0">Fond je veden per dítě. Po akci se strhne jen dětem, které ten den přišly a šly na akci.</div></div>`;
+  h+=`<div class="tile"><div class="ch">Zůstatek</div><div class="fond-big" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary-strong)'}">${c.fond.toLocaleString('cs-CZ')} Kč</div><div class="note2">Fond je veden per dítě. Po akci se strhne jen dětem, které ten den přišly a šly na akci.</div></div>`;
   h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+(c.fondLog&&c.fondLog.length?c.fondLog.map(l=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b></div>`).join(''):`<div class="empty">Zatím se nic nečerpalo.</div>`)+`</div>`;
   h+=`</div>`;
   return h+`</div>`;
@@ -37,7 +37,7 @@ function renderOdecet(){
   const present=isWE(d)?[]:data.map((c,i)=>({c,i})).filter(x=>{const k=getCode(x.c,d);return k&&k!=='OM';});
   let h=`<button class="back" onclick="cancelOdecet()">← Zpět na fond</button>`;
   h+=`<div class="tile"><div class="ch">Odečet po akci</div><div style="font-family:var(--font-serif);font-size:17px;color:var(--color-primary-strong)">${a.name}</div><div class="ameta">${dayLbl(a)} · ${a.paid} Kč/dítě</div></div>`;
-  h+=`<div class="note2" style="margin:0 2px 8px">Přítomných ${d}. 6.: <b>${present.length}</b>. Vyber, kdo se akce zúčastnil – strhne se jen jim.</div>`;
+  h+=`<div class="note2">Přítomných ${d}. 6.: <b>${present.length}</b>. Vyber, kdo se akce zúčastnil – strhne se jen jim.</div>`;
   h+=`<div class="filters">`+[['vse','Celá třída'],['pre','Jen předškoláci'],['vlastni','Vlastní výběr']].map(g=>`<button class="${odecet.group===g[0]?'on':''}" onclick="setOdGroup('${g[0]}')">${g[1]}</button>`).join('')+`</div>`;
   h+=`<input class="search" placeholder="Najít dítě…" value="${esc(odQuery)}" oninput="onOdSearch(this.value)">`;
   h+=`<div class="rosterbox">`+(present.length?present.filter(x=>!odQuery||norm(full(x.c)).includes(norm(odQuery))).sort(byAlpha).map(x=>`<div class="row"><div class="rmain" onclick="togOdChild(${x.i})"><span class="chk ${odecet.sel.has(x.i)?'on':''}">${odecet.sel.has(x.i)?'✓':''}</span>${avatar(x.c,26)}<span class="nm">${full(x.c)}</span>${x.c.predskolak?'<span class="bdg pre">předšk.</span>':''}<span class="ind" style="color:var(--color-text-muted)">${x.c.fond.toLocaleString('cs-CZ')} Kč</span></div></div>`).join('') : '<div class="empty">Ten den nikdo nepřišel.</div>')+`</div>`;

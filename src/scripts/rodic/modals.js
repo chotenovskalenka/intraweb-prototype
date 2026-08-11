@@ -20,12 +20,12 @@ function renderUcet(){
 
   h+=`<div class="tile"><div class="ch">Změna telefonu</div>
     ${row('Telefon – matka','telMatka','tel')}${row('Telefon – otec','telOtec','tel')}
-    <div class="note2" style="margin:8px 0 10px">Společné pro domácnost – projeví se v profilu obou dětí.</div>
+    <div class="note2">Společné pro domácnost – projeví se v profilu obou dětí.</div>
     <button class="btn-primary" onclick="ucetSaveTel()">Uložit telefon</button></div>`;
 
   h+=`<div class="tile"><div class="ch">Změna e-mailu</div>
     ${row('E-mail – matka','emailMatka')}${row('E-mail – otec','emailOtec')}
-    <div class="note2" style="margin:8px 0 10px">Společné pro domácnost – projeví se v profilu obou dětí.</div>
+    <div class="note2">Společné pro domácnost – projeví se v profilu obou dětí.</div>
     <button class="btn-primary" onclick="ucetSaveEmail()">Uložit e-mail</button></div>`;
 
   h+=`<div class="tile"><div class="ch">Změna hesla</div>

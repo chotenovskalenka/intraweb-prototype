@@ -17,7 +17,7 @@ function renderProfil(){
 
   h+=`<div class="tile"><div class="ch">Rodiče</div>
     ${row('Matka',ACCOUNT.telMatka+' · '+ACCOUNT.emailMatka)}${row('Otec',ACCOUNT.telOtec+' · '+ACCOUNT.emailOtec)}
-    <div class="note2" style="margin:8px 0 0">Telefon i e-mail spravujete v Nastavení účtu.</div></div>`;
+    <div class="note2">Telefon i e-mail spravujete v Nastavení účtu.</div></div>`;
 
   h+=`<div class="tile"><div class="ch">Zdraví a strava</div>
     ${row('Alergie',profAlergie(p))}${row('Léky',profAno(p.leky,p.lekyText))}${row('Brýle',profAno(p.bryle,p.bryleText))}

@@ -53,7 +53,7 @@ function renderPlatby(){
     ${c.fondlog.map(x=>`<div class="frow"><div class="fL"><div class="fo">${x[0]}</div><div class="fv">${x[1]}</div></div><div class="fa">${kc(x[2])} Kč</div></div>`).join('')}
     <div class="fondlab">Přispět do fondu</div>
     <div class="pay-box"><div class="qrbox">${fakeQR(4242,150)}</div><div class="pay-info"><div class="pay-hint">Chcete přispět víc? Naskenujte a ve své bankovní aplikaci zadejte vlastní částku.</div><div class="np" style="margin-top:6px"><span>Variabilní symbol</span><b>${vsFmt(fondVS)}</b></div></div></div>
-    <div class="note2" style="margin-top:12px">Kulturní fond pokrývá divadla, výlety, výtvarný materiál apod. Odečítá se jen za akce, kterých se dítě účastní. Položky jsou demo.</div></div>`;
+    <div class="note2">Kulturní fond pokrývá divadla, výlety, výtvarný materiál apod. Odečítá se jen za akce, kterých se dítě účastní. Položky jsou demo.</div></div>`;
 
   return h+`</div></div>`;
 }
