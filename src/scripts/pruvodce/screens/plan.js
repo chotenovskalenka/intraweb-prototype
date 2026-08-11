@@ -1,7 +1,7 @@
 /* SCREEN: PRUVODCE_PLAN */
 function renderPlan(){
+  // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
   let h=`<div class="vhead">Akce a výjimky · červen</div>`;
-  h+=`<button class="addbig" onclick="openAkce(null)">+ Vytvořit novou akci</button>`;
   const sorted=[...AKCE].sort((a,b)=>a.day-b.day);
   h+= sorted.length? sorted.map(akceCard).join('') : `<div class="empty">Zatím žádné akce.</div>`;
   h+=`<div class="vhead" style="margin-top:18px">Týdenní rytmus</div>`;
