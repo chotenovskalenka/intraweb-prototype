@@ -222,6 +222,49 @@ sdílené komponenty, zůstávají v příslušném `screens-*.css`.
 
 ---
 
+## Mezery (fáze 4.7)
+
+**Proč vznikly:** v CSS žilo **27 různých px hodnot** pro `margin`/`padding`/`gap` a tokeny
+`--space-*` se používaly 12×. Bez škály se odsazení nedalo odvodit – proto se pořád „zapomínalo
+na mezeru" a dopisovalo se inline (`style="margin-top:18px"` bylo v šablonách 5×).
+
+| Token | Hodnota | Kde |
+|---|---|---|
+| `--space-xs` | 4 px | uvnitř řádku (ikona ↔ text) |
+| `--space-sm` | 8 px | mezi řádky uvnitř karty |
+| `--space-md` | 12 px | mezi kartami; nad tlačítkem v kartě |
+| `--space-lg` | 16 px | hlavička → obsah |
+| `--space-xl` | 24 px | mezi sekcemi stránky |
+| `--space-2xl` | 32 px | velké předěly, patička |
+| `--space-3xl` | 48 px | spodní vzduch stránky |
+
+**Pravidlo:** odsazení nese **komponenta, ne místo použití**. Když nová obrazovka potřebuje mezeru
+navíc, je to signál, že ji má špatně nastavenou komponenta – oprav ji tam, ne inline.
+Příklad: `.vhead` (nadpis sekce) má `margin-top: var(--space-xl)` a `:first-child{margin-top:0}`,
+takže sekce od sebe odsadí samy a první na stránce nemá zbytečnou mezeru nahoře.
+
+## Tlačítka (fáze 4.7)
+
+**Hierarchie:**
+
+| Typ | Třída | Kdy |
+|---|---|---|
+| primární | `.btn-primary` | hlavní akce obrazovky/modalu (jen jedna) |
+| sekundární | `.btn-ghost` | zrušit, vedlejší volba |
+| přidávací | `.addbtn` | čárkovaný rámeček, „+ přidat / zobrazit víc" |
+| destruktivní | `.btn-del` | smazat |
+
+**Pravidlo šířky – šířku určuje kontejner, ne tlačítko:**
+
+- **základ** = šířka dle obsahu (tak se chová tlačítko v topbaru vedle H1),
+- **`.mbtns`** (řádek tlačítek v modalu) rozdělí místo rovným dílem (`flex:1` je scoped sem),
+- **`.btn-block`** = plná šířka, jen pro potvrzení formuláře.
+
+Dřív měl `.btn-primary` v základu `flex:1`, takže se roztáhl přes celý řádek všude, kde byl ve
+flex kontejneru – a mimo něj se to obcházelo inline `width:100%` (6×). Odsud „tlačítko je moc velké".
+
+---
+
 ## Přístupnost a mikrocopy (fáze 4.4)
 
 - **Kontrast:** všechny hlavní textové kombinace splňují **WCAG AA** (≥4.5, velký text/UI ≥3). `info`

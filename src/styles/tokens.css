@@ -47,9 +47,14 @@
      Token --font-serif drží nadpisový font (historický název; hodnota je bezpatková). */
   --font-serif:"Bricolage Grotesque",system-ui,sans-serif;
   --font-sans:"Inter",system-ui,sans-serif;
-  /* spacing škála – aktivace v komponentách proběhne ve 4.3 */
-  --space-xs:4px;
-  --space-sm:8px;
-  --space-md:12px;
-  --space-lg:16px;
+  /* Škála mezer (4.7). Pravidla použití viz design-system.md „Mezery".
+     Před zavedením škály žilo v CSS 27 různých px hodnot pro margin/padding/gap –
+     proto se pořád zapomínalo na odsazení a psalo se inline. Nové mezery ber odsud. */
+  --space-xs:4px;    /* uvnitř řádku, mezi ikonou a textem */
+  --space-sm:8px;    /* mezi řádky uvnitř karty */
+  --space-md:12px;   /* mezi kartami; nad tlačítkem v kartě */
+  --space-lg:16px;   /* hlavička → obsah */
+  --space-xl:24px;   /* mezi sekcemi stránky */
+  --space-2xl:32px;  /* velké předěly, patička */
+  --space-3xl:48px;  /* spodní vzduch stránky */
 }

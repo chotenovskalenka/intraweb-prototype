@@ -11,12 +11,12 @@ function renderFond(){
   let h=`<div class="doch">`;
   h+=`<div class="vhead">Placené akce</div>`;
   h+= paidAkce.length? `<div class="fond-akce">`+paidAkce.map(a=>`<div class="frow"><span class="adate">${dayLbl(a)}</span><div style="flex:1"><div class="aname">${a.name}</div><div class="ameta">${a.paid} Kč/dítě</div></div>${a.done?'<span class="bdg pre" style="padding:6px 10px">odečteno ✓</span>':`<button class="odbtn" onclick="startOdecet('${a.id}')">Odečíst</button>`}</div>`).join('')+`</div>` : `<div class="empty">Žádné placené akce. Cenu nastavíš u akce v Plán &amp; program.</div>`;
-  h+=`<div class="vhead" style="margin-top:18px">Ruční čerpání (celá třída)</div>`;
+  h+=`<div class="vhead">Ruční čerpání (celá třída)</div>`;
   h+=`<button class="addbig" onclick="togFond()">+ Přidat čerpání (např. materiál)</button>`;
   if(fondFormOpen)h+=`<div class="tile"><label class="pl">Co se čerpalo</label><input class="pin" id="f-name" placeholder="např. Výtvarný materiál"><label class="pl">Kdy</label><input class="pin" id="f-date" placeholder="např. červen 2026"><label class="pl">Částka na dítě (Kč)</label><input class="pin" id="f-amt" type="number" placeholder="0"><div class="mbtns"><button class="btn-ghost" onclick="togFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout celé třídě</button></div></div>`;
-  h+=`<div class="vhead" style="margin-top:18px">Zůstatky dětí</div>`;
+  h+=`<div class="vhead">Zůstatky dětí</div>`;
   h+=`<div class="fond-grid">`+data.map((c,i)=>({c,i})).sort(byAlpha).map(({c,i})=>`<div class="row"><div class="rmain" onclick="openFondChild(${i})">${avatar(c,26)}<span class="nm">${full(c)}</span><span class="ind" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč ›</span></div></div>`).join('')+`</div>`;
-  if(FONDHIST.length){h+=`<div class="vhead" style="margin-top:18px">Historie čerpání</div>`;
+  if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
     FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div><button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button></div>`;});
     h+=`<div class="note2">Spletl/a ses? „Vrátit" čerpání stornuje – částka se dětem přičte zpět.</div>`;}
   return h+`</div>`;
@@ -43,7 +43,7 @@ function renderOdecet(){
   h+=`<div class="rosterbox">`+(present.length?present.filter(x=>!odQuery||norm(full(x.c)).includes(norm(odQuery))).sort(byAlpha).map(x=>`<div class="row"><div class="rmain" onclick="togOdChild(${x.i})"><span class="chk ${odecet.sel.has(x.i)?'on':''}">${odecet.sel.has(x.i)?'✓':''}</span>${avatar(x.c,26)}<span class="nm">${full(x.c)}</span>${x.c.predskolak?'<span class="bdg pre">předšk.</span>':''}<span class="ind" style="color:var(--color-text-muted)">${x.c.fond.toLocaleString('cs-CZ')} Kč</span></div></div>`).join('') : '<div class="empty">Ten den nikdo nepřišel.</div>')+`</div>`;
   const n=odecet.sel.size, tot=n*a.paid;
   h+=`<div class="tile" style="margin-top:11px"><div class="np"><span>Vybráno dětí</span><b>${n}</b></div><div class="np"><span>Strhne se celkem</span><b>${tot.toLocaleString('cs-CZ')} Kč</b></div></div>`;
-  h+=`<button class="btn-primary" style="width:100%" onclick="confirmOdecet()">Strhnout z fondu</button>`;
+  h+=`<button class="btn-primary btn-block" onclick="confirmOdecet()">Strhnout z fondu</button>`;
   return h;
 }
 window.openFondChild=i=>{fondChild=i;render();};
