@@ -30,7 +30,7 @@ function renderDite(i){
   const rz=rozhovoryFor(i);
   h+=`<div class="tile"><div class="ch">Rozhovory s rodiči (${rz.length})</div>`+rz.map(r=>`<div class="rozh"><div class="rozhd">${r.date}</div>${r.note}</div>`).join('')+`<label class="pl" style="margin-top:10px">Nový záznam</label><textarea class="pta" id="rozh-new" placeholder="zápis z rozhovoru, doporučení na doma…"></textarea><button class="btn-primary btn-block" style="margin-top:var(--space-sm)" onclick="addRozhovor(${i})">Přidat záznam</button></div>`;
   // placeholdery prací se střídají přes --photo-1..5, ať dlaždice nesplývají v jednu plochu
-  h+=`<div class="tile"><div class="ch">Fotky prací dítěte</div>`+(w?`<div class="works">`+Array.from({length:w}).map((_,k)=>`<div class="work" style="background:var(--photo-${k%5+1})">práce</div>`).join('')+`</div>`:`<div class="note2" style="margin:0">Zatím žádné práce.</div>`)+`<button class="addbtn" onclick="addWork(${i})">+ Nahrát práci dítěte</button></div>`;
+  h+=`<div class="tile"><div class="ch">Fotky prací dítěte</div>`+(w?`<div class="works">`+Array.from({length:w}).map((_,k)=>`<div class="work" style="background:var(--photo-${k%5+1})">práce</div>`).join('')+`</div>`:`<div class="note2">Zatím žádné práce.</div>`)+`<button class="addbtn" onclick="addWork(${i})">+ Nahrát práci dítěte</button></div>`;
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
