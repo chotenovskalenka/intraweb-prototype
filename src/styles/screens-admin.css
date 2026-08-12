@@ -67,8 +67,8 @@
 .por-t{flex:1;font-size:var(--text-body);color:var(--color-text)}
 .por-sk{color:var(--color-text-muted)}
 .por-typ{font-size:var(--text-chip);font-weight:600;padding:2px 8px;border-radius:var(--radius-xs);flex-shrink:0}
-.por-typ.porada{color:var(--color-primary);background:rgba(43,112,89,.12)}
-.por-typ.evaluace{color:var(--color-accent-ink);background:rgba(200,188,133,.14)}
+.por-typ.porada{color:var(--color-primary);background:var(--soft-primary)}
+.por-typ.evaluace{color:var(--color-accent-ink);background:var(--soft-accent)}
 
 /* badge varianty stavů aktuality (základ .bdg z components.css) */
 .bdg.sent{color:var(--state-brand-ink);background:var(--state-brand-bg)}
@@ -96,12 +96,12 @@
 .rec-fam{font-weight:400;color:var(--color-text-muted);font-size:var(--text-micro)}
 .ak-preview{margin-top:4px}
 .ak-preview b{color:var(--color-primary)}
-.ak-warn{font-size:var(--text-small);color:var(--color-danger);background:rgba(176,73,47,.08);border:1px solid rgba(176,73,47,.20);border-radius:var(--radius-md);padding:10px 12px;line-height:var(--leading-normal)}
+.ak-warn{font-size:var(--text-small);color:var(--color-danger);background:var(--wash-danger);border:1px solid var(--edge-danger);border-radius:var(--radius-md);padding:10px 12px;line-height:var(--leading-normal)}
 .btn-primary:disabled{opacity:.45;cursor:not-allowed}
 
 /* porady – štítek chip */
 .stitek{display:inline-block;font-size:var(--text-micro);font-weight:500;color:var(--color-text-muted);background:var(--color-surface-2);border:1px solid var(--color-border);padding:2px 9px;border-radius:var(--radius-full);margin:0 5px 5px 0}
-.stitek.hi{color:var(--color-primary);background:rgba(43,112,89,.12);border-color:rgba(43,112,89,.22);font-weight:600}
+.stitek.hi{color:var(--color-primary);background:var(--soft-primary);border-color:var(--edge-primary);font-weight:600}
 .za-tags{margin-top:9px}
 
 /* porady – seznam zápisů */

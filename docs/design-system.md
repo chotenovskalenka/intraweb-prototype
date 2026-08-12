@@ -262,6 +262,50 @@ takže sekce od sebe odsadí samy a první na stránce nemá zbytečnou mezeru n
 sebou `var(--space-sm)`. Dřív tu žilo **pět různých odsazení** (13/15, 13/15/11, 11/14, 14/15) pro
 tutéž věc.
 
+## Typografická škála (fáze 4.7)
+
+Dřív žilo v CSS **27 různých velikostí písma** a čtyři z nich (12 / 12,5 / 13 / 13,5 px) nesly
+tělový text ve 146 deklaracích. Každý token má roli a **protějšek v textových stylech Figma knihovny**.
+
+| Token | Velikost | Role | Styl ve Figmě |
+|---|---|---|---|
+| `--text-chip` | 10 px | odznáčky, chipy | Chip/Text |
+| `--text-micro` | 11 px | popisky polí (`.pl`) | Mikropopisek/Pole |
+| `--text-note` | 12 px | poznámky (`.note2`, `.tlab`) | Tělo/Poznámka |
+| `--text-meta` | 12,5 px | meta pod názvem (`.ameta`) | Tělo/Popisek |
+| `--text-small` | 13,5 px | sekundární text | Tělo/Menší |
+| `--text-body` | 14 px | běžný text | Tělo/Základ |
+| `--text-action` | 15 px | popisek tlačítka | Tlačítko/Text |
+| `--text-heading` | 16 px | nadpis karty a sekce | Nadpis/Karta, Nadpis/Sekce |
+| `--text-title` | 19 px | nadpis modalu, program dne | — |
+| `--text-display` | 25 px | nadpis stránky (`.dh-t`) | Nadpis/Stránka |
+| `--text-number` | 28 px | velká čísla v dlaždicích | — |
+| `--text-number-lg` | 34 px | největší čísla (zůstatek fondu) | — |
+
+**Řádkování** – čtyři kroky místo dřívějších třinácti hodnot mezi 1,05 a 1,65:
+`--leading-tight` 1,15 (nadpisy) · `--leading-snug` 1,3 (krátké popisky) ·
+`--leading-normal` 1,45 (běžný text) · `--leading-relaxed` 1,6 (delší odstavce).
+Hodnoty `0`, `1` a `24px` zůstávají – to jsou kontejnery ikon a glyfů, ne text.
+Mimo škálu je i `font-size:21px` u `.burger` (glyf ☰).
+
+## Poloprůhledné výplně (fáze 4.7)
+
+V CSS žilo **deset různých alf jedné zelené**, osm rezavé a osm okrové – bez pravidla, kdy použít
+kterou. Tři kroky podle účelu:
+
+| | wash (podklad) | soft (výplň) | edge (ohraničení) |
+|---|---|---|---|
+| primární | `--wash-primary` .07 | `--soft-primary` .12 | `--edge-primary` .20 |
+| danger | `--wash-danger` .08 | `--soft-danger` .12 | `--edge-danger` .28 |
+| accent | `--wash-accent` .10 | `--soft-accent` .14 | `--edge-accent` .30 |
+
+**Pozor na hranici se stavovou paletou:** prvek, který vyjadřuje *stav* (odznáček uhrazeno /
+neuhrazeno, chip docházky), bere barvu z `--state-*`, ne z těchto tintů. Tinty jsou pro plochy,
+které stav nenesou (podklad sekce, ohraničení karty).
+
+Ponechány záměrně mimo škálu: scrimy a překryvy (`rgba(31,42,46,.42)` a spol.), stíny (`rgba(0,0,0,…)`)
+a paleta Google kalendáře.
+
 ## Rádiusy (fáze 4.7)
 
 Dřív žilo v CSS osm různých hodnot zaoblení a **čtyři z nich (8/9/10/11 px) dělaly tutéž práci** –

@@ -1,4 +1,4 @@
-.specbar{background:rgba(200,188,133,.10);border:1px solid rgba(200,188,133,.3);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
+.specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
 .spectit{font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-accent-ink);font-weight:600;margin-bottom:6px}
 .specnums{display:flex;gap:16px;font-size:var(--text-small);color:var(--color-text)}.specnums b{font-family:var(--font-serif);font-size:var(--text-title);color:var(--color-primary-strong);margin-right:4px}
 .temanav{display:flex;gap:6px;margin-bottom:10px}
