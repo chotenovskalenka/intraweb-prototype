@@ -21,6 +21,18 @@
   --color-border-strong:rgba(31,42,46,.16);
   --color-danger:#B0492F;
   --color-success:#387349;
+  /* Poloprůhledné výplně a ohraničení značkových barev (4.7). Dřív žilo v CSS deset různých
+     alf jedné zelené, osm rezavé a osm okrové – bez pravidla, kdy použít kterou.
+     wash = sotva znatelný podklad · soft = běžná výplň, aktivní stav · edge = ohraničení. */
+  --wash-primary:rgba(43,112,89,.07);
+  --soft-primary:rgba(43,112,89,.12);
+  --edge-primary:rgba(43,112,89,.20);
+  --wash-danger:rgba(176,73,47,.08);
+  --soft-danger:rgba(176,73,47,.12);
+  --edge-danger:rgba(176,73,47,.28);
+  --wash-accent:rgba(200,188,133,.10);
+  --soft-accent:rgba(200,188,133,.14);
+  --edge-accent:rgba(200,188,133,.30);
   /* UI tinty (směr whitespace + barva) – světlé kategorie/stavy */
   --tint-green:#E3EDE7;
   --tint-rose:#F1E1DC;
