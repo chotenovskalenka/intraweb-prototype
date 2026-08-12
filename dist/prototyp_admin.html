@@ -314,7 +314,9 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .stepper button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;padding:5px 16px;font-family:var(--font-serif);line-height:1}
 .stepper button:disabled{color:var(--color-text-hint);cursor:default}
 .stepper span{font-family:var(--font-serif);font-size:var(--text-heading);color:var(--color-primary-strong)}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--space-xs)}
+/* minmax(0,1fr) místo 1fr: samotné 1fr je minmax(auto,1fr), takže se sloupec nesmrskne pod
+   šířku obsahu a delší slovo („odpolední") mřížku roztlačí ven z kontejneru. */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--space-xs)}
 .calh{text-align:center;font-size:var(--text-micro);color:var(--color-text-muted);padding:2px 0}
 table.wt td.ced{cursor:pointer;background:var(--wash-primary)}
 table.wt td.ced:active{background:var(--soft-primary)}
