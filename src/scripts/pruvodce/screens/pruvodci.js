@@ -15,7 +15,8 @@ function renderPruvodci(){
   if(todays.length)h+=`<div class="np" style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:9px"><span>Dnes uspává</span><select class="selin" onchange="setUspava(this.value)">`+todays.map(x=>`<option value="${x.i}" ${x.i===uspavaToday?'selected':''}>${x.g.n}</option>`).join('')+`</select></div>`;
   h+=`</div>`;
   h+=`<div class="vhead">Týden · služby</div>`;
-  h+=`<div class="weekbox"><table class="wt"><thead><tr><th class="who">Průvodce</th>`+DAYS.map((d,j)=>`<th class="${j===TODAY?'today':''}">${d}</th>`).join('')+`</tr></thead><tbody>`;
+  // wt-sm = tabulka s krátkými jmény → na mobilu užší první sloupec, aby buňky měly 44 px
+  h+=`<div class="weekbox"><table class="wt wt-sm"><thead><tr><th class="who">Průvodce</th>`+DAYS.map((d,j)=>`<th class="${j===TODAY?'today':''}">${d}</th>`).join('')+`</tr></thead><tbody>`;
   GUIDESHIFT.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>`<td class="ced${di===TODAY?' today':''}" onclick="openShift(${gi},${di})">${shiftCell(d)}</td>`).join('')+`</tr>`;});
   h+=`</tbody></table></div><div class="hint">Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).</div>`;
   return h;
