@@ -630,6 +630,11 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .newsbox{padding-bottom:8px}
 .newsrow{display:flex;align-items:baseline;gap:9px;width:100%;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text);cursor:pointer;text-align:left;line-height:var(--leading-normal)}
 .newsrow:first-of-type{border-top:none;padding-top:2px}
+/* Náhled fotky v kompaktním řádku novinek. Bez něj nebylo poznat, že novinka fotku má –
+   fotky totiž mívají spíš nedůležité novinky (výprava, brigáda), a ty do velkých karet nejdou. */
+.newsrow.has-thumb{align-items:center}
+.newsthumb{width:52px;height:38px;border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0;background:var(--color-surface-2)}
+.newsthumb img{width:100%;height:100%;object-fit:cover;display:block}
 .newsdate{font-size:var(--text-micro);color:var(--color-text-muted);min-width:36px;flex-shrink:0}
 .newsline{flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .newsarr{color:var(--color-text-hint);flex-shrink:0}
@@ -1510,6 +1515,13 @@ window.pickDashDay=d=>{dashDay=d;dashPickerOpen=false;dashEdit=false;render();};
    při delším provozu se jich nastřádá hodně a karty by zabíraly zbytečně moc místa.
    Rodič nevidí autora (jméno průvodce jen v průvodcovské appce). */
 function novinkaExcerpt(n){const p=(n.full||n.t).split('\n')[0];return p.length>140?p.slice(0,140)+'…':p;}
+// Náhled fotky v kompaktním řádku. Vpravo před šipkou – vlevo by řádky s fotkou a bez ní
+// měly text odsazený jinak. Placeholder (barva) se vykreslí bez popisku, na 52 px by se nevešel.
+function novThumb(img){
+  return img.slice(0,5)==='data:'
+    ? `<span class="newsthumb"><img src="${img}" alt=""></span>`
+    : `<span class="newsthumb" style="background:${img}"></span>`;
+}
 const NOV_STRANKA=6;   // řádků na stránku u neduležitých novinek
 function renderAktuality(){
   const vsechny=NEWS.filter(n=>TODAY<=n.until), dulezite=vsechny.filter(n=>n.urgent), ostatni=vsechny.filter(n=>!n.urgent);
@@ -1530,7 +1542,7 @@ function renderAktuality(){
     h+=`</div>`;
   }
   if(ostatni.length){
-    h+=`<div class="tile newsbox">`+stranka.map(n=>`<button class="newsrow" onclick="openNovinka('${n.id}')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span><span class="newsarr">›</span></button>`).join('')+`</div>`;
+    h+=`<div class="tile newsbox">`+stranka.map(n=>`<button class="newsrow${n.img?' has-thumb':''}" onclick="openNovinka('${n.id}')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span>${n.img?novThumb(n.img):''}<span class="newsarr">›</span></button>`).join('')+`</div>`;
     if(stran>1){
       h+=`<div class="dh-nav novstep"><button class="dh-step" onclick="stepNovStrana(-1)" ${novStrana<=1?'disabled':''} aria-label="Předchozí strana">‹</button><span class="dh-lbl">Strana ${novStrana} z ${stran}</span><button class="dh-step" onclick="stepNovStrana(1)" ${novStrana>=stran?'disabled':''} aria-label="Další strana">›</button></div>`;
     }
