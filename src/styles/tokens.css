@@ -42,7 +42,14 @@
   --state-neutral-ink:var(--color-text-muted);--state-neutral-bg:rgba(92,101,96,.14);
   --state-muted-ink:var(--color-text-hint);  --state-muted-bg:rgba(31,42,46,.07);
   --state-brand-ink:var(--color-primary);    --state-brand-bg:rgba(43,112,89,.12);
-  --radius-md:14px;
+  /* Škála rádiusů (4.7). Dřív žilo v CSS osm různých hodnot a čtyři z nich (8/9/10/11 px)
+     dělaly tutéž práci — zaoblení malých ovládacích prvků. Nové zaoblení ber odsud.
+     Kruhy (avatary, 50 %) sem nepatří, ty zůstávají procentuální. */
+  --radius-xs:6px;      /* odznáčky, chipy, drobné značky */
+  --radius-sm:9px;      /* formulářová pole, malá tlačítka */
+  --radius-md:12px;     /* ovládací prvky, řádky seznamů, karty v seznamu */
+  --radius-lg:14px;     /* hlavní plochy – .tile, .newscard */
+  --radius-full:999px;  /* pilulky, přepínače */
   /* Typografie – nadpisy Bricolage Grotesque, tělo/UI Inter (univerzální pro všechny 4 školky).
      Token --font-serif drží nadpisový font (historický název; hodnota je bezpatková). */
   --font-serif:"Bricolage Grotesque",system-ui,sans-serif;

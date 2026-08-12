@@ -257,6 +257,27 @@ navíc, je to signál, že ji má špatně nastavenou komponenta – oprav ji ta
 Příklad: `.vhead` (nadpis sekce) má `margin-top: var(--space-xl)` a `:first-child{margin-top:0}`,
 takže sekce od sebe odsadí samy a první na stránce nemá zbytečnou mezeru nahoře.
 
+**Vnitřek karty je jednotný:** `.tile`, `.tab`, `.daycard`, `.specbar`, `.alerttile` mají všechny
+`padding: var(--space-md) var(--space-lg)` a `margin-bottom: var(--space-md)`; nadpis `.ch` má pod
+sebou `var(--space-sm)`. Dřív tu žilo **pět různých odsazení** (13/15, 13/15/11, 11/14, 14/15) pro
+tutéž věc.
+
+## Rádiusy (fáze 4.7)
+
+Dřív žilo v CSS osm různých hodnot zaoblení a **čtyři z nich (8/9/10/11 px) dělaly tutéž práci** –
+zaoblení malých ovládacích prvků. Škála je odvozená ze skutečných shluků v kódu:
+
+| Token | Hodnota | Kde |
+|---|---|---|
+| `--radius-xs` | 6 px | odznáčky, chipy, drobné značky |
+| `--radius-sm` | 9 px | formulářová pole, malá tlačítka |
+| `--radius-md` | 12 px | ovládací prvky, řádky seznamů, karty v seznamu |
+| `--radius-lg` | 14 px | hlavní plochy – `.tile`, `.newscard`, `.tab` |
+| `--radius-full` | 999 px | pilulky, přepínače |
+
+**Výjimky, které do škály nepatří** (a mají zůstat): `50 %` u kruhových avatarů, `2 px` u pruhů
+Google kalendáře (záměrná nápodoba), `18 px` u modalů a spodních sheetů, `5 px` u štítku PDF.
+
 ## Tlačítka (fáze 4.7)
 
 **Hierarchie:**
