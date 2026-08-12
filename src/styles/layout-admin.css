@@ -11,7 +11,12 @@
 
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
 .topbar-a{display:flex;align-items:center;gap:12px;padding:18px 32px;border-bottom:1px solid var(--color-border)}
-.ttl-a{font-family:var(--font-serif);font-size:var(--text-display);color:var(--color-primary-strong);flex:1}
+/* Nadpis stránky – shodný s .dh-t v mobilních appkách. Dřív mu chyběla váha (400 místo 700),
+   takže admin působil lehčeji než zbylé dvě appky. */
+.ttl-a{font-family:var(--font-serif);font-size:var(--text-display);font-weight:700;line-height:var(--leading-tight);color:var(--color-primary-strong);flex:1}
+/* Primární akce sekce sedí v topbaru vedle nadpisu (stejně jako v průvodcovské),
+   ne jako pruh přes celou šířku obsahu. */
+.topbar-a>.btn-primary{flex:0 0 auto;padding:11px 20px}
 .role-a{font-size:var(--text-micro);font-weight:500;color:var(--color-primary);background:var(--soft-primary);border:1px solid var(--edge-primary);padding:5px 12px;border-radius:var(--radius-full);white-space:nowrap}
 .content-wrap{padding:24px 32px 48px;flex:1}
 .content-wrap #content{max-width:980px;margin:0 auto}

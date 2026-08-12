@@ -21,7 +21,7 @@ function renderPorady(){
 
 /* ---- seznam zápisů ---- */
 function renderPoList(){
-  let h=`<button class="addbig no-print" onclick="poNewZ()">+ Nový zápis</button>`;
+  let h="";  // akce „+ Nový zápis" je v topbaru (core.js TOPACT)
   // filtry
   h+=`<div class="filters no-print">`
     +chip('fSkolka','vse','Všechny školky',fSkolka)
