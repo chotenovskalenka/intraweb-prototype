@@ -334,6 +334,13 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .calh{text-align:center;font-size:var(--text-micro);color:var(--color-text-muted);padding:2px 0}
 table.wt td.ced{cursor:pointer;background:var(--wash-primary)}
 table.wt td.ced:active{background:var(--soft-primary)}
+/* Klikací buňky musí splnit dotykový cíl ≥44 px (design-system.md, přístupnost).
+   Na mobilu jich bylo 40×39 – na desktopu se klikne myší, tam stačí výchozí výška.
+   .wt-sm = tabulka s krátkými jmény (služby průvodců) → užší první sloupec uvolní šířku buňkám. */
+@media (max-width:899px){
+  table.wt td.ced{height:44px}
+  table.wt.wt-sm th.who,table.wt.wt-sm td.who{width:33%}
+}
 table.wt td.pastc{opacity:.45}
 .calcell{aspect-ratio:1;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-surface);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative}
 .calcell .cnum{font-size:var(--text-small);color:var(--color-text)}
@@ -449,6 +456,13 @@ table.wt td.pastc{opacity:.45}
 .doch>.legend{margin-bottom:8px}
 .dfield .dsw{margin:0;width:auto;flex:0 0 auto}
 .dfield .dsw button{flex:0 0 auto;padding:10px 18px}
+/* Na mobilu se přepínač (152 px) a datum (199 px) nevešly na jeden řádek – chybělo 18 px,
+   takže se pole zalomilo a hlavička spolkla ~200 px výšky, než se objevilo první dítě.
+   Užší odsazení přepínače je vrátí na jeden řádek; dotykový cíl drží min-height 44 px. */
+@media (max-width:899px){
+  .dfield .dsw button{padding:10px 12px}
+  .dfield{gap:8px}
+}
 .dnav{display:flex;align-items:center;gap:2px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:2px}
 .dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
 .dnav button:disabled{color:var(--color-text-hint);cursor:default}
@@ -1291,7 +1305,8 @@ function renderPruvodci(){
   if(todays.length)h+=`<div class="np" style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:9px"><span>Dnes uspává</span><select class="selin" onchange="setUspava(this.value)">`+todays.map(x=>`<option value="${x.i}" ${x.i===uspavaToday?'selected':''}>${x.g.n}</option>`).join('')+`</select></div>`;
   h+=`</div>`;
   h+=`<div class="vhead">Týden · služby</div>`;
-  h+=`<div class="weekbox"><table class="wt"><thead><tr><th class="who">Průvodce</th>`+DAYS.map((d,j)=>`<th class="${j===TODAY?'today':''}">${d}</th>`).join('')+`</tr></thead><tbody>`;
+  // wt-sm = tabulka s krátkými jmény → na mobilu užší první sloupec, aby buňky měly 44 px
+  h+=`<div class="weekbox"><table class="wt wt-sm"><thead><tr><th class="who">Průvodce</th>`+DAYS.map((d,j)=>`<th class="${j===TODAY?'today':''}">${d}</th>`).join('')+`</tr></thead><tbody>`;
   GUIDESHIFT.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>`<td class="ced${di===TODAY?' today':''}" onclick="openShift(${gi},${di})">${shiftCell(d)}</td>`).join('')+`</tr>`;});
   h+=`</tbody></table></div><div class="hint">Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).</div>`;
   return h;

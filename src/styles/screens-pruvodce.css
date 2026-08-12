@@ -24,6 +24,13 @@
 .doch>.legend{margin-bottom:8px}
 .dfield .dsw{margin:0;width:auto;flex:0 0 auto}
 .dfield .dsw button{flex:0 0 auto;padding:10px 18px}
+/* Na mobilu se přepínač (152 px) a datum (199 px) nevešly na jeden řádek – chybělo 18 px,
+   takže se pole zalomilo a hlavička spolkla ~200 px výšky, než se objevilo první dítě.
+   Užší odsazení přepínače je vrátí na jeden řádek; dotykový cíl drží min-height 44 px. */
+@media (max-width:899px){
+  .dfield .dsw button{padding:10px 12px}
+  .dfield{gap:8px}
+}
 .dnav{display:flex;align-items:center;gap:2px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:2px}
 .dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
 .dnav button:disabled{color:var(--color-text-hint);cursor:default}

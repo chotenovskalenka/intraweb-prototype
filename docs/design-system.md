@@ -350,8 +350,14 @@ flex kontejneru – a mimo něj se to obcházelo inline `width:100%` (6×). Odsu
   a `success` ztmaveny na `#496D7E` / `#387349`, ať procházejí i jako text na pozadí a krémový text na výplni.
   Hint (`--color-text-hint`) je jen pro nepodstatné hinty (≥3:1).
 - **Dotykové cíle:** interaktivní prvky v mobilních appkách mají **klikací plochu ≥ 44×44 px**
-  (min-height / hit-area přes `::before`; vizuál se nemusí měnit – např. `.chk` zůstává 30 px). Výjimka:
-  Google-kalendář (`.gstep`/`.gcell`) drží kompaktní Google rozměry (záměrná nápodoba).
+  (min-height / hit-area přes `::before`; vizuál se nemusí měnit – např. `.chk` zůstává 30 px). Výjimky:
+  - Google-kalendář (`.gstep`/`.gcell`) drží kompaktní Google rozměry (záměrná nápodoba).
+  - **Týdenní docházka** (`table.wt td.ced` v `renderTydenD`) má na mobilu **40×44 px** místo 44×44.
+    Pět sloupců dnů plus čitelné jméno dítěte se do 375 px v plné šířce nevejde – při 143 px se
+    „Tonička Procházková" už ořezává, další zúžení by znečitelnilo většinu jmen. Výška 44 px
+    splněna; obětována je šířka, protože jméno je pro orientaci důležitější než 4 px dotyku.
+    Rozpis služeb (`table.wt.wt-sm`) tenhle problém nemá – krátká jména dovolí užší první
+    sloupec a buňky vycházejí na 46×44.
 - **Focus:** `:focus-visible` (2px `--color-primary` ring) jen při klávesové navigaci; `:focus{outline:none}`
   potlačuje ring po kliknutí myší. Hlavně pro desktop/admin.
 - **Oslovení:** **průvodce tyká, rodič vyká**, admin neosobní. Formát dat „D. M. RRRR".

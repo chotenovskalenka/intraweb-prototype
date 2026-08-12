@@ -318,6 +318,13 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .calh{text-align:center;font-size:var(--text-micro);color:var(--color-text-muted);padding:2px 0}
 table.wt td.ced{cursor:pointer;background:var(--wash-primary)}
 table.wt td.ced:active{background:var(--soft-primary)}
+/* Klikací buňky musí splnit dotykový cíl ≥44 px (design-system.md, přístupnost).
+   Na mobilu jich bylo 40×39 – na desktopu se klikne myší, tam stačí výchozí výška.
+   .wt-sm = tabulka s krátkými jmény (služby průvodců) → užší první sloupec uvolní šířku buňkám. */
+@media (max-width:899px){
+  table.wt td.ced{height:44px}
+  table.wt.wt-sm th.who,table.wt.wt-sm td.who{width:33%}
+}
 table.wt td.pastc{opacity:.45}
 .calcell{aspect-ratio:1;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-surface);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative}
 .calcell .cnum{font-size:var(--text-small);color:var(--color-text)}
