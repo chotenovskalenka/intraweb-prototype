@@ -353,7 +353,9 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .cal .cell.today{outline:2px solid var(--color-primary);outline-offset:-2px}
 .cal .cell.sel{box-shadow:0 0 0 2px var(--color-accent) inset}
 .cal .dnum{font-size:var(--text-micro);color:var(--color-text-muted)}
-.cal .mk{font-size:var(--text-chip);font-weight:700;line-height:var(--leading-tight);text-align:center;word-break:break-word;hyphens:auto}
+/* 8 px je VĚDOMÁ výjimka pod typografickou škálou: do sedmi sloupců na 375 px se celé slovo
+   („odpolední") při 10 px nevejde a mřížka se rozsype. Na desktopu je místa dost → --text-chip. */
+.cal .mk{font-size:8px;font-weight:700;line-height:var(--leading-tight);text-align:center;word-break:break-word;hyphens:auto}
 @media (min-width:900px){.cal .mk{font-size:var(--text-chip)}}
 .edlock{font-size:var(--text-meta);color:var(--color-text-muted);font-style:italic}
 .pay2{border-color:var(--color-accent);background:var(--wash-accent)}
