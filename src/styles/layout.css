@@ -3,22 +3,22 @@
 .scroll{padding:14px 16px 30px;min-height:100vh;display:flex;flex-direction:column}
 .scroll>#content{flex:1}
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:13px}
-.burger{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;font-size:21px;line-height:1;color:var(--color-primary-strong);cursor:pointer;padding:2px 4px;margin-left:-8px}
-.ttl{font-family:var(--font-serif);font-size:19px;color:var(--color-primary-strong)}
-.role{font-size:11.5px;font-weight:500;color:var(--color-primary);background:rgba(43,112,89,.10);border:1px solid rgba(43,112,89,.18);padding:5px 10px;border-radius:var(--radius-full);white-space:nowrap}
+.burger{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;font-size:21px/* glyf ☰, ne text – mimo typografickou škálu */;line-height:1;color:var(--color-primary-strong);cursor:pointer;padding:2px 4px;margin-left:-8px}
+.ttl{font-family:var(--font-serif);font-size:var(--text-title);color:var(--color-primary-strong)}
+.role{font-size:var(--text-micro);font-weight:500;color:var(--color-primary);background:rgba(43,112,89,.10);border:1px solid rgba(43,112,89,.18);padding:5px 10px;border-radius:var(--radius-full);white-space:nowrap}
 .scrim{position:fixed;inset:0;background:rgba(31,42,46,.42);z-index:5;display:none}.scrim.on{display:block}
 .drawer{position:fixed;top:0;left:0;bottom:0;width:76%;max-width:300px;background:var(--color-surface);z-index:6;transform:translateX(-101%);transition:.22s;padding:20px 0 14px;box-shadow:6px 0 28px rgba(0,0,0,.16);overflow-y:auto;display:flex;flex-direction:column}
 .drawer.on{transform:none}
-.dh{display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-size:17px;font-weight:700;color:var(--color-primary-strong);padding:0 20px 14px;border-bottom:1px solid var(--color-border);margin-bottom:8px}
+.dh{display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-size:var(--text-heading);font-weight:700;color:var(--color-primary-strong);padding:0 20px 14px;border-bottom:1px solid var(--color-border);margin-bottom:8px}
 .dh .brand-mark{width:32px;height:32px;flex:none;object-fit:contain}
-.dh small{display:block;font-family:var(--font-sans);font-size:11.5px;color:var(--color-text-muted);font-weight:400}
-.ditem{display:flex;align-items:center;gap:11px;min-height:44px;padding:12px 20px;font-size:15px;color:var(--color-text);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--font-sans)}
+.dh small{display:block;font-family:var(--font-sans);font-size:var(--text-micro);color:var(--color-text-muted);font-weight:400}
+.ditem{display:flex;align-items:center;gap:11px;min-height:44px;padding:12px 20px;font-size:var(--text-action);color:var(--color-text);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--font-sans)}
 .ditem.on{background:rgba(43,112,89,.10);color:var(--color-primary);font-weight:600}
 .ditem .ic{width:18px;text-align:center;opacity:.7}
 .dfoot{margin-top:auto;padding-top:8px;border-top:1px solid var(--color-border)}
-.dfoot-acc{display:flex;flex-direction:column;line-height:1.35}
-.dfoot-acc small{font-weight:400;color:var(--color-text-muted);font-size:11.5px}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--color-primary-strong);color:var(--color-on-primary);font-size:14px;font-weight:600;padding:11px 20px;border-radius:var(--radius-full);opacity:0;pointer-events:none;transition:.22s;z-index:40;box-shadow:0 6px 20px rgba(0,0,0,.22)}
+.dfoot-acc{display:flex;flex-direction:column;line-height:var(--leading-snug)}
+.dfoot-acc small{font-weight:400;color:var(--color-text-muted);font-size:var(--text-micro)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--color-primary-strong);color:var(--color-on-primary);font-size:var(--text-body);font-weight:600;padding:11px 20px;border-radius:var(--radius-full);opacity:0;pointer-events:none;transition:.22s;z-index:40;box-shadow:0 6px 20px rgba(0,0,0,.22)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* Desktop (≥900px): responzivní shell – trvalý levý sidebar + obsah, který plyne

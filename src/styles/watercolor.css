@@ -12,7 +12,7 @@
   padding:18px 20px;border-bottom:none;margin-bottom:10px;
 }
 .drawer .brand-mark{width:56px;height:56px}
-.drawer .brand-txt{color:#141414;font-size:24px;font-weight:800;line-height:1.05}
+.drawer .brand-txt{color:#141414;font-size:var(--text-display);font-weight:800;line-height:var(--leading-tight)}
 /* admin: .sidebar .sb-brand */
 .sidebar{padding-top:0}
 .sidebar .sb-brand{
@@ -20,7 +20,7 @@
   padding:18px 22px;border-bottom:none;margin-bottom:10px;
 }
 .sidebar .brand-mark{width:56px;height:56px}
-.sidebar .brand-txt{color:#141414;font-size:24px;font-weight:800;line-height:1.05}
+.sidebar .brand-txt{color:#141414;font-size:var(--text-display);font-weight:800;line-height:var(--leading-tight)}
 
 /* === jemný wash u patičky (odspoda nahoru) === */
 /* rodič + průvodce – wash na .screen (ne .scroll): .scroll má na desktopu

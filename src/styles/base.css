@@ -1,5 +1,5 @@
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--color-bg);font-family:var(--font-sans);color:var(--color-text);-webkit-font-smoothing:antialiased;min-height:100vh;line-height:1.5}
+body{background:var(--color-bg);font-family:var(--font-sans);color:var(--color-text);-webkit-font-smoothing:antialiased;min-height:100vh;line-height:var(--leading-normal)}
 
 /* Přístupnost: viditelný focus jen při klávesové navigaci (ne po kliknutí myší).
    Hlavně pro desktop/admin. */
