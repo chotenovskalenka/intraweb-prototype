@@ -250,6 +250,9 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .btn-ghost{background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border-strong);font-size:15px;padding:13px 20px;border-radius:11px;cursor:pointer;font-family:var(--font-sans)}
 .mbtns>.btn-primary,.mbtns>.btn-ghost{flex:1}
 .btn-block{display:block;width:100%}
+/* Neaktivní tlačítko – stejný jazyk jako .savebtn.dis (výplň surface-2, text hint).
+   Bez tohoto pravidla vypadalo .btn-primary[disabled] přesně jako aktivní (admin: Uložit zápis, Odeslat). */
+.btn-primary:disabled,.btn-ghost:disabled{background:var(--color-surface-2);color:var(--color-text-hint);border-color:var(--color-border);cursor:default}
 .btn-del{display:block;background:none;border:none;color:var(--color-danger);font-size:13.5px;font-weight:600;cursor:pointer;margin:12px auto 0;font-family:var(--font-sans)}
 .filters{display:flex;gap:var(--space-sm);margin-bottom:var(--space-md);overflow-x:auto;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}
 .filters button{flex:0 0 auto;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:13px;color:var(--color-text-muted);padding:8px 15px;border-radius:999px;cursor:pointer}
