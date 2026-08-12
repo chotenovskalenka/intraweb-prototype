@@ -10,7 +10,7 @@ function renderAktuality(){
 }
 
 function renderAkList(){
-  let h=`<button class="addbig" onclick="akNew()">+ Nová novinka</button>`;
+  let h="";  // akce „+ Nová novinka" je v topbaru (core.js TOPACT)
   // pořadí: koncepty a naplánované nahoře, pak odeslané, pak archivované
   const order={koncept:0,naplanovana:1,odeslana:2,archivovana:3};
   const items=AKTUALITY.slice().sort((a,b)=>order[a.stav]-order[b.stav]);
