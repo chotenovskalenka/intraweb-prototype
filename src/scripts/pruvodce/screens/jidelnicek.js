@@ -40,11 +40,12 @@ function renderJidelnicek(){
       const svacina=it[0].indexOf('Svačinka')===0;
       const deti=detiSAlergii(it[2]);
       const kolik=svacina?pocetVyskytu(it[1]):0;
+      // Jména jdou dovnitř .mv, aby seděla POD názvem jídla. Vedle textu je nelze dát:
+      // u pěti dětí (mléko) si chip ukousl 40 % šířky a název jídla se rozpadl na pět řádků.
       h+=`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}`;
       if(kolik>1)h+=`<span class="jid-op" title="Tato svačina je v datech ${kolik}×">↻ ${kolik}×</span>`;
-      h+=`</span>`;
       if(deti.length)h+=`<span class="jid-alerg">${deti.join(', ')}</span>`;
-      h+=`</div>`;
+      h+=`</span></div>`;
     });
     h+=`</div>`;
   });
