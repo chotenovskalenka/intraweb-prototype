@@ -430,6 +430,22 @@ table.wt td.pastc{opacity:.45}
   /* textové odkazy */
   .clink:hover,.newsmore:hover,.cardlink:hover,.tlabbtn:hover{text-decoration:underline}
 }
+/* Řádek jídelníčku (druh jídla · název · alergie). Sdílené – rodič jídelníček čte,
+   průvodce podle něj chystá svačiny. Dřív žilo jen v screens-rodic.css. */
+.mrow{display:flex;gap:var(--space-sm);align-items:baseline;padding:6px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
+.mrow:first-of-type{border-top:none;padding-top:0}
+.mk2{font-size:var(--text-chip);color:var(--color-text-muted);min-width:72px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
+.mv{flex:1}
+/* Listovadlo (‹ popisek ›) – sdílené. Rodič ho má u docházky, jídelníčku, plánu i novinek,
+   průvodce u jídelníčku. Dřív žilo jen v screens-rodic.css a v průvodcovské se rozpadlo
+   na 8×20 px, protože se ten soubor nenačítá. */
+.dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
+.dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:var(--radius-md);font-size:var(--text-title);color:var(--color-primary);cursor:pointer}
+.dh-step:disabled{color:var(--color-text-hint);cursor:default}
+.dh-lbl{font-family:var(--font-serif);font-size:var(--text-action);color:var(--color-primary-strong);padding:0 6px;white-space:nowrap}
+/* listovadlo na řádku s H1 v topbaru – přisazené doprava */
+.plan-head-nav{margin-left:auto}
+.plan-head-nav .dh-lbl{min-width:130px;text-align:center}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -502,6 +518,11 @@ table.wt td.pastc{opacity:.45}
 .prehl-abs .pa-nm{font-size:var(--text-body);font-weight:500;color:var(--color-text)}
 .prehl-abs .pa-r{margin-left:auto;font-size:var(--text-note);color:var(--color-danger);text-align:right;max-width:52%;line-height:var(--leading-snug)}
 .pa-cap{font-size:var(--text-note);color:var(--color-text-muted);margin-bottom:2px}
+/* Jídelníček – jména dětí s alergií místo čísel alergenů. Svačinářku zajímá, koho se to týká,
+   ne číslo z vyhlášky. Vpravo v řádku, ať text jídla drží zarovnání i u řádků bez alergie. */
+.jid-alerg{flex-shrink:0;align-self:center;max-width:40%;text-align:right;font-size:var(--text-chip);font-weight:600;color:var(--color-danger);background:var(--wash-danger);border-radius:var(--radius-xs);padding:2px 7px;line-height:var(--leading-snug)}
+/* Kolikrát se svačina v jídelníčku opakuje – aby se to nemuselo dohledávat listováním zpět. */
+.jid-op{display:inline-block;margin-left:6px;font-size:var(--text-chip);font-weight:600;color:var(--color-text-muted);background:var(--color-surface-2);border-radius:var(--radius-xs);padding:1px 6px;white-space:nowrap}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -646,6 +667,85 @@ function makePDF(title,lines){
   off.forEach(o=>{pdf+=String(o).padStart(10,'0')+' 00000 n \n';});
   pdf+=`trailer\n<</Size ${objs.length+1}/Root 1 0 R>>\nstartxref\n${xref}\n%%EOF`;
   return pdf;
+}
+
+/* ── JÍDELNÍČEK ────────────────────────────────────────────────────────────────
+   Sdílený oběma mobilními appkami: rodič ho čte, průvodce podle něj chystá svačiny.
+   Je to týž dodavatel (Mamafood), takže jeden zdroj – ne dvě kopie v data.js.
+   Týden nese `m` (měsíc), aby šlo listovat i do minulosti. */
+/* Jídelníček převzatý z reálného týdenníku Vhaaji (list „Jídelníček cerven", Pro rodiče 25_26.xlsx):
+   obědy veganské z bistra Mamafood, živočišná složka jen ve svačinkách. Alergeny číslované dle
+   přílohy vyhlášky – viz ALERGENY_NAZVY níže. Zdroj má svačinky u 1. týdne (1.–5. 6.) prázdné,
+   doplněny stejnou skladbou jako u 2. týdne (reálné recepty, jen z jiného týdne).
+   JIDELNICEK = 4 celé týdny (červen 2026 má jen 26 pracovních dní do konce 4. týdne;
+   5. týden 29.–30. 6. je ve zdroji nedodaný – viz jidelnicekDen(), vrací null → zobrazí se prázdný stav). */
+const JIDELNICEK=[
+  /* Květen = historie, aby šlo listovat zpět (svačinářka podle ní plánuje, ať se svačiny
+     neopakují moc často). Sestaveno z týchž reálných receptů jako červen – opakování je
+     v tom záměrné a odpovídá provozu: skladba svačin se po týdnech vrací. */
+  {m:5,od:18,do:22,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Dýňový krém s praženými semínky',''],['Hlavní jídlo','Čočka na kyselo s cibulkou a tofu „vajíčky", rajčatovo-okurkový salátek','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Fazolačka s kořenovou zeleninou','9'],['Hlavní jídlo','Zeleninové rizoto s fazolkami a kedlubnovým salátkem s granátovým jablíčkem',''],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
+    [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Brokolicový krém',''],['Hlavní jídlo','Cuketové bramboráčky se zeleninovou omáčkou a pečenými hrachovými nudličkami','1'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Hrstková s kořenovou zeleninou',''],['Hlavní jídlo','Koprová omáčka s pečenými sójovými plátky a bramborami','6'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Květákový krém',''],['Hlavní jídlo','Chana masala s jasmínovou rýží a cizrnou',''],['Svačinka 2','Domácí bublanina','1']],
+  ]},
+  {m:5,od:25,do:29,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Mrkvová s pomerančem',''],['Hlavní jídlo','Zeleninové kari s květákem, batáty, dýní a cizrnou, jasmínová rýže',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), salámová pomazánka, zelenina',''],['Polévka','Zeleninová minestrone s bylinkovým pestem',''],['Hlavní jídlo','Květákové placičky s cizrnou, bramborovo-hráškové pyré a salátek',''],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Bramboračka s kořenovou zeleninou','9'],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninový vývar s nudličkami','1, 9'],['Hlavní jídlo','Znojemská omáčka s pečenými sójovými nudličkami s jasmínovou rýží','6'],['Svačinka 2','Smetanový jogurt s vločkami, rozinkami, mákem a ořechy, ovoce','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Pórkový krém s pečenou cizrnou',''],['Hlavní jídlo','Cizrnovo-řepné karbanátky s bramborovo-mrkvovým pyré, čerstvá zelenina',''],['Svačinka 2','Domácí maková buchta, ovoce','']],
+  ]},
+  {m:6,od:1,do:5,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Žampiónový krém se sušenými švestkami',''],['Hlavní jídlo','Luštěninové karbanátky s bramborovou kaší a mrkvovým salátkem',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Fazolačka s kořenovou zeleninou','9'],['Hlavní jídlo','Zeleninová smetanová omáčka s hrachovými koulemi, bramborami a karamelizovanou mrkví',''],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Krém z červené čočky s mrkví a kokosovým mlékem',''],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Hrstková s kořenovou zeleninou',''],['Hlavní jídlo','Koprová omáčka s pečenými sójovými plátky a bramborami (hrachovými kuličkami nebo lupinovým tempehem)','6'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Květákový krém',''],['Hlavní jídlo','Zeleninové rizoto s fazolkami a kedlubnovým salátkem s granátovým jablíčkem',''],['Svačinka 2','Domácí bublanina','1']],
+  ]},
+  {m:6,od:8,do:12,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Mrkvová s pomerančem',''],['Hlavní jídlo','Čočka na kyselo s cibulkou a tofu „vajíčky", rajčatovo-okurkový salátek','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Ochucená mléčná kaše, ovoce','7'],['Hlavní jídlo','Pečená zelenina s bramborami, křupavým tofu a domácí tatarkou','6'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Batátový krém s karamelizovanými hruškami',''],['Hlavní jídlo','Květákové placičky s cizrnou, bramborovo-hráškové pyré a salátek',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s květákem, mrkví a bramborami',''],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Zeleninová minestrone s bylinkovým pestem',''],['Hlavní jídlo','Chana masala s jasmínovou rýží a cizrnou',''],['Svačinka 2','Domácí bublanina','1']],
+  ]},
+  {m:6,od:15,do:19,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Petrželový krém s bylinkovým pestem',''],['Hlavní jídlo','Zeleninové kung pao s tempehem, arašídy a jasmínovou rýží','5, 6'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), salámová pomazánka, zelenina',''],['Polévka','Zeleninová s květákem, hráškem a kapustou',''],['Hlavní jídlo','Cuketové bramboráčky se zeleninovou omáčkou a pečenými hrachovými nudličkami','1'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Bramboračka s kořenovou zeleninou','9'],['Hlavní jídlo','Mac and cheese (krémová sýrová omáčka ze zeleniny a kešu oříšků s kolínky)','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninový vývar s nudličkami','1, 9'],['Hlavní jídlo','Buchtičky se šodó, vanilkovým krémem a ovocem','1'],['Svačinka 2','Smetanový jogurt s vločkami, rozinkami, mákem a ořechy, ovoce','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Pórkový krém s pečenou cizrnou',''],['Hlavní jídlo','Tomatová omáčka s těstovinami, hrachovými kuličkami a oříškovou posypkou','1, 8'],['Svačinka 2','Domácí maková buchta, ovoce','']],
+  ]},
+  {m:6,od:22,do:26,dny:[
+    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Cuketový krém',''],['Hlavní jídlo','Znojemská omáčka s pečenými sójovými/hrachovými nudličkami s jasmínovou rýží','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
+    [['Svačinka 1','Pečivo (1× bez sóji), pomazánka s pažitkou, zelenina',''],['Polévka','Kukuřičná s cherry rajčaty a kokosovým mlékem',''],['Hlavní jídlo','Boloňské špagety s mrkví, červenou čočkou a oříšky','1, 8'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Čočková s kořenovou zeleninou','9'],['Hlavní jídlo','Cizrnovo-řepné karbanátky s bramborovo-mrkvovým pyré, čerstvá zelenina',''],['Svačinka 2','Pečivo (1× bez sóji), domácí guacamole, zelenina','']],
+    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s ječnými kroupami','1, 9'],['Hlavní jídlo','Plněné bramborové knedlíky se zelím a cibulkou, plněné hrachovým granulátem','1'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
+    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Tomatová s rýžovými hvězdičkami',''],['Hlavní jídlo','Zeleninové kari s květákem, batáty, dýní a cizrnou, jasmínová rýže',''],['Svačinka 2','Croissant, sýr, salátek, zelenina','']],
+  ]},
+];
+/* Vrátí jídelníček dne (5 položek: svačinky/polévka/hlavní) podle dne v měsíci, nebo null,
+   pokud pro daný den (víkend, nebo mimo dodané 4 týdny – 27.–30. 6.) žádný není. */
+function jidelnicekTyden(den,m){m=m||6;return JIDELNICEK.find(t=>t.m===m&&den>=t.od&&den<=t.do);}
+/* Index týdne v JIDELNICEK – appky si podle něj nastaví výchozí (aktuální) týden.
+   Nehardkódovat 0: před červnem leží květnová historie, takže 0 je nejstarší týden. */
+function jidIndex(den,m){m=m||6;return Math.max(0,JIDELNICEK.findIndex(t=>t.m===m&&den>=t.od&&den<=t.do));}
+/* Popisek týdne „18.–22. 5." – měsíc bere z dat, ne natvrdo. */
+function jidTydenLabel(t){return `${t.od}.–${t.do}. ${t.m}.`;}
+function jidelnicekDen(den,m){const t=jidelnicekTyden(den,m);return t?t.dny[wd(den)]:null;}
+/* Alergeny dle přílohy vyhlášky (jen ty, které se v jídelníčku Vhaaji reálně objevují). */
+const ALERGENY_NAZVY={1:'lepek',4:'ryby',5:'arašídy',6:'sója',7:'mléko',8:'skořápkové plody',9:'celer'};
+function alergenyZDne(dny){
+  const s=new Set();
+  dny.forEach(it=>{if(it[2])it[2].split(',').forEach(c=>{c=c.trim();if(c)s.add(Number(c));});});
+  return [...s].sort((a,b)=>a-b);
+}
+function alergenyLegenda(dny){
+  const cisla=alergenyZDne(dny);
+  if(!cisla.length)return '';
+  return `<div class="alerg-legend">Alergeny: `+cisla.map(c=>`<b>${c}</b> ${ALERGENY_NAZVY[c]||''}`).join(', ')+`</div>`;
 }
 </script>
 <script>
@@ -1442,6 +1542,62 @@ window.togOdChild=i=>{odecet.group='vlastni';odecet.sel.has(i)?odecet.sel.delete
 window.confirmOdecet=()=>{const a=AKCE.find(x=>x.id===odecet.akceId);if(!odecet.sel.size){showToast('Nikdo nevybrán');return;}const n=odecet.sel.size;const idxs=[...odecet.sel];idxs.forEach(i=>{data[i].fond-=a.paid;data[i].fondLog.unshift({name:a.name,date:dayLbl(a),amt:a.paid});});a.done=true;FONDHIST.unshift({id:Date.now(),name:a.name,amt:a.paid,n,idxs,akceId:a.id});odecet=null;odQuery='';render();showToast('Strženo '+n+'× '+a.paid+' Kč ✓');};
 </script>
 <script>
+/* SCREEN: PRUVODCE_JIDELNICEK – jídelníček pro průvodce a svačinářku.
+   Data jsou sdílená v shared.js (týž dodavatel jako u rodičů, jeden zdroj).
+
+   Dva rozdíly proti rodičovské appce, oba vycházejí z toho, kdo obrazovku používá:
+
+   1) ALERGENY JAKO JMÉNA DĚTÍ. Rodiče zajímá číslo alergenu u vlastního dítěte;
+      svačinářku zajímá, KOHO se to týká. Čísla se proto překládají přes ALERGENY_NAZVY
+      na děti, které tu alergii mají. Když se jídlo nikoho netýká, nezobrazí se nic –
+      obrazovka je tím tišší než rodičovská, ne hlučnější.
+
+   2) LISTOVÁNÍ DO HISTORIE + OPAKOVÁNÍ. Svačinářka chystá svačiny a potřebuje vědět,
+      jak často se opakují. Samotné tlačítko „zpět" by ji nutilo pamatovat si, co kde bylo,
+      proto se u svačin rovnou počítá výskyt napříč všemi týdny (↻ 3×). */
+
+/* Děti dotčené alergeny jednoho jídla. Vrací křestní jména – na mobilu se příjmení nevejdou
+   a v rámci třídy jsou křestní jména jednoznačná. */
+function detiSAlergii(kody){
+  if(!kody)return [];
+  const nazvy=kody.split(',').map(c=>ALERGENY_NAZVY[Number(c.trim())]).filter(Boolean);
+  if(!nazvy.length)return [];
+  return data.filter(c=>c.alergie&&nazvy.some(n=>c.alergie.toLowerCase().includes(n)))
+             .map(c=>c.n);
+}
+
+/* Kolikrát se totéž jídlo objeví napříč všemi týdny v datech. Počítá se jen u svačin –
+   ty svačinářka plánuje; u obědů skladbu určuje dodavatel. */
+function pocetVyskytu(nazev){
+  let n=0;
+  JIDELNICEK.forEach(t=>t.dny.forEach(den=>den.forEach(it=>{if(it[1]===nazev)n++;})));
+  return n;
+}
+
+function renderJidelnicek(){
+  const t=JIDELNICEK[jidTyden];
+  let h=`<div class="doch">`;
+  t.dny.forEach((den,i)=>{
+    const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
+    h+=`<div class="tile"><div class="ch">${DOW[wd(d)]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
+    den.forEach(it=>{
+      const svacina=it[0].indexOf('Svačinka')===0;
+      const deti=detiSAlergii(it[2]);
+      const kolik=svacina?pocetVyskytu(it[1]):0;
+      h+=`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}`;
+      if(kolik>1)h+=`<span class="jid-op" title="Tato svačina je v datech ${kolik}×">↻ ${kolik}×</span>`;
+      h+=`</span>`;
+      if(deti.length)h+=`<span class="jid-alerg">${deti.join(', ')}</span>`;
+      h+=`</div>`;
+    });
+    h+=`</div>`;
+  });
+  h+=`<div class="note2">Jídelníček dodává Mamafood. U jídla svítí jména dětí, které na některou jeho surovinu mají alergii – vychází z jejich karet v sekci Děti. ↻ ukazuje, kolikrát je svačina v jídelníčku celkem.</div>`;
+  return h+`</div>`;
+}
+window.stepJidTyden=d=>{jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};
+</script>
+<script>
 /* SCREEN: PRUVODCE_KONTAKTY */
 function renderKontakty(){
   let h='';
@@ -1549,6 +1705,7 @@ window.setCell=code=>{const d=cellM.d;if(d===TODAYD)data[cellM.ci].status=code;e
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
   ['dochazka','Docházka','✓'],
+  ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
   ['plan','Plán & program','✎'],
   ['pruvodci','Docházka průvodců','◷'],
@@ -1560,11 +1717,12 @@ const SECTIONS=[
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 
 let section='prehled', drawerOpen=false, wquery='';
+let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
 let rytOpen=-1, modal=null, shiftM=null;
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
+const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -1577,6 +1735,8 @@ function render(){
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
     : section==='plan' ? `<h1 class="dh-t">Plán &amp; program</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
+    // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
+    : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${jidTydenLabel(JIDELNICEK[jidTyden])}</span><button class="dh-step" onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';
   renderDrawer();

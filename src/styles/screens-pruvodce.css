@@ -68,3 +68,8 @@
 .prehl-abs .pa-nm{font-size:var(--text-body);font-weight:500;color:var(--color-text)}
 .prehl-abs .pa-r{margin-left:auto;font-size:var(--text-note);color:var(--color-danger);text-align:right;max-width:52%;line-height:var(--leading-snug)}
 .pa-cap{font-size:var(--text-note);color:var(--color-text-muted);margin-bottom:2px}
+/* Jídelníček – jména dětí s alergií místo čísel alergenů. Svačinářku zajímá, koho se to týká,
+   ne číslo z vyhlášky. Vpravo v řádku, ať text jídla drží zarovnání i u řádků bez alergie. */
+.jid-alerg{flex-shrink:0;align-self:center;max-width:40%;text-align:right;font-size:var(--text-chip);font-weight:600;color:var(--color-danger);background:var(--wash-danger);border-radius:var(--radius-xs);padding:2px 7px;line-height:var(--leading-snug)}
+/* Kolikrát se svačina v jídelníčku opakuje – aby se to nemuselo dohledávat listováním zpět. */
+.jid-op{display:inline-block;margin-left:6px;font-size:var(--text-chip);font-weight:600;color:var(--color-text-muted);background:var(--color-surface-2);border-radius:var(--radius-xs);padding:1px 6px;white-space:nowrap}
