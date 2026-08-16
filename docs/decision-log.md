@@ -1214,3 +1214,25 @@ QA: 9 karet reálných jmen, 6 fotek + 3 generované avatary, Dubánek u školky
   crop hlava→hrudník v `photos.js`); podtitulek „Dubánek · školkový skřítek" **smazán**.
 - **Buttony u školky** (Zavolat/E-mail) zmenšeny (`flex:0 0 auto`) na velikost jako u průvodců;
   školková karta je flex řádek [obrázek | jméno + kontakt].
+
+---
+
+## 12. 8. 2026 – Jídelníček v průvodcovské appce (HYPOTÉZY, ne rozhodnutí)
+
+Sekce Jídelníček přidána do průvodcovské appky; data přesunuta z `rodic/data.js` do `shared.js`
+(týž dodavatel pro obě appky = jeden zdroj). Doplněny dva květnové týdny, aby listování zpět
+vedlo někam – aktuální týden byl v datech první.
+
+**Dvě funkce na obrazovce jsou vědomé hypotézy, ne schválená rozhodnutí:**
+
+1. **Počítadlo opakování svačiny** (`↻ 6×`) – počítá výskyty přesného názvu napříč všemi týdny
+   v datech. Vzniklo z domněnky, že svačinářku zajímá četnost. Známé slabiny: chybí jmenovatel
+   (6× z kolika?), počítá i budoucí týdny, porovnává přesný text (pečivo s Lučinou ≠ pečivo se
+   sýrem, i když obojí je pečivo).
+2. **Jména dětí místo čísel alergenů** – vzniklo z domněnky, že dohledávání alergií zdržuje.
+
+Obojí stojí na tom, že **s žádnou svačinářkou zatím nikdo nemluvil**. Ponecháno v prototypu
+záměrně – reakce při testování řekne víc než abstraktní dotaz –, ale **nesmí se to vykládat jako
+schválená funkce**. Otázky k ověření: `docs/vyzkum-svacinarka.md` (5 otázek, stačí dvě svačinářky).
+
+Rozhodnout až podle nálezů, v rámci fáze 5.2.
