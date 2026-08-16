@@ -265,12 +265,16 @@ table.wt thead th.today{color:var(--color-primary);background:var(--soft-primary
 table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);font-weight:600;color:var(--color-primary-strong);border-top:1px solid var(--color-border-strong);font-size:var(--text-meta)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:var(--text-note);color:var(--color-text-muted);margin:10px 2px 0}.legend span b{font-weight:600;color:var(--color-text)}
 .prow{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:6px;overflow:hidden}
-.prow.open{border-color:var(--color-primary)}
-.pmain{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer}
+.pmain{display:flex;align-items:center;gap:10px;padding:11px 13px}
+/* pole při editaci celého rozvrhu (jeden den = program + kroužek).
+   min-height drží dotykový cíl 44 px – na mobilu se tu za sebou proklepává 10 polí. */
+.pfields{display:flex;flex-direction:column;gap:var(--space-sm);padding:0 13px 12px}
+.pfields .pin{min-height:44px}
+/* kroužek si drží akcentovou barvu i v editaci – stejné čtení jako .psub v režimu čtení */
+.pfields .pin:last-child{color:var(--color-accent-ink)}
 .pd{font-size:var(--text-small);color:var(--color-text-muted);min-width:34px;flex-shrink:0}
 .pp{font-family:var(--font-serif);font-size:var(--text-action);color:var(--color-primary-strong)}
 .psub{padding:0 13px 10px;font-size:var(--text-meta);color:var(--color-accent-ink);margin-top:-4px}
-.pedit{border-top:1px solid var(--color-border);background:var(--color-surface-2);padding:12px 13px}
 .pl{display:block;font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin:9px 0 5px}.pl:first-child{margin-top:0}
 .pchips{display:flex;flex-wrap:wrap;gap:6px}
 .pchips button{border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:var(--text-meta);color:var(--color-text-muted);padding:6px 11px;border-radius:var(--radius-full);cursor:pointer}
@@ -485,7 +489,16 @@ table.wt td.pastc{opacity:.45}
 .dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
 .dnav button:disabled{color:var(--color-text-hint);cursor:default}
 .dnav span{font-family:var(--font-serif);font-size:var(--text-body);color:var(--color-primary-strong);padding:0 8px;white-space:nowrap}
+/* Týdenní rytmus jako rozvrh (jen desktop – na mobilu zůstává stoh řádků, .ryt* jsou tam
+   průhledné obaly). Sekce se vysazuje z masonry #content, aby týden byl v jedné řadě. */
 @media (min-width:900px){
+  #content > .ryt-sec{column-span:all;margin-bottom:var(--space-xl)}
+  .ryt{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--space-sm);margin-bottom:var(--space-md)}
+  .ryt .prow{display:flex;flex-direction:column;margin-bottom:0}
+  .ryt .pmain{flex-direction:column;align-items:stretch;gap:var(--space-xs);padding:var(--space-md) var(--space-md) var(--space-sm);cursor:default}
+  .ryt .pd{min-width:0;font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.06em}
+  .ryt .psub{margin-top:auto;padding-top:var(--space-sm)}   /* kroužek na patě sloupce */
+  .ryt-extra{max-width:340px}
   #content > .doch{column-span:all;margin-bottom:0}
   .doch-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
   .doch-head .dh-t{margin:0}
@@ -976,15 +989,6 @@ const AKCE_LONI=[
   {name:'Svatojánský jarmark – rozloučení s předškoláky',day:24,dayEnd:null,time:'15:30',place:'s Jaatou a Maatou',note:'',paid:0},
   {name:'Konec řádného provozu',day:30,dayEnd:null,time:'',place:'',note:'docházka do 15h',paid:0},
 ];
-// Loňský týdenní rytmus – k náhledu a převzetí (RYTMUS je aktuální/editovatelný).
-const RYTMUS_LONI=[
-  {d:0,prog:'Rytmika',krouzek:'Tanečky s Klárkou'},
-  {d:1,prog:'Putování',krouzek:''},
-  {d:2,prog:'Tvorba',krouzek:'Keramika s Evou'},
-  {d:3,prog:'Pohyb',krouzek:'Cvičení s Péťou'},
-  {d:4,prog:'Hrátky s pohádkou',krouzek:''},
-];
-
 let GUIDESHIFT=[
   {n:'Táňa',days:[{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'}]},
   {n:'Darča',days:[{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'}]},
@@ -1348,21 +1352,36 @@ window.akceFromLoni=i=>{const a=AKCE_LONI[i];if(!a)return;
    Obojí odpovídá na tutéž otázku „co s dětmi děláme", proto jedna obrazovka. Rytmus je
    jen 5 řádků a mění se jednou za rok – vlastní položka v navigaci by byla neúměrná.
    Slovo „příprava" používá sám tým („přípravy pedagogický"). */
-let rytLoni=false;  // náhled loňského rytmu (k převzetí)
+/* Editace celého týdne najednou: rozvrh se přepne do polí a průvodce přepisuje dny za sebou,
+   aniž by musel otevírat pět dialogů. Rozepsané hodnoty drží rytDraft, do RYTMUS se zapíšou
+   až Uložit – proto oninput jen plní draft a nevolá render() (jinak by utekl kurzor). */
+let rytEdit=false, rytDraft=null;
 
 function renderPriprava(){
-  let h=`<div class="vhead">Týdenní rytmus</div>`;
-  RYTMUS.forEach((r,i)=>{const opened=rytOpen===i;
-    h+=`<div class="prow${opened?' open':''}"><div class="pmain" onclick="rytTog(${i})"><span class="pd">${DOW[r.d]}</span><span class="pp">${r.prog}</span></div>`;
-    if(!opened&&r.krouzek)h+=`<div class="psub">Kroužek: ${r.krouzek}</div>`;
-    if(opened){h+=`<div class="pedit"><label class="pl">Program</label><div class="pchips">`+PROGOPTS.map(o=>`<button class="${r.prog===o?'on':''}" onclick="setRyt(${i},'${o}')">${o}</button>`).join('')+`</div><input class="pin" style="margin-top:7px" value="${esc(r.prog)}" oninput="setRytRaw(${i},this.value)"><label class="pl">Kroužek</label><input class="pin" value="${esc(r.krouzek)}" oninput="setRytKr(${i},this.value)" placeholder="nepovinné"><button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytSave(${i})">Uložit</button></div>`;}
-    h+=`</div>`;
+  // Rytmus je jeden týden – na desktopu se vysazuje z masonry (.ryt-sec) a kreslí jako
+  // rozvrh: 5 dnů vedle sebe. Na mobilu zůstává stoh řádků pod sebou (viz screens-pruvodce.css).
+  let h=`<div class="ryt-sec"><div class="vhead">Týdenní rytmus</div>`;
+  h+=`<div class="ryt${rytEdit?' ryt-edit':''}">`;
+  RYTMUS.forEach((r,i)=>{
+    if(rytEdit){
+      const d=rytDraft[i];
+      h+=`<div class="prow"><div class="pmain"><span class="pd">${DOW[r.d]}</span></div><div class="pfields">`+
+        `<input class="pin" list="progopts" value="${esc(d.prog)}" oninput="setRytD(${i},'prog',this.value)" placeholder="program" aria-label="Program – ${DOW[r.d]}">`+
+        `<input class="pin" value="${esc(d.krouzek)}" oninput="setRytD(${i},'krouzek',this.value)" placeholder="kroužek" aria-label="Kroužek – ${DOW[r.d]}">`+
+        `</div></div>`;
+    } else {
+      h+=`<div class="prow"><div class="pmain"><span class="pd">${DOW[r.d]}</span><span class="pp">${r.prog}</span></div>`;
+      if(r.krouzek)h+=`<div class="psub">Kroužek: ${r.krouzek}</div>`;
+      h+=`</div>`;
+    }
   });
-  // Loňský rytmus – průvodci ho často přebírají do nového roku
-  h+=`<button class="addbtn" onclick="togRytLoni()">${rytLoni?'Skrýt loňský rytmus':'Zobrazit loňský rytmus (2024/25)'}</button>`;
-  if(rytLoni){h+=`<div class="tile"><div class="ch">Loňský týdenní rytmus (2024/25)</div>`;
-    RYTMUS_LONI.forEach(r=>{h+=`<div class="np"><span><b>${DOW[r.d]}</b> · ${r.prog}</span>${r.krouzek?`<span style="color:var(--color-accent-ink)">${r.krouzek}</span>`:'<span style="color:var(--color-text-hint)">–</span>'}</div>`;});
-    h+=`<button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytAdopt()">Převzít loňský rytmus</button></div>`;}
+  h+=`</div>`;
+  // nabídka programů pro pole – datalist necháva napsat i vlastní text
+  if(rytEdit)h+=`<datalist id="progopts">${PROGOPTS.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
+  h+= rytEdit
+    ? `<div class="ryt-extra mbtns"><button class="btn-ghost" onclick="rytCancel()">Zrušit</button><button class="btn-primary" onclick="rytSaveAll()">Uložit rozvrh</button></div>`
+    : `<div class="ryt-extra"><button class="addbtn" onclick="rytEditOn()">Upravit rozvrh</button></div>`;
+  h+=`</div>`;
   h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
   return h;
 }
@@ -1392,13 +1411,10 @@ function temaBlock(){
   h+=`<button class="btn-primary btn-block" onclick="showToast('Tématický plán uložen ✓')">Uložit tématický plán</button>`;
   return h;
 }
-window.rytTog=i=>{rytOpen=rytOpen===i?-1:i;render();};
-window.setRyt=(i,v)=>{RYTMUS[i].prog=v;showToast('Uloženo ✓');render();};
-window.setRytRaw=(i,v)=>{RYTMUS[i].prog=v;};
-window.setRytKr=(i,v)=>{RYTMUS[i].krouzek=v;};
-window.rytSave=i=>{rytOpen=-1;render();showToast('Uloženo ✓');};
-window.togRytLoni=()=>{rytLoni=!rytLoni;render();};
-window.rytAdopt=()=>{RYTMUS=RYTMUS_LONI.map(r=>({d:r.d,prog:r.prog,krouzek:r.krouzek}));rytLoni=false;render();showToast('Loňský rytmus převzat ✓');};
+window.rytEditOn=()=>{rytDraft=RYTMUS.map(r=>({prog:r.prog,krouzek:r.krouzek}));rytEdit=true;render();};
+window.rytCancel=()=>{rytEdit=false;rytDraft=null;render();};
+window.setRytD=(i,f,v)=>{rytDraft[i][f]=v;};   // bez render() – kurzor v poli musí zůstat
+window.rytSaveAll=()=>{RYTMUS.forEach((r,i)=>{r.prog=rytDraft[i].prog.trim();r.krouzek=rytDraft[i].krouzek.trim();});rytEdit=false;rytDraft=null;render();showToast('Rozvrh uložen ✓');};
 window.setTemaH=v=>{TEMA.hodnota=v;};
 window.setTemaB=(i,v)=>{TEMA.tydny[i].b=v;};
 window.setTemaP=(i,v)=>{TEMA.tydny[i].p=v;};

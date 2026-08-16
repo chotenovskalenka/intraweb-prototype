@@ -127,15 +127,6 @@ const AKCE_LONI=[
   {name:'Svatojánský jarmark – rozloučení s předškoláky',day:24,dayEnd:null,time:'15:30',place:'s Jaatou a Maatou',note:'',paid:0},
   {name:'Konec řádného provozu',day:30,dayEnd:null,time:'',place:'',note:'docházka do 15h',paid:0},
 ];
-// Loňský týdenní rytmus – k náhledu a převzetí (RYTMUS je aktuální/editovatelný).
-const RYTMUS_LONI=[
-  {d:0,prog:'Rytmika',krouzek:'Tanečky s Klárkou'},
-  {d:1,prog:'Putování',krouzek:''},
-  {d:2,prog:'Tvorba',krouzek:'Keramika s Evou'},
-  {d:3,prog:'Pohyb',krouzek:'Cvičení s Péťou'},
-  {d:4,prog:'Hrátky s pohádkou',krouzek:''},
-];
-
 let GUIDESHIFT=[
   {n:'Táňa',days:[{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'}]},
   {n:'Darča',days:[{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'}]},
