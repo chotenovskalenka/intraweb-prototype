@@ -1,41 +1,35 @@
 /* SCREEN: RODIC_AKTUALITY – Novinky ze školky.
-   Platnost (n.until) řídí jen to, kdy novinka ze seznamu zmizí – rodiče to datum nezajímá,
-   proto se nikde nezobrazuje (jen v průvodcovské appce, kde ho průvodce nastavuje).
-   Důležité novinky = velké karty s fotkou (.news-grid), zbytek kompaktní řádky (.newsrow) –
-   při delším provozu se jich nastřádá hodně a karty by zabíraly zbytečně moc místa.
-   Rodič nevidí autora (jméno průvodce jen v průvodcovské appce). */
+   Zobrazení převzato z průvodcovské appky: VŠECHNY novinky jsou karty s úvodní fotkou
+   (.news-grid, 1/2/3 sloupce), ne jen ty důležité. Dřív šly nedůležité do kompaktních řádků –
+   jenže „je důležitá" a „má fotku" jsou nezávislé věci, takže fotky končily v textovém seznamu
+   a obrazovka působila mrtvě. Objem řeší stránkování níž, ne skrývání fotek.
+
+   Rodičovská specifika proti průvodci (vědomá, viz decision-log):
+   – bez autora (jméno průvodce jen v průvodcovské appce),
+   – bez data platnosti (n.until řídí jen to, kdy novinka zmizí – rodiče nezajímá),
+   – bez sdílení do WhatsAppu (to je akce průvodce),
+   – klik otevírá článkový detail (čtecí šířka), ne modal. */
 function novinkaExcerpt(n){const p=(n.full||n.t).split('\n')[0];return p.length>140?p.slice(0,140)+'…':p;}
-// Náhled fotky v kompaktním řádku. Vpravo před šipkou – vlevo by řádky s fotkou a bez ní
-// měly text odsazený jinak. Placeholder (barva) se vykreslí bez popisku, na 52 px by se nevešel.
-function novThumb(img){
-  return img.slice(0,5)==='data:'
-    ? `<span class="newsthumb"><img src="${img}" alt=""></span>`
-    : `<span class="newsthumb" style="background:${img}"></span>`;
-}
-const NOV_STRANKA=6;   // řádků na stránku u neduležitých novinek
+const NOV_STRANKA=9;   // karet na stránku (3 řady po třech na širokém okně)
 function renderAktuality(){
-  const vsechny=NEWS.filter(n=>TODAY<=n.until), dulezite=vsechny.filter(n=>n.urgent), ostatni=vsechny.filter(n=>!n.urgent);
-  const stran=Math.max(1,Math.ceil(ostatni.length/NOV_STRANKA));
+  const vsechny=NEWS.filter(n=>TODAY<=n.until);
+  // důležité napřed, zbytek za nimi – pořadí v rámci skupin drží seed (nejnovější první)
+  const serazene=[...vsechny.filter(n=>n.urgent),...vsechny.filter(n=>!n.urgent)];
+  const stran=Math.max(1,Math.ceil(serazene.length/NOV_STRANKA));
   if(novStrana>stran)novStrana=stran;
-  const zacatek=(novStrana-1)*NOV_STRANKA, stranka=ostatni.slice(zacatek,zacatek+NOV_STRANKA);
-  let h=`<div class="doch">`;
-  if(dulezite.length){
-    h+=`<div class="news-grid">`;
-    dulezite.forEach(n=>{
-      h+=`<button class="newscard urgent" onclick="openNovinka('${n.id}')">`;
-      if(n.img)h+=photoBox('nc-hero',n.img);
-      h+=`<div class="nc-body"><span class="newsurg">Důležité</span><div class="nc-t">${n.t}</div>`;
-      h+=`<div class="newsmeta" style="margin-top:3px">${n.date}</div>`;
-      h+=`<div class="nc-x">${novinkaExcerpt(n)}</div>`;
-      h+=`<div class="nc-foot">Celá novinka ›</div></div></button>`;
-    });
-    h+=`</div>`;
-  }
-  if(ostatni.length){
-    h+=`<div class="tile newsbox">`+stranka.map(n=>`<button class="newsrow${n.img?' has-thumb':''}" onclick="openNovinka('${n.id}')"><span class="newsdate">${n.date}</span><span class="newsline">${n.t}</span>${n.img?novThumb(n.img):''}<span class="newsarr">›</span></button>`).join('')+`</div>`;
-    if(stran>1){
-      h+=`<div class="dh-nav novstep"><button class="dh-step" onclick="stepNovStrana(-1)" ${novStrana<=1?'disabled':''} aria-label="Předchozí strana">‹</button><span class="dh-lbl">Strana ${novStrana} z ${stran}</span><button class="dh-step" onclick="stepNovStrana(1)" ${novStrana>=stran?'disabled':''} aria-label="Další strana">›</button></div>`;
-    }
+  const zacatek=(novStrana-1)*NOV_STRANKA, stranka=serazene.slice(zacatek,zacatek+NOV_STRANKA);
+  let h=`<div class="doch"><div class="news-grid">`;
+  stranka.forEach(n=>{
+    h+=`<button class="newscard${n.urgent?' urgent':''}" onclick="openNovinka('${n.id}')">`;
+    if(n.img)h+=photoBox('nc-hero',n.img);
+    h+=`<div class="nc-body">${n.urgent?'<span class="newsurg">Důležité</span>':''}<div class="nc-t">${n.t}</div>`;
+    h+=`<div class="newsmeta">${n.date}</div>`;
+    h+=`<div class="nc-x">${novinkaExcerpt(n)}</div>`;
+    h+=`<div class="nc-foot">Celá novinka ›</div></div></button>`;
+  });
+  h+=`</div>`;
+  if(stran>1){
+    h+=`<div class="dh-nav novstep"><button class="dh-step" onclick="stepNovStrana(-1)" ${novStrana<=1?'disabled':''} aria-label="Předchozí strana">‹</button><span class="dh-lbl">Strana ${novStrana} z ${stran}</span><button class="dh-step" onclick="stepNovStrana(1)" ${novStrana>=stran?'disabled':''} aria-label="Další strana">›</button></div>`;
   }
   h+=`<div class="note2">Novinky píší průvodci; důležité mohou zároveň sdílet do WhatsAppu.</div>`;
   return h+`</div>`;
