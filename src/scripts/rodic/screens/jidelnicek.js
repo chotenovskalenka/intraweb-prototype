@@ -1,13 +1,14 @@
 /* SCREEN: RODIC_JIDELNICEK – celý jídelníček, navigace po týdnech (JIDELNICEK v data.js).
    H1 + stepper týdnů se renderuje do topbaru (core.js renderHead, stejný vzor jako Tématický plán).
    Řádkově: dny pod sebou v chronologickém pořadí (ne mřížka/sloupce – ty řadí dny nepřehledně). */
-function jidLabel(){const t=JIDELNICEK[jidTyden];return `${t.od}.–${t.do}. 6.`;}
+function jidLabel(){return jidTydenLabel(JIDELNICEK[jidTyden]);}
 function renderJidelnicek(){
   const t=JIDELNICEK[jidTyden];
   let h=`<div class="doch">`;
   t.dny.forEach((den,i)=>{
-    const d=t.od+i, dnes=d===TODAY;
-    h+=`<div class="tile"><div class="tlab">${DOW[wd(d)]} ${d}. 6.${dnes?' · dnes':''}</div>`
+    // „dnes" jen když sedí i měsíc – v květnové historii by se jinak označil špatný den
+    const d=t.od+i, dnes=(d===TODAY&&t.m===6);
+    h+=`<div class="tile"><div class="tlab">${DOW[wd(d)]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`
       +den.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')
       +`</div>`;
   });
