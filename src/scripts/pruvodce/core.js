@@ -4,7 +4,8 @@ const SECTIONS=[
   ['dochazka','Docházka','✓'],
   ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
-  ['plan','Plán & program','✎'],
+  ['akce','Akce','✎'],
+  ['priprava','Příprava','▤'],
   ['pruvodci','Docházka průvodců','◷'],
   ['kalendar','Kalendář','▦'],
   ['deti','Děti','☺'],
@@ -19,7 +20,7 @@ let view='den', open=-1, query='', tab='rano';
 let rytOpen=-1, modal=null, shiftM=null;
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
+const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -31,7 +32,7 @@ function render(){
   // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
-    : section==='plan' ? `<h1 class="dh-t">Plán &amp; program</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
+    : section==='akce' ? `<h1 class="dh-t">Akce</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${jidTydenLabel(JIDELNICEK[jidTyden])}</span><button class="dh-step" onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;

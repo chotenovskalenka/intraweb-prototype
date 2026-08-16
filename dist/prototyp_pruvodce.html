@@ -774,7 +774,7 @@ const ICON_SVG={
 };
 /* klíč sekce (napříč appkami) → ikona */
 const ICON_KEY={prehled:'prehled',aktuality:'news',novinky:'news',dochazka:'dochazka',profil:'profil',
-  platby:'platby',kalendar:'kalendar',plan:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
+  platby:'platby',kalendar:'kalendar',plan:'plan',akce:'clipboard',priprava:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
   pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh'};
 function icon(key){const k=ICON_KEY[key];return k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_SVG[k]}</svg>`:'';}
 </script>
@@ -1071,7 +1071,7 @@ function renderPrehled(){
   h+=`<div class="tile"><div class="ch">Program dne</div>`;
   h+=`<div class="prog-day">${ryt?ryt.prog:'Volný program'}</div>`;
   if(ryt&&ryt.krouzek)h+=`<div class="tval" style="font-size:13.5px">Kroužek: <b>${ryt.krouzek}</b></div>`;
-  h+=`<button class="cardlink" onclick="go('plan')">Tématický plán ›</button></div>`;
+  h+=`<button class="cardlink" onclick="go('priprava')">Tématický plán ›</button></div>`;
   // básnička a písnička aktuálního týdne (3. 6. = 1. týden)
   const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
   h+=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>`;
@@ -1081,7 +1081,7 @@ function renderPrehled(){
   }else{
     h+=`<div class="empty" style="padding:6px 0 0;text-align:left;font-style:normal">Pro tento týden zatím nevyplněno.</div>`;
   }
-  h+=`<button class="cardlink" onclick="go('plan')">Otevřít tématický plán ›</button></div>`;
+  h+=`<button class="cardlink" onclick="go('priprava')">Otevřít tématický plán ›</button></div>`;
   // dnešní akce (pokud na dnešek nějaká je) – proklik na detail
   const akToday=[...AKCE].filter(a=>a.day<=TODAYD&&(a.dayEnd?a.dayEnd>=TODAYD:a.day===TODAYD)).sort((a,b)=>a.day-b.day);
   if(akToday.length){
@@ -1314,10 +1314,12 @@ window.saveNov=()=>{const f=novForm;
   novForm=null;renderModalRoot();render();showToast('Novinka odeslána rodičům ✓');};
 </script>
 <script>
-/* SCREEN: PRUVODCE_PLAN */
-let rytLoni=false;  // náhled loňského rytmu (k převzetí)
+/* SCREEN: PRUVODCE_AKCE – datované jednorázové události (výlety, divadla, focení).
+   Dřív součást jedné obrazovky „Plán & program"; oddělené od Přípravy, protože jde
+   o operativu s dopadem na docházku a kulturní fond, ne o pedagogickou přípravu. */
 let akceLoni=false; // náhled loňských akcí (inspirace při plánování)
-function renderPlan(){
+
+function renderAkce(){
   // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
   let h=`<div class="vhead">Akce a výjimky · červen</div>`;
   const sorted=[...AKCE].sort((a,b)=>a.day-b.day);
@@ -1328,7 +1330,28 @@ function renderPlan(){
     h+=AKCE_LONI.map((a,i)=>{const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
       return `<button class="acard" onclick="akceFromLoni(${i})"><span class="adate">${a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span><span class="aplus">+</span></button>`;}).join('');
     h+=`</div>`;}
-  h+=`<div class="vhead">Týdenní rytmus</div>`;
+  return h;
+}
+function akceCard(a){
+  const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
+  return `<button class="acard" onclick="openAkce('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;
+}
+window.togAkceLoni=()=>{akceLoni=!akceLoni;render();};
+// Loňská akce → nová letošní: převezme vše kromě data (id:null ⇒ uložením vznikne nová akce).
+window.akceFromLoni=i=>{const a=AKCE_LONI[i];if(!a)return;
+  modal={id:null,name:a.name,day:a.day,dayEnd:a.dayEnd||'',time:a.time||'',place:a.place||'',note:a.note||'',paid:a.paid||''};
+  renderModalRoot();};
+</script>
+<script>
+/* SCREEN: PRUVODCE_PRIPRAVA – pedagogická příprava: týdenní rytmus (rámec dne v týdnu)
+   + tématický plán (obsah měsíce: hodnota, básničky, písničky, plakát).
+   Obojí odpovídá na tutéž otázku „co s dětmi děláme", proto jedna obrazovka. Rytmus je
+   jen 5 řádků a mění se jednou za rok – vlastní položka v navigaci by byla neúměrná.
+   Slovo „příprava" používá sám tým („přípravy pedagogický"). */
+let rytLoni=false;  // náhled loňského rytmu (k převzetí)
+
+function renderPriprava(){
+  let h=`<div class="vhead">Týdenní rytmus</div>`;
   RYTMUS.forEach((r,i)=>{const opened=rytOpen===i;
     h+=`<div class="prow${opened?' open':''}"><div class="pmain" onclick="rytTog(${i})"><span class="pd">${DOW[r.d]}</span><span class="pp">${r.prog}</span></div>`;
     if(!opened&&r.krouzek)h+=`<div class="psub">Kroužek: ${r.krouzek}</div>`;
@@ -1342,10 +1365,6 @@ function renderPlan(){
     h+=`<button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytAdopt()">Převzít loňský rytmus</button></div>`;}
   h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
   return h;
-}
-function akceCard(a){
-  const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
-  return `<button class="acard" onclick="openAkce('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;
 }
 // Ordered periods, newest first: aktuální červen 2026 (editovatelný) + archiv zpět do loňska.
 function temaPeriods(){return [{key:'cerven',label:'Červen 2026'},...TEMA_ARCHIV.map(a=>({key:a.key,label:a.label}))];}
@@ -1377,22 +1396,17 @@ window.rytTog=i=>{rytOpen=rytOpen===i?-1:i;render();};
 window.setRyt=(i,v)=>{RYTMUS[i].prog=v;showToast('Uloženo ✓');render();};
 window.setRytRaw=(i,v)=>{RYTMUS[i].prog=v;};
 window.setRytKr=(i,v)=>{RYTMUS[i].krouzek=v;};
+window.rytSave=i=>{rytOpen=-1;render();showToast('Uloženo ✓');};
+window.togRytLoni=()=>{rytLoni=!rytLoni;render();};
+window.rytAdopt=()=>{RYTMUS=RYTMUS_LONI.map(r=>({d:r.d,prog:r.prog,krouzek:r.krouzek}));rytLoni=false;render();showToast('Loňský rytmus převzat ✓');};
 window.setTemaH=v=>{TEMA.hodnota=v;};
 window.setTemaB=(i,v)=>{TEMA.tydny[i].b=v;};
 window.setTemaP=(i,v)=>{TEMA.tydny[i].p=v;};
 window.setTemaYt=(i,v)=>{TEMA.tydny[i].yt=v;};
 window.setTemaByt=(i,v)=>{TEMA.tydny[i].byt=v;};
+window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){TEMA.file=f.name;render();showToast('Nahráno ✓');}};
 window.temaStep=dir=>{const ps=temaPeriods();let i=ps.findIndex(p=>p.key===temaMonth);i=Math.min(ps.length-1,Math.max(0,i+dir));temaMonth=ps[i].key;render();};
 window.temaAdopt=key=>{const a=TEMA_ARCHIV.find(x=>x.key===key);if(!a)return;TEMA.hodnota=a.hodnota;TEMA.tydny=a.tydny.map(w=>({b:w.b||'',byt:w.byt||'',p:w.p||'',yt:w.yt||''}));temaMonth='cerven';render();showToast('Plán převzat do června 2026 ✓');};
-window.togAkceLoni=()=>{akceLoni=!akceLoni;render();};
-// Loňská akce → nová letošní: převezme vše kromě data (id:null ⇒ uložením vznikne nová akce).
-window.akceFromLoni=i=>{const a=AKCE_LONI[i];if(!a)return;
-  modal={id:null,name:a.name,day:a.day,dayEnd:a.dayEnd||'',time:a.time||'',place:a.place||'',note:a.note||'',paid:a.paid||''};
-  renderModalRoot();};
-window.togRytLoni=()=>{rytLoni=!rytLoni;render();};
-window.rytAdopt=()=>{RYTMUS=RYTMUS_LONI.map(r=>({d:r.d,prog:r.prog,krouzek:r.krouzek}));rytLoni=false;render();showToast('Loňský rytmus převzat ✓');};
-window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){TEMA.file=f.name;render();showToast('Nahráno ✓');}};
-window.rytSave=i=>{rytOpen=-1;render();showToast('Uloženo ✓');};
 </script>
 <script>
 /* SCREEN: PRUVODCE_PRUVODCI */
@@ -1713,7 +1727,8 @@ const SECTIONS=[
   ['dochazka','Docházka','✓'],
   ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
-  ['plan','Plán & program','✎'],
+  ['akce','Akce','✎'],
+  ['priprava','Příprava','▤'],
   ['pruvodci','Docházka průvodců','◷'],
   ['kalendar','Kalendář','▦'],
   ['deti','Děti','☺'],
@@ -1728,7 +1743,7 @@ let view='den', open=-1, query='', tab='rano';
 let rytOpen=-1, modal=null, shiftM=null;
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,plan:renderPlan,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
+const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -1740,7 +1755,7 @@ function render(){
   // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
-    : section==='plan' ? `<h1 class="dh-t">Plán &amp; program</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
+    : section==='akce' ? `<h1 class="dh-t">Akce</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${jidTydenLabel(JIDELNICEK[jidTyden])}</span><button class="dh-step" onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;

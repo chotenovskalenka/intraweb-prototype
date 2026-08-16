@@ -1,18 +1,12 @@
-/* SCREEN: PRUVODCE_PLAN */
+/* SCREEN: PRUVODCE_PRIPRAVA – pedagogická příprava: týdenní rytmus (rámec dne v týdnu)
+   + tématický plán (obsah měsíce: hodnota, básničky, písničky, plakát).
+   Obojí odpovídá na tutéž otázku „co s dětmi děláme", proto jedna obrazovka. Rytmus je
+   jen 5 řádků a mění se jednou za rok – vlastní položka v navigaci by byla neúměrná.
+   Slovo „příprava" používá sám tým („přípravy pedagogický"). */
 let rytLoni=false;  // náhled loňského rytmu (k převzetí)
-let akceLoni=false; // náhled loňských akcí (inspirace při plánování)
-function renderPlan(){
-  // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
-  let h=`<div class="vhead">Akce a výjimky · červen</div>`;
-  const sorted=[...AKCE].sort((a,b)=>a.day-b.day);
-  h+= sorted.length? sorted.map(akceCard).join('') : `<div class="empty">Zatím žádné akce.</div>`;
-  // Loňské akce – inspirace: klik předvyplní novou akci, datum se doladí v modalu
-  h+=`<button class="addbtn" onclick="togAkceLoni()">${akceLoni?'Skrýt loňské akce':'Zobrazit loňské akce (červen 2025)'}</button>`;
-  if(akceLoni){h+=`<div class="tile"><div class="ch">Loňské akce · červen 2025</div><div class="note2">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
-    h+=AKCE_LONI.map((a,i)=>{const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
-      return `<button class="acard" onclick="akceFromLoni(${i})"><span class="adate">${a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span><span class="aplus">+</span></button>`;}).join('');
-    h+=`</div>`;}
-  h+=`<div class="vhead">Týdenní rytmus</div>`;
+
+function renderPriprava(){
+  let h=`<div class="vhead">Týdenní rytmus</div>`;
   RYTMUS.forEach((r,i)=>{const opened=rytOpen===i;
     h+=`<div class="prow${opened?' open':''}"><div class="pmain" onclick="rytTog(${i})"><span class="pd">${DOW[r.d]}</span><span class="pp">${r.prog}</span></div>`;
     if(!opened&&r.krouzek)h+=`<div class="psub">Kroužek: ${r.krouzek}</div>`;
@@ -26,10 +20,6 @@ function renderPlan(){
     h+=`<button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytAdopt()">Převzít loňský rytmus</button></div>`;}
   h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
   return h;
-}
-function akceCard(a){
-  const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
-  return `<button class="acard" onclick="openAkce('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;
 }
 // Ordered periods, newest first: aktuální červen 2026 (editovatelný) + archiv zpět do loňska.
 function temaPeriods(){return [{key:'cerven',label:'Červen 2026'},...TEMA_ARCHIV.map(a=>({key:a.key,label:a.label}))];}
@@ -61,19 +51,14 @@ window.rytTog=i=>{rytOpen=rytOpen===i?-1:i;render();};
 window.setRyt=(i,v)=>{RYTMUS[i].prog=v;showToast('Uloženo ✓');render();};
 window.setRytRaw=(i,v)=>{RYTMUS[i].prog=v;};
 window.setRytKr=(i,v)=>{RYTMUS[i].krouzek=v;};
+window.rytSave=i=>{rytOpen=-1;render();showToast('Uloženo ✓');};
+window.togRytLoni=()=>{rytLoni=!rytLoni;render();};
+window.rytAdopt=()=>{RYTMUS=RYTMUS_LONI.map(r=>({d:r.d,prog:r.prog,krouzek:r.krouzek}));rytLoni=false;render();showToast('Loňský rytmus převzat ✓');};
 window.setTemaH=v=>{TEMA.hodnota=v;};
 window.setTemaB=(i,v)=>{TEMA.tydny[i].b=v;};
 window.setTemaP=(i,v)=>{TEMA.tydny[i].p=v;};
 window.setTemaYt=(i,v)=>{TEMA.tydny[i].yt=v;};
 window.setTemaByt=(i,v)=>{TEMA.tydny[i].byt=v;};
+window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){TEMA.file=f.name;render();showToast('Nahráno ✓');}};
 window.temaStep=dir=>{const ps=temaPeriods();let i=ps.findIndex(p=>p.key===temaMonth);i=Math.min(ps.length-1,Math.max(0,i+dir));temaMonth=ps[i].key;render();};
 window.temaAdopt=key=>{const a=TEMA_ARCHIV.find(x=>x.key===key);if(!a)return;TEMA.hodnota=a.hodnota;TEMA.tydny=a.tydny.map(w=>({b:w.b||'',byt:w.byt||'',p:w.p||'',yt:w.yt||''}));temaMonth='cerven';render();showToast('Plán převzat do června 2026 ✓');};
-window.togAkceLoni=()=>{akceLoni=!akceLoni;render();};
-// Loňská akce → nová letošní: převezme vše kromě data (id:null ⇒ uložením vznikne nová akce).
-window.akceFromLoni=i=>{const a=AKCE_LONI[i];if(!a)return;
-  modal={id:null,name:a.name,day:a.day,dayEnd:a.dayEnd||'',time:a.time||'',place:a.place||'',note:a.note||'',paid:a.paid||''};
-  renderModalRoot();};
-window.togRytLoni=()=>{rytLoni=!rytLoni;render();};
-window.rytAdopt=()=>{RYTMUS=RYTMUS_LONI.map(r=>({d:r.d,prog:r.prog,krouzek:r.krouzek}));rytLoni=false;render();showToast('Loňský rytmus převzat ✓');};
-window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){TEMA.file=f.name;render();showToast('Nahráno ✓');}};
-window.rytSave=i=>{rytOpen=-1;render();showToast('Uloženo ✓');};

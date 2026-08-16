@@ -52,7 +52,7 @@ function renderPrehled(){
   h+=`<div class="tile"><div class="ch">Program dne</div>`;
   h+=`<div class="prog-day">${ryt?ryt.prog:'Volný program'}</div>`;
   if(ryt&&ryt.krouzek)h+=`<div class="tval" style="font-size:13.5px">Kroužek: <b>${ryt.krouzek}</b></div>`;
-  h+=`<button class="cardlink" onclick="go('plan')">Tématický plán ›</button></div>`;
+  h+=`<button class="cardlink" onclick="go('priprava')">Tématický plán ›</button></div>`;
   // básnička a písnička aktuálního týdne (3. 6. = 1. týden)
   const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
   h+=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>`;
@@ -62,7 +62,7 @@ function renderPrehled(){
   }else{
     h+=`<div class="empty" style="padding:6px 0 0;text-align:left;font-style:normal">Pro tento týden zatím nevyplněno.</div>`;
   }
-  h+=`<button class="cardlink" onclick="go('plan')">Otevřít tématický plán ›</button></div>`;
+  h+=`<button class="cardlink" onclick="go('priprava')">Otevřít tématický plán ›</button></div>`;
   // dnešní akce (pokud na dnešek nějaká je) – proklik na detail
   const akToday=[...AKCE].filter(a=>a.day<=TODAYD&&(a.dayEnd?a.dayEnd>=TODAYD:a.day===TODAYD)).sort((a,b)=>a.day-b.day);
   if(akToday.length){
