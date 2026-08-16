@@ -208,58 +208,6 @@ const WEATHER={
   8:{icon:'🌧',t9:12,t17:16,desc:'déšť',nightRain:true},
 };
 const WDEF={icon:'⛅',t9:14,t17:21,desc:'polojasno',nightRain:false};
-/* Jídelníček převzatý z reálného týdenníku Vhaaji (list „Jídelníček cerven", Pro rodiče 25_26.xlsx):
-   obědy veganské z bistra Mamafood, živočišná složka jen ve svačinkách. Alergeny číslované dle
-   přílohy vyhlášky – viz ALERGENY_NAZVY níže. Zdroj má svačinky u 1. týdne (1.–5. 6.) prázdné,
-   doplněny stejnou skladbou jako u 2. týdne (reálné recepty, jen z jiného týdne).
-   JIDELNICEK = 4 celé týdny (červen 2026 má jen 26 pracovních dní do konce 4. týdne;
-   5. týden 29.–30. 6. je ve zdroji nedodaný – viz jidelnicekDen(), vrací null → zobrazí se prázdný stav). */
-const JIDELNICEK=[
-  {od:1,do:5,dny:[
-    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Žampiónový krém se sušenými švestkami',''],['Hlavní jídlo','Luštěninové karbanátky s bramborovou kaší a mrkvovým salátkem',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
-    [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Fazolačka s kořenovou zeleninou','9'],['Hlavní jídlo','Zeleninová smetanová omáčka s hrachovými koulemi, bramborami a karamelizovanou mrkví',''],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
-    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Krém z červené čočky s mrkví a kokosovým mlékem',''],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
-    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Hrstková s kořenovou zeleninou',''],['Hlavní jídlo','Koprová omáčka s pečenými sójovými plátky a bramborami (hrachovými kuličkami nebo lupinovým tempehem)','6'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
-    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Květákový krém',''],['Hlavní jídlo','Zeleninové rizoto s fazolkami a kedlubnovým salátkem s granátovým jablíčkem',''],['Svačinka 2','Domácí bublanina','1']],
-  ]},
-  {od:8,do:12,dny:[
-    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Mrkvová s pomerančem',''],['Hlavní jídlo','Čočka na kyselo s cibulkou a tofu „vajíčky", rajčatovo-okurkový salátek','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
-    [['Svačinka 1','Pečivo (1× bez sóji), vajíčková pomazánka, zelenina',''],['Polévka','Ochucená mléčná kaše, ovoce','7'],['Hlavní jídlo','Pečená zelenina s bramborami, křupavým tofu a domácí tatarkou','6'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','7']],
-    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Batátový krém s karamelizovanými hruškami',''],['Hlavní jídlo','Květákové placičky s cizrnou, bramborovo-hráškové pyré a salátek',''],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, zelenina','']],
-    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s květákem, mrkví a bramborami',''],['Hlavní jídlo','Těstoviny se smetanovou omáčkou s hráškem, mrkví a květákem, fazolkami a oříškovou posypkou','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','7']],
-    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Zeleninová minestrone s bylinkovým pestem',''],['Hlavní jídlo','Chana masala s jasmínovou rýží a cizrnou',''],['Svačinka 2','Domácí bublanina','1']],
-  ]},
-  {od:15,do:19,dny:[
-    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Petrželový krém s bylinkovým pestem',''],['Hlavní jídlo','Zeleninové kung pao s tempehem, arašídy a jasmínovou rýží','5, 6'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
-    [['Svačinka 1','Pečivo (1× bez sóji), salámová pomazánka, zelenina',''],['Polévka','Zeleninová s květákem, hráškem a kapustou',''],['Hlavní jídlo','Cuketové bramboráčky se zeleninovou omáčkou a pečenými hrachovými nudličkami','1'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','']],
-    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Bramboračka s kořenovou zeleninou','9'],['Hlavní jídlo','Mac and cheese (krémová sýrová omáčka ze zeleniny a kešu oříšků s kolínky)','1, 8'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
-    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninový vývar s nudličkami','1, 9'],['Hlavní jídlo','Buchtičky se šodó, vanilkovým krémem a ovocem','1'],['Svačinka 2','Smetanový jogurt s vločkami, rozinkami, mákem a ořechy, ovoce','']],
-    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Pórkový krém s pečenou cizrnou',''],['Hlavní jídlo','Tomatová omáčka s těstovinami, hrachovými kuličkami a oříškovou posypkou','1, 8'],['Svačinka 2','Domácí maková buchta, ovoce','']],
-  ]},
-  {od:22,do:26,dny:[
-    [['Svačinka 1','Pečivo (1× bez sóji), Lučina, zelenina',''],['Polévka','Cuketový krém',''],['Hlavní jídlo','Znojemská omáčka s pečenými sójovými/hrachovými nudličkami s jasmínovou rýží','6'],['Svačinka 2','Pečivo (1× bez sóji), pomazánkové máslo, šunka, zelenina','']],
-    [['Svačinka 1','Pečivo (1× bez sóji), pomazánka s pažitkou, zelenina',''],['Polévka','Kukuřičná s cherry rajčaty a kokosovým mlékem',''],['Hlavní jídlo','Boloňské špagety s mrkví, červenou čočkou a oříšky','1, 8'],['Svačinka 2','Tortilla plněná kečupem, šunkou a sýrem, zelenina','']],
-    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Čočková s kořenovou zeleninou','9'],['Hlavní jídlo','Cizrnovo-řepné karbanátky s bramborovo-mrkvovým pyré, čerstvá zelenina',''],['Svačinka 2','Pečivo (1× bez sóji), domácí guacamole, zelenina','']],
-    [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s ječnými kroupami','1, 9'],['Hlavní jídlo','Plněné bramborové knedlíky se zelím a cibulkou, plněné hrachovým granulátem','1'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
-    [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Tomatová s rýžovými hvězdičkami',''],['Hlavní jídlo','Zeleninové kari s květákem, batáty, dýní a cizrnou, jasmínová rýže',''],['Svačinka 2','Croissant, sýr, salátek, zelenina','']],
-  ]},
-];
-/* Vrátí jídelníček dne (5 položek: svačinky/polévka/hlavní) podle dne v měsíci, nebo null,
-   pokud pro daný den (víkend, nebo mimo dodané 4 týdny – 27.–30. 6.) žádný není. */
-function jidelnicekTyden(den){return JIDELNICEK.find(t=>den>=t.od&&den<=t.do);}
-function jidelnicekDen(den){const t=jidelnicekTyden(den);return t?t.dny[wd(den)]:null;}
-/* Alergeny dle přílohy vyhlášky (jen ty, které se v jídelníčku Vhaaji reálně objevují). */
-const ALERGENY_NAZVY={1:'lepek',4:'ryby',5:'arašídy',6:'sója',7:'mléko',8:'skořápkové plody',9:'celer'};
-function alergenyZDne(dny){
-  const s=new Set();
-  dny.forEach(it=>{if(it[2])it[2].split(',').forEach(c=>{c=c.trim();if(c)s.add(Number(c));});});
-  return [...s].sort((a,b)=>a-b);
-}
-function alergenyLegenda(dny){
-  const cisla=alergenyZDne(dny);
-  if(!cisla.length)return '';
-  return `<div class="alerg-legend">Alergeny: `+cisla.map(c=>`<b>${c}</b> ${ALERGENY_NAZVY[c]||''}`).join(', ')+`</div>`;
-}
 /* Výlet předškoláků je každý měsíc 1. čtvrtek (v červnu horolezení v Letňanech). */
 const akce=[
   {title:'Výlet předškoláků – horolezení',date:'čt 4. 6.',time:'8:00–8:30',place:'Jungle Sport park, Letňany',note:'Sraz na místě, na oběd zpět do školky. Děti odpoledne nespí.'},

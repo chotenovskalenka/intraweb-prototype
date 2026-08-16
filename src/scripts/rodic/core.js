@@ -13,7 +13,7 @@ let pfEdit=null;   // rozpracovaná editace profilu (overlay 'profedit')
 let faktRok='2025/26', faktStav='vse';   // filtr faktur (rok/stav)
 let planIdx=9;   // vybraný měsíc v tématickém plánu (index do TEMA_MESICE; 9 = červen)
 let novStrana=1;   // stránka v seznamu ostatních (neduležitých) novinek
-let jidTyden=0;   // vybraný týden v Jídelníčku (index do JIDELNICEK; 0 = 1.–5. 6.)
+let jidTyden=jidIndex(TODAY,6);   // výchozí = aktuální týden (před červnem je květnová historie)
 
 const RENDER={prehled:renderDashboard,aktuality:renderAktuality,dochazka:renderDochazka,profil:renderProfil,platby:renderPlatby,kalendar:renderKalendar,jidelnicek:renderJidelnicek,plan:renderPlan,fotky:renderFotky,kontakty:renderKontakty};
 
