@@ -1,5 +1,19 @@
 # Výzkum – svačinářka a plánování svačin
 
+> **⚠ Z velké části už zodpovězeno.** Tenhle dokument vznikl dřív, než se našel existující výzkum
+> v `podklady/1. tým – Intranet školky.csv`. Ten odpovídá na otázky 3 i 4:
+>
+> - **Otázka 3 (podle čeho se rozhodne dát něco znovu):** neplánuje podle četnosti, ale podle
+>   programu – *„zohledňuju podle měsíčního plánu Modré Máty – kdy jdou na výlet, co pečou. Když
+>   je jejich vaření sladké, snažím se, aby druhá svačina byla slaná."* (R6).
+>   → **Počítadlo `↻` měří špatnou věc.**
+> - **Otázka 4 (alergie):** Terka – *„potřebuji rychle extrahovat předškoláky nebo alergiky."*
+>   → **Jména alergiků u jídla mají oporu.**
+>
+> Zbývají otázky **1, 2 a 5** (nástroj a rytmus plánování, jak daleko zpět se dívá, změny na
+> poslední chvíli). Ty stojí za doptání, ale nejsou blokující.
+> Souvislosti viz [vyzkum-brief.md](vyzkum-brief.md).
+
 **Typ:** krátký rozhovor o současné praxi (ne test prototypu).
 **Rozsah:** 5 otázek, ~15 minut. Stačí **dvě svačinářky** ze čtyř školek – když řeknou totéž,
 máš vzorec; když se rozejdou, zjistíš, že praxe není jednotná, a to je taky odpověď.
