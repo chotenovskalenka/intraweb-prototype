@@ -10,9 +10,12 @@ const raw=[
   ['Oskar','Urban','celodenní',true],['Zuzka','Malá','celodenní',true],['Edita','Bláhová','celodenní',false],
   ['Damián','Tichý','dopolední',false],
 ];
-const meta=[[false,''],[true,''],[false,'lepek'],[false,''],[true,''],[false,''],[true,''],[false,'mléko, vejce'],
-  [false,''],[true,''],[false,''],[false,''],[false,''],[false,''],[true,'arašídy'],[false,''],[true,''],[false,''],
-  [false,''],[false,''],[false,'celer'],[true,''],[false,''],[false,''],[false,'']];
+/* [předškolák, alergie]. Alergie na mléko má pět dětí – ve školce je to nejčastější alergen
+   a zároveň to drží obrazovku Jídelníček u reálného nejhoršího případu: mléčná svačina se
+   týká pětice, ne jednotlivce. Eliška zůstává bez alergie, ať sedí s rodičovským seedem. */
+const meta=[[false,''],[true,''],[false,'lepek'],[false,''],[true,''],[false,'mléko'],[true,''],[false,'mléko, vejce'],
+  [false,''],[true,'mléko'],[false,''],[false,''],[false,''],[false,''],[true,'arašídy'],[false,''],[true,'mléko'],[false,''],
+  [false,''],[false,''],[false,'celer'],[true,''],[false,'mléko'],[false,''],[false,'']];
 function planCode(p){return p==='celodenní'?'C':p==='dopolední'?'D':'O';}
 // celodenní docházka je jen v úterý (index 1) – v ostatní dny platí odpolední
 function weekFor(i,plan){const b=planCode(plan),a=b==='C'?['O','C','O','O','O']:[b,b,b,b,b];

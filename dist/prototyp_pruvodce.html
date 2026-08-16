@@ -519,8 +519,10 @@ table.wt td.pastc{opacity:.45}
 .prehl-abs .pa-r{margin-left:auto;font-size:var(--text-note);color:var(--color-danger);text-align:right;max-width:52%;line-height:var(--leading-snug)}
 .pa-cap{font-size:var(--text-note);color:var(--color-text-muted);margin-bottom:2px}
 /* Jídelníček – jména dětí s alergií místo čísel alergenů. Svačinářku zajímá, koho se to týká,
-   ne číslo z vyhlášky. Vpravo v řádku, ať text jídla drží zarovnání i u řádků bez alergie. */
-.jid-alerg{flex-shrink:0;align-self:center;max-width:40%;text-align:right;font-size:var(--text-chip);font-weight:600;color:var(--color-danger);background:var(--wash-danger);border-radius:var(--radius-xs);padding:2px 7px;line-height:var(--leading-snug)}
+   ne číslo z vyhlášky. Vlastní řádek pod názvem jídla: vedle textu si chip u pěti jmen (mléko)
+   ukousl 40 % šířky a název jídla se rozpadl na pět řádků. width:fit-content = pozadí objímá
+   jména, nedělá z nich přes celou šířku těžký pruh. */
+.jid-alerg{display:block;width:fit-content;margin-top:5px;font-size:var(--text-chip);font-weight:600;color:var(--color-danger);background:var(--wash-danger);border-radius:var(--radius-xs);padding:3px 8px;line-height:var(--leading-snug)}
 /* Kolikrát se svačina v jídelníčku opakuje – aby se to nemuselo dohledávat listováním zpět. */
 .jid-op{display:inline-block;margin-left:6px;font-size:var(--text-chip);font-weight:600;color:var(--color-text-muted);background:var(--color-surface-2);border-radius:var(--radius-xs);padding:1px 6px;white-space:nowrap}
 </style>
@@ -857,9 +859,12 @@ const raw=[
   ['Oskar','Urban','celodenní',true],['Zuzka','Malá','celodenní',true],['Edita','Bláhová','celodenní',false],
   ['Damián','Tichý','dopolední',false],
 ];
-const meta=[[false,''],[true,''],[false,'lepek'],[false,''],[true,''],[false,''],[true,''],[false,'mléko, vejce'],
-  [false,''],[true,''],[false,''],[false,''],[false,''],[false,''],[true,'arašídy'],[false,''],[true,''],[false,''],
-  [false,''],[false,''],[false,'celer'],[true,''],[false,''],[false,''],[false,'']];
+/* [předškolák, alergie]. Alergie na mléko má pět dětí – ve školce je to nejčastější alergen
+   a zároveň to drží obrazovku Jídelníček u reálného nejhoršího případu: mléčná svačina se
+   týká pětice, ne jednotlivce. Eliška zůstává bez alergie, ať sedí s rodičovským seedem. */
+const meta=[[false,''],[true,''],[false,'lepek'],[false,''],[true,''],[false,'mléko'],[true,''],[false,'mléko, vejce'],
+  [false,''],[true,'mléko'],[false,''],[false,''],[false,''],[false,''],[true,'arašídy'],[false,''],[true,'mléko'],[false,''],
+  [false,''],[false,''],[false,'celer'],[true,''],[false,'mléko'],[false,''],[false,'']];
 function planCode(p){return p==='celodenní'?'C':p==='dopolední'?'D':'O';}
 // celodenní docházka je jen v úterý (index 1) – v ostatní dny platí odpolední
 function weekFor(i,plan){const b=planCode(plan),a=b==='C'?['O','C','O','O','O']:[b,b,b,b,b];
@@ -1584,11 +1589,12 @@ function renderJidelnicek(){
       const svacina=it[0].indexOf('Svačinka')===0;
       const deti=detiSAlergii(it[2]);
       const kolik=svacina?pocetVyskytu(it[1]):0;
+      // Jména jdou dovnitř .mv, aby seděla POD názvem jídla. Vedle textu je nelze dát:
+      // u pěti dětí (mléko) si chip ukousl 40 % šířky a název jídla se rozpadl na pět řádků.
       h+=`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}`;
       if(kolik>1)h+=`<span class="jid-op" title="Tato svačina je v datech ${kolik}×">↻ ${kolik}×</span>`;
-      h+=`</span>`;
       if(deti.length)h+=`<span class="jid-alerg">${deti.join(', ')}</span>`;
-      h+=`</div>`;
+      h+=`</span></div>`;
     });
     h+=`</div>`;
   });
