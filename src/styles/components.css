@@ -250,3 +250,19 @@ table.wt td.pastc{opacity:.45}
   /* textové odkazy */
   .clink:hover,.newsmore:hover,.cardlink:hover,.tlabbtn:hover{text-decoration:underline}
 }
+/* Řádek jídelníčku (druh jídla · název · alergie). Sdílené – rodič jídelníček čte,
+   průvodce podle něj chystá svačiny. Dřív žilo jen v screens-rodic.css. */
+.mrow{display:flex;gap:var(--space-sm);align-items:baseline;padding:6px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
+.mrow:first-of-type{border-top:none;padding-top:0}
+.mk2{font-size:var(--text-chip);color:var(--color-text-muted);min-width:72px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
+.mv{flex:1}
+/* Listovadlo (‹ popisek ›) – sdílené. Rodič ho má u docházky, jídelníčku, plánu i novinek,
+   průvodce u jídelníčku. Dřív žilo jen v screens-rodic.css a v průvodcovské se rozpadlo
+   na 8×20 px, protože se ten soubor nenačítá. */
+.dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
+.dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:var(--radius-md);font-size:var(--text-title);color:var(--color-primary);cursor:pointer}
+.dh-step:disabled{color:var(--color-text-hint);cursor:default}
+.dh-lbl{font-family:var(--font-serif);font-size:var(--text-action);color:var(--color-primary-strong);padding:0 6px;white-space:nowrap}
+/* listovadlo na řádku s H1 v topbaru – přisazené doprava */
+.plan-head-nav{margin-left:auto}
+.plan-head-nav .dh-lbl{min-width:130px;text-align:center}

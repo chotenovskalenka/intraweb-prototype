@@ -18,7 +18,6 @@
    Sdílené třídy .dash-head/.dh-t/.ch/.dash3/.dcol/.cardlink/.prog-day jsou v components.css. */
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:var(--text-body);color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
-.dh-nav{position:relative;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap}
 /* přisazeno k pravému okraji .dashhead, ať se při změně šířky h1 (jiný název dne) nehýbe – viz plan-head-nav níže */
 .dashhead>.dh-nav{margin-left:auto}
 /* Mobil: hlavička se zalomí na dva řádky a odznak „dnes" zůstával osamocený vlevo, šipky
@@ -29,11 +28,7 @@
   .dashhead>.dh-today{margin-left:0}
   .dashhead>.dh-nav{margin-left:0}
 }
-.dh-step{min-width:44px;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);border-radius:var(--radius-md);font-size:var(--text-title);color:var(--color-primary);cursor:pointer}
-.dh-step:disabled{color:var(--color-text-hint);cursor:default}
 /* výběr měsíce v tématickém plánu – na řádku s H1 (dashhead), přisazený úplně doprava */
-.plan-head-nav{margin-left:auto}
-.plan-head-nav .dh-lbl{min-width:130px;text-align:center}
 /* stránkování seznamu neduležitých novinek */
 .novstep{justify-content:center;margin:14px 0 0}
 .novstep .dh-lbl{min-width:110px;text-align:center}
@@ -56,10 +51,6 @@
 .gchip{min-height:44px;display:flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:var(--radius-full);padding:4px 12px 4px 4px;font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;color:var(--color-text);cursor:pointer}
 .moon{color:var(--color-info);font-size:var(--text-small)}
 .uline{font-size:var(--text-note);color:var(--color-info);margin-top:8px}
-.mrow{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
-.mrow:first-of-type{border-top:none;padding-top:0}
-.mk2{font-size:var(--text-chip);color:var(--color-text-muted);min-width:72px;flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
-.mv{flex:1}
 .alerg{font-size:var(--text-chip);color:var(--color-accent-ink);background:var(--soft-accent);border-radius:var(--radius-xs);padding:1px 6px;flex-shrink:0;align-self:center}
 /* kompaktní vysvětlivky alergenů – jen čísla, která se v daném dni/týdnu reálně objeví */
 .alerg-legend{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:8px;line-height:var(--leading-normal)}
@@ -162,7 +153,6 @@ select.pf-in{cursor:pointer}
 .bulktoggle{width:auto;border:1px solid var(--color-primary);background:var(--color-surface);color:var(--color-primary);font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;padding:11px 18px;border-radius:var(--radius-md);cursor:pointer;margin-bottom:10px}
 /* nadpis pohledu + listování období (šipky jako na Přehledu) */
 .vhrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.dh-lbl{font-family:var(--font-serif);font-size:var(--text-action);color:var(--color-primary-strong);padding:0 6px;white-space:nowrap}
 .nahline{display:flex;align-items:baseline;gap:6px;font-size:var(--text-small);color:var(--color-text-muted);margin:0 2px 10px}
 .nahline b{font-family:var(--font-serif);font-size:var(--text-heading);color:var(--color-primary-strong)}
 .nahsub{font-size:var(--text-micro);color:var(--color-text-hint)}
