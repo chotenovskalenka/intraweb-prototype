@@ -3,21 +3,36 @@
    Obojí odpovídá na tutéž otázku „co s dětmi děláme", proto jedna obrazovka. Rytmus je
    jen 5 řádků a mění se jednou za rok – vlastní položka v navigaci by byla neúměrná.
    Slovo „příprava" používá sám tým („přípravy pedagogický"). */
-let rytLoni=false;  // náhled loňského rytmu (k převzetí)
+/* Editace celého týdne najednou: rozvrh se přepne do polí a průvodce přepisuje dny za sebou,
+   aniž by musel otevírat pět dialogů. Rozepsané hodnoty drží rytDraft, do RYTMUS se zapíšou
+   až Uložit – proto oninput jen plní draft a nevolá render() (jinak by utekl kurzor). */
+let rytEdit=false, rytDraft=null;
 
 function renderPriprava(){
-  let h=`<div class="vhead">Týdenní rytmus</div>`;
-  RYTMUS.forEach((r,i)=>{const opened=rytOpen===i;
-    h+=`<div class="prow${opened?' open':''}"><div class="pmain" onclick="rytTog(${i})"><span class="pd">${DOW[r.d]}</span><span class="pp">${r.prog}</span></div>`;
-    if(!opened&&r.krouzek)h+=`<div class="psub">Kroužek: ${r.krouzek}</div>`;
-    if(opened){h+=`<div class="pedit"><label class="pl">Program</label><div class="pchips">`+PROGOPTS.map(o=>`<button class="${r.prog===o?'on':''}" onclick="setRyt(${i},'${o}')">${o}</button>`).join('')+`</div><input class="pin" style="margin-top:7px" value="${esc(r.prog)}" oninput="setRytRaw(${i},this.value)"><label class="pl">Kroužek</label><input class="pin" value="${esc(r.krouzek)}" oninput="setRytKr(${i},this.value)" placeholder="nepovinné"><button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytSave(${i})">Uložit</button></div>`;}
-    h+=`</div>`;
+  // Rytmus je jeden týden – na desktopu se vysazuje z masonry (.ryt-sec) a kreslí jako
+  // rozvrh: 5 dnů vedle sebe. Na mobilu zůstává stoh řádků pod sebou (viz screens-pruvodce.css).
+  let h=`<div class="ryt-sec"><div class="vhead">Týdenní rytmus</div>`;
+  h+=`<div class="ryt${rytEdit?' ryt-edit':''}">`;
+  RYTMUS.forEach((r,i)=>{
+    if(rytEdit){
+      const d=rytDraft[i];
+      h+=`<div class="prow"><div class="pmain"><span class="pd">${DOW[r.d]}</span></div><div class="pfields">`+
+        `<input class="pin" list="progopts" value="${esc(d.prog)}" oninput="setRytD(${i},'prog',this.value)" placeholder="program" aria-label="Program – ${DOW[r.d]}">`+
+        `<input class="pin" value="${esc(d.krouzek)}" oninput="setRytD(${i},'krouzek',this.value)" placeholder="kroužek" aria-label="Kroužek – ${DOW[r.d]}">`+
+        `</div></div>`;
+    } else {
+      h+=`<div class="prow"><div class="pmain"><span class="pd">${DOW[r.d]}</span><span class="pp">${r.prog}</span></div>`;
+      if(r.krouzek)h+=`<div class="psub">Kroužek: ${r.krouzek}</div>`;
+      h+=`</div>`;
+    }
   });
-  // Loňský rytmus – průvodci ho často přebírají do nového roku
-  h+=`<button class="addbtn" onclick="togRytLoni()">${rytLoni?'Skrýt loňský rytmus':'Zobrazit loňský rytmus (2024/25)'}</button>`;
-  if(rytLoni){h+=`<div class="tile"><div class="ch">Loňský týdenní rytmus (2024/25)</div>`;
-    RYTMUS_LONI.forEach(r=>{h+=`<div class="np"><span><b>${DOW[r.d]}</b> · ${r.prog}</span>${r.krouzek?`<span style="color:var(--color-accent-ink)">${r.krouzek}</span>`:'<span style="color:var(--color-text-hint)">–</span>'}</div>`;});
-    h+=`<button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="rytAdopt()">Převzít loňský rytmus</button></div>`;}
+  h+=`</div>`;
+  // nabídka programů pro pole – datalist necháva napsat i vlastní text
+  if(rytEdit)h+=`<datalist id="progopts">${PROGOPTS.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
+  h+= rytEdit
+    ? `<div class="ryt-extra mbtns"><button class="btn-ghost" onclick="rytCancel()">Zrušit</button><button class="btn-primary" onclick="rytSaveAll()">Uložit rozvrh</button></div>`
+    : `<div class="ryt-extra"><button class="addbtn" onclick="rytEditOn()">Upravit rozvrh</button></div>`;
+  h+=`</div>`;
   h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
   return h;
 }
@@ -47,13 +62,10 @@ function temaBlock(){
   h+=`<button class="btn-primary btn-block" onclick="showToast('Tématický plán uložen ✓')">Uložit tématický plán</button>`;
   return h;
 }
-window.rytTog=i=>{rytOpen=rytOpen===i?-1:i;render();};
-window.setRyt=(i,v)=>{RYTMUS[i].prog=v;showToast('Uloženo ✓');render();};
-window.setRytRaw=(i,v)=>{RYTMUS[i].prog=v;};
-window.setRytKr=(i,v)=>{RYTMUS[i].krouzek=v;};
-window.rytSave=i=>{rytOpen=-1;render();showToast('Uloženo ✓');};
-window.togRytLoni=()=>{rytLoni=!rytLoni;render();};
-window.rytAdopt=()=>{RYTMUS=RYTMUS_LONI.map(r=>({d:r.d,prog:r.prog,krouzek:r.krouzek}));rytLoni=false;render();showToast('Loňský rytmus převzat ✓');};
+window.rytEditOn=()=>{rytDraft=RYTMUS.map(r=>({prog:r.prog,krouzek:r.krouzek}));rytEdit=true;render();};
+window.rytCancel=()=>{rytEdit=false;rytDraft=null;render();};
+window.setRytD=(i,f,v)=>{rytDraft[i][f]=v;};   // bez render() – kurzor v poli musí zůstat
+window.rytSaveAll=()=>{RYTMUS.forEach((r,i)=>{r.prog=rytDraft[i].prog.trim();r.krouzek=rytDraft[i].krouzek.trim();});rytEdit=false;rytDraft=null;render();showToast('Rozvrh uložen ✓');};
 window.setTemaH=v=>{TEMA.hodnota=v;};
 window.setTemaB=(i,v)=>{TEMA.tydny[i].b=v;};
 window.setTemaP=(i,v)=>{TEMA.tydny[i].p=v;};

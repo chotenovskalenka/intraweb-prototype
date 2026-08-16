@@ -85,12 +85,16 @@ table.wt thead th.today{color:var(--color-primary);background:var(--soft-primary
 table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);font-weight:600;color:var(--color-primary-strong);border-top:1px solid var(--color-border-strong);font-size:var(--text-meta)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:var(--text-note);color:var(--color-text-muted);margin:10px 2px 0}.legend span b{font-weight:600;color:var(--color-text)}
 .prow{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:6px;overflow:hidden}
-.prow.open{border-color:var(--color-primary)}
-.pmain{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer}
+.pmain{display:flex;align-items:center;gap:10px;padding:11px 13px}
+/* pole při editaci celého rozvrhu (jeden den = program + kroužek).
+   min-height drží dotykový cíl 44 px – na mobilu se tu za sebou proklepává 10 polí. */
+.pfields{display:flex;flex-direction:column;gap:var(--space-sm);padding:0 13px 12px}
+.pfields .pin{min-height:44px}
+/* kroužek si drží akcentovou barvu i v editaci – stejné čtení jako .psub v režimu čtení */
+.pfields .pin:last-child{color:var(--color-accent-ink)}
 .pd{font-size:var(--text-small);color:var(--color-text-muted);min-width:34px;flex-shrink:0}
 .pp{font-family:var(--font-serif);font-size:var(--text-action);color:var(--color-primary-strong)}
 .psub{padding:0 13px 10px;font-size:var(--text-meta);color:var(--color-accent-ink);margin-top:-4px}
-.pedit{border-top:1px solid var(--color-border);background:var(--color-surface-2);padding:12px 13px}
 .pl{display:block;font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);margin:9px 0 5px}.pl:first-child{margin-top:0}
 .pchips{display:flex;flex-wrap:wrap;gap:6px}
 .pchips button{border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:var(--text-meta);color:var(--color-text-muted);padding:6px 11px;border-radius:var(--radius-full);cursor:pointer}
