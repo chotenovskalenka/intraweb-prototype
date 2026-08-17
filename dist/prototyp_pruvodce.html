@@ -185,6 +185,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    a tam, kde se zapomnělo, sekce splývaly). První na stránce ho nepotřebuje. */
 .vhead{font-family:var(--font-serif);font-size:var(--text-heading);color:var(--color-primary-strong);margin:var(--space-xl) 2px var(--space-sm)}
 .vhead:first-child{margin-top:0}
+/* Nadpis sekce s akcí vpravo – stejná gramatika jako H1 + tlačítko v topbaru (.dashhead).
+   Odsazení sekce nese řádek, .vhead uvnitř ho má vynulované. Tlačítka jsou kompaktní,
+   aby se i dvě vešla vedle nadpisu na 375 px a nezalomila se pod něj. */
+.vhead-row{display:flex;align-items:center;gap:var(--space-sm);margin:var(--space-xl) 2px var(--space-sm)}
+.vhead-row:first-child{margin-top:0}
+.vhead-row>.vhead{margin:0;min-width:0}
+.vhead-act{display:flex;gap:var(--space-sm);margin-left:auto;flex:0 0 auto}
+.vhead-act>button{min-height:44px;padding:0 14px;font-size:var(--text-small);white-space:nowrap}
 /* Vysvětlující poznámka. Odsazení si řeší sama podle okolí (dřív se přepisovalo inline 9×):
    hned pod nadpisem karty žádné (mezeru už dal nadpis), na konci karty žádné dole. */
 .note2{font-size:var(--text-note);color:var(--color-text-hint);margin:var(--space-sm) 0;line-height:var(--leading-normal)}
@@ -498,7 +506,6 @@ table.wt td.pastc{opacity:.45}
   .ryt .pmain{flex-direction:column;align-items:stretch;gap:var(--space-xs);padding:var(--space-md) var(--space-md) var(--space-sm);cursor:default}
   .ryt .pd{min-width:0;font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.06em}
   .ryt .psub{margin-top:auto;padding-top:var(--space-sm)}   /* kroužek na patě sloupce */
-  .ryt-extra{max-width:340px}
   #content > .doch{column-span:all;margin-bottom:0}
   .doch-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
   .doch-head .dh-t{margin:0}
@@ -1360,7 +1367,11 @@ let rytEdit=false, rytDraft=null;
 function renderPriprava(){
   // Rytmus je jeden týden – na desktopu se vysazuje z masonry (.ryt-sec) a kreslí jako
   // rozvrh: 5 dnů vedle sebe. Na mobilu zůstává stoh řádků pod sebou (viz screens-pruvodce.css).
-  let h=`<div class="ryt-sec"><div class="vhead">Týdenní rytmus</div>`;
+  // akce sekce sedí vpravo vedle nadpisu a nestěhují se mezi režimy (viz .vhead-row)
+  const akce=rytEdit
+    ? `<button class="btn-ghost" onclick="rytCancel()">Zrušit</button><button class="btn-primary" onclick="rytSaveAll()">Uložit</button>`
+    : `<button class="btn-ghost" onclick="rytEditOn()">Upravit rozvrh</button>`;
+  let h=`<div class="ryt-sec"><div class="vhead-row"><div class="vhead">Týdenní rytmus</div><div class="vhead-act">${akce}</div></div>`;
   h+=`<div class="ryt${rytEdit?' ryt-edit':''}">`;
   RYTMUS.forEach((r,i)=>{
     if(rytEdit){
@@ -1378,9 +1389,6 @@ function renderPriprava(){
   h+=`</div>`;
   // nabídka programů pro pole – datalist necháva napsat i vlastní text
   if(rytEdit)h+=`<datalist id="progopts">${PROGOPTS.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
-  h+= rytEdit
-    ? `<div class="ryt-extra mbtns"><button class="btn-ghost" onclick="rytCancel()">Zrušit</button><button class="btn-primary" onclick="rytSaveAll()">Uložit rozvrh</button></div>`
-    : `<div class="ryt-extra"><button class="addbtn" onclick="rytEditOn()">Upravit rozvrh</button></div>`;
   h+=`</div>`;
   h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
   return h;
