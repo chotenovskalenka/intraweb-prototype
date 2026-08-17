@@ -11,7 +11,11 @@ let rytEdit=false, rytDraft=null;
 function renderPriprava(){
   // Rytmus je jeden týden – na desktopu se vysazuje z masonry (.ryt-sec) a kreslí jako
   // rozvrh: 5 dnů vedle sebe. Na mobilu zůstává stoh řádků pod sebou (viz screens-pruvodce.css).
-  let h=`<div class="ryt-sec"><div class="vhead">Týdenní rytmus</div>`;
+  // akce sekce sedí vpravo vedle nadpisu a nestěhují se mezi režimy (viz .vhead-row)
+  const akce=rytEdit
+    ? `<button class="btn-ghost" onclick="rytCancel()">Zrušit</button><button class="btn-primary" onclick="rytSaveAll()">Uložit</button>`
+    : `<button class="btn-ghost" onclick="rytEditOn()">Upravit rozvrh</button>`;
+  let h=`<div class="ryt-sec"><div class="vhead-row"><div class="vhead">Týdenní rytmus</div><div class="vhead-act">${akce}</div></div>`;
   h+=`<div class="ryt${rytEdit?' ryt-edit':''}">`;
   RYTMUS.forEach((r,i)=>{
     if(rytEdit){
@@ -29,9 +33,6 @@ function renderPriprava(){
   h+=`</div>`;
   // nabídka programů pro pole – datalist necháva napsat i vlastní text
   if(rytEdit)h+=`<datalist id="progopts">${PROGOPTS.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
-  h+= rytEdit
-    ? `<div class="ryt-extra mbtns"><button class="btn-ghost" onclick="rytCancel()">Zrušit</button><button class="btn-primary" onclick="rytSaveAll()">Uložit rozvrh</button></div>`
-    : `<div class="ryt-extra"><button class="addbtn" onclick="rytEditOn()">Upravit rozvrh</button></div>`;
   h+=`</div>`;
   h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
   return h;
