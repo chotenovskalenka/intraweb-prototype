@@ -190,9 +190,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    aby se i dvě vešla vedle nadpisu na 375 px a nezalomila se pod něj. */
 .vhead-row{display:flex;align-items:center;gap:var(--space-sm);margin:var(--space-xl) 2px var(--space-sm)}
 .vhead-row:first-child{margin-top:0}
-.vhead-row>.vhead{margin:0;min-width:0}
 .vhead-act{display:flex;gap:var(--space-sm);margin-left:auto;flex:0 0 auto}
 .vhead-act>button{min-height:44px;padding:0 14px;font-size:var(--text-small);white-space:nowrap}
+.vhead-row>.vhead{margin:0;min-width:0;white-space:nowrap}
+/* Když se akce vedle nadpisu nevejdou, spadnou celé pod něj – nadpis se nikdy neláme na slova. */
+@media (max-width:899px){
+  .vhead-row{flex-wrap:wrap}
+  .vhead-act{width:100%;margin-left:0}
+  .vhead-act:only-child,.vhead-row>.vhead+.vhead-act{width:auto;margin-left:auto}
+  .dn-cur{display:none}   /* „· aktuální" – na mobilu by stepper vytlačil nadpis */
+}
 /* Vysvětlující poznámka. Odsazení si řeší sama podle okolí (dřív se přepisovalo inline 9×):
    hned pod nadpisem karty žádné (mezeru už dal nadpis), na konci karty žádné dole. */
 .note2{font-size:var(--text-note);color:var(--color-text-hint);margin:var(--space-sm) 0;line-height:var(--leading-normal)}
