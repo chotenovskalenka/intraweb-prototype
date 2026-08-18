@@ -34,7 +34,7 @@ function renderPriprava(){
   // nabídka programů pro pole – datalist necháva napsat i vlastní text
   if(rytEdit)h+=`<datalist id="progopts">${PROGOPTS.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
   h+=`</div>`;
-  h+=`<div class="vhead">Tématický plán</div>`+temaBlock();
+  h+=`<div class="tema-sec"><div class="vhead-row"><div class="vhead">Tématický plán</div><div class="vhead-act">${temaNav()}</div></div>`+temaBlock()+`</div>`;
   return h;
 }
 // Ordered periods, newest first: aktuální červen 2026 (editovatelný) + archiv zpět do loňska.
@@ -42,25 +42,32 @@ function temaPeriods(){return [{key:'cerven',label:'Červen 2026'},...TEMA_ARCHI
 function temaNav(){
   const ps=temaPeriods(),i=Math.max(0,ps.findIndex(p=>p.key===temaMonth)),cur=ps[i];
   // stepper ‹ starší · novější › – prochází archiv tématických plánů zpět v čase
-  return `<div class="dfield" style="margin-bottom:12px"><div class="dnav"><button onclick="temaStep(1)" ${i>=ps.length-1?'disabled':''} aria-label="Starší plán">‹</button><span>${cur.label}${i===0?' · aktuální':''}</span><button onclick="temaStep(-1)" ${i<=0?'disabled':''} aria-label="Novější plán">›</button></div></div>`;
+  return `<div class="dnav"><button onclick="temaStep(1)" ${i>=ps.length-1?'disabled':''} aria-label="Starší plán">‹</button><span>${cur.label}${i===0?'<i class="dn-cur"> · aktuální</i>':''}</span><button onclick="temaStep(-1)" ${i<=0?'disabled':''} aria-label="Novější plán">›</button></div>`;
 }
 function temaBlock(){
   if(temaMonth!=='cerven'){
-    // archiv = jen ke čtení + převzetí do června
-    const a=TEMA_ARCHIV.find(x=>x.key===temaMonth);if(!a)return temaNav();
-    let h=temaNav();
+    // archiv = jen ke čtení + převzetí do června; bez plakátu, takže týdny plní obě kolony
+    const a=TEMA_ARCHIV.find(x=>x.key===temaMonth);if(!a)return '';
+    let h=`<div class="tema-arch">`;
     h+=`<div class="tile"><div class="ch">Hodnota měsíce</div><div class="tval">${a.hodnota}</div></div>`;
     a.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="ch">${i+1}. týden</div>`+(w.b?`<div class="np"><span style="color:var(--color-text-muted)">Básnička</span></div><div class="tval">${w.b}</div>`:'')+(w.p?`<div class="np" style="margin-top:6px"><span style="color:var(--color-text-muted)">Písnička</span></div><div class="tval">${w.p}</div>`:'')+((!w.b&&!w.p)?`<div class="note2">–</div>`:'')+`</div>`;});
-    h+=`<button class="btn-primary btn-block" onclick="temaAdopt('${a.key}')">Převzít tento plán do června 2026</button>`;
+    h+=`</div><button class="btn-primary btn-block tema-save" onclick="temaAdopt('${a.key}')">Převzít tento plán do června 2026</button>`;
     return h;
   }
-  let h=temaNav();
+  // Dvě kolony: vlevo text (hodnota + týdny), vpravo plakát. V DOM je plakát první, aby na
+  // mobilu zůstal nahoře jako přehled; na desktopu ho mřížka posadí do druhého sloupce.
+  let h=`<div class="tema-cols"><div class="tema-plakat">`;
   h+=`<div class="tile"><div class="ch">Tématický plán v designu</div><div class="note2">Aktuální plán vyvěšený ve školce (tiskne se na nástěnku):</div>`+
     TEMA_POSTERS.map((p,i)=>`<button class="poster-btn" onclick="openPoster(${i})" aria-label="Zvětšit plakát"><img class="tema-poster" src="${p}" alt="Tématický plán červen" loading="lazy"><span class="poster-zoom">⤢</span></button>`).join('')+
     `<label class="addbtn" style="display:block;text-align:center;margin-top:9px">+ Nahrát nový plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label></div>`;
-  h+=`<div class="tile"><label class="pl">Hodnota měsíce</label><input class="pin" value="${esc(TEMA.hodnota)}" oninput="setTemaH(this.value)" placeholder="např. nadšení"></div>`;
+  h+=`</div><div class="tema-text">`;
+  h+=`<div class="tile"><div class="ch">Téma měsíce</div><label class="pl">Hodnota měsíce</label><input class="pin" value="${esc(TEMA.hodnota)}" oninput="setTemaH(this.value)" placeholder="např. nadšení">`+
+    `<label class="pl">Text pro rodiče</label><textarea class="pta" oninput="setTemaIntro(this.value)" placeholder="čím měsíc žijeme – pár vět…">${escTa(TEMA.intro)}</textarea>`+
+    `<div class="note2">Tenhle text vidí rodiče ve své appce u tématu měsíce.</div></div>`;
   TEMA.tydny.forEach((w,i)=>{h+=`<div class="tile"><div class="ch">${i+1}. týden</div><label class="pl">Básnička</label><textarea class="pta" oninput="setTemaB(${i},this.value)" placeholder="text básničky…">${escTa(w.b)}</textarea><label class="pl">Odkaz (básnička)</label><input class="pin" value="${esc(w.byt||'')}" oninput="setTemaByt(${i},this.value)" placeholder="https://…"><label class="pl">Písnička</label><textarea class="pta" oninput="setTemaP(${i},this.value)" placeholder="text písničky…">${escTa(w.p)}</textarea><label class="pl">Odkaz (písnička)</label><input class="pin" value="${esc(w.yt)}" oninput="setTemaYt(${i},this.value)" placeholder="https://youtu.be/…"></div>`;});
-  h+=`<button class="btn-primary btn-block" onclick="showToast('Tématický plán uložen ✓')">Uložit tématický plán</button>`;
+  h+=`</div></div>`;
+  // uložení zůstává dole pod formulářem – potvrzuje se až po vyplnění
+  h+=`<button class="btn-primary btn-block tema-save" onclick="showToast('Tématický plán uložen ✓')">Uložit tématický plán</button>`;
   return h;
 }
 window.rytEditOn=()=>{rytDraft=RYTMUS.map(r=>({prog:r.prog,krouzek:r.krouzek}));rytEdit=true;render();};
@@ -68,6 +75,7 @@ window.rytCancel=()=>{rytEdit=false;rytDraft=null;render();};
 window.setRytD=(i,f,v)=>{rytDraft[i][f]=v;};   // bez render() – kurzor v poli musí zůstat
 window.rytSaveAll=()=>{RYTMUS.forEach((r,i)=>{r.prog=rytDraft[i].prog.trim();r.krouzek=rytDraft[i].krouzek.trim();});rytEdit=false;rytDraft=null;render();showToast('Rozvrh uložen ✓');};
 window.setTemaH=v=>{TEMA.hodnota=v;};
+window.setTemaIntro=v=>{TEMA.intro=v;};
 window.setTemaB=(i,v)=>{TEMA.tydny[i].b=v;};
 window.setTemaP=(i,v)=>{TEMA.tydny[i].p=v;};
 window.setTemaYt=(i,v)=>{TEMA.tydny[i].yt=v;};
