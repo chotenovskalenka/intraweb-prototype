@@ -118,6 +118,14 @@ const TEMA_ARCHIV=[
     {b:'',p:''}]},
 ];
 let temaMonth='cerven';
+/* Plány na příští měsíce. Průvodci si připravují dopředu, ale hotový plán má jen běžící měsíc
+   (TEMA) a archiv (TEMA_ARCHIV). Budoucí měsíce vznikají prázdné až ve chvíli, kdy se na ně
+   průvodce přepne – proto mapa, ne pole. Klíč 'RRRR-MM' stejně jako v archivu.
+   Prázdniny se přeskakují: školní rok je září–červen, viz TEMA_MESICE. */
+const TEMA_ROK=[[9,2026],[10,2026],[11,2026],[12,2026],[1,2027],[2,2027],[3,2027],[4,2027],[5,2027],[6,2027]];
+let TEMA_PRIPRAVA={};
+function temaKey(m,y){return y+'-'+String(m).padStart(2,'0');}
+function prazdnyPlan(){return {hodnota:'',intro:'',file:'',tydny:[{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''}]};}
 // Loňské akce (červen 2025) – jen jako inspirace při plánování nového června.
 // Nepřebírají se hromadně (data se rok od roku liší) – klik založí novou akci s předvyplněnými údaji.
 const AKCE_LONI=[
