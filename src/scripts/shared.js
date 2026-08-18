@@ -150,3 +150,6 @@ function alergenyLegenda(dny){
   if(!cisla.length)return '';
   return `<div class="alerg-legend">Alergeny: `+cisla.map(c=>`<b>${c}</b> ${ALERGENY_NAZVY[c]||''}`).join(', ')+`</div>`;
 }
+
+// Názvy měsíců (1. pád) – používá rodičovská i průvodcovská appka v tématickém plánu.
+const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
