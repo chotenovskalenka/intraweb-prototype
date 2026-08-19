@@ -29,8 +29,7 @@ function renderDeti(){
   let h=`<div class="deti"><div class="filters">`+[['all','Všechny'],['pre','Předškoláci'],['al','Alergici']]
     .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocty[f[0]]}</span></button>`).join('')+`</div>`;
   const list=detiList();
-  h+=`<input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`;
-  h+=`<div class="deti-sum"><span class="tlab">${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')}</span>`+
+  h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`+
     `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button></div>`;
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div></div>`;
   // Dvojí výpis: na mobilu karty (dobře se na ně klepe), na desktopu tabulka (25 dětí se
@@ -41,7 +40,7 @@ function renderDeti(){
   }).join('')+`</div>`;
   h+=`<table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
     const on=detiSort===k;
-    return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):''}</span></button></th>`;
+    return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):'↕'}</span></button></th>`;
   }).join('')+`</tr></thead><tbody>`+
     list.map(x=>{const c=x.c;
       return `<tr onclick="openDite(${x.i})"><td class="nm">${avatar(c,28)}${full(c)}</td><td>${c.plan}</td><td>${c.vek} let</td><td>${c.nar}</td>`+
