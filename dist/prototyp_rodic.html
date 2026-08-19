@@ -591,6 +591,10 @@ table.wt td.pastc{opacity:.45}
 .skolka-info .cinfo{text-align:left;margin-top:9px}
 .k-docs{flex:1;min-width:250px}
 .k-docs .doc{flex-wrap:wrap;row-gap:4px}
+/* dokument ke stažení je <button> – shodit nativní vzhled, ať vypadá jako řádek seznamu */
+.doc-dl{width:100%;background:none;border:none;border-top:1px solid var(--color-border);font-family:var(--font-sans);color:var(--color-text);cursor:pointer;text-align:left;text-decoration:none}
+.doc-dl:first-of-type{border-top:none}
+.doc-dl .pdf{white-space:nowrap}
 .gcard{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px;background:var(--color-surface)}
 .gcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .gcard-n{font-family:var(--font-serif);font-size:var(--text-action);font-weight:600;color:var(--color-primary-strong)}
@@ -696,9 +700,6 @@ table.wt td.pastc{opacity:.45}
 /* tlačítko Upravit v hlavičce profilu */
 .dh-edit{background:none;border:1px solid var(--color-primary);color:var(--color-primary);font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;padding:8px 15px;border-radius:var(--radius-sm);cursor:pointer;flex-shrink:0}
 /* dokument jako klikací řádek ke stažení (button = full width, jako .doc) */
-.doc-dl{width:100%;background:none;border:none;border-top:1px solid var(--color-border);font-family:var(--font-sans);color:var(--color-text);cursor:pointer;text-align:left;text-decoration:none}
-.doc-dl:first-of-type{border-top:none}
-.doc-dl .pdf{white-space:nowrap}
 /* editační formulář profilu */
 .pf-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--color-border)}
 .pf-row:first-of-type{border-top:none}
