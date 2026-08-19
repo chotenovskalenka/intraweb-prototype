@@ -4,6 +4,7 @@ function renderModalRoot(){
   const r=document.getElementById('modalRoot');
   if(modal){r.innerHTML=akceModalHTML();return;}
   if(shiftM){r.innerHTML=shiftModalHTML();return;}
+  if(fondM){r.innerHTML=fondModalHTML();return;}
   if(cellM){r.innerHTML=cellModalHTML();return;}
   if(detailA){r.innerHTML=akceDetailHTML();return;}
   if(novM){r.innerHTML=novModalHTML();return;}
@@ -54,6 +55,44 @@ function shiftModalHTML(){
     <div class="mbtns"><button class="btn-ghost" onclick="closeShift()">Zrušit</button><button class="btn-primary" onclick="saveShift()">Uložit</button></div>
   </div></div>`;
 }
+/* Ruční čerpání z fondu. V modalu, a ne rozbalené v obsahu: je to úkon (vyplnit + vybrat
+   komu + potvrdit), ne něco k prohlížení, a rozbalený formulář odtlačil zůstatky dětí pryč. */
+function fondModalHTML(){
+  const m=fondM,castka=Number(m.amt)||0;
+  return `<div class="modal-scrim" onclick="if(event.target===this)closeFond()"><div class="modal modal-wide">
+    <h3>Ruční čerpání z fondu</h3>
+    <div class="fond-form">
+      <div><label class="pl">Co se čerpalo</label><input class="pin" value="${esc(m.name)}" oninput="setFondDraft('name',this.value)" placeholder="např. Výtvarný materiál"></div>
+      <div><label class="pl">Kdy</label><input class="pin" value="${esc(m.date)}" oninput="setFondDraft('date',this.value)" placeholder="např. červen 2026"></div>
+      <div><label class="pl">Částka na dítě (Kč)</label><input class="pin" type="number" min="0" value="${m.amt}" oninput="setFondDraft('amt',this.value)" placeholder="0"></div>
+    </div>
+    <label class="pl">Komu strhnout</label>
+    ${pickerHTML(data.map((c,i)=>({c,i})),m.sel,m.group,'setFondGroup','togFondChild',m.q,'onFondQ')}
+    ${souhrnHTML(m.sel.size,castka,'Strhne se celkem','')}
+    <div class="mbtns"><button class="btn-ghost" onclick="closeFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout vybraným</button></div>
+  </div></div>`;
+}
+window.togFond=()=>{fondM={name:'',date:'',amt:'',sel:new Set(data.map((c,i)=>i)),group:'vse',q:''};renderModalRoot();};
+window.closeFond=()=>{fondM=null;renderModalRoot();};
+// částka mění souhrn → překreslit; text ne, jinak by utekl kurzor
+window.setFondDraft=(f,v)=>{fondM[f]=v;if(f==='amt')renderModalRoot();};
+window.setFondGroup=g=>{if(g==='vse')fondM.sel=new Set(data.map((c,i)=>i));
+  else if(g==='pre')fondM.sel=new Set(data.map((c,i)=>i).filter(i=>data[i].predskolak));
+  fondM.group=g;renderModalRoot();};
+window.togFondChild=i=>{fondM.group='vlastni';fondM.sel.has(i)?fondM.sel.delete(i):fondM.sel.add(i);renderModalRoot();};
+// hledání uvnitř modalu – vlastní obdoba renderKeepFocus (ta míří na #content)
+window.onFondQ=v=>{const a=document.activeElement,pos=a&&a.selectionStart;fondM.q=v;renderModalRoot();
+  const inp=document.querySelector('#modalRoot .search');if(inp){inp.focus();try{inp.setSelectionRange(pos,pos);}catch(e){}}};
+window.addFond=()=>{
+  const m=fondM,n=m.name.trim(),d=m.date.trim(),amt=Number(m.amt)||0;
+  if(!n){showToast('Napiš, co se čerpalo');return;}
+  if(!m.sel.size){showToast('Vyber, komu se má strhnout');return;}
+  const idxs=[...m.sel];
+  idxs.forEach(i=>{data[i].fond-=amt;data[i].fondLog.unshift({name:n,date:d||'–',amt});});
+  FONDHIST.unshift({id:Date.now(),name:n,amt,n:idxs.length,idxs,akceId:null});
+  fondM=null;renderModalRoot();render();showToast('Strženo '+pocetDeti(idxs.length)+' ✓');
+};
+
 window.openAkce=id=>{
   if(id){const a=AKCE.find(x=>x.id===id);modal={id:a.id,name:a.name,day:a.day,dayEnd:a.dayEnd||'',time:a.time||'',place:a.place||'',note:a.note||'',paid:a.paid||''};}
   else{modal={id:null,name:'',day:8,dayEnd:'',time:'',place:'',note:'',paid:''};}

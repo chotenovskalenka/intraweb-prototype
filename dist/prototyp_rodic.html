@@ -312,6 +312,8 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .ameta{font-size:var(--text-meta);color:var(--color-text-muted);margin-top:2px;line-height:var(--leading-normal)}
 .modal-scrim{position:fixed;inset:0;background:rgba(31,42,46,.5);z-index:30;display:flex;align-items:flex-end;justify-content:center}
 .modal{background:var(--color-bg);width:100%;max-width:460px;border-radius:18px 18px 0 0;padding:18px 18px 22px;max-height:90vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
+/* modal s výběrem dětí potřebuje víc místa než formulář o třech polích */
+.modal.modal-wide{max-width:620px}
 .modal h3{font-family:var(--font-serif);font-size:var(--text-title);color:var(--color-primary-strong);margin-bottom:6px}
 /* Desktop: bottom-sheet (průvodce modal) se změní na vycentrovaný dialog. */
 @media (min-width:700px){

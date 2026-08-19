@@ -312,6 +312,8 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .ameta{font-size:var(--text-meta);color:var(--color-text-muted);margin-top:2px;line-height:var(--leading-normal)}
 .modal-scrim{position:fixed;inset:0;background:rgba(31,42,46,.5);z-index:30;display:flex;align-items:flex-end;justify-content:center}
 .modal{background:var(--color-bg);width:100%;max-width:460px;border-radius:18px 18px 0 0;padding:18px 18px 22px;max-height:90vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
+/* modal s výběrem dětí potřebuje víc místa než formulář o třech polích */
+.modal.modal-wide{max-width:620px}
 .modal h3{font-family:var(--font-serif);font-size:var(--text-title);color:var(--color-primary-strong);margin-bottom:6px}
 /* Desktop: bottom-sheet (průvodce modal) se změní na vycentrovaný dialog. */
 @media (min-width:700px){
@@ -1943,10 +1945,9 @@ window.addWork=i=>{worksMap[i]=(worksMap[i]||0)+1;render();showToast('Práce nah
 <script>
 /* SCREEN: PRUVODCE_FOND */
 let FONDHIST=[];
-let fondFormOpen=false, odecet=null, fondChild=-1;
+let odecet=null, fondChild=-1;
 let fondQuery='', fondSort='nm', fondDir=1;
-// rozepsané ruční čerpání: údaje + výběr dětí (drží se i mezi překreslením)
-let fondDraft={name:'',date:'',amt:''}, fondSel=new Set(), fondGroup='vse', fondQ='';
+
 const FOND_SLOUPCE=[['nm','Dítě'],['fond','Zůstatek'],['predskolak','Předškolák'],['cerpani','Čerpání']];
 // pod 300 Kč je zůstatek varovný – rodiče je potřeba vyzvat k doplnění
 const fondBarva=c=>c.fond<300?'var(--color-danger)':'var(--color-primary)';
@@ -1987,18 +1988,6 @@ function renderFond(){
   h+=`<div class="vhead">Placené akce</div>`;
   h+= paidAkce.length? `<div class="fond-akce">`+paidAkce.map(a=>`<div class="frow"><span class="adate">${dayLbl(a)}</span><div style="flex:1"><div class="aname">${a.name}</div><div class="ameta">${a.paid} Kč/dítě</div></div>${a.done?'<span class="bdg pre" style="padding:6px 10px">odečteno ✓</span>':(hospodar?`<button class="odbtn" onclick="startOdecet('${a.id}')">Odečíst</button>`:'<span class="dt-no">čeká na hospodářku</span>')}</div>`).join('')+`</div>` : `<div class="empty">Žádné placené akce. Cenu nastavíš u akce v Plán &amp; program.</div>`;
   // „+ Přidat čerpání" je v topbaru (core.js) – stejně jako „+ Nová akce" a „+ Nová novinka"
-  if(fondFormOpen)h+=`<div class="vhead">Ruční čerpání</div>`;
-  if(fondFormOpen){
-    h+=`<div class="tile"><div class="fond-form">`+
-      `<div><label class="pl">Co se čerpalo</label><input class="pin" id="f-name" value="${esc(fondDraft.name)}" oninput="setFondDraft('name',this.value)" placeholder="např. Výtvarný materiál"></div>`+
-      `<div><label class="pl">Kdy</label><input class="pin" id="f-date" value="${esc(fondDraft.date)}" oninput="setFondDraft('date',this.value)" placeholder="např. červen 2026"></div>`+
-      `<div><label class="pl">Částka na dítě (Kč)</label><input class="pin" id="f-amt" type="number" min="0" value="${fondDraft.amt||''}" oninput="setFondDraft('amt',this.value)" placeholder="0"></div>`+
-      `</div></div>`;
-    h+=`<div class="note2">Vyber, komu se má strhnout – materiál se často pořizuje jen pro část třídy.</div>`;
-    h+=pickerHTML(data.map((c,i)=>({c,i})),fondSel,fondGroup,'setFondGroup','togFondChild',fondQ,'onFondQ');
-    h+=souhrnHTML(fondSel.size,Number(fondDraft.amt)||0,'Strhne se celkem',
-      `<div class="mbtns"><button class="btn-ghost" onclick="togFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout vybraným</button></div>`);
-  }
   h+=`<div class="vhead">Zůstatky dětí</div>`;
   const list=fondList();
   h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(fondQuery)}" oninput="onFondSearch(this.value)">`+
@@ -2056,24 +2045,6 @@ window.exportFond=()=>{
 window.openFondChild=i=>{fondChild=i;render();};
 window.closeFondChild=()=>{fondChild=-1;render();};
 window.onOdSearch=v=>{odQuery=v;renderKeepFocus();};
-window.togFond=()=>{fondFormOpen=!fondFormOpen;
-  if(fondFormOpen){fondDraft={name:'',date:'',amt:''};fondSel=new Set(data.map((c,i)=>i));fondGroup='vse';fondQ='';}
-  render();};
-window.setFondDraft=(f,v)=>{fondDraft[f]=v;if(f==='amt')render();};   // částka mění souhrn, text ne (kurzor)
-window.setFondGroup=g=>{if(g==='vse')fondSel=new Set(data.map((c,i)=>i));
-  else if(g==='pre')fondSel=new Set(data.map((c,i)=>i).filter(i=>data[i].predskolak));
-  fondGroup=g;render();};
-window.togFondChild=i=>{fondGroup='vlastni';fondSel.has(i)?fondSel.delete(i):fondSel.add(i);render();};
-window.onFondQ=v=>{fondQ=v;renderKeepFocus();};
-window.addFond=()=>{
-  const n=fondDraft.name.trim(),d=fondDraft.date.trim(),amt=Number(fondDraft.amt)||0;
-  if(!n){showToast('Napiš, co se čerpalo');return;}
-  if(!fondSel.size){showToast('Vyber, komu se má strhnout');return;}
-  const idxs=[...fondSel];
-  idxs.forEach(i=>{data[i].fond-=amt;data[i].fondLog.unshift({name:n,date:d||'–',amt});});
-  FONDHIST.unshift({id:Date.now(),name:n,amt,n:idxs.length,idxs,akceId:null});
-  fondFormOpen=false;render();showToast('Strženo '+pocetDeti(idxs.length)+' ✓');
-};
 window.stornoFond=id=>{const k=FONDHIST.findIndex(x=>x.id===id);if(k<0)return;const x=FONDHIST[k];x.idxs.forEach(i=>{data[i].fond+=x.amt;const li=data[i].fondLog.findIndex(l=>l.name===x.name&&l.amt===x.amt);if(li>=0)data[i].fondLog.splice(li,1);});if(x.akceId){const a=AKCE.find(y=>y.id===x.akceId);if(a)a.done=false;}FONDHIST.splice(k,1);render();showToast('Čerpání vráceno ✓');};
 window.startOdecet=id=>{const a=AKCE.find(x=>x.id===id);odecet={akceId:id,group:'vse',sel:new Set(presentIdx(a))};render();};
 window.cancelOdecet=()=>{odecet=null;render();};
@@ -2163,6 +2134,7 @@ function renderModalRoot(){
   const r=document.getElementById('modalRoot');
   if(modal){r.innerHTML=akceModalHTML();return;}
   if(shiftM){r.innerHTML=shiftModalHTML();return;}
+  if(fondM){r.innerHTML=fondModalHTML();return;}
   if(cellM){r.innerHTML=cellModalHTML();return;}
   if(detailA){r.innerHTML=akceDetailHTML();return;}
   if(novM){r.innerHTML=novModalHTML();return;}
@@ -2213,6 +2185,44 @@ function shiftModalHTML(){
     <div class="mbtns"><button class="btn-ghost" onclick="closeShift()">Zrušit</button><button class="btn-primary" onclick="saveShift()">Uložit</button></div>
   </div></div>`;
 }
+/* Ruční čerpání z fondu. V modalu, a ne rozbalené v obsahu: je to úkon (vyplnit + vybrat
+   komu + potvrdit), ne něco k prohlížení, a rozbalený formulář odtlačil zůstatky dětí pryč. */
+function fondModalHTML(){
+  const m=fondM,castka=Number(m.amt)||0;
+  return `<div class="modal-scrim" onclick="if(event.target===this)closeFond()"><div class="modal modal-wide">
+    <h3>Ruční čerpání z fondu</h3>
+    <div class="fond-form">
+      <div><label class="pl">Co se čerpalo</label><input class="pin" value="${esc(m.name)}" oninput="setFondDraft('name',this.value)" placeholder="např. Výtvarný materiál"></div>
+      <div><label class="pl">Kdy</label><input class="pin" value="${esc(m.date)}" oninput="setFondDraft('date',this.value)" placeholder="např. červen 2026"></div>
+      <div><label class="pl">Částka na dítě (Kč)</label><input class="pin" type="number" min="0" value="${m.amt}" oninput="setFondDraft('amt',this.value)" placeholder="0"></div>
+    </div>
+    <label class="pl">Komu strhnout</label>
+    ${pickerHTML(data.map((c,i)=>({c,i})),m.sel,m.group,'setFondGroup','togFondChild',m.q,'onFondQ')}
+    ${souhrnHTML(m.sel.size,castka,'Strhne se celkem','')}
+    <div class="mbtns"><button class="btn-ghost" onclick="closeFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout vybraným</button></div>
+  </div></div>`;
+}
+window.togFond=()=>{fondM={name:'',date:'',amt:'',sel:new Set(data.map((c,i)=>i)),group:'vse',q:''};renderModalRoot();};
+window.closeFond=()=>{fondM=null;renderModalRoot();};
+// částka mění souhrn → překreslit; text ne, jinak by utekl kurzor
+window.setFondDraft=(f,v)=>{fondM[f]=v;if(f==='amt')renderModalRoot();};
+window.setFondGroup=g=>{if(g==='vse')fondM.sel=new Set(data.map((c,i)=>i));
+  else if(g==='pre')fondM.sel=new Set(data.map((c,i)=>i).filter(i=>data[i].predskolak));
+  fondM.group=g;renderModalRoot();};
+window.togFondChild=i=>{fondM.group='vlastni';fondM.sel.has(i)?fondM.sel.delete(i):fondM.sel.add(i);renderModalRoot();};
+// hledání uvnitř modalu – vlastní obdoba renderKeepFocus (ta míří na #content)
+window.onFondQ=v=>{const a=document.activeElement,pos=a&&a.selectionStart;fondM.q=v;renderModalRoot();
+  const inp=document.querySelector('#modalRoot .search');if(inp){inp.focus();try{inp.setSelectionRange(pos,pos);}catch(e){}}};
+window.addFond=()=>{
+  const m=fondM,n=m.name.trim(),d=m.date.trim(),amt=Number(m.amt)||0;
+  if(!n){showToast('Napiš, co se čerpalo');return;}
+  if(!m.sel.size){showToast('Vyber, komu se má strhnout');return;}
+  const idxs=[...m.sel];
+  idxs.forEach(i=>{data[i].fond-=amt;data[i].fondLog.unshift({name:n,date:d||'–',amt});});
+  FONDHIST.unshift({id:Date.now(),name:n,amt,n:idxs.length,idxs,akceId:null});
+  fondM=null;renderModalRoot();render();showToast('Strženo '+pocetDeti(idxs.length)+' ✓');
+};
+
 window.openAkce=id=>{
   if(id){const a=AKCE.find(x=>x.id===id);modal={id:a.id,name:a.name,day:a.day,dayEnd:a.dayEnd||'',time:a.time||'',place:a.place||'',note:a.note||'',paid:a.paid||''};}
   else{modal={id:null,name:'',day:8,dayEnd:'',time:'',place:'',note:'',paid:''};}
@@ -2264,7 +2274,7 @@ let section='prehled', drawerOpen=false, wquery='';
 let hospodar=true;
 let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
-let modal=null, shiftM=null;
+let modal=null, shiftM=null, fondM=null;
 let shiftT=SHIFT_AKT;   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
