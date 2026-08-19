@@ -54,12 +54,24 @@ function renderDite(i){
   // hlavička detailu je jeden blok → na desktopu přeskočí masonry sloupce (column-span:all)
   let h=`<div class="dite-head"><button class="back" onclick="closeDite()">← Zpět na seznam</button>`;
   h+=`<div class="pav">${avatar(c,72)}</div><div class="pname">${full(c)}</div><div class="pfull">${c.plan}${c.predskolak?' · předškolák':''}</div></div>`;
-  h+=`<div class="tile"><div class="ch">Přehled</div>`+
-     `<div class="np"><span>Narozeniny</span><b>${c.nar}</b></div>`+
-     `<div class="np"><span>Věk</span><b>${c.vek} let</b></div>`+
-     `<div class="np"><span>Režim docházky</span><b>${c.plan}</b></div>`+
-     `<div class="np"><span>Předškolák</span><b>${c.predskolak?'ano · nástup do ZŠ 2026':'ne'}</b></div>`+
-     `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div></div>`;
+  // Kmenová data dítěte mění jen průvodce s právy hospodářky; ostatní je vidí ke čtení.
+  h+=`<div class="tile"><div class="ch">Přehled</div>`;
+  if(hospodar){
+    h+=`<label class="pl">Režim docházky</label><div class="pchips">`+
+       PLANY.map(o=>`<button class="${c.plan===o?'on':''}" onclick="setDitePlan(${i},'${o}')">${o}</button>`).join('')+`</div>`+
+       `<label class="pl">Alergie</label><input class="pin" value="${esc(c.alergie||'')}" oninput="setDiteF(${i},'alergie',this.value)" placeholder="žádné">`+
+       `<label class="pl">Narozeniny</label><input class="pin" value="${esc(c.nar)}" oninput="setDiteF(${i},'nar',this.value)" placeholder="D. M. RRRR">`+
+       `<div class="np" style="margin-top:9px"><span>Předškolák</span><button class="tgl ${c.predskolak?'on':''}" role="switch" aria-checked="${c.predskolak}" onclick="togDitePre(${i})">${c.predskolak?'ano · nástup do ZŠ 2026':'ne'}</button></div>`+
+       `<button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="showToast('Uloženo ✓')">Uložit údaje</button>`;
+  }else{
+    h+=`<div class="np"><span>Narozeniny</span><b>${c.nar}</b></div>`+
+       `<div class="np"><span>Věk</span><b>${c.vek} let</b></div>`+
+       `<div class="np"><span>Režim docházky</span><b>${c.plan}</b></div>`+
+       `<div class="np"><span>Předškolák</span><b>${c.predskolak?'ano · nástup do ZŠ 2026':'ne'}</b></div>`+
+       `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div>`+
+       `<div class="note2">Údaje dítěte mění průvodce s právy hospodářky.</div>`;
+  }
+  h+=`</div>`;
   h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
   if(c.note)h+=`<div class="tile"><div class="ch">Aktuální poznámka</div><div class="tval">${c.note}</div></div>`;
   h+=`<div class="tile"><div class="ch">Záznamy a hodnocení (${recs.length})</div>`+recs.map(r=>`<div class="np"><span>${r[0]}</span><b style="font-weight:500;color:var(--color-text-muted)">${r[1]}</b></div>`).join('')+`</div>`;
@@ -79,6 +91,9 @@ window.exportDeti=()=>{
   showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
 window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
+window.setDitePlan=(i,v)=>{data[i].plan=v;render();};
+window.setDiteF=(i,f,v)=>{data[i][f]=v;};   // bez render() – kurzor v poli musí zůstat
+window.togDitePre=i=>{data[i].predskolak=!data[i].predskolak;render();};
 window.setDetiF=f=>{detiFilter=f;render();};
 window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
 window.openDite=i=>{detiOpen=i;render();};

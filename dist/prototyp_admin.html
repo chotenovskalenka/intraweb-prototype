@@ -535,6 +535,11 @@ table.wt td.pastc{opacity:.45}
 .deti-bar .search{flex:1 1 200px;margin-bottom:0}
 .deti-exp{flex:0 0 auto;margin-left:auto;min-height:44px;padding:0 14px;font-size:var(--text-small);white-space:nowrap}
 @media (min-width:900px){ .deti-bar .search{flex:0 1 320px} }
+/* Ano/ne přepínač v detailu dítěte (předškolák). Vypadá jako hodnota, ne jako tlačítko –
+   klepnutím se překlopí; 44 px kvůli dotyku. */
+.tgl{min-height:44px;padding:0 12px;border:1px solid var(--color-border-strong);background:var(--color-surface);
+  border-radius:var(--radius-full);font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);cursor:pointer}
+.tgl.on{background:var(--soft-primary);border-color:var(--edge-primary);color:var(--color-primary-strong);font-weight:600}
 </style>
 <style>
 /* SCREENS: ADMIN – obrazovkové styly (dashboard vedení). Skládá z existujících komponent
