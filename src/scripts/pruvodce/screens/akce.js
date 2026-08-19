@@ -1,24 +1,20 @@
 /* SCREEN: PRUVODCE_AKCE – datované jednorázové události (výlety, divadla, focení).
-   Dřív součást jedné obrazovky „Plán & program"; oddělené od Přípravy, protože jde
-   o operativu s dopadem na docházku a kulturní fond, ne o pedagogickou přípravu. */
-let akceLoni=false; // náhled loňských akcí (inspirace při plánování)
-
+   Listuje se po měsících: zpět do loňska (odkud se plány přebírají) i dopředu na plánování.
+   Minulé měsíce jsou jen ke čtení a řádek z nich jde jedním klepnutím převzít do běžícího
+   měsíce – to nahradilo dřívější přepínač „Zobrazit loňské akce". */
 function renderAkce(){
-  // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
-  let h=`<div class="akce"><div class="vhead">Akce a výjimky · červen</div>`;
-  const sorted=[...AKCE].sort((a,b)=>a.day-b.day);
-  if(!sorted.length)return h+`<div class="empty">Zatím žádné akce.</div></div>`;
+  const o=AKCE_MESICE[akceM], rows=[...akceMesic(akceM)].sort((a,b)=>a.day-b.day), minuly=akceM<AKCE_AKT;
+  let h=`<div class="akce"><div class="vhead-row"><div class="vhead">Akce a výjimky</div><div class="vhead-act">`+
+    `<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`+
+    `<span>${o.label}${akceM===AKCE_AKT?'<i class="dn-cur"> · aktuální</i>':''}</span>`+
+    `<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div></div></div>`;
+  if(minuly)h+=`<div class="note2">Minulý měsíc – klepnutím na akci ji založíš znovu do června 2026 s předvyplněnými údaji.</div>`;
+  if(!rows.length)return h+`<div class="empty">V ${o.label.toLowerCase()} zatím žádné akce.</div></div>`;
+  const klik=minuly?(a,i)=>`akceZnovu('${o.key}',${i})`:(a)=>`openAkce('${a.id}')`;
+  const lbl=a=>(a.dayEnd&&a.dayEnd!==a.day)?`${a.day}.–${a.dayEnd}. ${o.m}.`:`${a.day}. ${o.m}.`;
   // Stejně jako u soupisu dětí: na mobilu karty, na desktopu tabulka. Obojí v DOM, přepíná CSS.
-  h+=`<div class="akce-cards">`+sorted.map(a=>akceCard(a,`openAkce('${a.id}')`)).join('')+`</div>`;
-  h+=akceTable(sorted,a=>`openAkce('${a.id}')`,dayLbl);
-  // Loňské akce – inspirace: klik předvyplní novou akci, datum se doladí v modalu
-  h+=`<button class="addbtn" onclick="togAkceLoni()">${akceLoni?'Skrýt loňské akce':'Zobrazit loňské akce (červen 2025)'}</button>`;
-  if(akceLoni){
-    const lbl=a=>a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`;
-    h+=`<div class="vhead">Loňské akce · červen 2025</div><div class="note2">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
-    h+=`<div class="akce-cards">`+AKCE_LONI.map((a,i)=>akceCard(a,`akceFromLoni(${i})`,lbl,true)).join('')+`</div>`;
-    h+=akceTable(AKCE_LONI,(a,i)=>`akceFromLoni(${i})`,lbl,true);
-  }
+  h+=`<div class="akce-cards">`+rows.map((a,i)=>akceCard(a,klik(a,i),lbl,minuly)).join('')+`</div>`;
+  h+=akceTable(rows,(a,i)=>klik(a,i),lbl,minuly);
   return h+`</div>`;
 }
 function akceCard(a,klik,lbl,plus){
@@ -27,7 +23,7 @@ function akceCard(a,klik,lbl,plus){
 }
 /* Tabulka akcí (desktop). Poznámka je poslední, protože jako jediná zalamuje na víc řádků. */
 function akceTable(rows,klik,lbl,plus){
-  return `<table class="dtab akce-tab"><thead><tr><th>Datum</th><th>Akce</th><th>Čas</th><th>Místo</th><th>Z fondu</th><th>Poznámka</th></tr></thead><tbody>`+
+  return `<table class="dtab akce-tab"><thead><tr>`+['Datum','Akce','Čas','Místo','Z fondu','Poznámka'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`+
     rows.map((a,i)=>`<tr onclick="${klik(a,i)}"><td class="dt-date">${(lbl||dayLbl)(a)}</td>`+
       `<td class="nm">${a.name}${plus?' <span class="aplus">+</span>':''}</td>`+
       `<td>${a.time||'<span class="dt-no">–</span>'}</td>`+
@@ -36,8 +32,8 @@ function akceTable(rows,klik,lbl,plus){
       `<td class="dt-note">${a.note||'<span class="dt-no">–</span>'}</td></tr>`).join('')+
     `</tbody></table>`;
 }
-window.togAkceLoni=()=>{akceLoni=!akceLoni;render();};
-// Loňská akce → nová letošní: převezme vše kromě data (id:null ⇒ uložením vznikne nová akce).
-window.akceFromLoni=i=>{const a=AKCE_LONI[i];if(!a)return;
+window.stepAkceM=d=>{akceM=Math.max(0,Math.min(AKCE_MESICE.length-1,akceM+d));render();};
+// Akce z minulého měsíce → nová v běžícím měsíci (id:null ⇒ uložením vznikne nová).
+window.akceZnovu=(key,i)=>{const a=akceMesic(AKCE_MESICE.findIndex(x=>x.key===key))[i];if(!a)return;
   modal={id:null,name:a.name,day:a.day,dayEnd:a.dayEnd||'',time:a.time||'',place:a.place||'',note:a.note||'',paid:a.paid||''};
   renderModalRoot();};

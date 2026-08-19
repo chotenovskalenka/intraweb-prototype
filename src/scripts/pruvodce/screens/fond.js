@@ -73,7 +73,13 @@ function renderFondChild(i){
   h+=`<div class="dite-head"><div class="pav">${avatar(c,64)}</div><div class="pname">${full(c)}</div><div class="pfull">Kulturní fond</div></div>`;
   h+=`<div class="fond-detail">`;
   h+=`<div class="tile"><div class="ch">Zůstatek</div><div class="fond-big" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary-strong)'}">${c.fond.toLocaleString('cs-CZ')} Kč</div><div class="note2">Fond je veden per dítě. Po akci se strhne jen dětem, které ten den přišly a šly na akci.</div></div>`;
-  h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+(c.fondLog&&c.fondLog.length?c.fondLog.map(l=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b></div>`).join(''):`<div class="empty">Zatím se nic nečerpalo.</div>`)+`</div>`;
+  // Zpětná oprava: dítě nakonec na akci nešlo, nebo se odečetlo omylem. Vrací jen tomuhle
+  // dítěti; hromadné čerpání zůstává ostatním. Smí to průvodce s právy hospodářky.
+  h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+
+    (c.fondLog&&c.fondLog.length
+      ? c.fondLog.map((l,k)=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b>${hospodar?`<button class="odbtn ghostred fond-undo" onclick="vratitDiteti(${i},${k})" title="Vrátit ${l.amt} Kč zpět na fond">Vrátit</button>`:''}</div>`).join('')
+      : `<div class="empty">Zatím se nic nečerpalo.</div>`)+
+    (hospodar?`<button class="addbtn" onclick="pridatDiteti(${i})">+ Čerpání jen tomuto dítěti</button>`:`<div class="note2">Opravy provádí průvodce s právy hospodářky.</div>`)+`</div>`;
   h+=`</div>`;
   return h+`</div>`;
 }
@@ -97,6 +103,18 @@ window.exportFond=()=>{
     list.map(({c})=>[full(c),c.fond,c.predskolak?'ano':'',(c.fondLog||[]).length]));
   showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
+/* Vrátí jedno čerpání jednomu dítěti. Zároveň ho vyjme z hromadného záznamu ve FONDHIST –
+   jinak by pozdější „Vrátit" u celé dávky vrátilo peníze podruhé. */
+window.vratitDiteti=(i,k)=>{
+  const l=data[i].fondLog[k];if(!l)return;
+  data[i].fond+=l.amt;data[i].fondLog.splice(k,1);
+  const h=FONDHIST.find(x=>x.name===l.name&&x.amt===l.amt&&x.idxs.includes(i));
+  if(h){h.idxs=h.idxs.filter(x=>x!==i);h.n=h.idxs.length;
+    if(!h.idxs.length){if(h.akceId){const a=AKCE.find(y=>y.id===h.akceId);if(a)a.done=false;}FONDHIST.splice(FONDHIST.indexOf(h),1);}}
+  render();showToast('Vráceno '+l.amt+' Kč ✓');
+};
+// čerpání jen za tohle dítě – tentýž modal, jen s předvybraným jediným dítětem
+window.pridatDiteti=i=>{fondM={name:'',date:MESIC_TED,amt:'',sel:new Set([i]),group:'vlastni',q:''};renderModalRoot();};
 window.openFondChild=i=>{fondChild=i;render();};
 window.closeFondChild=()=>{fondChild=-1;render();};
 window.onOdSearch=v=>{odQuery=v;renderKeepFocus();};
