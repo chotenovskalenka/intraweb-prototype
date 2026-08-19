@@ -40,7 +40,7 @@ function renderDeti(){
   }).join('')+`</div>`;
   h+=`<table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
     const on=detiSort===k;
-    return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):'↕'}</span></button></th>`;
+    return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):'⇅'}</span></button></th>`;
   }).join('')+`</tr></thead><tbody>`+
     list.map(x=>{const c=x.c;
       return `<tr onclick="openDite(${x.i})"><td class="nm">${avatar(c,28)}${full(c)}</td><td>${c.plan}</td><td>${c.vek} let</td><td>${c.nar}</td>`+

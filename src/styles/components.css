@@ -342,8 +342,12 @@ table.wt td.pastc{opacity:.45}
     font-family:var(--font-sans);font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;text-align:left}
   .dtab thead th button:hover{color:var(--color-primary)}
   .dtab thead th.srt button{color:var(--color-primary-strong)}
-  .dtab .arw{font-size:8px;line-height:1;min-width:8px;color:var(--color-text-hint)}
+  /* Indikátor řazení. 8 px byl pod hranicí čitelnosti; --text-note s muted barvou drží
+     4,7:1 proti pozadí hlavičky (hint měl jen 3,4:1). Neaktivní ⇅ je pořád vidět, aby bylo
+     poznat, že sloupec jde seřadit – jen se nepere s popiskem. */
+  .dtab .arw{font-size:var(--text-note);line-height:1;min-width:11px;color:var(--color-text-muted)}
   .dtab thead th.srt .arw{color:var(--color-primary)}
+  .dtab thead th button:hover .arw{color:var(--color-primary)}
   .dtab td{padding:11px 14px;font-size:var(--text-small);color:var(--color-text);border-top:1px solid var(--color-border)}
   .dtab tbody tr{cursor:pointer}
   .dtab tbody tr:first-child td{border-top:none}
@@ -357,4 +361,4 @@ table.wt td.pastc{opacity:.45}
 .deti-bar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm);margin-bottom:9px}
 .deti-bar .search{flex:1 1 200px;margin-bottom:0}
 .deti-exp{flex:0 0 auto;margin-left:auto;min-height:44px;padding:0 14px;font-size:var(--text-small);white-space:nowrap}
-@media (min-width:900px){ .deti-bar .search{flex:0 1 320px} .deti-exp{margin-left:0} }
+@media (min-width:900px){ .deti-bar .search{flex:0 1 320px} }
