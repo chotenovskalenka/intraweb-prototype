@@ -465,6 +465,43 @@ table.wt td.pastc{opacity:.45}
 /* listovadlo na řádku s H1 v topbaru – přisazené doprava */
 .plan-head-nav{margin-left:auto}
 .plan-head-nav .dh-lbl{min-width:130px;text-align:center}
+
+/* Napodobenina Google Kalendáře – sdílený kalendář školky, stejný v rodičovské i
+   průvodcovské appce. Barvy a kompaktní rozměry jsou záměrná kopie Googlu, nesahat. */
+.gcalwrap{background:#fff;border:1px solid rgba(60,64,67,.12);border-radius:var(--radius-md);padding:14px 10px}
+.gcalhd{font-size:var(--text-title);font-weight:600;color:#3c4043;margin:0 4px 12px}
+.gcal{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.gh{font-size:var(--text-chip);color:#70757a;text-align:center;font-weight:500;padding:2px 0;letter-spacing:.03em}
+.gcell{min-height:42px;display:flex;flex-direction:column;align-items:center;padding-top:3px;cursor:pointer;border-radius:var(--radius-sm)}
+.gcell.gsel{background:#e8f0fe}
+.gn{font-size:var(--text-note);color:#3c4043;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.gcell.gwe .gn{color:#9aa0a6}
+.gcell.gtoday .gn{background:#1a73e8;color:#fff;font-weight:500}
+.gbars{display:flex;flex-direction:column;gap:2px;width:100%;padding:2px 4px 0;align-items:stretch}
+.gbar{height:3px;border-radius:2px}
+.gbar.g-akce,.gvbar.g-akce{background:#33b679}
+.gbar.g-naro,.gvbar.g-naro{background:#e67c73}
+.gbar.g-rozvrh,.gvbar.g-rozvrh{background:#039be5}
+.gbar.g-org,.gvbar.g-org{background:#8e24aa}
+.gday{font-size:var(--text-body);font-weight:600;color:#3c4043;margin:14px 4px 8px}
+.gev{display:flex;align-items:center;gap:11px;padding:9px 4px;font-size:var(--text-small);color:#3c4043;border-top:1px solid #f1f3f4}
+.gev:first-of-type{border-top:none}
+.gvbar{width:4px;height:18px;border-radius:2px;flex-shrink:0}
+.gevt{margin-left:auto;color:#70757a;font-size:var(--text-micro)}
+.gnone{font-size:var(--text-meta);color:#9aa0a6;font-style:italic;padding:8px 4px}
+.gcalnav{display:flex;justify-content:space-between;align-items:center;margin:0 2px 12px}
+.gstep{display:flex;align-items:center;gap:2px}
+.gstep button{border:none;background:none;color:#5f6368;font-size:var(--text-title);cursor:pointer;padding:2px 8px;line-height:1}
+.gstep .gmo{font-size:var(--text-heading);font-weight:600;color:#3c4043;min-width:64px;text-align:center;text-transform:capitalize}
+.gstep .gyr{font-size:var(--text-heading);font-weight:600;color:#3c4043;min-width:42px;text-align:center}
+.gcell.gempty{cursor:default;background:transparent}
+@media (min-width:900px){
+  /* Kalendář: mřížka vlevo, vybraný den vpravo – uvnitř bílého .gcalwrap */
+  .kal-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:20px;align-items:start}
+  .kal-main{min-width:0}
+  .kal-side{min-width:0;border-left:1px solid #f1f3f4;padding-left:18px}
+  .kal-side .gday{margin-top:0}
+}
 </style>
 <style>
 /* SCREENS: RODIC – rodičovské obrazovky + rodičovské varianty sdílených tříd.
@@ -688,11 +725,6 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
   /* Profil má hodně různě vysokých karet – mřížka by nechávala díry, proto sloupcový tok. */
   .page-cols{column-count:2;column-gap:20px}
   .page-cols>.tile{break-inside:avoid;margin:0 0 20px}
-  /* Kalendář: mřížka vlevo, vybraný den vpravo – uvnitř bílého .gcalwrap */
-  .kal-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:20px;align-items:start}
-  .kal-main{min-width:0}
-  .kal-side{min-width:0;border-left:1px solid #f1f3f4;padding-left:18px}
-  .kal-side .gday{margin-top:0}
 }
 /* Karty novinek (news-grid, newscard, nc-…, nd-…) jsou sdílené v components.css. */
 /* Detail novinky – článek: omezená čtecí šířka, na desktopu vycentrovaný, bez boxů */
@@ -846,33 +878,6 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .kevdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .kev .kevt{margin-left:auto;font-size:var(--text-micro);color:var(--color-text-muted)}
 .knone{font-size:var(--text-meta);color:var(--color-text-hint);font-style:italic;padding:8px 2px}
-.gcalwrap{background:#fff;border:1px solid rgba(60,64,67,.12);border-radius:var(--radius-md);padding:14px 10px}
-.gcalhd{font-size:var(--text-title);font-weight:600;color:#3c4043;margin:0 4px 12px}
-.gcal{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
-.gh{font-size:var(--text-chip);color:#70757a;text-align:center;font-weight:500;padding:2px 0;letter-spacing:.03em}
-.gcell{min-height:42px;display:flex;flex-direction:column;align-items:center;padding-top:3px;cursor:pointer;border-radius:var(--radius-sm)}
-.gcell.gsel{background:#e8f0fe}
-.gn{font-size:var(--text-note);color:#3c4043;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%}
-.gcell.gwe .gn{color:#9aa0a6}
-.gcell.gtoday .gn{background:#1a73e8;color:#fff;font-weight:500}
-.gbars{display:flex;flex-direction:column;gap:2px;width:100%;padding:2px 4px 0;align-items:stretch}
-.gbar{height:3px;border-radius:2px}
-.gbar.g-akce,.gvbar.g-akce{background:#33b679}
-.gbar.g-naro,.gvbar.g-naro{background:#e67c73}
-.gbar.g-rozvrh,.gvbar.g-rozvrh{background:#039be5}
-.gbar.g-org,.gvbar.g-org{background:#8e24aa}
-.gday{font-size:var(--text-body);font-weight:600;color:#3c4043;margin:14px 4px 8px}
-.gev{display:flex;align-items:center;gap:11px;padding:9px 4px;font-size:var(--text-small);color:#3c4043;border-top:1px solid #f1f3f4}
-.gev:first-of-type{border-top:none}
-.gvbar{width:4px;height:18px;border-radius:2px;flex-shrink:0}
-.gevt{margin-left:auto;color:#70757a;font-size:var(--text-micro)}
-.gnone{font-size:var(--text-meta);color:#9aa0a6;font-style:italic;padding:8px 4px}
-.gcalnav{display:flex;justify-content:space-between;align-items:center;margin:0 2px 12px}
-.gstep{display:flex;align-items:center;gap:2px}
-.gstep button{border:none;background:none;color:#5f6368;font-size:var(--text-title);cursor:pointer;padding:2px 8px;line-height:1}
-.gstep .gmo{font-size:var(--text-heading);font-weight:600;color:#3c4043;min-width:64px;text-align:center;text-transform:capitalize}
-.gstep .gyr{font-size:var(--text-heading);font-weight:600;color:#3c4043;min-width:42px;text-align:center}
-.gcell.gempty{cursor:default;background:transparent}
 .doch-sleep{font-size:var(--text-small);color:var(--color-text-muted);margin:-6px 0 10px}
 .doch-sleep b{color:var(--color-text)}
 .doch-pozn{background:var(--tint-ochre);border-radius:var(--radius-sm);padding:8px 11px;font-size:var(--text-small);line-height:var(--leading-normal);margin:0 0 10px}
@@ -1119,6 +1124,8 @@ function alergenyLegenda(dny){
 
 // Názvy měsíců (1. pád) – používá rodičovská i průvodcovská appka v tématickém plánu.
 const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+// 2. pád – pro datum „3. června" (nominativ by dal „3. červen")
+const MONTHS_G=['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
 </script>
 <script>
 /* SHARED: ikony menu – čárové (Lucide styl, stroke=currentColor, takže se obarví podle
@@ -1206,6 +1213,31 @@ const TEMA_MESICE=[
 ];
 /* otevře plakát ve zvětšení (lightbox); i = index v TEMA_POSTERS */
 function openPoster(i){openLightbox(TEMA_POSTERS[i],'tematicky-plan-cerven-'+(i+1)+'.jpg');}
+</script>
+<script>
+/* Sdílený kalendář školky – tentýž Google Kalendář vidí rodiče i průvodci, proto data žijí
+   mimo obě data.js (načítá se před nimi, viz <script src> v rodic.html i pruvodce.html).
+   Průvodcovská appka do něj navíc promítá vlastní AKCE a služby – „spárování" kalendáře. */
+const EVMAP={
+  4:[{t:'Výlet předškoláků – horolezení',type:'akce'}],
+  5:[{t:'Pedagogická porada – školka zavřená',type:'org'}],
+  8:[{t:'Kroužek Tanečky s Niki · 15:15',type:'rozvrh'}],
+  10:[{t:'Narozeniny – Eliška',type:'naro',vek:5}],
+  11:[{t:'Předškolácký den',type:'rozvrh'}],
+  13:[{t:'Brigáda na zahradě',type:'akce'}],
+  17:[{t:'Narozeniny – Tonička',type:'naro',vek:4}],
+  18:[{t:'Kroužek Živly se Shaunem · 14:00',type:'rozvrh'}],
+  20:[{t:'Tatínkovský den',type:'akce'}],
+  24:[{t:'Výprava do lesa',type:'akce'},{t:'Narozeniny – Kuba',type:'naro',vek:6}],
+  27:[{t:'Společné focení tříd',type:'akce'}],
+  30:[{t:'Konec školního roku',type:'org'},{t:'Závěrečné posezení s rodiči',type:'akce'}],
+};
+const TYPELAB={akce:'akce',naro:'narozeniny',rozvrh:'rozvrh',org:'organizace'};
+
+// datum → pozice v mřížce měsíce
+const daysInMonth=(y,m)=>new Date(y,m+1,0).getDate();
+const firstOffset=(y,m)=>(new Date(y,m,1).getDay()+6)%7;
+const wdLocal=(y,m,d)=>(new Date(y,m,d).getDay()+6)%7;
 </script>
 <script>
 /* SHARED (mobilní appky): reálné fotky k novinkám (nw3–nw5), 640x480 JPEG.
@@ -1432,29 +1464,11 @@ const akce=[
   {title:'Výlet předškoláků – horolezení',date:'čt 4. 6.',time:'8:00–8:30',place:'Jungle Sport park, Letňany',note:'Sraz na místě, na oběd zpět do školky. Děti odpoledne nespí.'},
   {title:'Brigáda na zahradě',date:'so 13. 6.',time:'9:00–12:00',place:'Zahrada školky',note:'Společné hrabání a sázení pro rodiče i děti. Občerstvení zajištěno.'},
 ];
-const EVMAP={
-  4:[{t:'Výlet předškoláků – horolezení',type:'akce'}],
-  5:[{t:'Pedagogická porada – školka zavřená',type:'org'}],
-  8:[{t:'Kroužek Tanečky s Niki · 15:15',type:'rozvrh'}],
-  10:[{t:'Narozeniny – Eliška',type:'naro',vek:5}],
-  11:[{t:'Předškolácký den',type:'rozvrh'}],
-  13:[{t:'Brigáda na zahradě',type:'akce'}],
-  17:[{t:'Narozeniny – Tonička',type:'naro',vek:4}],
-  18:[{t:'Kroužek Živly se Shaunem · 14:00',type:'rozvrh'}],
-  20:[{t:'Tatínkovský den',type:'akce'}],
-  24:[{t:'Výprava do lesa',type:'akce'},{t:'Narozeniny – Kuba',type:'naro',vek:6}],
-  27:[{t:'Společné focení tříd',type:'akce'}],
-  30:[{t:'Konec školního roku',type:'org'},{t:'Závěrečné posezení s rodiči',type:'akce'}],
-};
-const TYPELAB={akce:'akce',naro:'narozeniny',rozvrh:'rozvrh',org:'organizace'};
 
 const TODAY=3;
 const TODAY_M=5;   // měsíc „dneška" (0=leden … 5=červen) – zdroj pro dynamické nadpisy „…v červnu"
 // 6. pád (lokativ) pro nadpisy typu „Co se děje v červnu / Narozeniny v červnu"
 const MONTHS_V=['lednu','únoru','březnu','dubnu','květnu','červnu','červenci','srpnu','září','říjnu','listopadu','prosinci'];
-const daysInMonth=(y,m)=>new Date(y,m+1,0).getDate();
-const firstOffset=(y,m)=>(new Date(y,m,1).getDay()+6)%7;
-const wdLocal=(y,m,d)=>(new Date(y,m,d).getDay()+6)%7;
 const editable=d=>d>TODAY;
 const dayLabel=d=>d===TODAY?'Dnes · St 3. 6.':DOW[wd(d)]+' '+d+'. 6.';
 
@@ -1953,7 +1967,7 @@ function renderKalendar(){
     h+=`<div class="gcell${today?' gtoday':''}${d===kalSel?' gsel':''}${we?' gwe':''}" onclick="kalPick(${d})"><span class="gn">${d}</span><span class="gbars">${bars}</span></div>`;}
   h+=`</div></div><div class="kal-side">`;
   const sevs=isJune?(EVMAP[kalSel]||[]):[];
-  h+=`<div class="gday">${DOW[wdLocal(kalY,kalM,kalSel)]} ${kalSel}. ${MONTHS[kalM]}</div>`;
+  h+=`<div class="gday">${DOW[wdLocal(kalY,kalM,kalSel)]} ${kalSel}. ${MONTHS_G[kalM]}</div>`;
   h+= sevs.length? sevs.map(e=>`<div class="gev"><span class="gvbar g-${e.type}"></span><span>${e.t}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
   h+=`</div></div>`;
   return h+`</div>`;

@@ -285,3 +285,40 @@ table.wt td.pastc{opacity:.45}
 /* listovadlo na řádku s H1 v topbaru – přisazené doprava */
 .plan-head-nav{margin-left:auto}
 .plan-head-nav .dh-lbl{min-width:130px;text-align:center}
+
+/* Napodobenina Google Kalendáře – sdílený kalendář školky, stejný v rodičovské i
+   průvodcovské appce. Barvy a kompaktní rozměry jsou záměrná kopie Googlu, nesahat. */
+.gcalwrap{background:#fff;border:1px solid rgba(60,64,67,.12);border-radius:var(--radius-md);padding:14px 10px}
+.gcalhd{font-size:var(--text-title);font-weight:600;color:#3c4043;margin:0 4px 12px}
+.gcal{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.gh{font-size:var(--text-chip);color:#70757a;text-align:center;font-weight:500;padding:2px 0;letter-spacing:.03em}
+.gcell{min-height:42px;display:flex;flex-direction:column;align-items:center;padding-top:3px;cursor:pointer;border-radius:var(--radius-sm)}
+.gcell.gsel{background:#e8f0fe}
+.gn{font-size:var(--text-note);color:#3c4043;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.gcell.gwe .gn{color:#9aa0a6}
+.gcell.gtoday .gn{background:#1a73e8;color:#fff;font-weight:500}
+.gbars{display:flex;flex-direction:column;gap:2px;width:100%;padding:2px 4px 0;align-items:stretch}
+.gbar{height:3px;border-radius:2px}
+.gbar.g-akce,.gvbar.g-akce{background:#33b679}
+.gbar.g-naro,.gvbar.g-naro{background:#e67c73}
+.gbar.g-rozvrh,.gvbar.g-rozvrh{background:#039be5}
+.gbar.g-org,.gvbar.g-org{background:#8e24aa}
+.gday{font-size:var(--text-body);font-weight:600;color:#3c4043;margin:14px 4px 8px}
+.gev{display:flex;align-items:center;gap:11px;padding:9px 4px;font-size:var(--text-small);color:#3c4043;border-top:1px solid #f1f3f4}
+.gev:first-of-type{border-top:none}
+.gvbar{width:4px;height:18px;border-radius:2px;flex-shrink:0}
+.gevt{margin-left:auto;color:#70757a;font-size:var(--text-micro)}
+.gnone{font-size:var(--text-meta);color:#9aa0a6;font-style:italic;padding:8px 4px}
+.gcalnav{display:flex;justify-content:space-between;align-items:center;margin:0 2px 12px}
+.gstep{display:flex;align-items:center;gap:2px}
+.gstep button{border:none;background:none;color:#5f6368;font-size:var(--text-title);cursor:pointer;padding:2px 8px;line-height:1}
+.gstep .gmo{font-size:var(--text-heading);font-weight:600;color:#3c4043;min-width:64px;text-align:center;text-transform:capitalize}
+.gstep .gyr{font-size:var(--text-heading);font-weight:600;color:#3c4043;min-width:42px;text-align:center}
+.gcell.gempty{cursor:default;background:transparent}
+@media (min-width:900px){
+  /* Kalendář: mřížka vlevo, vybraný den vpravo – uvnitř bílého .gcalwrap */
+  .kal-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:20px;align-items:start}
+  .kal-main{min-width:0}
+  .kal-side{min-width:0;border-left:1px solid #f1f3f4;padding-left:18px}
+  .kal-side .gday{margin-top:0}
+}

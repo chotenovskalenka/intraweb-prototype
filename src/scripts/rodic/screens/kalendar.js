@@ -15,7 +15,7 @@ function renderKalendar(){
     h+=`<div class="gcell${today?' gtoday':''}${d===kalSel?' gsel':''}${we?' gwe':''}" onclick="kalPick(${d})"><span class="gn">${d}</span><span class="gbars">${bars}</span></div>`;}
   h+=`</div></div><div class="kal-side">`;
   const sevs=isJune?(EVMAP[kalSel]||[]):[];
-  h+=`<div class="gday">${DOW[wdLocal(kalY,kalM,kalSel)]} ${kalSel}. ${MONTHS[kalM]}</div>`;
+  h+=`<div class="gday">${DOW[wdLocal(kalY,kalM,kalSel)]} ${kalSel}. ${MONTHS_G[kalM]}</div>`;
   h+= sevs.length? sevs.map(e=>`<div class="gev"><span class="gvbar g-${e.type}"></span><span>${e.t}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
   h+=`</div></div>`;
   return h+`</div>`;
