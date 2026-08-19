@@ -335,7 +335,9 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .btn-del{display:block;background:none;border:none;color:var(--color-danger);font-size:var(--text-small);font-weight:600;cursor:pointer;margin:12px auto 0;font-family:var(--font-sans)}
 .filters{display:flex;gap:var(--space-sm);margin-bottom:var(--space-md);overflow-x:auto;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}
 .filters button{flex:0 0 auto;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);padding:8px 15px;border-radius:var(--radius-full);cursor:pointer}
-.filters button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
+.filters button.on{background:var(--soft-primary);border-color:var(--edge-primary);color:var(--color-primary-strong);font-weight:600}
+.filters .cnt{color:var(--color-text-hint);font-variant-numeric:tabular-nums;margin-left:2px}
+.filters button.on .cnt{color:var(--color-primary)}
 .bdg{font-size:var(--text-chip);font-weight:600;padding:2px 7px;border-radius:var(--radius-xs);white-space:nowrap}
 .bdg.pre{color:var(--state-brand-ink);background:var(--state-brand-bg)}.bdg.al{color:var(--state-danger-ink);background:var(--state-danger-bg)}
 .pav{display:flex;justify-content:center;margin:6px 0 10px}
@@ -501,6 +503,24 @@ table.wt td.pastc{opacity:.45}
   .kal-main{min-width:0}
   .kal-side{min-width:0;border-left:1px solid #f1f3f4;padding-left:18px}
   .kal-side .gday{margin-top:0}
+}
+
+/* Soupis dětí. Karty se dobře trefují prstem, ale na desktopu z 25 dětí udělají dva
+   dlouhé sloupce – tam je čitelnější tabulka. Obojí je v DOM a přepíná se tady;
+   appka nemá listener na resize, takže větvit v JS by při změně šířky nechalo starý výpis. */
+.dtab{display:none}
+@media (min-width:900px){
+  #content > .deti{column-span:all}
+  .deti-cards{display:none}
+  .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
+  .dtab thead th{text-align:left;font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;padding:10px 14px;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
+  .dtab td{padding:11px 14px;font-size:var(--text-small);color:var(--color-text);border-top:1px solid var(--color-border)}
+  .dtab tbody tr{cursor:pointer}
+  .dtab tbody tr:first-child td{border-top:none}
+  .dtab tbody tr:hover{background:var(--wash-primary)}
+  .dtab td.nm{font-weight:500;white-space:nowrap;color:var(--color-primary-strong)}
+  .dtab td.nm .av{vertical-align:middle;margin-right:9px}
+  .dt-no{color:var(--color-text-hint)}
 }
 </style>
 <style>
@@ -799,7 +819,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .fakt-filter .filters{margin:0}
 /* filtr Neuhrazené = červený */
 .filters button.danger{color:var(--color-danger);border-color:var(--edge-danger)}
-.filters button.danger.on{background:var(--color-danger);border-color:var(--color-danger);color:var(--color-on-primary)}
+.filters button.danger.on{background:var(--wash-danger);border-color:var(--edge-danger);color:var(--color-danger)}
 /* stažení PDF u faktury */
 .fbtn{flex:0 0 auto;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:var(--text-micro);font-weight:600;color:var(--color-text-muted);padding:5px 10px;border-radius:var(--radius-sm);cursor:pointer;white-space:nowrap}
 /* neuhrazená faktura – zvýrazněný řádek + rovnou rozevřená platba s QR */
