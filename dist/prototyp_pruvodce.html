@@ -1494,6 +1494,11 @@ function temaPlan(o){
    Mizí, jakmile má měsíc vlastní obsah. */
 function temaLoniBtn(){
   const o=temaObdobi();
+  if(o.stav==='archiv'){
+    // opačný směr: z archivu založit tentýž měsíc příští rok
+    const cil=temaSousedniRok(o,1);
+    return cil?`<button class="btn-ghost" onclick="temaAdopt('${o.key}','${cil.key}')">Použít pro ${cil.label.toLowerCase()}</button>`:'';
+  }
   if(o.stav!=='priprava')return '';
   const t=temaPlan(o),loni=temaSousedniRok(o,-1);
   if(!loni||t.hodnota||t.intro||t.tydny.some(w=>w.b||w.p))return '';
@@ -1545,13 +1550,8 @@ function temaBlock(){
   });
   h+=`</div></div>`;
   // uložení zůstává dole pod formulářem – potvrzuje se až po vyplnění
-  if(ro){
-    // z archivu: použít ho jako základ pro tentýž měsíc příští rok
-    const cil=temaSousedniRok(o,1);
-    h+= cil?`<button class="btn-primary btn-block tema-save" onclick="temaAdopt('${o.key}','${cil.key}')">Použít pro ${cil.label.toLowerCase()}</button>`:'';
-  }else{
-    h+=`<button class="btn-primary btn-block tema-save" onclick="showToast('Tématický plán uložen ✓')">Uložit ${o.stav==='bezi'?'tématický plán':'plán na '+o.label.toLowerCase()}</button>`;
-  }
+  // archiv je jen ke čtení – jeho jediná akce („Použít pro…") sedí nahoře u nadpisu
+  if(!ro)h+=`<button class="btn-primary btn-block tema-save" onclick="showToast('Tématický plán uložen ✓')">Uložit ${o.stav==='bezi'?'tématický plán':'plán na '+o.label.toLowerCase()}</button>`;
   return h;
 }
 window.rytEditOn=()=>{rytDraft=RYTMUS.map(r=>({prog:r.prog,krouzek:r.krouzek}));rytEdit=true;render();};
