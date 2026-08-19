@@ -167,3 +167,4 @@ function stahniCSV(soubor,hlavicky,radky){
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 function pocetDeti(n){return n+' '+(n===1?'dítě':(n>=2&&n<=4?'děti':'dětí'));}
+const telnum=p=>p.replace(/ /g,'');

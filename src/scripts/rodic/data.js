@@ -226,5 +226,4 @@ const code=(c,d)=>c.att[d]||(c.base==='C'&&wd(d)!==1?'O':c.base);
 const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${CODES[cd][1]}">${CODES[cd][0]}</span>`;
 const cur=()=>children[ci];
 const plural=n=>n===1?'den':(n>=2&&n<=4?'dny':'dní');
-const telnum=p=>p.replace(/ /g,'');
 const kc=n=>n.toLocaleString('cs-CZ');

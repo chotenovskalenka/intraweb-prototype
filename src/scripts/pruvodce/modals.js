@@ -63,7 +63,7 @@ function fondModalHTML(){
     <h3>Ruční čerpání z fondu</h3>
     <div class="fond-form">
       <div><label class="pl">Co se čerpalo</label><input class="pin" value="${esc(m.name)}" oninput="setFondDraft('name',this.value)" placeholder="např. Výtvarný materiál"></div>
-      <div><label class="pl">Kdy</label><input class="pin" value="${esc(m.date)}" oninput="setFondDraft('date',this.value)" placeholder="např. červen 2026"></div>
+      <div><label class="pl">Kdy</label><select class="pin" onchange="setFondDraft('date',this.value)">${MESICE_ROKU.map(x=>`<option value="${x}" ${m.date===x?'selected':''}>${x}</option>`).join('')}</select></div>
       <div><label class="pl">Částka na dítě (Kč)</label><input class="pin" type="number" min="0" value="${m.amt}" oninput="setFondDraft('amt',this.value)" placeholder="0"></div>
     </div>
     <label class="pl">Komu strhnout</label>
@@ -72,7 +72,7 @@ function fondModalHTML(){
     <div class="mbtns"><button class="btn-ghost" onclick="closeFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout vybraným</button></div>
   </div></div>`;
 }
-window.togFond=()=>{fondM={name:'',date:'',amt:'',sel:new Set(data.map((c,i)=>i)),group:'vse',q:''};renderModalRoot();};
+window.togFond=()=>{fondM={name:'',date:MESIC_TED,amt:'',sel:new Set(data.map((c,i)=>i)),group:'vse',q:''};renderModalRoot();};
 window.closeFond=()=>{fondM=null;renderModalRoot();};
 // částka mění souhrn → překreslit; text ne, jinak by utekl kurzor
 window.setFondDraft=(f,v)=>{fondM[f]=v;if(f==='amt')renderModalRoot();};

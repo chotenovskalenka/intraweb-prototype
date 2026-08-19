@@ -6,6 +6,9 @@
 .temanav button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .frow{display:flex;gap:11px;align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:11px 13px;margin-bottom:7px}
 .odbtn{flex-shrink:0;min-height:44px;background:var(--color-primary);color:var(--color-on-primary);border:none;font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;padding:8px 15px;border-radius:var(--radius-sm);cursor:pointer}
+/* Storno čerpání je oprava, ne hlavní akce – .ghostred z components.css tu prohrávalo
+   pořadím souborů, proto explicitně. */
+.odbtn.ghostred{background:transparent;border:1px solid var(--edge-danger);color:var(--color-danger);font-weight:500}
 .gchips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .gchip{display:flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:var(--radius-full);padding:5px 13px 5px 5px;font-size:var(--text-small);font-weight:500}
 .rozh{font-size:var(--text-small);line-height:var(--leading-normal);padding:8px 0;border-top:1px solid var(--color-border);color:var(--color-text)}.rozh:first-of-type{border-top:none}

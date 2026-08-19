@@ -46,13 +46,22 @@ function rozhovoryFor(i){if(!rozhovoryMap[i])rozhovoryMap[i]=[
 ];return rozhovoryMap[i];}
 let worksMap={3:2,9:3}, dopoMap={};
 
+/* Tým školky. `n` je krátké jméno, kterým se průvodce dohledá v rozpisu služeb (GUIDESHIFT).
+   `fce` = funkce navíc; kdo ji nemá, je řadový průvodce. Zázemí (vedení, obědy, účetnictví)
+   je oddělené – nemá službu u dětí, ale průvodci ho potřebují po ruce. */
 const guides=[
-  {n:'Darča',sur:'K.',phone:'+420 720 111 222',email:'darca@vhaaji.cz'},
-  {n:'Gabča',sur:'N.',phone:'+420 720 333 444',email:'gabca@vhaaji.cz'},
-  {n:'Honza',sur:'P.',phone:'+420 720 555 666',email:'honza@vhaaji.cz'},
-  {n:'Táňa',sur:'V.',phone:'+420 720 777 888',email:'tana@vhaaji.cz'},
+  {n:'Táňa',sur:'Kynclová',fce:'vedoucí průvodce',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
+  {n:'Gabča',sur:'Vašíčková',phone:'+420 604 553 246',email:'gabca@vhaaji.cz'},
+  {n:'Darča',sur:'Mikolášová',phone:'+420 603 290 593',email:'darina@vhaaji.cz'},
+  {n:'Honza',sur:'Kolář',phone:'+420 605 426 333',email:'honza@vhaaji.cz'},
+  {n:'Míša',sur:'Hrubínová',fce:'hospodářka',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
 ];
-const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@vhaaji.cz',phone:'+420 720 000 111'};
+const ZAZEMI=[
+  {n:'Tereza',sur:'Vavrečková',fce:'vedení',phone:'+420 603 200 512',email:'tereza@vhaaji.cz'},
+  {n:'Ksenia',sur:'Andramanova',fce:'obědy a svačiny',phone:'+420 721 472 219',email:'ksenia@vhaaji.cz'},
+  {n:'Eva',sur:'Sionová',fce:'účetnictví',phone:'+420 777 752 533',email:'eva@vhaaji.cz'},
+];
+const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@vhaaji.cz',phone:'+420 720 000 111',adresa:'Ďáblický háj, Praha 8'};
 
 let RYTMUS=[
   {d:0,prog:'Rytmika',krouzek:'Tanečky s Niki'},
@@ -170,6 +179,19 @@ function temaKey(m,y){return y+'-'+String(m).padStart(2,'0');}
 function prazdnyPlan(){return {hodnota:'',intro:'',file:'',tydny:[{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''}]};}
 // Loňské akce (červen 2025) – jen jako inspirace při plánování nového června.
 // Nepřebírají se hromadně (data se rok od roku liší) – klik založí novou akci s předvyplněnými údaji.
+/* Akce po měsících. Běžný měsíc (červen 2026) je živé AKCE – čte ho dashboard, kalendář
+   i fond. Ostatní měsíce žijí v AKCE_DATA a vznikají prázdné až při otevření.
+   Rozsah = loňský červen (odkud se přebírá) přes školní rok až do příštího června. */
+const AKCE_MESICE=[{m:6,y:2025},
+  {m:9,y:2025},{m:10,y:2025},{m:11,y:2025},{m:12,y:2025},{m:1,y:2026},{m:2,y:2026},{m:3,y:2026},{m:4,y:2026},{m:5,y:2026},{m:6,y:2026},
+  {m:9,y:2026},{m:10,y:2026},{m:11,y:2026},{m:12,y:2026},{m:1,y:2027},{m:2,y:2027},{m:3,y:2027},{m:4,y:2027},{m:5,y:2027},{m:6,y:2027}]
+  .map(x=>({...x,key:x.y+'-'+String(x.m).padStart(2,'0'),label:MONTHS[x.m-1].charAt(0).toUpperCase()+MONTHS[x.m-1].slice(1)+' '+x.y}));
+const AKCE_AKT=AKCE_MESICE.findIndex(x=>x.key==='2026-06');
+const AKCE_DATA={};
+function akceMesic(i){const k=AKCE_MESICE[i].key;
+  if(i===AKCE_AKT)return AKCE;
+  if(k==='2025-06')return AKCE_DATA[k]||(AKCE_DATA[k]=AKCE_LONI.map((a,n)=>({...a,id:'l'+n})));
+  return AKCE_DATA[k]||(AKCE_DATA[k]=[]);}
 const AKCE_LONI=[
   {name:'Škola v přírodě',day:2,dayEnd:6,time:'',place:'Sloup v Čechách',note:'Pětidenní pobyt',paid:0},
   {name:'Výlet předškoláků – lanové centrum',day:5,dayEnd:null,time:'8:00–8:30',place:'Lanový park Praha 6',note:'1. čtvrtek v měsíci',paid:0},
@@ -215,6 +237,10 @@ function shiftLabel(t){return `${t.od}.–${t.do}. ${t.m}.`;}
 let uspavaToday=1;
 const OFFREASONS=['nemoc','málo dětí','volno','dovolená'];
 const PLANY=['celodenní','dopolední','odpolední'];   // režimy docházky dítěte
+/* Měsíce školního roku pro výběr „kdy se čerpalo" – ať se datum nepíše pokaždé jinak
+   („červen 2026" vs „6/2026"). Vychází z TEMA_MESICE (září 2025 → červen 2026). */
+const MESICE_ROKU=TEMA_MESICE.map(t=>MONTHS[t.m-1]+' '+t.y);
+const MESIC_TED='červen 2026';
 
 const SEEDFOND=[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]];
 const FONDROK=2000;

@@ -303,6 +303,9 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .pchips{display:flex;flex-wrap:wrap;gap:6px}
 .pchips button{border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:var(--text-meta);color:var(--color-text-muted);padding:6px 11px;border-radius:var(--radius-full);cursor:pointer}
 .pchips button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
+/* Číselná pole (částka, cena akce) bez spinnerů – částka se píše, ne klikátkem po jedné. */
+.pin[type=number]{appearance:textfield;-moz-appearance:textfield}
+.pin[type=number]::-webkit-outer-spin-button,.pin[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .pin{width:100%;border:1px solid var(--color-border-strong);border-radius:var(--radius-sm);padding:9px 11px;font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text);background:var(--color-surface)}
 .pta{width:100%;border:1px solid var(--color-border-strong);border-radius:var(--radius-sm);padding:9px 11px;font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text);background:var(--color-surface);min-height:62px;resize:vertical;line-height:var(--leading-normal)}
 .addbig{width:100%;border:none;background:var(--color-primary);color:var(--color-on-primary);font-family:var(--font-sans);font-size:var(--text-action);font-weight:600;padding:14px;border-radius:var(--radius-md);cursor:pointer;margin-bottom:11px}
@@ -528,17 +531,19 @@ table.wt td.pastc{opacity:.45}
   .deti-cards,.akce-cards{display:none}
   .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
   .dtab thead th{text-align:left;padding:0;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
-  /* hlavička je tlačítko na řazení – šipka drží místo i když je sloupec neaktivní */
-  .dtab thead th button{width:100%;display:flex;align-items:center;gap:5px;min-height:38px;padding:0 14px;border:none;background:none;cursor:pointer;
+  /* Popisek hlavičky. U řaditelných sloupců je to tlačítko, u ostatních prostý <span> –
+     styl musí sedět na obojím, jinak neřaditelná tabulka spadne na výchozí <th>. */
+  .dtab thead th>button,.dtab thead th>span{width:100%;display:flex;align-items:center;gap:5px;min-height:38px;padding:0 14px;border:none;background:none;
     font-family:var(--font-sans);font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;text-align:left}
-  .dtab thead th button:hover{color:var(--color-primary)}
-  .dtab thead th.srt button{color:var(--color-primary-strong)}
+  .dtab thead th>button{cursor:pointer}
+  .dtab thead th>button:hover{color:var(--color-primary)}
+  .dtab thead th.srt>button{color:var(--color-primary-strong)}
   /* Indikátor řazení. 8 px byl pod hranicí čitelnosti; --text-note s muted barvou drží
      4,7:1 proti pozadí hlavičky (hint měl jen 3,4:1). Neaktivní ⇅ je pořád vidět, aby bylo
      poznat, že sloupec jde seřadit – jen se nepere s popiskem. */
   .dtab .arw{font-size:var(--text-note);line-height:1;min-width:11px;color:var(--color-text-muted)}
   .dtab thead th.srt .arw{color:var(--color-primary)}
-  .dtab thead th button:hover .arw{color:var(--color-primary)}
+  .dtab thead th>button:hover .arw{color:var(--color-primary)}
   .dtab td{padding:11px 14px;font-size:var(--text-small);color:var(--color-text);border-top:1px solid var(--color-border)}
   .dtab tbody tr{cursor:pointer}
   .dtab tbody tr:first-child td{border-top:none}
@@ -564,6 +569,39 @@ table.wt td.pastc{opacity:.45}
 .tgl{min-height:44px;padding:0 12px;border:1px solid var(--color-border-strong);background:var(--color-surface);
   border-radius:var(--radius-full);font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);cursor:pointer}
 .tgl.on{background:var(--soft-primary);border-color:var(--edge-primary);color:var(--color-primary-strong);font-weight:600}
+/* „Vrátit" u řádku historie čerpání – drobné, ať nepřebije částku, ale s dotykovým cílem 44 px */
+.np>.fond-undo{flex:0 0 auto;margin-left:var(--space-md);padding:0 12px;font-size:var(--text-note);font-weight:500}
+
+/* Kontaktní karty (průvodci, školka, dokumenty) – sdílené rodičovskou i průvodcovskou
+   appkou, proto tady a ne v screens-rodic.css. */
+.moon{color:var(--color-info);font-size:var(--text-small)}
+.cinfo{font-size:var(--text-note);color:var(--color-text-muted);margin-top:10px;text-align:center}
+.pdf{font-size:var(--text-chip);font-weight:700;color:var(--color-danger);border:1px solid var(--edge-danger);border-radius:5px;padding:2px 5px}
+.doc{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
+.doc:first-of-type{border-top:none}
+.doc .dt2{color:var(--color-text-muted);font-size:var(--text-micro)}
+.k-sec{font-family:var(--font-serif);font-size:var(--text-heading);font-weight:600;color:var(--color-primary-strong);margin:0 0 11px}
+.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:0 0 18px}
+.k-bottom{display:flex;gap:16px;flex-wrap:wrap;margin-top:56px;align-items:stretch}
+.k-bottom>.tile{margin-bottom:0}
+.skolka{display:flex;gap:14px;align-items:flex-end;flex:1.3;min-width:300px;overflow:visible}
+.dubanek-pop{width:132px;flex-shrink:0;display:block;margin-top:-56px;pointer-events:none}
+.skolka-info{flex:1;min-width:0;padding-bottom:2px}
+.skolka-info .gcard-n{margin-bottom:9px}
+.skolka-info .cinfo{text-align:left;margin-top:9px}
+.k-docs{flex:1;min-width:250px}
+.k-docs .doc{flex-wrap:wrap;row-gap:4px}
+.gcard{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px;background:var(--color-surface)}
+.gcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.gcard-n{font-family:var(--font-serif);font-size:var(--text-action);font-weight:600;color:var(--color-primary-strong)}
+.wa-card{display:block;text-decoration:none;color:inherit;margin-bottom:0}
+.wa-sub{font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.wa-open{display:block;font-size:var(--text-meta);font-weight:600;color:var(--color-primary)}
+.gcard .contact{margin-top:0}
+.gcard .cinfo{margin-top:7px}
+.skolka-contact{flex-wrap:wrap}
+.skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
+.gcard-sch{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:1px}
 </style>
 <style>
 /* SCREENS: RODIC – rodičovské obrazovky + rodičovské varianty sdílených tříd.
@@ -617,7 +655,6 @@ table.wt td.pastc{opacity:.45}
 .gps{font-size:var(--text-micro);color:var(--color-text-hint);margin-top:6px}
 .gchips{display:flex;gap:8px;flex-wrap:wrap}
 .gchip{min-height:44px;display:flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:var(--radius-full);padding:4px 12px 4px 4px;font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;color:var(--color-text);cursor:pointer}
-.moon{color:var(--color-info);font-size:var(--text-small)}
 .uline{font-size:var(--text-note);color:var(--color-info);margin-top:8px}
 .alerg{font-size:var(--text-chip);color:var(--color-accent-ink);background:var(--soft-accent);border-radius:var(--radius-xs);padding:1px 6px;flex-shrink:0;align-self:center}
 /* kompaktní vysvětlivky alergenů – jen čísla, která se v daném dni/týdnu reálně objeví */
@@ -626,7 +663,6 @@ table.wt td.pastc{opacity:.45}
 .akce{min-height:44px;display:flex;justify-content:space-between;gap:10px;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:var(--text-small);font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
 .akce:first-of-type{border-top:none;padding-top:0}
 .akce .when{color:var(--color-text-muted);font-size:var(--text-meta);font-weight:400;flex-shrink:0;white-space:nowrap}
-.cinfo{font-size:var(--text-note);color:var(--color-text-muted);margin-top:10px;text-align:center}
 
 /* platby */
 .frow{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;padding:10px 0;border-top:1px solid var(--color-border)}
@@ -638,13 +674,9 @@ table.wt td.pastc{opacity:.45}
 .ubadge{font-size:var(--text-chip);font-weight:600;padding:2px 8px;border-radius:var(--radius-xs);white-space:nowrap}
 .ubadge.ne{color:var(--color-danger);background:var(--state-danger-bg)}
 .ubadge.ano{color:var(--color-success);background:var(--state-ok-bg)}
-.pdf{font-size:var(--text-chip);font-weight:700;color:var(--color-danger);border:1px solid var(--edge-danger);border-radius:5px;padding:2px 5px}
 .drivelink{font-size:var(--text-micro);font-weight:600;color:var(--color-primary);white-space:nowrap}
 
 /* profil */
-.doc{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
-.doc:first-of-type{border-top:none}
-.doc .dt2{color:var(--color-text-muted);font-size:var(--text-micro)}
 .rozhov{font-size:var(--text-small);padding:8px 0;border-top:1px solid var(--color-border)}
 .rozhov:first-of-type{border-top:none}
 .rozhov .rd{font-size:var(--text-micro);color:var(--color-text-muted);margin-bottom:2px}
@@ -658,29 +690,7 @@ table.wt td.pastc{opacity:.45}
 .song-week{font-size:var(--text-micro);color:var(--color-text-muted);margin:2px 0 4px}
 .song-tx{font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text)}
 /* kontakty – průvodci rovnou rozbalení v mřížce */
-.k-sec{font-family:var(--font-serif);font-size:var(--text-heading);font-weight:600;color:var(--color-primary-strong);margin:0 0 11px}
-.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:0 0 18px}
 /* školkový kontakt s Dubánkem (vyleze bez pozadí z horního okraje karty) + menší buttony jako u průvodců */
-.k-bottom{display:flex;gap:16px;flex-wrap:wrap;margin-top:56px;align-items:stretch}
-.k-bottom>.tile{margin-bottom:0}
-.skolka{display:flex;gap:14px;align-items:flex-end;flex:1.3;min-width:300px;overflow:visible}
-.dubanek-pop{width:132px;flex-shrink:0;display:block;margin-top:-56px;pointer-events:none}
-.skolka-info{flex:1;min-width:0;padding-bottom:2px}
-.skolka-info .gcard-n{margin-bottom:9px}
-.skolka-contact{flex-wrap:wrap}
-.skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
-.skolka-info .cinfo{text-align:left;margin-top:9px}
-.k-docs{flex:1;min-width:250px}
-.k-docs .doc{flex-wrap:wrap;row-gap:4px}
-.gcard{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px;background:var(--color-surface)}
-.gcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.gcard-n{font-family:var(--font-serif);font-size:var(--text-action);font-weight:600;color:var(--color-primary-strong)}
-.wa-card{display:block;text-decoration:none;color:inherit;margin-bottom:0}
-.wa-sub{font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
-.wa-open{display:block;font-size:var(--text-meta);font-weight:600;color:var(--color-primary)}
-.gcard-sch{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:1px}
-.gcard .contact{margin-top:0}
-.gcard .cinfo{margin-top:7px}
 .rec{display:flex;gap:9px;align-items:flex-start;font-size:var(--text-small);line-height:var(--leading-normal);padding:6px 0}
 .recdot{width:7px;height:7px;border-radius:50%;background:var(--color-primary);margin-top:6px;flex-shrink:0}
 /* tlačítko Upravit v hlavičce profilu */
@@ -1200,6 +1210,7 @@ function stahniCSV(soubor,hlavicky,radky){
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 function pocetDeti(n){return n+' '+(n===1?'dítě':(n>=2&&n<=4?'děti':'dětí'));}
+const telnum=p=>p.replace(/ /g,'');
 </script>
 <script>
 /* SHARED: ikony menu – čárové (Lucide styl, stroke=currentColor, takže se obarví podle
@@ -1551,7 +1562,6 @@ const code=(c,d)=>c.att[d]||(c.base==='C'&&wd(d)!==1?'O':c.base);
 const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${CODES[cd][1]}">${CODES[cd][0]}</span>`;
 const cur=()=>children[ci];
 const plural=n=>n===1?'den':(n>=2&&n<=4?'dny':'dní');
-const telnum=p=>p.replace(/ /g,'');
 const kc=n=>n.toLocaleString('cs-CZ');
 </script>
 <script>

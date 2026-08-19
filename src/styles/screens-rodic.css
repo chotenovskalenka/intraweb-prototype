@@ -49,7 +49,6 @@
 .gps{font-size:var(--text-micro);color:var(--color-text-hint);margin-top:6px}
 .gchips{display:flex;gap:8px;flex-wrap:wrap}
 .gchip{min-height:44px;display:flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:var(--radius-full);padding:4px 12px 4px 4px;font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;color:var(--color-text);cursor:pointer}
-.moon{color:var(--color-info);font-size:var(--text-small)}
 .uline{font-size:var(--text-note);color:var(--color-info);margin-top:8px}
 .alerg{font-size:var(--text-chip);color:var(--color-accent-ink);background:var(--soft-accent);border-radius:var(--radius-xs);padding:1px 6px;flex-shrink:0;align-self:center}
 /* kompaktní vysvětlivky alergenů – jen čísla, která se v daném dni/týdnu reálně objeví */
@@ -58,7 +57,6 @@
 .akce{min-height:44px;display:flex;justify-content:space-between;gap:10px;width:100%;align-items:center;background:none;border:none;border-top:1px solid var(--color-border);padding:10px 0;font-family:var(--font-sans);font-size:var(--text-small);font-weight:500;color:var(--color-text);cursor:pointer;text-align:left}
 .akce:first-of-type{border-top:none;padding-top:0}
 .akce .when{color:var(--color-text-muted);font-size:var(--text-meta);font-weight:400;flex-shrink:0;white-space:nowrap}
-.cinfo{font-size:var(--text-note);color:var(--color-text-muted);margin-top:10px;text-align:center}
 
 /* platby */
 .frow{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;padding:10px 0;border-top:1px solid var(--color-border)}
@@ -70,13 +68,9 @@
 .ubadge{font-size:var(--text-chip);font-weight:600;padding:2px 8px;border-radius:var(--radius-xs);white-space:nowrap}
 .ubadge.ne{color:var(--color-danger);background:var(--state-danger-bg)}
 .ubadge.ano{color:var(--color-success);background:var(--state-ok-bg)}
-.pdf{font-size:var(--text-chip);font-weight:700;color:var(--color-danger);border:1px solid var(--edge-danger);border-radius:5px;padding:2px 5px}
 .drivelink{font-size:var(--text-micro);font-weight:600;color:var(--color-primary);white-space:nowrap}
 
 /* profil */
-.doc{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
-.doc:first-of-type{border-top:none}
-.doc .dt2{color:var(--color-text-muted);font-size:var(--text-micro)}
 .rozhov{font-size:var(--text-small);padding:8px 0;border-top:1px solid var(--color-border)}
 .rozhov:first-of-type{border-top:none}
 .rozhov .rd{font-size:var(--text-micro);color:var(--color-text-muted);margin-bottom:2px}
@@ -90,29 +84,7 @@
 .song-week{font-size:var(--text-micro);color:var(--color-text-muted);margin:2px 0 4px}
 .song-tx{font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text)}
 /* kontakty – průvodci rovnou rozbalení v mřížce */
-.k-sec{font-family:var(--font-serif);font-size:var(--text-heading);font-weight:600;color:var(--color-primary-strong);margin:0 0 11px}
-.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:0 0 18px}
 /* školkový kontakt s Dubánkem (vyleze bez pozadí z horního okraje karty) + menší buttony jako u průvodců */
-.k-bottom{display:flex;gap:16px;flex-wrap:wrap;margin-top:56px;align-items:stretch}
-.k-bottom>.tile{margin-bottom:0}
-.skolka{display:flex;gap:14px;align-items:flex-end;flex:1.3;min-width:300px;overflow:visible}
-.dubanek-pop{width:132px;flex-shrink:0;display:block;margin-top:-56px;pointer-events:none}
-.skolka-info{flex:1;min-width:0;padding-bottom:2px}
-.skolka-info .gcard-n{margin-bottom:9px}
-.skolka-contact{flex-wrap:wrap}
-.skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
-.skolka-info .cinfo{text-align:left;margin-top:9px}
-.k-docs{flex:1;min-width:250px}
-.k-docs .doc{flex-wrap:wrap;row-gap:4px}
-.gcard{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px;background:var(--color-surface)}
-.gcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.gcard-n{font-family:var(--font-serif);font-size:var(--text-action);font-weight:600;color:var(--color-primary-strong)}
-.wa-card{display:block;text-decoration:none;color:inherit;margin-bottom:0}
-.wa-sub{font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
-.wa-open{display:block;font-size:var(--text-meta);font-weight:600;color:var(--color-primary)}
-.gcard-sch{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:1px}
-.gcard .contact{margin-top:0}
-.gcard .cinfo{margin-top:7px}
 .rec{display:flex;gap:9px;align-items:flex-start;font-size:var(--text-small);line-height:var(--leading-normal);padding:6px 0}
 .recdot{width:7px;height:7px;border-radius:50%;background:var(--color-primary);margin-top:6px;flex-shrink:0}
 /* tlačítko Upravit v hlavičce profilu */

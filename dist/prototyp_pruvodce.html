@@ -303,6 +303,9 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .pchips{display:flex;flex-wrap:wrap;gap:6px}
 .pchips button{border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:var(--text-meta);color:var(--color-text-muted);padding:6px 11px;border-radius:var(--radius-full);cursor:pointer}
 .pchips button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
+/* Číselná pole (částka, cena akce) bez spinnerů – částka se píše, ne klikátkem po jedné. */
+.pin[type=number]{appearance:textfield;-moz-appearance:textfield}
+.pin[type=number]::-webkit-outer-spin-button,.pin[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .pin{width:100%;border:1px solid var(--color-border-strong);border-radius:var(--radius-sm);padding:9px 11px;font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text);background:var(--color-surface)}
 .pta{width:100%;border:1px solid var(--color-border-strong);border-radius:var(--radius-sm);padding:9px 11px;font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text);background:var(--color-surface);min-height:62px;resize:vertical;line-height:var(--leading-normal)}
 .addbig{width:100%;border:none;background:var(--color-primary);color:var(--color-on-primary);font-family:var(--font-sans);font-size:var(--text-action);font-weight:600;padding:14px;border-radius:var(--radius-md);cursor:pointer;margin-bottom:11px}
@@ -528,17 +531,19 @@ table.wt td.pastc{opacity:.45}
   .deti-cards,.akce-cards{display:none}
   .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
   .dtab thead th{text-align:left;padding:0;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
-  /* hlavička je tlačítko na řazení – šipka drží místo i když je sloupec neaktivní */
-  .dtab thead th button{width:100%;display:flex;align-items:center;gap:5px;min-height:38px;padding:0 14px;border:none;background:none;cursor:pointer;
+  /* Popisek hlavičky. U řaditelných sloupců je to tlačítko, u ostatních prostý <span> –
+     styl musí sedět na obojím, jinak neřaditelná tabulka spadne na výchozí <th>. */
+  .dtab thead th>button,.dtab thead th>span{width:100%;display:flex;align-items:center;gap:5px;min-height:38px;padding:0 14px;border:none;background:none;
     font-family:var(--font-sans);font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;text-align:left}
-  .dtab thead th button:hover{color:var(--color-primary)}
-  .dtab thead th.srt button{color:var(--color-primary-strong)}
+  .dtab thead th>button{cursor:pointer}
+  .dtab thead th>button:hover{color:var(--color-primary)}
+  .dtab thead th.srt>button{color:var(--color-primary-strong)}
   /* Indikátor řazení. 8 px byl pod hranicí čitelnosti; --text-note s muted barvou drží
      4,7:1 proti pozadí hlavičky (hint měl jen 3,4:1). Neaktivní ⇅ je pořád vidět, aby bylo
      poznat, že sloupec jde seřadit – jen se nepere s popiskem. */
   .dtab .arw{font-size:var(--text-note);line-height:1;min-width:11px;color:var(--color-text-muted)}
   .dtab thead th.srt .arw{color:var(--color-primary)}
-  .dtab thead th button:hover .arw{color:var(--color-primary)}
+  .dtab thead th>button:hover .arw{color:var(--color-primary)}
   .dtab td{padding:11px 14px;font-size:var(--text-small);color:var(--color-text);border-top:1px solid var(--color-border)}
   .dtab tbody tr{cursor:pointer}
   .dtab tbody tr:first-child td{border-top:none}
@@ -564,6 +569,39 @@ table.wt td.pastc{opacity:.45}
 .tgl{min-height:44px;padding:0 12px;border:1px solid var(--color-border-strong);background:var(--color-surface);
   border-radius:var(--radius-full);font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);cursor:pointer}
 .tgl.on{background:var(--soft-primary);border-color:var(--edge-primary);color:var(--color-primary-strong);font-weight:600}
+/* „Vrátit" u řádku historie čerpání – drobné, ať nepřebije částku, ale s dotykovým cílem 44 px */
+.np>.fond-undo{flex:0 0 auto;margin-left:var(--space-md);padding:0 12px;font-size:var(--text-note);font-weight:500}
+
+/* Kontaktní karty (průvodci, školka, dokumenty) – sdílené rodičovskou i průvodcovskou
+   appkou, proto tady a ne v screens-rodic.css. */
+.moon{color:var(--color-info);font-size:var(--text-small)}
+.cinfo{font-size:var(--text-note);color:var(--color-text-muted);margin-top:10px;text-align:center}
+.pdf{font-size:var(--text-chip);font-weight:700;color:var(--color-danger);border:1px solid var(--edge-danger);border-radius:5px;padding:2px 5px}
+.doc{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
+.doc:first-of-type{border-top:none}
+.doc .dt2{color:var(--color-text-muted);font-size:var(--text-micro)}
+.k-sec{font-family:var(--font-serif);font-size:var(--text-heading);font-weight:600;color:var(--color-primary-strong);margin:0 0 11px}
+.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:0 0 18px}
+.k-bottom{display:flex;gap:16px;flex-wrap:wrap;margin-top:56px;align-items:stretch}
+.k-bottom>.tile{margin-bottom:0}
+.skolka{display:flex;gap:14px;align-items:flex-end;flex:1.3;min-width:300px;overflow:visible}
+.dubanek-pop{width:132px;flex-shrink:0;display:block;margin-top:-56px;pointer-events:none}
+.skolka-info{flex:1;min-width:0;padding-bottom:2px}
+.skolka-info .gcard-n{margin-bottom:9px}
+.skolka-info .cinfo{text-align:left;margin-top:9px}
+.k-docs{flex:1;min-width:250px}
+.k-docs .doc{flex-wrap:wrap;row-gap:4px}
+.gcard{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px;background:var(--color-surface)}
+.gcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.gcard-n{font-family:var(--font-serif);font-size:var(--text-action);font-weight:600;color:var(--color-primary-strong)}
+.wa-card{display:block;text-decoration:none;color:inherit;margin-bottom:0}
+.wa-sub{font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.wa-open{display:block;font-size:var(--text-meta);font-weight:600;color:var(--color-primary)}
+.gcard .contact{margin-top:0}
+.gcard .cinfo{margin-top:7px}
+.skolka-contact{flex-wrap:wrap}
+.skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
+.gcard-sch{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:1px}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -574,6 +612,9 @@ table.wt td.pastc{opacity:.45}
 .temanav button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .frow{display:flex;gap:11px;align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:11px 13px;margin-bottom:7px}
 .odbtn{flex-shrink:0;min-height:44px;background:var(--color-primary);color:var(--color-on-primary);border:none;font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;padding:8px 15px;border-radius:var(--radius-sm);cursor:pointer}
+/* Storno čerpání je oprava, ne hlavní akce – .ghostred z components.css tu prohrávalo
+   pořadím souborů, proto explicitně. */
+.odbtn.ghostred{background:transparent;border:1px solid var(--edge-danger);color:var(--color-danger);font-weight:500}
 .gchips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .gchip{display:flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);background:var(--color-surface-2);border-radius:var(--radius-full);padding:5px 13px 5px 5px;font-size:var(--text-small);font-weight:500}
 .rozh{font-size:var(--text-small);line-height:var(--leading-normal);padding:8px 0;border-top:1px solid var(--color-border);color:var(--color-text)}.rozh:first-of-type{border-top:none}
@@ -903,6 +944,7 @@ function stahniCSV(soubor,hlavicky,radky){
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 function pocetDeti(n){return n+' '+(n===1?'dítě':(n>=2&&n<=4?'děti':'dětí'));}
+const telnum=p=>p.replace(/ /g,'');
 </script>
 <script>
 /* SHARED: ikony menu – čárové (Lucide styl, stroke=currentColor, takže se obarví podle
@@ -1074,13 +1116,22 @@ function rozhovoryFor(i){if(!rozhovoryMap[i])rozhovoryMap[i]=[
 ];return rozhovoryMap[i];}
 let worksMap={3:2,9:3}, dopoMap={};
 
+/* Tým školky. `n` je krátké jméno, kterým se průvodce dohledá v rozpisu služeb (GUIDESHIFT).
+   `fce` = funkce navíc; kdo ji nemá, je řadový průvodce. Zázemí (vedení, obědy, účetnictví)
+   je oddělené – nemá službu u dětí, ale průvodci ho potřebují po ruce. */
 const guides=[
-  {n:'Darča',sur:'K.',phone:'+420 720 111 222',email:'darca@vhaaji.cz'},
-  {n:'Gabča',sur:'N.',phone:'+420 720 333 444',email:'gabca@vhaaji.cz'},
-  {n:'Honza',sur:'P.',phone:'+420 720 555 666',email:'honza@vhaaji.cz'},
-  {n:'Táňa',sur:'V.',phone:'+420 720 777 888',email:'tana@vhaaji.cz'},
+  {n:'Táňa',sur:'Kynclová',fce:'vedoucí průvodce',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
+  {n:'Gabča',sur:'Vašíčková',phone:'+420 604 553 246',email:'gabca@vhaaji.cz'},
+  {n:'Darča',sur:'Mikolášová',phone:'+420 603 290 593',email:'darina@vhaaji.cz'},
+  {n:'Honza',sur:'Kolář',phone:'+420 605 426 333',email:'honza@vhaaji.cz'},
+  {n:'Míša',sur:'Hrubínová',fce:'hospodářka',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
 ];
-const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@vhaaji.cz',phone:'+420 720 000 111'};
+const ZAZEMI=[
+  {n:'Tereza',sur:'Vavrečková',fce:'vedení',phone:'+420 603 200 512',email:'tereza@vhaaji.cz'},
+  {n:'Ksenia',sur:'Andramanova',fce:'obědy a svačiny',phone:'+420 721 472 219',email:'ksenia@vhaaji.cz'},
+  {n:'Eva',sur:'Sionová',fce:'účetnictví',phone:'+420 777 752 533',email:'eva@vhaaji.cz'},
+];
+const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@vhaaji.cz',phone:'+420 720 000 111',adresa:'Ďáblický háj, Praha 8'};
 
 let RYTMUS=[
   {d:0,prog:'Rytmika',krouzek:'Tanečky s Niki'},
@@ -1198,6 +1249,19 @@ function temaKey(m,y){return y+'-'+String(m).padStart(2,'0');}
 function prazdnyPlan(){return {hodnota:'',intro:'',file:'',tydny:[{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''},{b:'',byt:'',p:'',yt:''}]};}
 // Loňské akce (červen 2025) – jen jako inspirace při plánování nového června.
 // Nepřebírají se hromadně (data se rok od roku liší) – klik založí novou akci s předvyplněnými údaji.
+/* Akce po měsících. Běžný měsíc (červen 2026) je živé AKCE – čte ho dashboard, kalendář
+   i fond. Ostatní měsíce žijí v AKCE_DATA a vznikají prázdné až při otevření.
+   Rozsah = loňský červen (odkud se přebírá) přes školní rok až do příštího června. */
+const AKCE_MESICE=[{m:6,y:2025},
+  {m:9,y:2025},{m:10,y:2025},{m:11,y:2025},{m:12,y:2025},{m:1,y:2026},{m:2,y:2026},{m:3,y:2026},{m:4,y:2026},{m:5,y:2026},{m:6,y:2026},
+  {m:9,y:2026},{m:10,y:2026},{m:11,y:2026},{m:12,y:2026},{m:1,y:2027},{m:2,y:2027},{m:3,y:2027},{m:4,y:2027},{m:5,y:2027},{m:6,y:2027}]
+  .map(x=>({...x,key:x.y+'-'+String(x.m).padStart(2,'0'),label:MONTHS[x.m-1].charAt(0).toUpperCase()+MONTHS[x.m-1].slice(1)+' '+x.y}));
+const AKCE_AKT=AKCE_MESICE.findIndex(x=>x.key==='2026-06');
+const AKCE_DATA={};
+function akceMesic(i){const k=AKCE_MESICE[i].key;
+  if(i===AKCE_AKT)return AKCE;
+  if(k==='2025-06')return AKCE_DATA[k]||(AKCE_DATA[k]=AKCE_LONI.map((a,n)=>({...a,id:'l'+n})));
+  return AKCE_DATA[k]||(AKCE_DATA[k]=[]);}
 const AKCE_LONI=[
   {name:'Škola v přírodě',day:2,dayEnd:6,time:'',place:'Sloup v Čechách',note:'Pětidenní pobyt',paid:0},
   {name:'Výlet předškoláků – lanové centrum',day:5,dayEnd:null,time:'8:00–8:30',place:'Lanový park Praha 6',note:'1. čtvrtek v měsíci',paid:0},
@@ -1243,6 +1307,10 @@ function shiftLabel(t){return `${t.od}.–${t.do}. ${t.m}.`;}
 let uspavaToday=1;
 const OFFREASONS=['nemoc','málo dětí','volno','dovolená'];
 const PLANY=['celodenní','dopolední','odpolední'];   // režimy docházky dítěte
+/* Měsíce školního roku pro výběr „kdy se čerpalo" – ať se datum nepíše pokaždé jinak
+   („červen 2026" vs „6/2026"). Vychází z TEMA_MESICE (září 2025 → červen 2026). */
+const MESICE_ROKU=TEMA_MESICE.map(t=>MONTHS[t.m-1]+' '+t.y);
+const MESIC_TED='červen 2026';
 
 const SEEDFOND=[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]];
 const FONDROK=2000;
@@ -1564,26 +1632,22 @@ window.saveNov=()=>{const f=novForm;
 </script>
 <script>
 /* SCREEN: PRUVODCE_AKCE – datované jednorázové události (výlety, divadla, focení).
-   Dřív součást jedné obrazovky „Plán & program"; oddělené od Přípravy, protože jde
-   o operativu s dopadem na docházku a kulturní fond, ne o pedagogickou přípravu. */
-let akceLoni=false; // náhled loňských akcí (inspirace při plánování)
-
+   Listuje se po měsících: zpět do loňska (odkud se plány přebírají) i dopředu na plánování.
+   Minulé měsíce jsou jen ke čtení a řádek z nich jde jedním klepnutím převzít do běžícího
+   měsíce – to nahradilo dřívější přepínač „Zobrazit loňské akce". */
 function renderAkce(){
-  // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
-  let h=`<div class="akce"><div class="vhead">Akce a výjimky · červen</div>`;
-  const sorted=[...AKCE].sort((a,b)=>a.day-b.day);
-  if(!sorted.length)return h+`<div class="empty">Zatím žádné akce.</div></div>`;
+  const o=AKCE_MESICE[akceM], rows=[...akceMesic(akceM)].sort((a,b)=>a.day-b.day), minuly=akceM<AKCE_AKT;
+  let h=`<div class="akce"><div class="vhead-row"><div class="vhead">Akce a výjimky</div><div class="vhead-act">`+
+    `<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`+
+    `<span>${o.label}${akceM===AKCE_AKT?'<i class="dn-cur"> · aktuální</i>':''}</span>`+
+    `<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div></div></div>`;
+  if(minuly)h+=`<div class="note2">Minulý měsíc – klepnutím na akci ji založíš znovu do června 2026 s předvyplněnými údaji.</div>`;
+  if(!rows.length)return h+`<div class="empty">V ${o.label.toLowerCase()} zatím žádné akce.</div></div>`;
+  const klik=minuly?(a,i)=>`akceZnovu('${o.key}',${i})`:(a)=>`openAkce('${a.id}')`;
+  const lbl=a=>(a.dayEnd&&a.dayEnd!==a.day)?`${a.day}.–${a.dayEnd}. ${o.m}.`:`${a.day}. ${o.m}.`;
   // Stejně jako u soupisu dětí: na mobilu karty, na desktopu tabulka. Obojí v DOM, přepíná CSS.
-  h+=`<div class="akce-cards">`+sorted.map(a=>akceCard(a,`openAkce('${a.id}')`)).join('')+`</div>`;
-  h+=akceTable(sorted,a=>`openAkce('${a.id}')`,dayLbl);
-  // Loňské akce – inspirace: klik předvyplní novou akci, datum se doladí v modalu
-  h+=`<button class="addbtn" onclick="togAkceLoni()">${akceLoni?'Skrýt loňské akce':'Zobrazit loňské akce (červen 2025)'}</button>`;
-  if(akceLoni){
-    const lbl=a=>a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`;
-    h+=`<div class="vhead">Loňské akce · červen 2025</div><div class="note2">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
-    h+=`<div class="akce-cards">`+AKCE_LONI.map((a,i)=>akceCard(a,`akceFromLoni(${i})`,lbl,true)).join('')+`</div>`;
-    h+=akceTable(AKCE_LONI,(a,i)=>`akceFromLoni(${i})`,lbl,true);
-  }
+  h+=`<div class="akce-cards">`+rows.map((a,i)=>akceCard(a,klik(a,i),lbl,minuly)).join('')+`</div>`;
+  h+=akceTable(rows,(a,i)=>klik(a,i),lbl,minuly);
   return h+`</div>`;
 }
 function akceCard(a,klik,lbl,plus){
@@ -1592,7 +1656,7 @@ function akceCard(a,klik,lbl,plus){
 }
 /* Tabulka akcí (desktop). Poznámka je poslední, protože jako jediná zalamuje na víc řádků. */
 function akceTable(rows,klik,lbl,plus){
-  return `<table class="dtab akce-tab"><thead><tr><th>Datum</th><th>Akce</th><th>Čas</th><th>Místo</th><th>Z fondu</th><th>Poznámka</th></tr></thead><tbody>`+
+  return `<table class="dtab akce-tab"><thead><tr>`+['Datum','Akce','Čas','Místo','Z fondu','Poznámka'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`+
     rows.map((a,i)=>`<tr onclick="${klik(a,i)}"><td class="dt-date">${(lbl||dayLbl)(a)}</td>`+
       `<td class="nm">${a.name}${plus?' <span class="aplus">+</span>':''}</td>`+
       `<td>${a.time||'<span class="dt-no">–</span>'}</td>`+
@@ -1601,9 +1665,9 @@ function akceTable(rows,klik,lbl,plus){
       `<td class="dt-note">${a.note||'<span class="dt-no">–</span>'}</td></tr>`).join('')+
     `</tbody></table>`;
 }
-window.togAkceLoni=()=>{akceLoni=!akceLoni;render();};
-// Loňská akce → nová letošní: převezme vše kromě data (id:null ⇒ uložením vznikne nová akce).
-window.akceFromLoni=i=>{const a=AKCE_LONI[i];if(!a)return;
+window.stepAkceM=d=>{akceM=Math.max(0,Math.min(AKCE_MESICE.length-1,akceM+d));render();};
+// Akce z minulého měsíce → nová v běžícím měsíci (id:null ⇒ uložením vznikne nová).
+window.akceZnovu=(key,i)=>{const a=akceMesic(AKCE_MESICE.findIndex(x=>x.key===key))[i];if(!a)return;
   modal={id:null,name:a.name,day:a.day,dayEnd:a.dayEnd||'',time:a.time||'',place:a.place||'',note:a.note||'',paid:a.paid||''};
   renderModalRoot();};
 </script>
@@ -2018,7 +2082,13 @@ function renderFondChild(i){
   h+=`<div class="dite-head"><div class="pav">${avatar(c,64)}</div><div class="pname">${full(c)}</div><div class="pfull">Kulturní fond</div></div>`;
   h+=`<div class="fond-detail">`;
   h+=`<div class="tile"><div class="ch">Zůstatek</div><div class="fond-big" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary-strong)'}">${c.fond.toLocaleString('cs-CZ')} Kč</div><div class="note2">Fond je veden per dítě. Po akci se strhne jen dětem, které ten den přišly a šly na akci.</div></div>`;
-  h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+(c.fondLog&&c.fondLog.length?c.fondLog.map(l=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b></div>`).join(''):`<div class="empty">Zatím se nic nečerpalo.</div>`)+`</div>`;
+  // Zpětná oprava: dítě nakonec na akci nešlo, nebo se odečetlo omylem. Vrací jen tomuhle
+  // dítěti; hromadné čerpání zůstává ostatním. Smí to průvodce s právy hospodářky.
+  h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+
+    (c.fondLog&&c.fondLog.length
+      ? c.fondLog.map((l,k)=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b>${hospodar?`<button class="odbtn ghostred fond-undo" onclick="vratitDiteti(${i},${k})" title="Vrátit ${l.amt} Kč zpět na fond">Vrátit</button>`:''}</div>`).join('')
+      : `<div class="empty">Zatím se nic nečerpalo.</div>`)+
+    (hospodar?`<button class="addbtn" onclick="pridatDiteti(${i})">+ Čerpání jen tomuto dítěti</button>`:`<div class="note2">Opravy provádí průvodce s právy hospodářky.</div>`)+`</div>`;
   h+=`</div>`;
   return h+`</div>`;
 }
@@ -2042,6 +2112,18 @@ window.exportFond=()=>{
     list.map(({c})=>[full(c),c.fond,c.predskolak?'ano':'',(c.fondLog||[]).length]));
   showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
+/* Vrátí jedno čerpání jednomu dítěti. Zároveň ho vyjme z hromadného záznamu ve FONDHIST –
+   jinak by pozdější „Vrátit" u celé dávky vrátilo peníze podruhé. */
+window.vratitDiteti=(i,k)=>{
+  const l=data[i].fondLog[k];if(!l)return;
+  data[i].fond+=l.amt;data[i].fondLog.splice(k,1);
+  const h=FONDHIST.find(x=>x.name===l.name&&x.amt===l.amt&&x.idxs.includes(i));
+  if(h){h.idxs=h.idxs.filter(x=>x!==i);h.n=h.idxs.length;
+    if(!h.idxs.length){if(h.akceId){const a=AKCE.find(y=>y.id===h.akceId);if(a)a.done=false;}FONDHIST.splice(FONDHIST.indexOf(h),1);}}
+  render();showToast('Vráceno '+l.amt+' Kč ✓');
+};
+// čerpání jen za tohle dítě – tentýž modal, jen s předvybraným jediným dítětem
+window.pridatDiteti=i=>{fondM={name:'',date:MESIC_TED,amt:'',sel:new Set([i]),group:'vlastni',q:''};renderModalRoot();};
 window.openFondChild=i=>{fondChild=i;render();};
 window.closeFondChild=()=>{fondChild=-1;render();};
 window.onOdSearch=v=>{odQuery=v;renderKeepFocus();};
@@ -2110,22 +2192,32 @@ function renderJidelnicek(){
 window.stepJidTyden=d=>{jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};
 </script>
 <script>
-/* SCREEN: PRUVODCE_KONTAKTY */
-function renderKontakty(){
-  let h='';
-  guides.forEach(g=>{
-    const gs=GUIDESHIFT.find(x=>x.n===g.n);
-    const days=gs?gs.days.map((d,i)=>serving(d)?DAYS[i]:null).filter(Boolean).join(', '):'';
-    const fd=gs?gs.days.find(d=>serving(d)):null;
-    const sched=days?`${days}${fd?` · ${fmt(fd.s)}–${fmt(fd.e)}`:''}`:'–';
-    h+=`<div class="tile"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">${avatar(g,38)}<b style="font-family:var(--font-serif);font-size:16px;color:var(--color-primary-strong)">${g.n} ${g.sur||''}</b></div>`+
-      `<div class="np"><span>Telefon</span><a class="clink" href="tel:${g.phone.replace(/ /g,'')}">${g.phone}</a></div>`+
-      `<div class="np"><span>E-mail</span><a class="clink" href="mailto:${g.email}">${g.email}</a></div>`+
-      `<div class="np"><span>Kdy je vhaaji</span><b style="font-weight:500;text-align:right">${sched}</b></div></div>`;
-  });
-  h+=`<div class="tile"><div class="ch">${SCHOOL.name}</div><div class="contact"><a class="cbtn" href="tel:${SCHOOL.phone.replace(/ /g,'')}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div><div class="note2">${SCHOOL.phone} · ${SCHOOL.email}</div></div>`;
-  return h;
+/* SCREEN: PRUVODCE_KONTAKTY – stejné karty jako u rodičů (komponenta .gcard* v components.css).
+   Průvodce navíc vidí u kolegy, kdy je ve školce – vyplývá to z rozpisu služeb. */
+const SKOLNI_DOKUMENTY=['Školní vzdělávací program','Školní a provozní řád'];
+function guideCard(g){
+  const gs=GUIDESHIFT.find(x=>x.n===g.n);
+  const days=gs?gs.days.map((d,i)=>serving(d)?DAYS[i]:null).filter(Boolean).join(', '):'';
+  const fd=gs?gs.days.find(d=>serving(d)):null;
+  // podřádek: funkce (má-li ji) + kdy je ve školce, což plyne z rozpisu služeb
+  const kdy=days?`${days}${fd?` · ${fmt(fd.s)}–${fmt(fd.e)}`:''}`:'';
+  const sched=[g.fce,kdy].filter(Boolean).join(' · ')||'ve školce podle potřeby';
+  return `<div class="gcard"><div class="gcard-top">${avatar(g,42)}<div class="gcard-id"><div class="gcard-n">${g.n} ${g.sur||''}${g.uspava?' <span class="moon">☾</span>':''}</div><div class="gcard-sch">${sched}</div></div></div>
+    <div class="contact"><a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a></div>
+    <div class="cinfo">${g.phone} · ${g.email}</div></div>`;
 }
+function renderKontakty(){
+  let h=`<div class="doch"><div class="k-sec">Průvodci</div><div class="gcards">`+guides.map(guideCard).join('')+`</div>`;
+  h+=`<div class="k-sec">Zázemí</div><div class="gcards">`+ZAZEMI.map(guideCard).join('')+`</div>`;
+  h+=`<div class="k-bottom">`;
+  h+=`<div class="tile skolka"><img class="dubanek-pop" src="${DUBANEK}" alt="Dubánek"><div class="skolka-info"><div class="gcard-n">${SCHOOL.name}</div>
+    <div class="contact skolka-contact"><a class="cbtn" href="tel:${telnum(SCHOOL.phone)}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div>
+    <div class="cinfo">${SCHOOL.phone} · ${SCHOOL.email}<br>${SCHOOL.adresa}</div></div></div>`;
+  h+=`<div class="tile k-docs"><div class="ch">Dokumenty ke stažení</div>`+SKOLNI_DOKUMENTY.map((t,i)=>`<button class="doc doc-dl" onclick="downloadSkolniDoc(${i})"><span>${t}</span><span class="pdf">PDF ↓</span></button>`).join('')+`</div>`;
+  h+=`</div>`;
+  return h+`</div>`;
+}
+window.downloadSkolniDoc=i=>{const t=SKOLNI_DOKUMENTY[i];downloadBlob(dlName(t)+'.pdf',makePDF(t),'application/pdf');showToast('Stahuji '+t+' ✓');};
 </script>
 <script>
 /* MODALS: PRUVODCE – renderModalRoot + HTML modálů a jejich handlery */
@@ -2193,7 +2285,7 @@ function fondModalHTML(){
     <h3>Ruční čerpání z fondu</h3>
     <div class="fond-form">
       <div><label class="pl">Co se čerpalo</label><input class="pin" value="${esc(m.name)}" oninput="setFondDraft('name',this.value)" placeholder="např. Výtvarný materiál"></div>
-      <div><label class="pl">Kdy</label><input class="pin" value="${esc(m.date)}" oninput="setFondDraft('date',this.value)" placeholder="např. červen 2026"></div>
+      <div><label class="pl">Kdy</label><select class="pin" onchange="setFondDraft('date',this.value)">${MESICE_ROKU.map(x=>`<option value="${x}" ${m.date===x?'selected':''}>${x}</option>`).join('')}</select></div>
       <div><label class="pl">Částka na dítě (Kč)</label><input class="pin" type="number" min="0" value="${m.amt}" oninput="setFondDraft('amt',this.value)" placeholder="0"></div>
     </div>
     <label class="pl">Komu strhnout</label>
@@ -2202,7 +2294,7 @@ function fondModalHTML(){
     <div class="mbtns"><button class="btn-ghost" onclick="closeFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout vybraným</button></div>
   </div></div>`;
 }
-window.togFond=()=>{fondM={name:'',date:'',amt:'',sel:new Set(data.map((c,i)=>i)),group:'vse',q:''};renderModalRoot();};
+window.togFond=()=>{fondM={name:'',date:MESIC_TED,amt:'',sel:new Set(data.map((c,i)=>i)),group:'vse',q:''};renderModalRoot();};
 window.closeFond=()=>{fondM=null;renderModalRoot();};
 // částka mění souhrn → překreslit; text ne, jinak by utekl kurzor
 window.setFondDraft=(f,v)=>{fondM[f]=v;if(f==='amt')renderModalRoot();};
@@ -2275,7 +2367,8 @@ let hospodar=true;
 let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
 let modal=null, shiftM=null, fondM=null;
-let shiftT=SHIFT_AKT;   // listovaný týden rozpisu služeb
+let shiftT=SHIFT_AKT;
+let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
 const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
