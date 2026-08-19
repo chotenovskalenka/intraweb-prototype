@@ -8,9 +8,10 @@
       na děti, které tu alergii mají. Když se jídlo nikoho netýká, nezobrazí se nic –
       obrazovka je tím tišší než rodičovská, ne hlučnější.
 
-   2) LISTOVÁNÍ DO HISTORIE + OPAKOVÁNÍ. Svačinářka chystá svačiny a potřebuje vědět,
-      jak často se opakují. Samotné tlačítko „zpět" by ji nutilo pamatovat si, co kde bylo,
-      proto se u svačin rovnou počítá výskyt napříč všemi týdny (↻ 3×). */
+   2) LISTOVÁNÍ DO HISTORIE. Svačinářka plánuje z toho, co bylo, proto jde listovat zpět.
+      Počítadlo opakování (↻ N×) tu bylo taky, ale výzkum ho vyvrátil: R6 neplánuje podle
+      četnosti, ale podle programu („když je jejich vaření sladké, snažím se, aby druhá
+      svačina byla slaná"). Měřilo špatnou věc, tak je pryč. */
 
 /* Děti dotčené alergeny jednoho jídla. Vrací křestní jména – na mobilu se příjmení nevejdou
    a v rámci třídy jsou křestní jména jednoznačná. */
@@ -24,32 +25,44 @@ function detiSAlergii(kody){
 
 /* Kolikrát se totéž jídlo objeví napříč všemi týdny v datech. Počítá se jen u svačin –
    ty svačinářka plánuje; u obědů skladbu určuje dodavatel. */
-function pocetVyskytu(nazev){
-  let n=0;
-  JIDELNICEK.forEach(t=>t.dny.forEach(den=>den.forEach(it=>{if(it[1]===nazev)n++;})));
-  return n;
-}
+
+/* Zadávání celého týdne najednou – tentýž vzor jako u týdenního rytmu. Rozepsané hodnoty
+   drží jidDraft, do JIDELNICEK se zapíšou až Uložit, proto oninput jen plní draft
+   a nevolá render() (jinak by z pole utekl kurzor). */
+let jidEdit=false, jidDraft=null;
 
 function renderJidelnicek(){
   const t=JIDELNICEK[jidTyden];
-  let h=`<div class="doch">`;
+  let h=`<div class="doch"><div class="vhead-row"><div class="vhead">Týden ${jidTydenLabel(t)}</div><div class="vhead-act">`+
+    (jidEdit
+      ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
+      : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+`</div></div>`;
   t.dny.forEach((den,i)=>{
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
     h+=`<div class="tile"><div class="ch">${DOW[wd(d)]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
-    den.forEach(it=>{
-      const svacina=it[0].indexOf('Svačinka')===0;
-      const deti=detiSAlergii(it[2]);
-      const kolik=svacina?pocetVyskytu(it[1]):0;
-      // Jména jdou dovnitř .mv, aby seděla POD názvem jídla. Vedle textu je nelze dát:
-      // u pěti dětí (mléko) si chip ukousl 40 % šířky a název jídla se rozpadl na pět řádků.
-      h+=`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}`;
-      if(kolik>1)h+=`<span class="jid-op" title="Tato svačina je v datech ${kolik}×">↻ ${kolik}×</span>`;
-      if(deti.length)h+=`<span class="jid-alerg">${deti.join(', ')}</span>`;
-      h+=`</span></div>`;
+    den.forEach((it,k)=>{
+      if(jidEdit){
+        const dr=jidDraft[i][k];
+        h+=`<div class="jid-edit"><label class="pl">${it[0]}</label>`+
+          `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[wd(d)]}">`+
+          `<input class="pin jid-alg" value="${esc(dr[2])}" oninput="setJid(${i},${k},2,this.value)" placeholder="alergeny, např. 1, 7" aria-label="Alergeny – ${it[0]}, ${DOW[wd(d)]}"></div>`;
+      }else{
+        const deti=detiSAlergii(it[2]);
+        // Jména jdou dovnitř .mv, aby seděla POD názvem jídla. Vedle textu je nelze dát:
+        // u pěti dětí (mléko) si chip ukousl 40 % šířky a název jídla se rozpadl na pět řádků.
+        h+=`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}`;
+        if(deti.length)h+=`<span class="jid-alerg">${deti.join(', ')}</span>`;
+        h+=`</span></div>`;
+      }
     });
     h+=`</div>`;
   });
-  h+=`<div class="note2">Jídelníček dodává Mamafood. U jídla svítí jména dětí, které na některou jeho surovinu mají alergii – vychází z jejich karet v sekci Děti. ↻ ukazuje, kolikrát je svačina v jídelníčku celkem.</div>`;
+  h+=`<div class="note2">Obědy dodává Mamafood, svačiny chystá školka. U jídla svítí jména dětí, které na některou jeho surovinu mají alergii – vychází z jejich karet v sekci Děti.</div>`;
   return h+`</div>`;
 }
+window.jidEditOn=()=>{jidDraft=JIDELNICEK[jidTyden].dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
+window.jidCancel=()=>{jidEdit=false;jidDraft=null;render();};
+window.setJid=(i,k,pole,v)=>{jidDraft[i][k][pole]=v;};   // bez render() – kurzor v poli musí zůstat
+window.jidSave=()=>{JIDELNICEK[jidTyden].dny=jidDraft.map(den=>den.map(it=>[it[0],it[1].trim(),it[2].trim()]));
+  jidEdit=false;jidDraft=null;render();showToast('Jídelníček uložen ✓');};
 window.stepJidTyden=d=>{jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};

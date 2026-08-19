@@ -90,9 +90,6 @@
 /* tlačítko Upravit v hlavičce profilu */
 .dh-edit{background:none;border:1px solid var(--color-primary);color:var(--color-primary);font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;padding:8px 15px;border-radius:var(--radius-sm);cursor:pointer;flex-shrink:0}
 /* dokument jako klikací řádek ke stažení (button = full width, jako .doc) */
-.doc-dl{width:100%;background:none;border:none;border-top:1px solid var(--color-border);font-family:var(--font-sans);color:var(--color-text);cursor:pointer;text-align:left;text-decoration:none}
-.doc-dl:first-of-type{border-top:none}
-.doc-dl .pdf{white-space:nowrap}
 /* editační formulář profilu */
 .pf-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--color-border)}
 .pf-row:first-of-type{border-top:none}
