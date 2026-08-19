@@ -106,6 +106,48 @@ const TEMA_KVETEN={hodnota:'péče',tydny:[
 // často přebírají osvědčené plány/rytmus z minula. Květen 2026 = TEMA_KVETEN.
 const TEMA_ARCHIV=[
   {key:'2026-05',label:'Květen 2026',hodnota:TEMA_KVETEN.hodnota,tydny:TEMA_KVETEN.tydny},
+  // Loňský školní rok celý – aby k připravovanému měsíci vždycky existoval ten samý
+  // z minula („převzít loňské září"). Hodnoty měsíců sedí s TEMA_MESICE (čte je rodič).
+  {key:'2026-04',label:'Duben 2026',hodnota:'radost',tydny:[
+    {b:'Travička se zelená, sluníčko ji zahřálo.',p:'Zajíček v své jamce sedí sám.'},
+    {b:'Velikonoce klepou, pomlázku si spletu.',p:'Hody, hody, doprovody.'},
+    {b:'',p:'Jaro dělá pokusy.'},
+    {b:'',p:''}]},
+  {key:'2026-03',label:'Březen 2026',hodnota:'probouzení',tydny:[
+    {b:'Sněženka nám vykoukla, zima už se odstěhovala.',p:'Zima, zima, zimička, byla tady chvilička.'},
+    {b:'Semínko jsme zasadili, vodou jsme ho pokropili.',p:'Šel zahradník do zahrady.'},
+    {b:'',p:'Travička zelená, to je moje potěšení…'},
+    {b:'',p:''}]},
+  {key:'2026-02',label:'Únor 2026',hodnota:'přátelství',tydny:[
+    {b:'Kamarád je ten, kdo počká.',p:'Když jsi kamarád, tak pojď si se mnou hrát.'},
+    {b:'Masopust držíme, nic se nevadíme.',p:'Já jsem muzikant a přicházím k vám z české země.'},
+    {b:'',p:'Kalamajka mik mik mik…'},
+    {b:'',p:''}]},
+  {key:'2026-01',label:'Leden 2026',hodnota:'trpělivost',tydny:[
+    {b:'Padá snížek, bílý snížek, na střechy i na chodníček.',p:'Sněží, sněží, mráz kolem běží.'},
+    {b:'Stopy v snehu – kdopak tudy šel?',p:'Rolničky, rolničky.'},
+    {b:'',p:''},
+    {b:'',p:''}]},
+  {key:'2025-12',label:'Prosinec 2025',hodnota:'klid',tydny:[
+    {b:'Mikuláši, dobrý strýčku, dej mi něco do košíčku.',p:'Nesem vám noviny.'},
+    {b:'Adventní svíčka svítí, venku už je tma.',p:'Půjdem spolu do Betléma.'},
+    {b:'Vánoce, Vánoce přicházejí – těšíme se na besídku.',p:'Štěstí, zdraví, pokoj svatý.'},
+    {b:'',p:''}]},
+  {key:'2025-11',label:'Listopad 2025',hodnota:'vděčnost',tydny:[
+    {b:'Foukej, foukej, větříčku, shoď mi jednu hruštičku.',p:'Prší, prší, jen se leje.'},
+    {b:'Lampionový průvod – světýlko si nesu.',p:'Svatý Martin přijíždí na bílém koni.'},
+    {b:'',p:'Voláme sluníčko.'},
+    {b:'',p:''}]},
+  {key:'2025-10',label:'Říjen 2025',hodnota:'odvaha',tydny:[
+    {b:'Šípek, šípek červený, podzim už je za dveřmi.',p:'Koulím, koulím brambory, ať mám plný komory.'},
+    {b:'Draka pouštíme, nahoru ho vyneseme.',p:'Běží liška k Táboru.'},
+    {b:'Jablíčko se kutálí, do košíku spadne mi.',p:''},
+    {b:'',p:''}]},
+  {key:'2025-09',label:'Září 2025',hodnota:'důvěra',tydny:[
+    {b:'Vítáme se v lese, každý si své jméno nese.',p:'Kdo si hraje, nezlobí.'},
+    {b:'Kamarády poznáváme, ruku si k tomu podáváme.',p:'Kalamajka mik mik mik…'},
+    {b:'Sbíráme, co les nám dal – žaludy i kaštany.',p:'Běží liška k Táboru.'},
+    {b:'',p:'Šel zahradník do zahrady.'}]},
   {key:'2025-06',label:'Červen 2025',hodnota:'radost',tydny:[
     {b:'Sluníčko, sluníčko, popojdi maličko.',p:'Já jsem muzikant a přicházím k vám z české země.'},
     {b:'Koulím, koulím brambory, ať mám plný komory.',p:'Kalamajka mik mik mik…'},

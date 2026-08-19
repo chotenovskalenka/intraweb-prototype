@@ -47,9 +47,17 @@ function temaPeriods(){
     ...TEMA_ARCHIV.map(a=>({key:a.key,label:a.label,stav:'archiv'}))];
 }
 function temaObdobi(){const ps=temaPeriods();return ps[Math.max(0,ps.findIndex(p=>p.key===temaMonth))];}
+/* Měsíc a rok období. Běžící červen 2026 má historický klíč 'cerven', ostatní 'RRRR-MM'. */
+function temaMY(o){return o.key==='cerven'?{m:6,y:2026}:{m:Number(o.key.slice(5)),y:Number(o.key.slice(0,4))};}
+/* Tentýž měsíc o rok dřív / později. Plány se přebírají po měsících – „loňské září bude
+   plus minus podobné" – ne do jednoho pevného cíle. Vrací období, nebo null. */
+function temaSousedniRok(o,posun){
+  const {m,y}=temaMY(o),cil=temaKey(m,y+posun);
+  return temaPeriods().find(p=>p.key===cil||(cil==='2026-06'&&p.key==='cerven'))||null;
+}
 // plán vybraného období; připravovaný měsíc vznikne prázdný až tady, při prvním otevření
-function temaPlan(){
-  const o=temaObdobi();
+function temaPlan(o){
+  o=o||temaObdobi();
   if(o.stav==='bezi')return TEMA;
   if(o.stav==='archiv')return TEMA_ARCHIV.find(a=>a.key===o.key)||prazdnyPlan();
   return TEMA_PRIPRAVA[o.key]||(TEMA_PRIPRAVA[o.key]=prazdnyPlan());
@@ -73,6 +81,12 @@ function temaBlock(){
   }
   if(!ro)h+=`<label class="addbtn" style="display:block;text-align:center;margin-top:9px">+ Nahrát ${plakaty.length?'nový ':''}plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label>`;
   h+=`</div></div><div class="tema-text">`;
+  // Připravovaný měsíc: nabídnout tentýž měsíc z loňska. Průvodci ho běžně přebírají
+  // a doladí detaily; nabídka mizí, jakmile má měsíc vlastní obsah.
+  if(o.stav==='priprava'){
+    const loni=temaSousedniRok(o,-1),prazdny=!t.hodnota&&!t.intro&&!t.tydny.some(w=>w.b||w.p);
+    if(loni&&prazdny)h+=`<div class="tile note-info"><div class="ch">${loni.label} už máš hotové</div><div class="note2">Rok co rok se plán opakuje jen s drobnostmi. Převezmi loňský a dolaď, co chceš jinak.</div><button class="btn-primary" onclick="temaAdopt('${loni.key}','${o.key}')">Převzít loňský plán</button></div>`;
+  }
   // téma měsíce
   h+=`<div class="tile"><div class="ch">Téma měsíce</div>`;
   if(ro){
@@ -100,9 +114,13 @@ function temaBlock(){
   });
   h+=`</div></div>`;
   // uložení zůstává dole pod formulářem – potvrzuje se až po vyplnění
-  h+= ro
-    ? `<button class="btn-primary btn-block tema-save" onclick="temaAdopt('${o.key}')">Převzít tento plán do června 2026</button>`
-    : `<button class="btn-primary btn-block tema-save" onclick="showToast('Tématický plán uložen ✓')">Uložit ${o.stav==='bezi'?'tématický plán':'plán na '+o.label.toLowerCase()}</button>`;
+  if(ro){
+    // z archivu: použít ho jako základ pro tentýž měsíc příští rok
+    const cil=temaSousedniRok(o,1);
+    h+= cil?`<button class="btn-primary btn-block tema-save" onclick="temaAdopt('${o.key}','${cil.key}')">Použít pro ${cil.label.toLowerCase()}</button>`:'';
+  }else{
+    h+=`<button class="btn-primary btn-block tema-save" onclick="showToast('Tématický plán uložen ✓')">Uložit ${o.stav==='bezi'?'tématický plán':'plán na '+o.label.toLowerCase()}</button>`;
+  }
   return h;
 }
 window.rytEditOn=()=>{rytDraft=RYTMUS.map(r=>({prog:r.prog,krouzek:r.krouzek}));rytEdit=true;render();};
@@ -117,4 +135,11 @@ window.setTemaYt=(i,v)=>{temaPlan().tydny[i].yt=v;};
 window.setTemaByt=(i,v)=>{temaPlan().tydny[i].byt=v;};
 window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){temaPlan().file=f.name;render();showToast('Nahráno ✓');}};
 window.temaStep=dir=>{const ps=temaPeriods();let i=ps.findIndex(p=>p.key===temaMonth);i=Math.min(ps.length-1,Math.max(0,i+dir));temaMonth=ps[i].key;render();};
-window.temaAdopt=key=>{const a=TEMA_ARCHIV.find(x=>x.key===key);if(!a)return;TEMA.hodnota=a.hodnota;TEMA.tydny=a.tydny.map(w=>({b:w.b||'',byt:w.byt||'',p:w.p||'',yt:w.yt||''}));temaMonth='cerven';render();showToast('Plán převzat do června 2026 ✓');};
+window.temaAdopt=(fromKey,toKey)=>{
+  const ps=temaPeriods(),src=ps.find(p=>p.key===fromKey),cil=ps.find(p=>p.key===toKey);
+  if(!src||!cil)return;
+  const z=temaPlan(src),c=temaPlan(cil);
+  c.hodnota=z.hodnota||'';c.intro=z.intro||'';
+  c.tydny=z.tydny.map(w=>({b:w.b||'',byt:w.byt||'',p:w.p||'',yt:w.yt||''}));
+  temaMonth=cil.key;render();showToast('Plán převzat do '+cil.label.toLowerCase()+' ✓');
+};
