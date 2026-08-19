@@ -522,7 +522,8 @@ table.wt td.pastc{opacity:.45}
     font-family:var(--font-sans);font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;text-align:left}
   .dtab thead th button:hover{color:var(--color-primary)}
   .dtab thead th.srt button{color:var(--color-primary-strong)}
-  .dtab .arw{font-size:8px;line-height:1;min-width:8px}
+  .dtab .arw{font-size:8px;line-height:1;min-width:8px;color:var(--color-text-hint)}
+  .dtab thead th.srt .arw{color:var(--color-primary)}
   .dtab td{padding:11px 14px;font-size:var(--text-small);color:var(--color-text);border-top:1px solid var(--color-border)}
   .dtab tbody tr{cursor:pointer}
   .dtab tbody tr:first-child td{border-top:none}
@@ -531,10 +532,12 @@ table.wt td.pastc{opacity:.45}
   .dtab td.nm .av{vertical-align:middle;margin-right:9px}
   .dt-no{color:var(--color-text-hint)}
 }
-/* Řádek nad soupisem: počet vlevo, stažení vpravo. */
-.deti-sum{display:flex;align-items:center;gap:var(--space-md);margin:0 2px 9px}
-.deti-sum .tlab{margin:0}
-.deti-exp{margin-left:auto;min-height:44px;padding:0 14px;font-size:var(--text-small);white-space:nowrap}
+/* Lišta nad soupisem: hledání + stažení. Do pole se píše jen jméno, takže nepotřebuje
+   celou šířku – uvolněné místo zabere tlačítko. Na úzkém displeji se zalomí pod pole. */
+.deti-bar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm);margin-bottom:9px}
+.deti-bar .search{flex:1 1 200px;margin-bottom:0}
+.deti-exp{flex:0 0 auto;margin-left:auto;min-height:44px;padding:0 14px;font-size:var(--text-small);white-space:nowrap}
+@media (min-width:900px){ .deti-bar .search{flex:0 1 320px} .deti-exp{margin-left:0} }
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -1770,8 +1773,7 @@ function renderDeti(){
   let h=`<div class="deti"><div class="filters">`+[['all','Všechny'],['pre','Předškoláci'],['al','Alergici']]
     .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocty[f[0]]}</span></button>`).join('')+`</div>`;
   const list=detiList();
-  h+=`<input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`;
-  h+=`<div class="deti-sum"><span class="tlab">${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')}</span>`+
+  h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`+
     `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button></div>`;
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div></div>`;
   // Dvojí výpis: na mobilu karty (dobře se na ně klepe), na desktopu tabulka (25 dětí se
@@ -1782,7 +1784,7 @@ function renderDeti(){
   }).join('')+`</div>`;
   h+=`<table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
     const on=detiSort===k;
-    return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):''}</span></button></th>`;
+    return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):'↕'}</span></button></th>`;
   }).join('')+`</tr></thead><tbody>`+
     list.map(x=>{const c=x.c;
       return `<tr onclick="openDite(${x.i})"><td class="nm">${avatar(c,28)}${full(c)}</td><td>${c.plan}</td><td>${c.vek} let</td><td>${c.nar}</td>`+
