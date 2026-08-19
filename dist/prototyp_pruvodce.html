@@ -516,8 +516,8 @@ table.wt td.pastc{opacity:.45}
    appka nemá listener na resize, takže větvit v JS by při změně šířky nechalo starý výpis. */
 .dtab{display:none}
 @media (min-width:900px){
-  #content > .deti{column-span:all}
-  .deti-cards{display:none}
+  #content > .deti,#content > .akce{column-span:all}
+  .deti-cards,.akce-cards{display:none}
   .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
   .dtab thead th{text-align:left;padding:0;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
   /* hlavička je tlačítko na řazení – šipka drží místo i když je sloupec neaktivní */
@@ -538,6 +538,12 @@ table.wt td.pastc{opacity:.45}
   .dtab td.nm{font-weight:500;white-space:nowrap;color:var(--color-primary-strong)}
   .dtab td.nm .av{vertical-align:middle;margin-right:9px}
   .dt-no{color:var(--color-text-hint)}
+  /* akce: datum úzké a nezalomené, poznámka bere zbytek – jako jediná se láme na víc řádků */
+  .akce-tab td.dt-date{white-space:nowrap;color:var(--color-primary);font-weight:600;width:1%}
+  .akce-tab td.dt-note{color:var(--color-text-muted);font-size:var(--text-meta);line-height:var(--leading-snug)}
+  .akce-tab td.nm{white-space:normal}
+  .akce-tab td.dt-fond{white-space:nowrap}
+  #content > .akce>.addbtn{max-width:340px}
 }
 /* Lišta nad soupisem: hledání + stažení. Do pole se píše jen jméno, takže nepotřebuje
    celou šířku – uvolněné místo zabere tlačítko. Na úzkém displeji se zalomí pod pole. */
@@ -870,6 +876,18 @@ function alergenyLegenda(dny){
 const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 // 2. pád – pro datum „3. června" (nominativ by dal „3. červen")
 const MONTHS_G=['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
+
+/* Stažení tabulky do CSV. Středník + BOM: česká verze Excelu jinak nacpe celý řádek do
+   jednoho sloupce. Stahuje se přesně to, co je vidět na obrazovce (filtr, hledání, řazení). */
+function stahniCSV(soubor,hlavicky,radky){
+  const bunka=v=>{v=String(v??'');return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const csv='\uFEFF'+[hlavicky,...radky].map(r=>r.map(bunka).join(';')).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download=soubor;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function pocetDeti(n){return n+' '+(n===1?'dítě':(n>=2&&n<=4?'děti':'dětí'));}
 </script>
 <script>
 /* SHARED: ikony menu – čárové (Lucide styl, stroke=currentColor, takže se obarví podle
@@ -1536,20 +1554,36 @@ let akceLoni=false; // náhled loňských akcí (inspirace při plánování)
 
 function renderAkce(){
   // „+ Nová akce" je v topbaru (viz core.js) – konzistentně s Novinkami
-  let h=`<div class="vhead">Akce a výjimky · červen</div>`;
+  let h=`<div class="akce"><div class="vhead">Akce a výjimky · červen</div>`;
   const sorted=[...AKCE].sort((a,b)=>a.day-b.day);
-  h+= sorted.length? sorted.map(akceCard).join('') : `<div class="empty">Zatím žádné akce.</div>`;
+  if(!sorted.length)return h+`<div class="empty">Zatím žádné akce.</div></div>`;
+  // Stejně jako u soupisu dětí: na mobilu karty, na desktopu tabulka. Obojí v DOM, přepíná CSS.
+  h+=`<div class="akce-cards">`+sorted.map(a=>akceCard(a,`openAkce('${a.id}')`)).join('')+`</div>`;
+  h+=akceTable(sorted,a=>`openAkce('${a.id}')`,dayLbl);
   // Loňské akce – inspirace: klik předvyplní novou akci, datum se doladí v modalu
   h+=`<button class="addbtn" onclick="togAkceLoni()">${akceLoni?'Skrýt loňské akce':'Zobrazit loňské akce (červen 2025)'}</button>`;
-  if(akceLoni){h+=`<div class="tile"><div class="ch">Loňské akce · červen 2025</div><div class="note2">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
-    h+=AKCE_LONI.map((a,i)=>{const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
-      return `<button class="acard" onclick="akceFromLoni(${i})"><span class="adate">${a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span><span class="aplus">+</span></button>`;}).join('');
-    h+=`</div>`;}
-  return h;
+  if(akceLoni){
+    const lbl=a=>a.dayEnd?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`;
+    h+=`<div class="vhead">Loňské akce · červen 2025</div><div class="note2">Klepni na akci a založíš letošní s předvyplněnými údaji – zbyde doladit datum.</div>`;
+    h+=`<div class="akce-cards">`+AKCE_LONI.map((a,i)=>akceCard(a,`akceFromLoni(${i})`,lbl,true)).join('')+`</div>`;
+    h+=akceTable(AKCE_LONI,(a,i)=>`akceFromLoni(${i})`,lbl,true);
+  }
+  return h+`</div>`;
 }
-function akceCard(a){
+function akceCard(a,klik,lbl,plus){
   const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
-  return `<button class="acard" onclick="openAkce('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;
+  return `<button class="acard" onclick="${klik}"><span class="adate">${(lbl||dayLbl)(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span>${plus?'<span class="aplus">+</span>':''}</button>`;
+}
+/* Tabulka akcí (desktop). Poznámka je poslední, protože jako jediná zalamuje na víc řádků. */
+function akceTable(rows,klik,lbl,plus){
+  return `<table class="dtab akce-tab"><thead><tr><th>Datum</th><th>Akce</th><th>Čas</th><th>Místo</th><th>Z fondu</th><th>Poznámka</th></tr></thead><tbody>`+
+    rows.map((a,i)=>`<tr onclick="${klik(a,i)}"><td class="dt-date">${(lbl||dayLbl)(a)}</td>`+
+      `<td class="nm">${a.name}${plus?' <span class="aplus">+</span>':''}</td>`+
+      `<td>${a.time||'<span class="dt-no">–</span>'}</td>`+
+      `<td>${a.place||'<span class="dt-no">–</span>'}</td>`+
+      `<td class="dt-fond">${a.paid?`${a.paid} Kč/dítě`:'<span class="dt-no">–</span>'}</td>`+
+      `<td class="dt-note">${a.note||'<span class="dt-no">–</span>'}</td></tr>`).join('')+
+    `</tbody></table>`;
 }
 window.togAkceLoni=()=>{akceLoni=!akceLoni;render();};
 // Loňská akce → nová letošní: převezme vše kromě data (id:null ⇒ uložením vznikne nová akce).
@@ -1863,20 +1897,11 @@ function renderDite(i){
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
-/* Stáhne právě zobrazený výřez – co je odfiltrované a seřazené na obrazovce, to je i v souboru.
-   Středník + BOM: Excel v české lokalizaci jinak nacpe celý řádek do jednoho sloupce. */
 window.exportDeti=()=>{
   const list=detiList();
-  const hlav=['Jméno','Režim docházky','Věk','Narozeniny','Předškolák','Alergie'];
-  const bunka=v=>{v=String(v??'');return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
-  const radky=list.map(x=>{const c=x.c;return [full(c),c.plan,c.vek,c.nar,c.predskolak?'ano':'',c.alergie||''];});
-  const csv='\uFEFF'+[hlav,...radky].map(r=>r.map(bunka).join(';')).join('\r\n');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-  a.download='deti-vhaaji-2026-06.csv';
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  showToast(`Staženo ${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')} ✓`);
+  stahniCSV('deti-vhaaji-2026-06.csv',['Jméno','Režim docházky','Věk','Narozeniny','Předškolák','Alergie'],
+    list.map(x=>{const c=x.c;return [full(c),c.plan,c.vek,c.nar,c.predskolak?'ano':'',c.alergie||''];}));
+  showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
 window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
 window.setDetiF=f=>{detiFilter=f;render();};
@@ -1890,6 +1915,22 @@ window.addWork=i=>{worksMap[i]=(worksMap[i]||0)+1;render();showToast('Práce nah
 /* SCREEN: PRUVODCE_FOND */
 let FONDHIST=[];
 let fondFormOpen=false, odecet=null, fondChild=-1;
+let fondQuery='', fondSort='nm', fondDir=1;
+const FOND_SLOUPCE=[['nm','Dítě'],['fond','Zůstatek'],['predskolak','Předškolák'],['cerpani','Čerpání']];
+// pod 300 Kč je zůstatek varovný – rodiče je potřeba vyzvat k doplnění
+const fondBarva=c=>c.fond<300?'var(--color-danger)':'var(--color-primary)';
+function fondList(){
+  return data.map((c,i)=>({c,i}))
+    .filter(x=>!fondQuery||norm(full(x.c)).includes(norm(fondQuery)))
+    .sort((a,b)=>{
+      let r=0;
+      if(fondSort==='fond')r=a.c.fond-b.c.fond;
+      else if(fondSort==='predskolak')r=(a.c.predskolak?1:0)-(b.c.predskolak?1:0);
+      else if(fondSort==='cerpani')r=(a.c.fondLog||[]).length-(b.c.fondLog||[]).length;
+      else r=a.c.n.localeCompare(b.c.n,'cs');
+      return r*fondDir || a.c.n.localeCompare(b.c.n,'cs');
+    });
+}
 
 function spanDay(a){let d=a.day;const end=a.dayEnd||a.day;while(d<=end&&isWE(d))d++;return d;}
 function presentIdx(a){const d=spanDay(a);if(isWE(d))return [];return data.map((c,i)=>i).filter(i=>{const k=getCode(data[i],d);return k&&k!=='OM';});}
@@ -1900,11 +1941,27 @@ function renderFond(){
   let h=`<div class="doch">`;
   h+=`<div class="vhead">Placené akce</div>`;
   h+= paidAkce.length? `<div class="fond-akce">`+paidAkce.map(a=>`<div class="frow"><span class="adate">${dayLbl(a)}</span><div style="flex:1"><div class="aname">${a.name}</div><div class="ameta">${a.paid} Kč/dítě</div></div>${a.done?'<span class="bdg pre" style="padding:6px 10px">odečteno ✓</span>':`<button class="odbtn" onclick="startOdecet('${a.id}')">Odečíst</button>`}</div>`).join('')+`</div>` : `<div class="empty">Žádné placené akce. Cenu nastavíš u akce v Plán &amp; program.</div>`;
-  h+=`<div class="vhead">Ruční čerpání (celá třída)</div>`;
-  h+=`<button class="addbig" onclick="togFond()">+ Přidat čerpání (např. materiál)</button>`;
+  // „+ Přidat čerpání" je v topbaru (core.js) – stejně jako „+ Nová akce" a „+ Nová novinka"
+  if(fondFormOpen)h+=`<div class="vhead">Ruční čerpání (celá třída)</div>`;
   if(fondFormOpen)h+=`<div class="tile"><label class="pl">Co se čerpalo</label><input class="pin" id="f-name" placeholder="např. Výtvarný materiál"><label class="pl">Kdy</label><input class="pin" id="f-date" placeholder="např. červen 2026"><label class="pl">Částka na dítě (Kč)</label><input class="pin" id="f-amt" type="number" placeholder="0"><div class="mbtns"><button class="btn-ghost" onclick="togFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout celé třídě</button></div></div>`;
   h+=`<div class="vhead">Zůstatky dětí</div>`;
-  h+=`<div class="fond-grid">`+data.map((c,i)=>({c,i})).sort(byAlpha).map(({c,i})=>`<div class="row"><div class="rmain" onclick="openFondChild(${i})">${avatar(c,26)}<span class="nm">${full(c)}</span><span class="ind" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč ›</span></div></div>`).join('')+`</div>`;
+  const list=fondList();
+  h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(fondQuery)}" oninput="onFondSearch(this.value)">`+
+    `<button class="btn-ghost deti-exp" onclick="exportFond()">Stáhnout jako CSV</button></div>`;
+  if(!list.length)h+=`<div class="empty">Nikdo neodpovídá hledání.</div>`;
+  else{
+    // stejný vzor jako soupis dětí: na mobilu karty, na desktopu tabulka
+    h+=`<div class="deti-cards">`+list.map(({c,i})=>`<div class="row"><div class="rmain" onclick="openFondChild(${i})">${avatar(c,26)}<span class="nm">${full(c)}</span><span class="ind" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč ›</span></div></div>`).join('')+`</div>`;
+    h+=`<table class="dtab"><thead><tr>`+FOND_SLOUPCE.map(([k,lab])=>{
+      const on=fondSort===k;
+      return `<th class="${on?'srt':''}" aria-sort="${on?(fondDir>0?'ascending':'descending'):'none'}"><button onclick="setFondSort('${k}')">${lab}<span class="arw">${on?(fondDir>0?'▲':'▼'):'⇅'}</span></button></th>`;
+    }).join('')+`</tr></thead><tbody>`+
+      list.map(({c,i})=>`<tr onclick="openFondChild(${i})"><td class="nm">${avatar(c,28)}${full(c)}</td>`+
+        `<td class="dt-fond" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč</td>`+
+        `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
+        `<td>${c.fondLog&&c.fondLog.length?`${c.fondLog.length}× · naposled ${c.fondLog[0].name}`:'<span class="dt-no">zatím nic</span>'}</td></tr>`).join('')+
+      `</tbody></table>`;
+  }
   if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
     FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div><button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button></div>`;});
     h+=`<div class="note2">Spletl/a ses? „Vrátit" čerpání stornuje – částka se dětem přičte zpět.</div>`;}
@@ -1935,6 +1992,14 @@ function renderOdecet(){
   h+=`<button class="btn-primary btn-block" onclick="confirmOdecet()">Strhnout z fondu</button>`;
   return h;
 }
+window.onFondSearch=v=>{fondQuery=v;renderKeepFocus();};
+window.setFondSort=k=>{if(fondSort===k)fondDir=-fondDir;else{fondSort=k;fondDir=1;}render();};
+window.exportFond=()=>{
+  const list=fondList();
+  stahniCSV('kulturni-fond-vhaaji-2026-06.csv',['Jméno','Zůstatek (Kč)','Předškolák','Počet čerpání'],
+    list.map(({c})=>[full(c),c.fond,c.predskolak?'ano':'',(c.fondLog||[]).length]));
+  showToast('Staženo '+pocetDeti(list.length)+' ✓');
+};
 window.openFondChild=i=>{fondChild=i;render();};
 window.closeFondChild=()=>{fondChild=-1;render();};
 window.onOdSearch=v=>{odQuery=v;renderKeepFocus();};
@@ -2144,6 +2209,7 @@ function render(){
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
     : section==='akce' ? `<h1 class="dh-t">Akce</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
+    : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1><button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${jidTydenLabel(JIDELNICEK[jidTyden])}</span><button class="dh-step" onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;

@@ -34,6 +34,7 @@ function render(){
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
     : section==='akce' ? `<h1 class="dh-t">Akce</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
+    : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1><button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${jidTydenLabel(JIDELNICEK[jidTyden])}</span><button class="dh-step" onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;

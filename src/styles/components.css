@@ -336,8 +336,8 @@ table.wt td.pastc{opacity:.45}
    appka nemá listener na resize, takže větvit v JS by při změně šířky nechalo starý výpis. */
 .dtab{display:none}
 @media (min-width:900px){
-  #content > .deti{column-span:all}
-  .deti-cards{display:none}
+  #content > .deti,#content > .akce{column-span:all}
+  .deti-cards,.akce-cards{display:none}
   .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
   .dtab thead th{text-align:left;padding:0;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
   /* hlavička je tlačítko na řazení – šipka drží místo i když je sloupec neaktivní */
@@ -358,6 +358,12 @@ table.wt td.pastc{opacity:.45}
   .dtab td.nm{font-weight:500;white-space:nowrap;color:var(--color-primary-strong)}
   .dtab td.nm .av{vertical-align:middle;margin-right:9px}
   .dt-no{color:var(--color-text-hint)}
+  /* akce: datum úzké a nezalomené, poznámka bere zbytek – jako jediná se láme na víc řádků */
+  .akce-tab td.dt-date{white-space:nowrap;color:var(--color-primary);font-weight:600;width:1%}
+  .akce-tab td.dt-note{color:var(--color-text-muted);font-size:var(--text-meta);line-height:var(--leading-snug)}
+  .akce-tab td.nm{white-space:normal}
+  .akce-tab td.dt-fond{white-space:nowrap}
+  #content > .akce>.addbtn{max-width:340px}
 }
 /* Lišta nad soupisem: hledání + stažení. Do pole se píše jen jméno, takže nepotřebuje
    celou šířku – uvolněné místo zabere tlačítko. Na úzkém displeji se zalomí pod pole. */
