@@ -155,3 +155,15 @@ function alergenyLegenda(dny){
 const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 // 2. pád – pro datum „3. června" (nominativ by dal „3. červen")
 const MONTHS_G=['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
+
+/* Stažení tabulky do CSV. Středník + BOM: česká verze Excelu jinak nacpe celý řádek do
+   jednoho sloupce. Stahuje se přesně to, co je vidět na obrazovce (filtr, hledání, řazení). */
+function stahniCSV(soubor,hlavicky,radky){
+  const bunka=v=>{v=String(v??'');return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const csv='\uFEFF'+[hlavicky,...radky].map(r=>r.map(bunka).join(';')).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download=soubor;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function pocetDeti(n){return n+' '+(n===1?'dítě':(n>=2&&n<=4?'děti':'dětí'));}

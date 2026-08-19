@@ -72,20 +72,11 @@ function renderDite(i){
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
-/* Stáhne právě zobrazený výřez – co je odfiltrované a seřazené na obrazovce, to je i v souboru.
-   Středník + BOM: Excel v české lokalizaci jinak nacpe celý řádek do jednoho sloupce. */
 window.exportDeti=()=>{
   const list=detiList();
-  const hlav=['Jméno','Režim docházky','Věk','Narozeniny','Předškolák','Alergie'];
-  const bunka=v=>{v=String(v??'');return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
-  const radky=list.map(x=>{const c=x.c;return [full(c),c.plan,c.vek,c.nar,c.predskolak?'ano':'',c.alergie||''];});
-  const csv='\uFEFF'+[hlav,...radky].map(r=>r.map(bunka).join(';')).join('\r\n');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-  a.download='deti-vhaaji-2026-06.csv';
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  showToast(`Staženo ${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')} ✓`);
+  stahniCSV('deti-vhaaji-2026-06.csv',['Jméno','Režim docházky','Věk','Narozeniny','Předškolák','Alergie'],
+    list.map(x=>{const c=x.c;return [full(c),c.plan,c.vek,c.nar,c.predskolak?'ano':'',c.alergie||''];}));
+  showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
 window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
 window.setDetiF=f=>{detiFilter=f;render();};

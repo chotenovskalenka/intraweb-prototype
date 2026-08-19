@@ -1,6 +1,22 @@
 /* SCREEN: PRUVODCE_FOND */
 let FONDHIST=[];
 let fondFormOpen=false, odecet=null, fondChild=-1;
+let fondQuery='', fondSort='nm', fondDir=1;
+const FOND_SLOUPCE=[['nm','Dítě'],['fond','Zůstatek'],['predskolak','Předškolák'],['cerpani','Čerpání']];
+// pod 300 Kč je zůstatek varovný – rodiče je potřeba vyzvat k doplnění
+const fondBarva=c=>c.fond<300?'var(--color-danger)':'var(--color-primary)';
+function fondList(){
+  return data.map((c,i)=>({c,i}))
+    .filter(x=>!fondQuery||norm(full(x.c)).includes(norm(fondQuery)))
+    .sort((a,b)=>{
+      let r=0;
+      if(fondSort==='fond')r=a.c.fond-b.c.fond;
+      else if(fondSort==='predskolak')r=(a.c.predskolak?1:0)-(b.c.predskolak?1:0);
+      else if(fondSort==='cerpani')r=(a.c.fondLog||[]).length-(b.c.fondLog||[]).length;
+      else r=a.c.n.localeCompare(b.c.n,'cs');
+      return r*fondDir || a.c.n.localeCompare(b.c.n,'cs');
+    });
+}
 
 function spanDay(a){let d=a.day;const end=a.dayEnd||a.day;while(d<=end&&isWE(d))d++;return d;}
 function presentIdx(a){const d=spanDay(a);if(isWE(d))return [];return data.map((c,i)=>i).filter(i=>{const k=getCode(data[i],d);return k&&k!=='OM';});}
@@ -11,11 +27,27 @@ function renderFond(){
   let h=`<div class="doch">`;
   h+=`<div class="vhead">Placené akce</div>`;
   h+= paidAkce.length? `<div class="fond-akce">`+paidAkce.map(a=>`<div class="frow"><span class="adate">${dayLbl(a)}</span><div style="flex:1"><div class="aname">${a.name}</div><div class="ameta">${a.paid} Kč/dítě</div></div>${a.done?'<span class="bdg pre" style="padding:6px 10px">odečteno ✓</span>':`<button class="odbtn" onclick="startOdecet('${a.id}')">Odečíst</button>`}</div>`).join('')+`</div>` : `<div class="empty">Žádné placené akce. Cenu nastavíš u akce v Plán &amp; program.</div>`;
-  h+=`<div class="vhead">Ruční čerpání (celá třída)</div>`;
-  h+=`<button class="addbig" onclick="togFond()">+ Přidat čerpání (např. materiál)</button>`;
+  // „+ Přidat čerpání" je v topbaru (core.js) – stejně jako „+ Nová akce" a „+ Nová novinka"
+  if(fondFormOpen)h+=`<div class="vhead">Ruční čerpání (celá třída)</div>`;
   if(fondFormOpen)h+=`<div class="tile"><label class="pl">Co se čerpalo</label><input class="pin" id="f-name" placeholder="např. Výtvarný materiál"><label class="pl">Kdy</label><input class="pin" id="f-date" placeholder="např. červen 2026"><label class="pl">Částka na dítě (Kč)</label><input class="pin" id="f-amt" type="number" placeholder="0"><div class="mbtns"><button class="btn-ghost" onclick="togFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout celé třídě</button></div></div>`;
   h+=`<div class="vhead">Zůstatky dětí</div>`;
-  h+=`<div class="fond-grid">`+data.map((c,i)=>({c,i})).sort(byAlpha).map(({c,i})=>`<div class="row"><div class="rmain" onclick="openFondChild(${i})">${avatar(c,26)}<span class="nm">${full(c)}</span><span class="ind" style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč ›</span></div></div>`).join('')+`</div>`;
+  const list=fondList();
+  h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(fondQuery)}" oninput="onFondSearch(this.value)">`+
+    `<button class="btn-ghost deti-exp" onclick="exportFond()">Stáhnout jako CSV</button></div>`;
+  if(!list.length)h+=`<div class="empty">Nikdo neodpovídá hledání.</div>`;
+  else{
+    // stejný vzor jako soupis dětí: na mobilu karty, na desktopu tabulka
+    h+=`<div class="deti-cards">`+list.map(({c,i})=>`<div class="row"><div class="rmain" onclick="openFondChild(${i})">${avatar(c,26)}<span class="nm">${full(c)}</span><span class="ind" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč ›</span></div></div>`).join('')+`</div>`;
+    h+=`<table class="dtab"><thead><tr>`+FOND_SLOUPCE.map(([k,lab])=>{
+      const on=fondSort===k;
+      return `<th class="${on?'srt':''}" aria-sort="${on?(fondDir>0?'ascending':'descending'):'none'}"><button onclick="setFondSort('${k}')">${lab}<span class="arw">${on?(fondDir>0?'▲':'▼'):'⇅'}</span></button></th>`;
+    }).join('')+`</tr></thead><tbody>`+
+      list.map(({c,i})=>`<tr onclick="openFondChild(${i})"><td class="nm">${avatar(c,28)}${full(c)}</td>`+
+        `<td class="dt-fond" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč</td>`+
+        `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
+        `<td>${c.fondLog&&c.fondLog.length?`${c.fondLog.length}× · naposled ${c.fondLog[0].name}`:'<span class="dt-no">zatím nic</span>'}</td></tr>`).join('')+
+      `</tbody></table>`;
+  }
   if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
     FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div><button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button></div>`;});
     h+=`<div class="note2">Spletl/a ses? „Vrátit" čerpání stornuje – částka se dětem přičte zpět.</div>`;}
@@ -46,6 +78,14 @@ function renderOdecet(){
   h+=`<button class="btn-primary btn-block" onclick="confirmOdecet()">Strhnout z fondu</button>`;
   return h;
 }
+window.onFondSearch=v=>{fondQuery=v;renderKeepFocus();};
+window.setFondSort=k=>{if(fondSort===k)fondDir=-fondDir;else{fondSort=k;fondDir=1;}render();};
+window.exportFond=()=>{
+  const list=fondList();
+  stahniCSV('kulturni-fond-vhaaji-2026-06.csv',['Jméno','Zůstatek (Kč)','Předškolák','Počet čerpání'],
+    list.map(({c})=>[full(c),c.fond,c.predskolak?'ano':'',(c.fondLog||[]).length]));
+  showToast('Staženo '+pocetDeti(list.length)+' ✓');
+};
 window.openFondChild=i=>{fondChild=i;render();};
 window.closeFondChild=()=>{fondChild=-1;render();};
 window.onOdSearch=v=>{odQuery=v;renderKeepFocus();};
