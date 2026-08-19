@@ -45,9 +45,9 @@ function akceModalHTML(){
   </div></div>`;
 }
 function shiftModalHTML(){
-  const m=shiftM,g=GUIDESHIFT[m.gi];
+  const m=shiftM,g=shiftTyden(shiftT)[m.gi];
   return `<div class="modal-scrim" onclick="if(event.target===this)closeShift()"><div class="modal">
-    <h3>Služba – ${g.n}, ${DOW[m.di]}</h3>
+    <h3>Služba – ${g.n}</h3><div class="pl" style="margin-top:-2px">${DOW[m.di]} ${SHIFT_TYDNY[shiftT].od+m.di}. ${SHIFT_TYDNY[shiftT].m}.</div>
     <div class="mini" style="margin-bottom:6px"><button class="${m.on?'on':''}" onclick="setShiftOn(true)">Slouží</button><button class="${!m.on?'on':''}" onclick="setShiftOn(false)">Neslouží</button></div>
     ${m.on?`<label class="pl">Příchod</label><input class="pin" type="time" value="${m.s}" oninput="setShiftF('s',this.value)"><label class="pl">Odchod</label><input class="pin" type="time" value="${m.e}" oninput="setShiftF('e',this.value)">`
     :`<label class="pl">Důvod (nepovinné)</label><select class="selin" style="width:100%" onchange="setShiftF('reason',this.value)"><option value="">–</option>${OFFREASONS.map(o=>`<option value="${o}" ${m.reason===o?'selected':''}>${o}</option>`).join('')}</select>`}
@@ -70,11 +70,11 @@ window.saveAkce=()=>{
   modal=null;renderModalRoot();render();showToast('Uloženo ✓');
 };
 window.delAkce=()=>{AKCE=AKCE.filter(x=>x.id!==modal.id);modal=null;renderModalRoot();render();showToast('Akce smazána');};
-window.openShift=(gi,di)=>{const d=GUIDESHIFT[gi].days[di];shiftM={gi,di,on:serving(d)||!d,s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
+window.openShift=(gi,di)=>{const d=shiftTyden(shiftT)[gi].days[di];shiftM={gi,di,on:serving(d)||!d,s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
 window.closeShift=()=>{shiftM=null;renderModalRoot();};
 window.setShiftOn=b=>{shiftM.on=b;renderModalRoot();};
 window.setShiftF=(f,v)=>{shiftM[f]=v;};
-window.saveShift=()=>{const m=shiftM;GUIDESHIFT[m.gi].days[m.di]=m.on?{s:m.s,e:m.e}:(m.reason?{off:m.reason}:null);shiftM=null;renderModalRoot();render();showToast('Uloženo ✓');};
+window.saveShift=()=>{const m=shiftM;shiftTyden(shiftT)[m.gi].days[m.di]=m.on?{s:m.s,e:m.e}:(m.reason?{off:m.reason}:null);shiftM=null;renderModalRoot();render();showToast('Uloženo ✓');};
 window.openAkceDetail=id=>{detailA=id;renderModalRoot();};
 window.closeAkceDetail=()=>{detailA=null;renderModalRoot();};
 window.editFromDetail=()=>{const id=detailA;detailA=null;openAkce(id);};

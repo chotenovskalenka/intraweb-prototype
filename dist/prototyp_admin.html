@@ -252,6 +252,9 @@ footer{margin-top:var(--space-lg);padding-top:13px;border-top:1px solid var(--co
 table.wt{width:100%;border-collapse:collapse;table-layout:fixed}
 table.wt th,table.wt td{padding:6px 2px;text-align:center;font-size:var(--text-meta)}
 table.wt thead th{position:sticky;top:0;background:var(--color-surface-2);color:var(--color-text-muted);font-weight:600;font-size:var(--text-micro);border-bottom:1px solid var(--color-border);z-index:1}
+/* datum ve hlavičce týdne – aby bylo poznat, na který týden se člověk dívá */
+table.wt thead th .wt-dt{font-weight:500;color:var(--color-text-hint)}
+table.wt thead th.today .wt-dt{color:var(--color-primary)}
 table.wt th.who,table.wt td.who{text-align:left;width:42%;padding-left:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 table.wt td.who{font-size:var(--text-small);font-weight:500}
 table.wt td.who .av{vertical-align:middle;margin-right:6px}
