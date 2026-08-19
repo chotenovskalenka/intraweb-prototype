@@ -994,6 +994,48 @@ const TEMA_KVETEN={hodnota:'péče',tydny:[
 // často přebírají osvědčené plány/rytmus z minula. Květen 2026 = TEMA_KVETEN.
 const TEMA_ARCHIV=[
   {key:'2026-05',label:'Květen 2026',hodnota:TEMA_KVETEN.hodnota,tydny:TEMA_KVETEN.tydny},
+  // Loňský školní rok celý – aby k připravovanému měsíci vždycky existoval ten samý
+  // z minula („převzít loňské září"). Hodnoty měsíců sedí s TEMA_MESICE (čte je rodič).
+  {key:'2026-04',label:'Duben 2026',hodnota:'radost',tydny:[
+    {b:'Travička se zelená, sluníčko ji zahřálo.',p:'Zajíček v své jamce sedí sám.'},
+    {b:'Velikonoce klepou, pomlázku si spletu.',p:'Hody, hody, doprovody.'},
+    {b:'',p:'Jaro dělá pokusy.'},
+    {b:'',p:''}]},
+  {key:'2026-03',label:'Březen 2026',hodnota:'probouzení',tydny:[
+    {b:'Sněženka nám vykoukla, zima už se odstěhovala.',p:'Zima, zima, zimička, byla tady chvilička.'},
+    {b:'Semínko jsme zasadili, vodou jsme ho pokropili.',p:'Šel zahradník do zahrady.'},
+    {b:'',p:'Travička zelená, to je moje potěšení…'},
+    {b:'',p:''}]},
+  {key:'2026-02',label:'Únor 2026',hodnota:'přátelství',tydny:[
+    {b:'Kamarád je ten, kdo počká.',p:'Když jsi kamarád, tak pojď si se mnou hrát.'},
+    {b:'Masopust držíme, nic se nevadíme.',p:'Já jsem muzikant a přicházím k vám z české země.'},
+    {b:'',p:'Kalamajka mik mik mik…'},
+    {b:'',p:''}]},
+  {key:'2026-01',label:'Leden 2026',hodnota:'trpělivost',tydny:[
+    {b:'Padá snížek, bílý snížek, na střechy i na chodníček.',p:'Sněží, sněží, mráz kolem běží.'},
+    {b:'Stopy v snehu – kdopak tudy šel?',p:'Rolničky, rolničky.'},
+    {b:'',p:''},
+    {b:'',p:''}]},
+  {key:'2025-12',label:'Prosinec 2025',hodnota:'klid',tydny:[
+    {b:'Mikuláši, dobrý strýčku, dej mi něco do košíčku.',p:'Nesem vám noviny.'},
+    {b:'Adventní svíčka svítí, venku už je tma.',p:'Půjdem spolu do Betléma.'},
+    {b:'Vánoce, Vánoce přicházejí – těšíme se na besídku.',p:'Štěstí, zdraví, pokoj svatý.'},
+    {b:'',p:''}]},
+  {key:'2025-11',label:'Listopad 2025',hodnota:'vděčnost',tydny:[
+    {b:'Foukej, foukej, větříčku, shoď mi jednu hruštičku.',p:'Prší, prší, jen se leje.'},
+    {b:'Lampionový průvod – světýlko si nesu.',p:'Svatý Martin přijíždí na bílém koni.'},
+    {b:'',p:'Voláme sluníčko.'},
+    {b:'',p:''}]},
+  {key:'2025-10',label:'Říjen 2025',hodnota:'odvaha',tydny:[
+    {b:'Šípek, šípek červený, podzim už je za dveřmi.',p:'Koulím, koulím brambory, ať mám plný komory.'},
+    {b:'Draka pouštíme, nahoru ho vyneseme.',p:'Běží liška k Táboru.'},
+    {b:'Jablíčko se kutálí, do košíku spadne mi.',p:''},
+    {b:'',p:''}]},
+  {key:'2025-09',label:'Září 2025',hodnota:'důvěra',tydny:[
+    {b:'Vítáme se v lese, každý si své jméno nese.',p:'Kdo si hraje, nezlobí.'},
+    {b:'Kamarády poznáváme, ruku si k tomu podáváme.',p:'Kalamajka mik mik mik…'},
+    {b:'Sbíráme, co les nám dal – žaludy i kaštany.',p:'Běží liška k Táboru.'},
+    {b:'',p:'Šel zahradník do zahrady.'}]},
   {key:'2025-06',label:'Červen 2025',hodnota:'radost',tydny:[
     {b:'Sluníčko, sluníčko, popojdi maličko.',p:'Já jsem muzikant a přicházím k vám z české země.'},
     {b:'Koulím, koulím brambory, ať mám plný komory.',p:'Kalamajka mik mik mik…'},
@@ -1432,9 +1474,17 @@ function temaPeriods(){
     ...TEMA_ARCHIV.map(a=>({key:a.key,label:a.label,stav:'archiv'}))];
 }
 function temaObdobi(){const ps=temaPeriods();return ps[Math.max(0,ps.findIndex(p=>p.key===temaMonth))];}
+/* Měsíc a rok období. Běžící červen 2026 má historický klíč 'cerven', ostatní 'RRRR-MM'. */
+function temaMY(o){return o.key==='cerven'?{m:6,y:2026}:{m:Number(o.key.slice(5)),y:Number(o.key.slice(0,4))};}
+/* Tentýž měsíc o rok dřív / později. Plány se přebírají po měsících – „loňské září bude
+   plus minus podobné" – ne do jednoho pevného cíle. Vrací období, nebo null. */
+function temaSousedniRok(o,posun){
+  const {m,y}=temaMY(o),cil=temaKey(m,y+posun);
+  return temaPeriods().find(p=>p.key===cil||(cil==='2026-06'&&p.key==='cerven'))||null;
+}
 // plán vybraného období; připravovaný měsíc vznikne prázdný až tady, při prvním otevření
-function temaPlan(){
-  const o=temaObdobi();
+function temaPlan(o){
+  o=o||temaObdobi();
   if(o.stav==='bezi')return TEMA;
   if(o.stav==='archiv')return TEMA_ARCHIV.find(a=>a.key===o.key)||prazdnyPlan();
   return TEMA_PRIPRAVA[o.key]||(TEMA_PRIPRAVA[o.key]=prazdnyPlan());
@@ -1458,6 +1508,12 @@ function temaBlock(){
   }
   if(!ro)h+=`<label class="addbtn" style="display:block;text-align:center;margin-top:9px">+ Nahrát ${plakaty.length?'nový ':''}plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label>`;
   h+=`</div></div><div class="tema-text">`;
+  // Připravovaný měsíc: nabídnout tentýž měsíc z loňska. Průvodci ho běžně přebírají
+  // a doladí detaily; nabídka mizí, jakmile má měsíc vlastní obsah.
+  if(o.stav==='priprava'){
+    const loni=temaSousedniRok(o,-1),prazdny=!t.hodnota&&!t.intro&&!t.tydny.some(w=>w.b||w.p);
+    if(loni&&prazdny)h+=`<div class="tile note-info"><div class="ch">${loni.label} už máš hotové</div><div class="note2">Rok co rok se plán opakuje jen s drobnostmi. Převezmi loňský a dolaď, co chceš jinak.</div><button class="btn-primary" onclick="temaAdopt('${loni.key}','${o.key}')">Převzít loňský plán</button></div>`;
+  }
   // téma měsíce
   h+=`<div class="tile"><div class="ch">Téma měsíce</div>`;
   if(ro){
@@ -1485,9 +1541,13 @@ function temaBlock(){
   });
   h+=`</div></div>`;
   // uložení zůstává dole pod formulářem – potvrzuje se až po vyplnění
-  h+= ro
-    ? `<button class="btn-primary btn-block tema-save" onclick="temaAdopt('${o.key}')">Převzít tento plán do června 2026</button>`
-    : `<button class="btn-primary btn-block tema-save" onclick="showToast('Tématický plán uložen ✓')">Uložit ${o.stav==='bezi'?'tématický plán':'plán na '+o.label.toLowerCase()}</button>`;
+  if(ro){
+    // z archivu: použít ho jako základ pro tentýž měsíc příští rok
+    const cil=temaSousedniRok(o,1);
+    h+= cil?`<button class="btn-primary btn-block tema-save" onclick="temaAdopt('${o.key}','${cil.key}')">Použít pro ${cil.label.toLowerCase()}</button>`:'';
+  }else{
+    h+=`<button class="btn-primary btn-block tema-save" onclick="showToast('Tématický plán uložen ✓')">Uložit ${o.stav==='bezi'?'tématický plán':'plán na '+o.label.toLowerCase()}</button>`;
+  }
   return h;
 }
 window.rytEditOn=()=>{rytDraft=RYTMUS.map(r=>({prog:r.prog,krouzek:r.krouzek}));rytEdit=true;render();};
@@ -1502,7 +1562,14 @@ window.setTemaYt=(i,v)=>{temaPlan().tydny[i].yt=v;};
 window.setTemaByt=(i,v)=>{temaPlan().tydny[i].byt=v;};
 window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){temaPlan().file=f.name;render();showToast('Nahráno ✓');}};
 window.temaStep=dir=>{const ps=temaPeriods();let i=ps.findIndex(p=>p.key===temaMonth);i=Math.min(ps.length-1,Math.max(0,i+dir));temaMonth=ps[i].key;render();};
-window.temaAdopt=key=>{const a=TEMA_ARCHIV.find(x=>x.key===key);if(!a)return;TEMA.hodnota=a.hodnota;TEMA.tydny=a.tydny.map(w=>({b:w.b||'',byt:w.byt||'',p:w.p||'',yt:w.yt||''}));temaMonth='cerven';render();showToast('Plán převzat do června 2026 ✓');};
+window.temaAdopt=(fromKey,toKey)=>{
+  const ps=temaPeriods(),src=ps.find(p=>p.key===fromKey),cil=ps.find(p=>p.key===toKey);
+  if(!src||!cil)return;
+  const z=temaPlan(src),c=temaPlan(cil);
+  c.hodnota=z.hodnota||'';c.intro=z.intro||'';
+  c.tydny=z.tydny.map(w=>({b:w.b||'',byt:w.byt||'',p:w.p||'',yt:w.yt||''}));
+  temaMonth=cil.key;render();showToast('Plán převzat do '+cil.label.toLowerCase()+' ✓');
+};
 </script>
 <script>
 /* SCREEN: PRUVODCE_PRUVODCI */
