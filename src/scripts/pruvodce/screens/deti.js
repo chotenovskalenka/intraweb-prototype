@@ -1,15 +1,27 @@
 /* SCREEN: PRUVODCE_DETI */
 function renderDeti(){
   if(detiOpen>=0)return renderDite(detiOpen);
-  let h=`<div class="filters">`+[['all','Všechny'],['pre','Předškoláci'],['al','Alergici']].map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')">${f[1]}</button>`).join('')+`</div>`;
+  // počty u filtrů – ať je poznat, že filtrují, ne že něco spouštějí
+  const pocty={all:data.length,pre:data.filter(c=>c.predskolak).length,al:data.filter(c=>c.alergie).length};
+  let h=`<div class="deti"><div class="filters">`+[['all','Všechny'],['pre','Předškoláci'],['al','Alergici']]
+    .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocty[f[0]]}</span></button>`).join('')+`</div>`;
   const list=data.map((c,i)=>({c,i})).filter(x=>detiFilter==='all'||(detiFilter==='pre'&&x.c.predskolak)||(detiFilter==='al'&&x.c.alergie)).filter(x=>!detiQuery||norm(full(x.c)).includes(norm(detiQuery))).sort(byAlpha);
   h+=`<input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`;
   h+=`<div class="tlab" style="margin:0 2px 9px">${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')}</div>`;
-  h+= list.length? list.map(x=>{const c=x.c;
+  if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div></div>`;
+  // Dvojí výpis: na mobilu karty (dobře se na ně klepe), na desktopu tabulka (25 dětí se
+  // dá přehlédnout na jednu obrazovku). Přepíná se v CSS – appka nemá listener na resize.
+  h+=`<div class="deti-cards">`+list.map(x=>{const c=x.c;
     const b=(c.predskolak?'<span class="bdg pre">předškolák</span>':'')+(c.alergie?` <span class="bdg al">${c.alergie}</span>`:'');
     return `<button class="acard" onclick="openDite(${x.i})">${avatar(c,32)}<span style="flex:1"><span class="aname">${full(c)}</span><div class="ameta">${c.plan}${b?' · ':''}${b}</div></span></button>`;
-  }).join('') : `<div class="empty">Nikdo neodpovídá filtru.</div>`;
-  return h;
+  }).join('')+`</div>`;
+  h+=`<table class="dtab"><thead><tr><th>Dítě</th><th>Režim docházky</th><th>Věk</th><th>Narozeniny</th><th>Předškolák</th><th>Alergie</th></tr></thead><tbody>`+
+    list.map(x=>{const c=x.c;
+      return `<tr onclick="openDite(${x.i})"><td class="nm">${avatar(c,28)}${full(c)}</td><td>${c.plan}</td><td>${c.vek} let</td><td>${c.nar}</td>`+
+        `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
+        `<td>${c.alergie?`<span class="bdg al">${c.alergie}</span>`:'<span class="dt-no">–</span>'}</td></tr>`;
+    }).join('')+`</tbody></table>`;
+  return h+`</div>`;
 }
 function renderDite(i){
   const c=data[i],w=worksMap[i]||0,recs=recordsFor(c);
