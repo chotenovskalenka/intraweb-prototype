@@ -505,7 +505,7 @@ table.wt td.pastc{opacity:.45}
    appka nemá listener na resize, takže větvit v JS by při změně šířky nechalo starý výpis. */
 .dtab{display:none}
 @media (min-width:900px){
-  #content > .deti,#content > .akce{column-span:all}
+  #content > .deti,#content > .akce-sec{column-span:all}
   .deti-cards,.akce-cards{display:none}
   .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
   .dtab thead th{text-align:left;padding:0;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
@@ -534,7 +534,7 @@ table.wt td.pastc{opacity:.45}
   .akce-tab td.dt-note{color:var(--color-text-muted);font-size:var(--text-meta);line-height:var(--leading-snug)}
   .akce-tab td.nm{white-space:normal}
   .akce-tab td.dt-fond{white-space:nowrap}
-  #content > .akce>.addbtn{max-width:340px}
+
 }
 /* Lišta nad soupisem: hledání + stažení. Do pole se píše jen jméno, takže nepotřebuje
    celou šířku – uvolněné místo zabere tlačítko. Na úzkém displeji se zalomí pod pole. */
@@ -930,6 +930,11 @@ const JIDELNICEK=[
     [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s ječnými kroupami','1, 9'],['Hlavní jídlo','Plněné bramborové knedlíky se zelím a cibulkou, plněné hrachovým granulátem','1'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
     [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Tomatová s rýžovými hvězdičkami',''],['Hlavní jídlo','Zeleninové kari s květákem, batáty, dýní a cizrnou, jasmínová rýže',''],['Svačinka 2','Croissant, sýr, salátek, zelenina','']],
   ]},
+  /* Příští školní rok – prázdné týdny k naplánování. Prázdniny se přeskakují (provoz je
+     září–červen), proto po červnu následuje září. Vyplňuje se v průvodcovské appce. */
+  {m:9,od:7,do:11,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]},
+  {m:9,od:14,do:18,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]},
+  {m:9,od:21,do:25,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]}
 ];
 /* Vrátí jídelníček dne (5 položek: svačinky/polévka/hlavní) podle dne v měsíci, nebo null,
    pokud pro daný den (víkend, nebo mimo dodané 4 týdny – 27.–30. 6.) žádný není. */

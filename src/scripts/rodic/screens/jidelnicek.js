@@ -8,7 +8,7 @@ function renderJidelnicek(){
   t.dny.forEach((den,i)=>{
     // „dnes" jen když sedí i měsíc – v květnové historii by se jinak označil špatný den
     const d=t.od+i, dnes=(d===TODAY&&t.m===6);
-    h+=`<div class="tile"><div class="tlab">${DOW[wd(d)]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`
+    h+=`<div class="tile"><div class="tlab">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`
       +den.map(it=>`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}</span>${it[2]?`<span class="alerg">${it[2]}</span>`:''}</div>`).join('')
       +`</div>`;
   });

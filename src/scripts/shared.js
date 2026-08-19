@@ -128,6 +128,11 @@ const JIDELNICEK=[
     [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s ječnými kroupami','1, 9'],['Hlavní jídlo','Plněné bramborové knedlíky se zelím a cibulkou, plněné hrachovým granulátem','1'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
     [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Tomatová s rýžovými hvězdičkami',''],['Hlavní jídlo','Zeleninové kari s květákem, batáty, dýní a cizrnou, jasmínová rýže',''],['Svačinka 2','Croissant, sýr, salátek, zelenina','']],
   ]},
+  /* Příští školní rok – prázdné týdny k naplánování. Prázdniny se přeskakují (provoz je
+     září–červen), proto po červnu následuje září. Vyplňuje se v průvodcovské appce. */
+  {m:9,od:7,do:11,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]},
+  {m:9,od:14,do:18,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]},
+  {m:9,od:21,do:25,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]}
 ];
 /* Vrátí jídelníček dne (5 položek: svačinky/polévka/hlavní) podle dne v měsíci, nebo null,
    pokud pro daný den (víkend, nebo mimo dodané 4 týdny – 27.–30. 6.) žádný není. */

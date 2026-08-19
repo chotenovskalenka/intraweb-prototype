@@ -39,13 +39,13 @@ function renderJidelnicek(){
       : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+`</div></div>`;
   t.dny.forEach((den,i)=>{
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
-    h+=`<div class="tile"><div class="ch">${DOW[wd(d)]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
+    h+=`<div class="tile"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
     den.forEach((it,k)=>{
       if(jidEdit){
         const dr=jidDraft[i][k];
         h+=`<div class="jid-edit"><label class="pl">${it[0]}</label>`+
-          `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[wd(d)]}">`+
-          `<input class="pin jid-alg" value="${esc(dr[2])}" oninput="setJid(${i},${k},2,this.value)" placeholder="alergeny, např. 1, 7" aria-label="Alergeny – ${it[0]}, ${DOW[wd(d)]}"></div>`;
+          `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[i]}">`+
+          `<input class="pin jid-alg" value="${esc(dr[2])}" oninput="setJid(${i},${k},2,this.value)" placeholder="alergeny, např. 1, 7" aria-label="Alergeny – ${it[0]}, ${DOW[i]}"></div>`;
       }else{
         const deti=detiSAlergii(it[2]);
         // Jména jdou dovnitř .mv, aby seděla POD názvem jídla. Vedle textu je nelze dát:

@@ -4,7 +4,7 @@
    měsíce – to nahradilo dřívější přepínač „Zobrazit loňské akce". */
 function renderAkce(){
   const o=AKCE_MESICE[akceM], rows=[...akceMesic(akceM)].sort((a,b)=>a.day-b.day), minuly=akceM<AKCE_AKT;
-  let h=`<div class="akce"><div class="vhead-row"><div class="vhead">Akce a výjimky</div><div class="vhead-act">`+
+  let h=`<div class="akce-sec"><div class="vhead-row"><div class="vhead">Akce a výjimky</div><div class="vhead-act">`+
     `<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`+
     `<span>${o.label}${akceM===AKCE_AKT?'<i class="dn-cur"> · aktuální</i>':''}</span>`+
     `<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div></div></div>`;
