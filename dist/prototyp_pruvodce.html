@@ -1461,7 +1461,7 @@ function renderPriprava(){
   // nabídka programů pro pole – datalist necháva napsat i vlastní text
   if(rytEdit)h+=`<datalist id="progopts">${PROGOPTS.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
   h+=`</div>`;
-  h+=`<div class="tema-sec"><div class="vhead-row"><div class="vhead">Tématický plán</div><div class="vhead-act">${temaNav()}</div></div>`+temaBlock()+`</div>`;
+  h+=`<div class="tema-sec"><div class="vhead-row"><div class="vhead">Tématický plán</div><div class="vhead-act">${temaLoniBtn()}${temaNav()}</div></div>`+temaBlock()+`</div>`;
   return h;
 }
 /* Období tématického plánu, od nejnovějšího: připravované měsíce příštího školního roku,
@@ -1489,6 +1489,16 @@ function temaPlan(o){
   if(o.stav==='archiv')return TEMA_ARCHIV.find(a=>a.key===o.key)||prazdnyPlan();
   return TEMA_PRIPRAVA[o.key]||(TEMA_PRIPRAVA[o.key]=prazdnyPlan());
 }
+/* „Převzít loňský plán" u připravovaného měsíce – v řádku s nadpisem, vlevo od stepperu,
+   aby stepper zůstal ukotvený vpravo a neposkakoval podle toho, jestli je tlačítko vidět.
+   Mizí, jakmile má měsíc vlastní obsah. */
+function temaLoniBtn(){
+  const o=temaObdobi();
+  if(o.stav!=='priprava')return '';
+  const t=temaPlan(o),loni=temaSousedniRok(o,-1);
+  if(!loni||t.hodnota||t.intro||t.tydny.some(w=>w.b||w.p))return '';
+  return `<button class="btn-ghost" onclick="temaAdopt('${loni.key}','${o.key}')" title="Převezme plán z období ${loni.label}">Převzít loňský plán</button>`;
+}
 function temaNav(){
   const ps=temaPeriods(),i=Math.max(0,ps.findIndex(p=>p.key===temaMonth)),cur=ps[i];
   // stepper ‹ starší · novější › – prochází připravované měsíce dopředu i archiv zpět
@@ -1508,12 +1518,6 @@ function temaBlock(){
   }
   if(!ro)h+=`<label class="addbtn" style="display:block;text-align:center;margin-top:9px">+ Nahrát ${plakaty.length?'nový ':''}plán (PDF/JPG/PNG)<input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="setTemaFile(this)"></label>`;
   h+=`</div></div><div class="tema-text">`;
-  // Připravovaný měsíc: nabídnout tentýž měsíc z loňska. Průvodci ho běžně přebírají
-  // a doladí detaily; nabídka mizí, jakmile má měsíc vlastní obsah.
-  if(o.stav==='priprava'){
-    const loni=temaSousedniRok(o,-1),prazdny=!t.hodnota&&!t.intro&&!t.tydny.some(w=>w.b||w.p);
-    if(loni&&prazdny)h+=`<div class="tile note-info"><div class="ch">${loni.label} už máš hotové</div><div class="note2">Rok co rok se plán opakuje jen s drobnostmi. Převezmi loňský a dolaď, co chceš jinak.</div><button class="btn-primary" onclick="temaAdopt('${loni.key}','${o.key}')">Převzít loňský plán</button></div>`;
-  }
   // téma měsíce
   h+=`<div class="tile"><div class="ch">Téma měsíce</div>`;
   if(ro){
