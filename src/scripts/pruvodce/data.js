@@ -179,13 +179,39 @@ const AKCE_LONI=[
   {name:'Svatojánský jarmark – rozloučení s předškoláky',day:24,dayEnd:null,time:'15:30',place:'s Jaatou a Maatou',note:'',paid:0},
   {name:'Konec řádného provozu',day:30,dayEnd:null,time:'',place:'',note:'docházka do 15h',paid:0},
 ];
-let GUIDESHIFT=[
+/* Rozpis služeb. Základní rota se opakuje týden co týden, odchylky (nemoc, dovolená) se
+   dopisují – proto jeden vzor + seznam výjimek místo sedmi ručně vypsaných týdnů.
+   Aktuální týden (1.–5. 6.) je živé GUIDESHIFT, ať ho dashboard a kontakty čtou beze změny. */
+const SHIFT_ROTA=[
   {n:'Táňa',days:[{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'}]},
   {n:'Darča',days:[{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'}]},
   {n:'Gabča',days:[null,{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'},null]},
   {n:'Honza',days:[null,null,{s:'08:00',e:'16:30'},null,{s:'08:00',e:'16:30'}]},
   {n:'Míša',days:[{s:'08:20',e:'15:00'},null,{s:'08:20',e:'15:00'},null,null]},
 ];
+const klonRoty=()=>SHIFT_ROTA.map(g=>({n:g.n,days:g.days.map(d=>d?{...d}:null)}));
+let GUIDESHIFT=klonRoty();
+/* Týdny rozpisu – dva zpět do května (ohlédnutí) a celý červen dopředu (plánování).
+   Klíč 'M-OD'; minulé týdny jsou jen ke čtení, stejně jako minulé dny v docházce. */
+const SHIFT_TYDNY=[
+  {m:5,od:18,do:22},{m:5,od:25,do:29},
+  {m:6,od:1,do:5},{m:6,od:8,do:12},{m:6,od:15,do:19},{m:6,od:22,do:26},{m:6,od:29,do:30},
+];
+const SHIFT_AKT=2;   // index aktuálního týdne (1.–5. 6., dnes je St 3. 6.)
+const SHIFT_DATA={};
+SHIFT_TYDNY.forEach((t,i)=>{if(i!==SHIFT_AKT)SHIFT_DATA[t.m+'-'+t.od]=klonRoty();});
+// zapsané odchylky minulých týdnů + jedna dopředu naplánovaná dovolená
+SHIFT_DATA['5-18'][2].days[3]={off:'nemoc'};
+SHIFT_DATA['5-18'][0].days[4]={off:'nemoc'};
+SHIFT_DATA['5-25'][4].days[0]={off:'volno'};
+SHIFT_DATA['5-25'][1].days[2]={off:'málo dětí'};
+SHIFT_DATA['6-15'][0].days[1]={off:'dovolená'};
+SHIFT_DATA['6-15'][0].days[3]={off:'dovolená'};
+SHIFT_DATA['6-29'][3].days[4]=null;
+function shiftTyden(i){return i===SHIFT_AKT?GUIDESHIFT:SHIFT_DATA[SHIFT_TYDNY[i].m+'-'+SHIFT_TYDNY[i].od];}
+// rozpis pro konkrétní červnový den – čte ho kalendář
+function shiftProDen(d){const i=SHIFT_TYDNY.findIndex(t=>t.m===6&&d>=t.od&&d<=t.do);return i<0?GUIDESHIFT:shiftTyden(i);}
+function shiftLabel(t){return `${t.od}.–${t.do}. ${t.m}.`;}
 let uspavaToday=1;
 const OFFREASONS=['nemoc','málo dětí','volno','dovolená'];
 

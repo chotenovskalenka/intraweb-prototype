@@ -167,7 +167,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   /* karty na desktopu dostanou jemný stín pro definici (na krémovém pozadí jinak splývají) */
   #content > .tile,#content > .newsitem,#content > .newsbox,.dash3 .tile{box-shadow:0 1px 3px rgba(31,42,46,.06)}
   /* prvky přes celou šířku (přehledové hlavičky, akce, sekce, seznamy docházky) */
-  #content > .dash-head,#content > .dash3,#content > .neuhr,#content > .daypicker,#content > .omluvbtn,#content > .vhead,
+  #content > .dash-head,#content > .dash3,#content > .neuhr,#content > .daypicker,#content > .omluvbtn,#content > .vhead,#content > .vhead-row,
   #content > .switch,#content > .mini,#content > .bulktoggle,#content > .hint,#content > .note2,
   #content > .sectip,#content > .selinfo,#content > .choices,#content > .wkrow,#content > .legend,
   #content > .stepper,#content > .filters,#content > .back,#content > .temanav,
@@ -268,6 +268,9 @@ footer{margin-top:var(--space-lg);padding-top:13px;border-top:1px solid var(--co
 table.wt{width:100%;border-collapse:collapse;table-layout:fixed}
 table.wt th,table.wt td{padding:6px 2px;text-align:center;font-size:var(--text-meta)}
 table.wt thead th{position:sticky;top:0;background:var(--color-surface-2);color:var(--color-text-muted);font-weight:600;font-size:var(--text-micro);border-bottom:1px solid var(--color-border);z-index:1}
+/* datum ve hlavičce týdne – aby bylo poznat, na který týden se člověk dívá */
+table.wt thead th .wt-dt{font-weight:500;color:var(--color-text-hint)}
+table.wt thead th.today .wt-dt{color:var(--color-primary)}
 table.wt th.who,table.wt td.who{text-align:left;width:42%;padding-left:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 table.wt td.who{font-size:var(--text-small);font-weight:500}
 table.wt td.who .av{vertical-align:middle;margin-right:6px}
@@ -1171,13 +1174,39 @@ const AKCE_LONI=[
   {name:'Svatojánský jarmark – rozloučení s předškoláky',day:24,dayEnd:null,time:'15:30',place:'s Jaatou a Maatou',note:'',paid:0},
   {name:'Konec řádného provozu',day:30,dayEnd:null,time:'',place:'',note:'docházka do 15h',paid:0},
 ];
-let GUIDESHIFT=[
+/* Rozpis služeb. Základní rota se opakuje týden co týden, odchylky (nemoc, dovolená) se
+   dopisují – proto jeden vzor + seznam výjimek místo sedmi ručně vypsaných týdnů.
+   Aktuální týden (1.–5. 6.) je živé GUIDESHIFT, ať ho dashboard a kontakty čtou beze změny. */
+const SHIFT_ROTA=[
   {n:'Táňa',days:[{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'},{s:'07:30',e:'16:00'}]},
   {n:'Darča',days:[{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'}]},
   {n:'Gabča',days:[null,{s:'07:30',e:'16:00'},null,{s:'07:30',e:'16:00'},null]},
   {n:'Honza',days:[null,null,{s:'08:00',e:'16:30'},null,{s:'08:00',e:'16:30'}]},
   {n:'Míša',days:[{s:'08:20',e:'15:00'},null,{s:'08:20',e:'15:00'},null,null]},
 ];
+const klonRoty=()=>SHIFT_ROTA.map(g=>({n:g.n,days:g.days.map(d=>d?{...d}:null)}));
+let GUIDESHIFT=klonRoty();
+/* Týdny rozpisu – dva zpět do května (ohlédnutí) a celý červen dopředu (plánování).
+   Klíč 'M-OD'; minulé týdny jsou jen ke čtení, stejně jako minulé dny v docházce. */
+const SHIFT_TYDNY=[
+  {m:5,od:18,do:22},{m:5,od:25,do:29},
+  {m:6,od:1,do:5},{m:6,od:8,do:12},{m:6,od:15,do:19},{m:6,od:22,do:26},{m:6,od:29,do:30},
+];
+const SHIFT_AKT=2;   // index aktuálního týdne (1.–5. 6., dnes je St 3. 6.)
+const SHIFT_DATA={};
+SHIFT_TYDNY.forEach((t,i)=>{if(i!==SHIFT_AKT)SHIFT_DATA[t.m+'-'+t.od]=klonRoty();});
+// zapsané odchylky minulých týdnů + jedna dopředu naplánovaná dovolená
+SHIFT_DATA['5-18'][2].days[3]={off:'nemoc'};
+SHIFT_DATA['5-18'][0].days[4]={off:'nemoc'};
+SHIFT_DATA['5-25'][4].days[0]={off:'volno'};
+SHIFT_DATA['5-25'][1].days[2]={off:'málo dětí'};
+SHIFT_DATA['6-15'][0].days[1]={off:'dovolená'};
+SHIFT_DATA['6-15'][0].days[3]={off:'dovolená'};
+SHIFT_DATA['6-29'][3].days[4]=null;
+function shiftTyden(i){return i===SHIFT_AKT?GUIDESHIFT:SHIFT_DATA[SHIFT_TYDNY[i].m+'-'+SHIFT_TYDNY[i].od];}
+// rozpis pro konkrétní červnový den – čte ho kalendář
+function shiftProDen(d){const i=SHIFT_TYDNY.findIndex(t=>t.m===6&&d>=t.od&&d<=t.do);return i<0?GUIDESHIFT:shiftTyden(i);}
+function shiftLabel(t){return `${t.od}.–${t.do}. ${t.m}.`;}
 let uspavaToday=1;
 const OFFREASONS=['nemoc','málo dětí','volno','dovolená'];
 
@@ -1696,13 +1725,27 @@ function renderPruvodci(){
   h+= todays.length? todays.map(x=>{const d=x.g.days[TODAY];return `<div class="np"><span>${x.g.n}${opener&&x.i===opener.i?' · <b style="color:var(--color-primary)">otevírá</b>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;}).join('') : '<div class="empty">Dnes nikdo nemá službu.</div>';
   if(todays.length)h+=`<div class="np" style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:9px"><span>Dnes uspává</span><select class="selin" onchange="setUspava(this.value)">`+todays.map(x=>`<option value="${x.i}" ${x.i===uspavaToday?'selected':''}>${x.g.n}</option>`).join('')+`</select></div>`;
   h+=`</div>`;
-  h+=`<div class="vhead">Týden · služby</div>`;
+  // Týden rozpisu se listuje a je vždycky datovaný – jinak není poznat, na který týden
+  // se člověk dívá. Minulé týdny jsou jen ke čtení, stejně jako minulé dny v docházce.
+  const t=SHIFT_TYDNY[shiftT], rows=shiftTyden(shiftT), minuly=shiftT<SHIFT_AKT;
+  h+=`<div class="vhead-row"><div class="vhead">Týden · služby</div><div class="vhead-act">`+
+    `<div class="dnav"><button onclick="stepShiftT(-1)" ${shiftT<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`+
+    `<span>${shiftLabel(t)}${shiftT===SHIFT_AKT?'<i class="dn-cur"> · tento týden</i>':''}</span>`+
+    `<button onclick="stepShiftT(1)" ${shiftT>=SHIFT_TYDNY.length-1?'disabled':''} aria-label="Další týden">›</button></div></div></div>`;
   // wt-sm = tabulka s krátkými jmény → na mobilu užší první sloupec, aby buňky měly 44 px
-  h+=`<div class="weekbox"><table class="wt wt-sm"><thead><tr><th class="who">Průvodce</th>`+DAYS.map((d,j)=>`<th class="${j===TODAY?'today':''}">${d}</th>`).join('')+`</tr></thead><tbody>`;
-  GUIDESHIFT.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>`<td class="ced${di===TODAY?' today':''}" onclick="openShift(${gi},${di})">${shiftCell(d)}</td>`).join('')+`</tr>`;});
-  h+=`</tbody></table></div><div class="hint">Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).</div>`;
+  h+=`<div class="weekbox"><table class="wt wt-sm"><thead><tr><th class="who">Průvodce</th>`+
+    DAYS.map((d,j)=>{const den=t.od+j, jeDnes=shiftT===SHIFT_AKT&&j===TODAY;
+      return den>t.do?`<th></th>`:`<th class="${jeDnes?'today':''}">${d} <span class="wt-dt">${den}.</span></th>`;}).join('')+`</tr></thead><tbody>`;
+  rows.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>{
+      const jeDnes=shiftT===SHIFT_AKT&&di===TODAY;
+      if(t.od+di>t.do)return `<td class="pastc"></td>`;
+      return minuly? `<td class="pastc">${shiftCell(d)}</td>`
+        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})">${shiftCell(d)}</td>`;
+    }).join('')+`</tr>`;});
+  h+=`</tbody></table></div><div class="hint">${minuly?'Minulý týden – jen k nahlédnutí.':'Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).'}</div>`;
   return h;
 }
+window.stepShiftT=d=>{shiftT=Math.max(0,Math.min(SHIFT_TYDNY.length-1,shiftT+d));render();};
 window.setUspava=v=>{uspavaToday=Number(v);};
 </script>
 <script>
@@ -1736,7 +1779,7 @@ function renderKalendar(){
   h+= evs.length? evs.map(e=>`<div class="gev"${e.id?` style="cursor:pointer" onclick="openAkceDetail('${e.id}')"`:''}><span class="gvbar g-${e.type}"></span><span>${e.t}${e.id?' ›':''}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
   // rozpis služeb – to rodiče nevidí, průvodce ano
   if(jeCerven&&!we){
-    const gws=GUIDESHIFT.filter(g=>serving(g.days[wd(kalSel)]));
+    const gws=shiftProDen(kalSel).filter(g=>serving(g.days[wd(kalSel)]));
     h+=`<div class="gev"><span class="gvbar g-rozvrh"></span><span>${gws.map(g=>g.n).join(', ')||'–'}</span><span class="gevt">slouží</span></div>`;
   }
   h+=`</div></div>`;
@@ -2027,9 +2070,9 @@ function akceModalHTML(){
   </div></div>`;
 }
 function shiftModalHTML(){
-  const m=shiftM,g=GUIDESHIFT[m.gi];
+  const m=shiftM,g=shiftTyden(shiftT)[m.gi];
   return `<div class="modal-scrim" onclick="if(event.target===this)closeShift()"><div class="modal">
-    <h3>Služba – ${g.n}, ${DOW[m.di]}</h3>
+    <h3>Služba – ${g.n}</h3><div class="pl" style="margin-top:-2px">${DOW[m.di]} ${SHIFT_TYDNY[shiftT].od+m.di}. ${SHIFT_TYDNY[shiftT].m}.</div>
     <div class="mini" style="margin-bottom:6px"><button class="${m.on?'on':''}" onclick="setShiftOn(true)">Slouží</button><button class="${!m.on?'on':''}" onclick="setShiftOn(false)">Neslouží</button></div>
     ${m.on?`<label class="pl">Příchod</label><input class="pin" type="time" value="${m.s}" oninput="setShiftF('s',this.value)"><label class="pl">Odchod</label><input class="pin" type="time" value="${m.e}" oninput="setShiftF('e',this.value)">`
     :`<label class="pl">Důvod (nepovinné)</label><select class="selin" style="width:100%" onchange="setShiftF('reason',this.value)"><option value="">–</option>${OFFREASONS.map(o=>`<option value="${o}" ${m.reason===o?'selected':''}>${o}</option>`).join('')}</select>`}
@@ -2052,11 +2095,11 @@ window.saveAkce=()=>{
   modal=null;renderModalRoot();render();showToast('Uloženo ✓');
 };
 window.delAkce=()=>{AKCE=AKCE.filter(x=>x.id!==modal.id);modal=null;renderModalRoot();render();showToast('Akce smazána');};
-window.openShift=(gi,di)=>{const d=GUIDESHIFT[gi].days[di];shiftM={gi,di,on:serving(d)||!d,s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
+window.openShift=(gi,di)=>{const d=shiftTyden(shiftT)[gi].days[di];shiftM={gi,di,on:serving(d)||!d,s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
 window.closeShift=()=>{shiftM=null;renderModalRoot();};
 window.setShiftOn=b=>{shiftM.on=b;renderModalRoot();};
 window.setShiftF=(f,v)=>{shiftM[f]=v;};
-window.saveShift=()=>{const m=shiftM;GUIDESHIFT[m.gi].days[m.di]=m.on?{s:m.s,e:m.e}:(m.reason?{off:m.reason}:null);shiftM=null;renderModalRoot();render();showToast('Uloženo ✓');};
+window.saveShift=()=>{const m=shiftM;shiftTyden(shiftT)[m.gi].days[m.di]=m.on?{s:m.s,e:m.e}:(m.reason?{off:m.reason}:null);shiftM=null;renderModalRoot();render();showToast('Uloženo ✓');};
 window.openAkceDetail=id=>{detailA=id;renderModalRoot();};
 window.closeAkceDetail=()=>{detailA=null;renderModalRoot();};
 window.editFromDetail=()=>{const id=detailA;detailA=null;openAkce(id);};
@@ -2084,7 +2127,8 @@ const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 let section='prehled', drawerOpen=false, wquery='';
 let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
-let rytOpen=-1, modal=null, shiftM=null;
+let modal=null, shiftM=null;
+let shiftT=SHIFT_AKT;   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
 const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};

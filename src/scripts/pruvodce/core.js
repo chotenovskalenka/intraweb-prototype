@@ -17,7 +17,8 @@ const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 let section='prehled', drawerOpen=false, wquery='';
 let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
-let rytOpen=-1, modal=null, shiftM=null;
+let modal=null, shiftM=null;
+let shiftT=SHIFT_AKT;   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
 const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};

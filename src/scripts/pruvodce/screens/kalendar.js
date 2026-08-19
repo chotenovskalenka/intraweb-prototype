@@ -28,7 +28,7 @@ function renderKalendar(){
   h+= evs.length? evs.map(e=>`<div class="gev"${e.id?` style="cursor:pointer" onclick="openAkceDetail('${e.id}')"`:''}><span class="gvbar g-${e.type}"></span><span>${e.t}${e.id?' ›':''}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
   // rozpis služeb – to rodiče nevidí, průvodce ano
   if(jeCerven&&!we){
-    const gws=GUIDESHIFT.filter(g=>serving(g.days[wd(kalSel)]));
+    const gws=shiftProDen(kalSel).filter(g=>serving(g.days[wd(kalSel)]));
     h+=`<div class="gev"><span class="gvbar g-rozvrh"></span><span>${gws.map(g=>g.n).join(', ')||'–'}</span><span class="gevt">slouží</span></div>`;
   }
   h+=`</div></div>`;

@@ -167,7 +167,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   /* karty na desktopu dostanou jemný stín pro definici (na krémovém pozadí jinak splývají) */
   #content > .tile,#content > .newsitem,#content > .newsbox,.dash3 .tile{box-shadow:0 1px 3px rgba(31,42,46,.06)}
   /* prvky přes celou šířku (přehledové hlavičky, akce, sekce, seznamy docházky) */
-  #content > .dash-head,#content > .dash3,#content > .neuhr,#content > .daypicker,#content > .omluvbtn,#content > .vhead,
+  #content > .dash-head,#content > .dash3,#content > .neuhr,#content > .daypicker,#content > .omluvbtn,#content > .vhead,#content > .vhead-row,
   #content > .switch,#content > .mini,#content > .bulktoggle,#content > .hint,#content > .note2,
   #content > .sectip,#content > .selinfo,#content > .choices,#content > .wkrow,#content > .legend,
   #content > .stepper,#content > .filters,#content > .back,#content > .temanav,
@@ -268,6 +268,9 @@ footer{margin-top:var(--space-lg);padding-top:13px;border-top:1px solid var(--co
 table.wt{width:100%;border-collapse:collapse;table-layout:fixed}
 table.wt th,table.wt td{padding:6px 2px;text-align:center;font-size:var(--text-meta)}
 table.wt thead th{position:sticky;top:0;background:var(--color-surface-2);color:var(--color-text-muted);font-weight:600;font-size:var(--text-micro);border-bottom:1px solid var(--color-border);z-index:1}
+/* datum ve hlavičce týdne – aby bylo poznat, na který týden se člověk dívá */
+table.wt thead th .wt-dt{font-weight:500;color:var(--color-text-hint)}
+table.wt thead th.today .wt-dt{color:var(--color-primary)}
 table.wt th.who,table.wt td.who{text-align:left;width:42%;padding-left:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 table.wt td.who{font-size:var(--text-small);font-weight:500}
 table.wt td.who .av{vertical-align:middle;margin-right:6px}
