@@ -333,10 +333,12 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
    Bez tohoto pravidla vypadalo .btn-primary[disabled] přesně jako aktivní (admin: Uložit zápis, Odeslat). */
 .btn-primary:disabled,.btn-ghost:disabled{background:var(--color-surface-2);color:var(--color-text-hint);border-color:var(--color-border);cursor:default}
 .btn-del{display:block;background:none;border:none;color:var(--color-danger);font-size:var(--text-small);font-weight:600;cursor:pointer;margin:12px auto 0;font-family:var(--font-sans)}
-.filters{display:flex;gap:var(--space-sm);margin-bottom:var(--space-md);overflow-x:auto;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}
-.filters button{flex:0 0 auto;min-height:44px;border:1px solid var(--color-border-strong);background:var(--color-surface);font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);padding:8px 15px;border-radius:var(--radius-full);cursor:pointer}
-.filters button.on{background:var(--soft-primary);border-color:var(--edge-primary);color:var(--color-primary-strong);font-weight:600}
-.filters .cnt{color:var(--color-text-hint);font-variant-numeric:tabular-nums;margin-left:2px}
+/* Filtr seznamu. Pilulka s výplní četla jako tlačítko („proveď"), i když jen přepíná výřez
+   dat – proto text s počtem a podtržením aktivního, ne button chrome. */
+.filters{display:flex;gap:var(--space-xl);margin-bottom:var(--space-md);border-bottom:1px solid var(--color-border);overflow-x:auto;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}
+.filters button{flex:0 0 auto;min-height:44px;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);padding:0 2px;cursor:pointer;white-space:nowrap}
+.filters button.on{color:var(--color-primary-strong);font-weight:600;border-bottom-color:var(--color-primary)}
+.filters .cnt{color:var(--color-text-hint);font-variant-numeric:tabular-nums;margin-left:4px}
 .filters button.on .cnt{color:var(--color-primary)}
 .bdg{font-size:var(--text-chip);font-weight:600;padding:2px 7px;border-radius:var(--radius-xs);white-space:nowrap}
 .bdg.pre{color:var(--state-brand-ink);background:var(--state-brand-bg)}.bdg.al{color:var(--state-danger-ink);background:var(--state-danger-bg)}
@@ -439,13 +441,14 @@ table.wt td.pastc{opacity:.45}
 
 /* Hover feedback – jen na zařízeních s myší (dotyk nezasažen). Doplněno v revizi ui-ux-pro-max. */
 @media (hover:hover){
+  .filters button:hover:not(.on){color:var(--color-primary)}
   a,button{transition:background-color .15s ease,color .15s ease,border-color .15s ease,filter .15s ease}
   /* navigace (drawer i admin sidebar) */
   .ditem:hover:not(.on),.sb-item:hover:not(.on){background:var(--wash-primary)}
   /* plné (primární) akce – jemné projasnění */
   .btn-primary:hover,.omluvbtn:hover,.addbig:hover,.savebtn:hover,.odbtn:hover,.fondbtn:hover,.btn-s.primary:hover,.omcheck:hover{filter:brightness(1.08)}
   /* ghost / outline / segment tlačítka – jemný tint */
-  .cbtn:hover,.addbtn:hover,.bulktoggle:hover,.omx:hover,.filters button:hover:not(.on),.switch button:hover:not(.on),.mini button:hover:not(.on),.temanav button:hover:not(.on),.kids button:hover:not(.on),.choices button:hover{background:var(--wash-primary);border-color:var(--color-primary)}
+  .cbtn:hover,.addbtn:hover,.bulktoggle:hover,.omx:hover,.switch button:hover:not(.on),.mini button:hover:not(.on),.temanav button:hover:not(.on),.kids button:hover:not(.on),.choices button:hover{background:var(--wash-primary);border-color:var(--color-primary)}
   /* klikací karty / řádky – zvýraznění povrchu */
   button.tile:hover,.akce:hover,.newsrow:hover,.kbtn:hover,.prehl-abs:hover,.stepper button:hover:not(:disabled),.dh-step:hover{background:var(--color-surface-2)}
   /* textové odkazy */
@@ -513,7 +516,13 @@ table.wt td.pastc{opacity:.45}
   #content > .deti{column-span:all}
   .deti-cards{display:none}
   .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
-  .dtab thead th{text-align:left;font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;padding:10px 14px;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
+  .dtab thead th{text-align:left;padding:0;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
+  /* hlavička je tlačítko na řazení – šipka drží místo i když je sloupec neaktivní */
+  .dtab thead th button{width:100%;display:flex;align-items:center;gap:5px;min-height:38px;padding:0 14px;border:none;background:none;cursor:pointer;
+    font-family:var(--font-sans);font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;text-align:left}
+  .dtab thead th button:hover{color:var(--color-primary)}
+  .dtab thead th.srt button{color:var(--color-primary-strong)}
+  .dtab .arw{font-size:8px;line-height:1;min-width:8px}
   .dtab td{padding:11px 14px;font-size:var(--text-small);color:var(--color-text);border-top:1px solid var(--color-border)}
   .dtab tbody tr{cursor:pointer}
   .dtab tbody tr:first-child td{border-top:none}
@@ -522,6 +531,10 @@ table.wt td.pastc{opacity:.45}
   .dtab td.nm .av{vertical-align:middle;margin-right:9px}
   .dt-no{color:var(--color-text-hint)}
 }
+/* Řádek nad soupisem: počet vlevo, stažení vpravo. */
+.deti-sum{display:flex;align-items:center;gap:var(--space-md);margin:0 2px 9px}
+.deti-sum .tlab{margin:0}
+.deti-exp{margin-left:auto;min-height:44px;padding:0 14px;font-size:var(--text-small);white-space:nowrap}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -1727,15 +1740,39 @@ window.kalStep=(dm,dy)=>{kalM+=dm;if(kalM>11){kalM=0;kalY++;}if(kalM<0){kalM=11;
 </script>
 <script>
 /* SCREEN: PRUVODCE_DETI */
+/* Řazení soupisu. Klik na hlavičku přepíná vzestupně/sestupně; výchozí je abecedně podle
+   jména (stejné pořadí jako dřív). Řadí se i karty na mobilu, i když tam hlavička není –
+   ať se seznam po přepnutí šířky nepřeskládá. */
+let detiSort='nm', detiDir=1;
+const DETI_SLOUPCE=[['nm','Dítě'],['plan','Režim docházky'],['vek','Věk'],['nar','Narozeniny'],['predskolak','Předškolák'],['alergie','Alergie']];
+// „16. 7. 2020" → 20200716, aby se narozeniny řadily podle data, ne podle textu
+function narKey(v){const p=(v||'').split('.').map(x=>Number(x.trim()));return (p[2]||0)*10000+(p[1]||0)*100+(p[0]||0);}
+// právě zobrazený výřez (filtr + hledání + řazení) – čte ho výpis i export
+function detiList(){
+  return data.map((c,i)=>({c,i}))
+    .filter(x=>detiFilter==='all'||(detiFilter==='pre'&&x.c.predskolak)||(detiFilter==='al'&&x.c.alergie))
+    .filter(x=>!detiQuery||norm(full(x.c)).includes(norm(detiQuery)))
+    .sort(detiCmp);
+}
+function detiCmp(a,b){
+  const A=a.c,B=b.c;let r=0;
+  if(detiSort==='nm')r=A.n.localeCompare(B.n,'cs');
+  else if(detiSort==='vek')r=A.vek-B.vek;
+  else if(detiSort==='nar')r=narKey(A.nar)-narKey(B.nar);
+  else if(detiSort==='predskolak')r=(A.predskolak?1:0)-(B.predskolak?1:0);
+  else r=String(A[detiSort]||'').localeCompare(String(B[detiSort]||''),'cs');
+  return r*detiDir || A.n.localeCompare(B.n,'cs');   // shodné hodnoty dorovná jméno
+}
 function renderDeti(){
   if(detiOpen>=0)return renderDite(detiOpen);
   // počty u filtrů – ať je poznat, že filtrují, ne že něco spouštějí
   const pocty={all:data.length,pre:data.filter(c=>c.predskolak).length,al:data.filter(c=>c.alergie).length};
   let h=`<div class="deti"><div class="filters">`+[['all','Všechny'],['pre','Předškoláci'],['al','Alergici']]
     .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocty[f[0]]}</span></button>`).join('')+`</div>`;
-  const list=data.map((c,i)=>({c,i})).filter(x=>detiFilter==='all'||(detiFilter==='pre'&&x.c.predskolak)||(detiFilter==='al'&&x.c.alergie)).filter(x=>!detiQuery||norm(full(x.c)).includes(norm(detiQuery))).sort(byAlpha);
+  const list=detiList();
   h+=`<input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`;
-  h+=`<div class="tlab" style="margin:0 2px 9px">${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')}</div>`;
+  h+=`<div class="deti-sum"><span class="tlab">${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')}</span>`+
+    `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button></div>`;
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div></div>`;
   // Dvojí výpis: na mobilu karty (dobře se na ně klepe), na desktopu tabulka (25 dětí se
   // dá přehlédnout na jednu obrazovku). Přepíná se v CSS – appka nemá listener na resize.
@@ -1743,7 +1780,10 @@ function renderDeti(){
     const b=(c.predskolak?'<span class="bdg pre">předškolák</span>':'')+(c.alergie?` <span class="bdg al">${c.alergie}</span>`:'');
     return `<button class="acard" onclick="openDite(${x.i})">${avatar(c,32)}<span style="flex:1"><span class="aname">${full(c)}</span><div class="ameta">${c.plan}${b?' · ':''}${b}</div></span></button>`;
   }).join('')+`</div>`;
-  h+=`<table class="dtab"><thead><tr><th>Dítě</th><th>Režim docházky</th><th>Věk</th><th>Narozeniny</th><th>Předškolák</th><th>Alergie</th></tr></thead><tbody>`+
+  h+=`<table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
+    const on=detiSort===k;
+    return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):''}</span></button></th>`;
+  }).join('')+`</tr></thead><tbody>`+
     list.map(x=>{const c=x.c;
       return `<tr onclick="openDite(${x.i})"><td class="nm">${avatar(c,28)}${full(c)}</td><td>${c.plan}</td><td>${c.vek} let</td><td>${c.nar}</td>`+
         `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
@@ -1774,6 +1814,22 @@ function renderDite(i){
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
+/* Stáhne právě zobrazený výřez – co je odfiltrované a seřazené na obrazovce, to je i v souboru.
+   Středník + BOM: Excel v české lokalizaci jinak nacpe celý řádek do jednoho sloupce. */
+window.exportDeti=()=>{
+  const list=detiList();
+  const hlav=['Jméno','Režim docházky','Věk','Narozeniny','Předškolák','Alergie'];
+  const bunka=v=>{v=String(v??'');return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const radky=list.map(x=>{const c=x.c;return [full(c),c.plan,c.vek,c.nar,c.predskolak?'ano':'',c.alergie||''];});
+  const csv='\uFEFF'+[hlav,...radky].map(r=>r.map(bunka).join(';')).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='deti-vhaaji-2026-06.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  showToast(`Staženo ${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')} ✓`);
+};
+window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
 window.setDetiF=f=>{detiFilter=f;render();};
 window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
 window.openDite=i=>{detiOpen=i;render();};

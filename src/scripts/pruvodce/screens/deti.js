@@ -1,13 +1,37 @@
 /* SCREEN: PRUVODCE_DETI */
+/* Řazení soupisu. Klik na hlavičku přepíná vzestupně/sestupně; výchozí je abecedně podle
+   jména (stejné pořadí jako dřív). Řadí se i karty na mobilu, i když tam hlavička není –
+   ať se seznam po přepnutí šířky nepřeskládá. */
+let detiSort='nm', detiDir=1;
+const DETI_SLOUPCE=[['nm','Dítě'],['plan','Režim docházky'],['vek','Věk'],['nar','Narozeniny'],['predskolak','Předškolák'],['alergie','Alergie']];
+// „16. 7. 2020" → 20200716, aby se narozeniny řadily podle data, ne podle textu
+function narKey(v){const p=(v||'').split('.').map(x=>Number(x.trim()));return (p[2]||0)*10000+(p[1]||0)*100+(p[0]||0);}
+// právě zobrazený výřez (filtr + hledání + řazení) – čte ho výpis i export
+function detiList(){
+  return data.map((c,i)=>({c,i}))
+    .filter(x=>detiFilter==='all'||(detiFilter==='pre'&&x.c.predskolak)||(detiFilter==='al'&&x.c.alergie))
+    .filter(x=>!detiQuery||norm(full(x.c)).includes(norm(detiQuery)))
+    .sort(detiCmp);
+}
+function detiCmp(a,b){
+  const A=a.c,B=b.c;let r=0;
+  if(detiSort==='nm')r=A.n.localeCompare(B.n,'cs');
+  else if(detiSort==='vek')r=A.vek-B.vek;
+  else if(detiSort==='nar')r=narKey(A.nar)-narKey(B.nar);
+  else if(detiSort==='predskolak')r=(A.predskolak?1:0)-(B.predskolak?1:0);
+  else r=String(A[detiSort]||'').localeCompare(String(B[detiSort]||''),'cs');
+  return r*detiDir || A.n.localeCompare(B.n,'cs');   // shodné hodnoty dorovná jméno
+}
 function renderDeti(){
   if(detiOpen>=0)return renderDite(detiOpen);
   // počty u filtrů – ať je poznat, že filtrují, ne že něco spouštějí
   const pocty={all:data.length,pre:data.filter(c=>c.predskolak).length,al:data.filter(c=>c.alergie).length};
   let h=`<div class="deti"><div class="filters">`+[['all','Všechny'],['pre','Předškoláci'],['al','Alergici']]
     .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocty[f[0]]}</span></button>`).join('')+`</div>`;
-  const list=data.map((c,i)=>({c,i})).filter(x=>detiFilter==='all'||(detiFilter==='pre'&&x.c.predskolak)||(detiFilter==='al'&&x.c.alergie)).filter(x=>!detiQuery||norm(full(x.c)).includes(norm(detiQuery))).sort(byAlpha);
+  const list=detiList();
   h+=`<input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`;
-  h+=`<div class="tlab" style="margin:0 2px 9px">${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')}</div>`;
+  h+=`<div class="deti-sum"><span class="tlab">${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')}</span>`+
+    `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button></div>`;
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div></div>`;
   // Dvojí výpis: na mobilu karty (dobře se na ně klepe), na desktopu tabulka (25 dětí se
   // dá přehlédnout na jednu obrazovku). Přepíná se v CSS – appka nemá listener na resize.
@@ -15,7 +39,10 @@ function renderDeti(){
     const b=(c.predskolak?'<span class="bdg pre">předškolák</span>':'')+(c.alergie?` <span class="bdg al">${c.alergie}</span>`:'');
     return `<button class="acard" onclick="openDite(${x.i})">${avatar(c,32)}<span style="flex:1"><span class="aname">${full(c)}</span><div class="ameta">${c.plan}${b?' · ':''}${b}</div></span></button>`;
   }).join('')+`</div>`;
-  h+=`<table class="dtab"><thead><tr><th>Dítě</th><th>Režim docházky</th><th>Věk</th><th>Narozeniny</th><th>Předškolák</th><th>Alergie</th></tr></thead><tbody>`+
+  h+=`<table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
+    const on=detiSort===k;
+    return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):''}</span></button></th>`;
+  }).join('')+`</tr></thead><tbody>`+
     list.map(x=>{const c=x.c;
       return `<tr onclick="openDite(${x.i})"><td class="nm">${avatar(c,28)}${full(c)}</td><td>${c.plan}</td><td>${c.vek} let</td><td>${c.nar}</td>`+
         `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
@@ -46,6 +73,22 @@ function renderDite(i){
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
+/* Stáhne právě zobrazený výřez – co je odfiltrované a seřazené na obrazovce, to je i v souboru.
+   Středník + BOM: Excel v české lokalizaci jinak nacpe celý řádek do jednoho sloupce. */
+window.exportDeti=()=>{
+  const list=detiList();
+  const hlav=['Jméno','Režim docházky','Věk','Narozeniny','Předškolák','Alergie'];
+  const bunka=v=>{v=String(v??'');return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const radky=list.map(x=>{const c=x.c;return [full(c),c.plan,c.vek,c.nar,c.predskolak?'ano':'',c.alergie||''];});
+  const csv='\uFEFF'+[hlav,...radky].map(r=>r.map(bunka).join(';')).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='deti-vhaaji-2026-06.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  showToast(`Staženo ${list.length} ${list.length===1?'dítě':(list.length>=2&&list.length<=4?'děti':'dětí')} ✓`);
+};
+window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
 window.setDetiF=f=>{detiFilter=f;render();};
 window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
 window.openDite=i=>{detiOpen=i;render();};
