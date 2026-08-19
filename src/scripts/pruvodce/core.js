@@ -40,8 +40,7 @@ function render(){
     : section==='akce' ? `<h1 class="dh-t">Akce</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
     : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1>${hospodar?'<button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>':''}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
-    // stepper .dnav – tentýž vzor jako u akcí, přípravy i rozpisu služeb
-    : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span>${jidTydenLabel(JIDELNICEK[jidTyden])}</span><button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
+    : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';
   const rc=document.getElementById('rolechip');
