@@ -153,3 +153,5 @@ function alergenyLegenda(dny){
 
 // Názvy měsíců (1. pád) – používá rodičovská i průvodcovská appka v tématickém plánu.
 const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+// 2. pád – pro datum „3. června" (nominativ by dal „3. červen")
+const MONTHS_G=['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
