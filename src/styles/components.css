@@ -341,7 +341,7 @@ table.wt td.pastc{opacity:.45}
    appka nemá listener na resize, takže větvit v JS by při změně šířky nechalo starý výpis. */
 .dtab{display:none}
 @media (min-width:900px){
-  #content > .deti,#content > .akce{column-span:all}
+  #content > .deti,#content > .akce-sec{column-span:all}
   .deti-cards,.akce-cards{display:none}
   .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
   .dtab thead th{text-align:left;padding:0;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
@@ -370,7 +370,7 @@ table.wt td.pastc{opacity:.45}
   .akce-tab td.dt-note{color:var(--color-text-muted);font-size:var(--text-meta);line-height:var(--leading-snug)}
   .akce-tab td.nm{white-space:normal}
   .akce-tab td.dt-fond{white-space:nowrap}
-  #content > .akce>.addbtn{max-width:340px}
+
 }
 /* Lišta nad soupisem: hledání + stažení. Do pole se píše jen jméno, takže nepotřebuje
    celou šířku – uvolněné místo zabere tlačítko. Na úzkém displeji se zalomí pod pole. */

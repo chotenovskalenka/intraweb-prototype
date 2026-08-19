@@ -527,7 +527,7 @@ table.wt td.pastc{opacity:.45}
    appka nemá listener na resize, takže větvit v JS by při změně šířky nechalo starý výpis. */
 .dtab{display:none}
 @media (min-width:900px){
-  #content > .deti,#content > .akce{column-span:all}
+  #content > .deti,#content > .akce-sec{column-span:all}
   .deti-cards,.akce-cards{display:none}
   .dtab{display:table;width:100%;border-collapse:collapse;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
   .dtab thead th{text-align:left;padding:0;background:var(--color-surface-2);border-bottom:1px solid var(--color-border)}
@@ -556,7 +556,7 @@ table.wt td.pastc{opacity:.45}
   .akce-tab td.dt-note{color:var(--color-text-muted);font-size:var(--text-meta);line-height:var(--leading-snug)}
   .akce-tab td.nm{white-space:normal}
   .akce-tab td.dt-fond{white-space:nowrap}
-  #content > .akce>.addbtn{max-width:340px}
+
 }
 /* Lišta nad soupisem: hledání + stažení. Do pole se píše jen jméno, takže nepotřebuje
    celou šířku – uvolněné místo zabere tlačítko. Na úzkém displeji se zalomí pod pole. */
@@ -912,6 +912,11 @@ const JIDELNICEK=[
     [['Svačinka 1','Domácí chléb, tuňáková pomazánka, zelenina','4'],['Polévka','Zeleninová s ječnými kroupami','1, 9'],['Hlavní jídlo','Plněné bramborové knedlíky se zelím a cibulkou, plněné hrachovým granulátem','1'],['Svačinka 2','Pečivo (1× bez sóji), máslo, sýr, zelenina','']],
     [['Svačinka 1','Ochucená mléčná kaše, ovoce','7'],['Polévka','Tomatová s rýžovými hvězdičkami',''],['Hlavní jídlo','Zeleninové kari s květákem, batáty, dýní a cizrnou, jasmínová rýže',''],['Svačinka 2','Croissant, sýr, salátek, zelenina','']],
   ]},
+  /* Příští školní rok – prázdné týdny k naplánování. Prázdniny se přeskakují (provoz je
+     září–červen), proto po červnu následuje září. Vyplňuje se v průvodcovské appce. */
+  {m:9,od:7,do:11,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]},
+  {m:9,od:14,do:18,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]},
+  {m:9,od:21,do:25,dny:[[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']],[['Svačinka 1','',''],['Polévka','',''],['Hlavní jídlo','',''],['Svačinka 2','','']]]}
 ];
 /* Vrátí jídelníček dne (5 položek: svačinky/polévka/hlavní) podle dne v měsíci, nebo null,
    pokud pro daný den (víkend, nebo mimo dodané 4 týdny – 27.–30. 6.) žádný není. */
@@ -1644,7 +1649,7 @@ window.saveNov=()=>{const f=novForm;
    měsíce – to nahradilo dřívější přepínač „Zobrazit loňské akce". */
 function renderAkce(){
   const o=AKCE_MESICE[akceM], rows=[...akceMesic(akceM)].sort((a,b)=>a.day-b.day), minuly=akceM<AKCE_AKT;
-  let h=`<div class="akce"><div class="vhead-row"><div class="vhead">Akce a výjimky</div><div class="vhead-act">`+
+  let h=`<div class="akce-sec"><div class="vhead-row"><div class="vhead">Akce a výjimky</div><div class="vhead-act">`+
     `<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`+
     `<span>${o.label}${akceM===AKCE_AKT?'<i class="dn-cur"> · aktuální</i>':''}</span>`+
     `<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div></div></div>`;
@@ -2183,13 +2188,13 @@ function renderJidelnicek(){
       : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+`</div></div>`;
   t.dny.forEach((den,i)=>{
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
-    h+=`<div class="tile"><div class="ch">${DOW[wd(d)]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
+    h+=`<div class="tile"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
     den.forEach((it,k)=>{
       if(jidEdit){
         const dr=jidDraft[i][k];
         h+=`<div class="jid-edit"><label class="pl">${it[0]}</label>`+
-          `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[wd(d)]}">`+
-          `<input class="pin jid-alg" value="${esc(dr[2])}" oninput="setJid(${i},${k},2,this.value)" placeholder="alergeny, např. 1, 7" aria-label="Alergeny – ${it[0]}, ${DOW[wd(d)]}"></div>`;
+          `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[i]}">`+
+          `<input class="pin jid-alg" value="${esc(dr[2])}" oninput="setJid(${i},${k},2,this.value)" placeholder="alergeny, např. 1, 7" aria-label="Alergeny – ${it[0]}, ${DOW[i]}"></div>`;
       }else{
         const deti=detiSAlergii(it[2]);
         // Jména jdou dovnitř .mv, aby seděla POD názvem jídla. Vedle textu je nelze dát:
