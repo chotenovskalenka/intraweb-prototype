@@ -214,6 +214,7 @@ function shiftProDen(d){const i=SHIFT_TYDNY.findIndex(t=>t.m===6&&d>=t.od&&d<=t.
 function shiftLabel(t){return `${t.od}.–${t.do}. ${t.m}.`;}
 let uspavaToday=1;
 const OFFREASONS=['nemoc','málo dětí','volno','dovolená'];
+const PLANY=['celodenní','dopolední','odpolední'];   // režimy docházky dítěte
 
 const SEEDFOND=[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]];
 const FONDROK=2000;

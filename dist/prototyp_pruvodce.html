@@ -132,7 +132,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:13px}
 .burger{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;font-size:21px/* glyf ☰, ne text – mimo typografickou škálu */;line-height:1;color:var(--color-primary-strong);cursor:pointer;padding:2px 4px;margin-left:-8px}
 .ttl{font-family:var(--font-serif);font-size:var(--text-title);color:var(--color-primary-strong)}
-.role{font-size:var(--text-micro);font-weight:500;color:var(--color-primary);background:var(--soft-primary);border:1px solid var(--edge-primary);padding:5px 10px;border-radius:var(--radius-full);white-space:nowrap}
+.role{font-size:var(--text-micro);font-weight:500;color:var(--color-primary);background:var(--soft-primary);border:1px solid var(--edge-primary);padding:5px 10px;border-radius:var(--radius-full);white-space:nowrap;font-family:var(--font-sans);cursor:pointer}
+/* Štítek je zároveň přepínač role → dotykový cíl 44 px přes ::before, aby vizuál zůstal
+   drobný (stejný trik jako u .chk v docházce). */
+.role{position:relative}
+.role::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+/* průvodce bez práv hospodářky – štítek zešedne, aby bylo poznat, proč nejde editovat */
+.role.role-ro{color:var(--color-text-muted);background:var(--color-surface-2);border-color:var(--color-border-strong)}
 .scrim{position:fixed;inset:0;background:rgba(31,42,46,.42);z-index:5;display:none}.scrim.on{display:block}
 .drawer{position:fixed;top:0;left:0;bottom:0;width:76%;max-width:300px;background:var(--color-surface);z-index:6;transform:translateX(-101%);transition:.22s;padding:20px 0 14px;box-shadow:6px 0 28px rgba(0,0,0,.16);overflow-y:auto;display:flex;flex-direction:column}
 .drawer.on{transform:none}
@@ -551,6 +557,11 @@ table.wt td.pastc{opacity:.45}
 .deti-bar .search{flex:1 1 200px;margin-bottom:0}
 .deti-exp{flex:0 0 auto;margin-left:auto;min-height:44px;padding:0 14px;font-size:var(--text-small);white-space:nowrap}
 @media (min-width:900px){ .deti-bar .search{flex:0 1 320px} }
+/* Ano/ne přepínač v detailu dítěte (předškolák). Vypadá jako hodnota, ne jako tlačítko –
+   klepnutím se překlopí; 44 px kvůli dotyku. */
+.tgl{min-height:44px;padding:0 12px;border:1px solid var(--color-border-strong);background:var(--color-surface);
+  border-radius:var(--radius-full);font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);cursor:pointer}
+.tgl.on{background:var(--soft-primary);border-color:var(--edge-primary);color:var(--color-primary-strong);font-weight:600}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -702,7 +713,7 @@ table.wt td.pastc{opacity:.45}
   <div class="scrim" id="scrim" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer"></div>
   <div class="scroll">
-    <div class="topbar"><button class="burger" onclick="openDrawer()">☰</button><div class="dashhead" id="dashhead"></div><span class="ttl" id="ttl">Přehled</span><span class="role">Průvodce</span></div>
+    <div class="topbar"><button class="burger" onclick="openDrawer()">☰</button><div class="dashhead" id="dashhead"></div><span class="ttl" id="ttl">Přehled</span><button class="role" id="rolechip" onclick="togHosp()" title="Přepnout roli (prototyp)">Průvodce</button></div>
     <div id="content"></div>
     <footer class="appfoot"><span>IS Vhaaji · prototyp</span><button class="sos-link" onclick="openSos()">Nahlásit chybu na IS</button></footer>
   </div>
@@ -1227,6 +1238,7 @@ function shiftProDen(d){const i=SHIFT_TYDNY.findIndex(t=>t.m===6&&d>=t.od&&d<=t.
 function shiftLabel(t){return `${t.od}.–${t.do}. ${t.m}.`;}
 let uspavaToday=1;
 const OFFREASONS=['nemoc','málo dětí','volno','dovolená'];
+const PLANY=['celodenní','dopolední','odpolední'];   // režimy docházky dítěte
 
 const SEEDFOND=[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]];
 const FONDROK=2000;
@@ -1879,12 +1891,24 @@ function renderDite(i){
   // hlavička detailu je jeden blok → na desktopu přeskočí masonry sloupce (column-span:all)
   let h=`<div class="dite-head"><button class="back" onclick="closeDite()">← Zpět na seznam</button>`;
   h+=`<div class="pav">${avatar(c,72)}</div><div class="pname">${full(c)}</div><div class="pfull">${c.plan}${c.predskolak?' · předškolák':''}</div></div>`;
-  h+=`<div class="tile"><div class="ch">Přehled</div>`+
-     `<div class="np"><span>Narozeniny</span><b>${c.nar}</b></div>`+
-     `<div class="np"><span>Věk</span><b>${c.vek} let</b></div>`+
-     `<div class="np"><span>Režim docházky</span><b>${c.plan}</b></div>`+
-     `<div class="np"><span>Předškolák</span><b>${c.predskolak?'ano · nástup do ZŠ 2026':'ne'}</b></div>`+
-     `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div></div>`;
+  // Kmenová data dítěte mění jen průvodce s právy hospodářky; ostatní je vidí ke čtení.
+  h+=`<div class="tile"><div class="ch">Přehled</div>`;
+  if(hospodar){
+    h+=`<label class="pl">Režim docházky</label><div class="pchips">`+
+       PLANY.map(o=>`<button class="${c.plan===o?'on':''}" onclick="setDitePlan(${i},'${o}')">${o}</button>`).join('')+`</div>`+
+       `<label class="pl">Alergie</label><input class="pin" value="${esc(c.alergie||'')}" oninput="setDiteF(${i},'alergie',this.value)" placeholder="žádné">`+
+       `<label class="pl">Narozeniny</label><input class="pin" value="${esc(c.nar)}" oninput="setDiteF(${i},'nar',this.value)" placeholder="D. M. RRRR">`+
+       `<div class="np" style="margin-top:9px"><span>Předškolák</span><button class="tgl ${c.predskolak?'on':''}" role="switch" aria-checked="${c.predskolak}" onclick="togDitePre(${i})">${c.predskolak?'ano · nástup do ZŠ 2026':'ne'}</button></div>`+
+       `<button class="btn-primary btn-block" style="margin-top:var(--space-md)" onclick="showToast('Uloženo ✓')">Uložit údaje</button>`;
+  }else{
+    h+=`<div class="np"><span>Narozeniny</span><b>${c.nar}</b></div>`+
+       `<div class="np"><span>Věk</span><b>${c.vek} let</b></div>`+
+       `<div class="np"><span>Režim docházky</span><b>${c.plan}</b></div>`+
+       `<div class="np"><span>Předškolák</span><b>${c.predskolak?'ano · nástup do ZŠ 2026':'ne'}</b></div>`+
+       `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div>`+
+       `<div class="note2">Údaje dítěte mění průvodce s právy hospodářky.</div>`;
+  }
+  h+=`</div>`;
   h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
   if(c.note)h+=`<div class="tile"><div class="ch">Aktuální poznámka</div><div class="tval">${c.note}</div></div>`;
   h+=`<div class="tile"><div class="ch">Záznamy a hodnocení (${recs.length})</div>`+recs.map(r=>`<div class="np"><span>${r[0]}</span><b style="font-weight:500;color:var(--color-text-muted)">${r[1]}</b></div>`).join('')+`</div>`;
@@ -1904,6 +1928,9 @@ window.exportDeti=()=>{
   showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
 window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
+window.setDitePlan=(i,v)=>{data[i].plan=v;render();};
+window.setDiteF=(i,f,v)=>{data[i][f]=v;};   // bez render() – kurzor v poli musí zůstat
+window.togDitePre=i=>{data[i].predskolak=!data[i].predskolak;render();};
 window.setDetiF=f=>{detiFilter=f;render();};
 window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
 window.openDite=i=>{detiOpen=i;render();};
@@ -1940,7 +1967,7 @@ function renderFond(){
   const paidAkce=[...AKCE].filter(a=>a.paid>0).sort((a,b)=>a.day-b.day);
   let h=`<div class="doch">`;
   h+=`<div class="vhead">Placené akce</div>`;
-  h+= paidAkce.length? `<div class="fond-akce">`+paidAkce.map(a=>`<div class="frow"><span class="adate">${dayLbl(a)}</span><div style="flex:1"><div class="aname">${a.name}</div><div class="ameta">${a.paid} Kč/dítě</div></div>${a.done?'<span class="bdg pre" style="padding:6px 10px">odečteno ✓</span>':`<button class="odbtn" onclick="startOdecet('${a.id}')">Odečíst</button>`}</div>`).join('')+`</div>` : `<div class="empty">Žádné placené akce. Cenu nastavíš u akce v Plán &amp; program.</div>`;
+  h+= paidAkce.length? `<div class="fond-akce">`+paidAkce.map(a=>`<div class="frow"><span class="adate">${dayLbl(a)}</span><div style="flex:1"><div class="aname">${a.name}</div><div class="ameta">${a.paid} Kč/dítě</div></div>${a.done?'<span class="bdg pre" style="padding:6px 10px">odečteno ✓</span>':(hospodar?`<button class="odbtn" onclick="startOdecet('${a.id}')">Odečíst</button>`:'<span class="dt-no">čeká na hospodářku</span>')}</div>`).join('')+`</div>` : `<div class="empty">Žádné placené akce. Cenu nastavíš u akce v Plán &amp; program.</div>`;
   // „+ Přidat čerpání" je v topbaru (core.js) – stejně jako „+ Nová akce" a „+ Nová novinka"
   if(fondFormOpen)h+=`<div class="vhead">Ruční čerpání (celá třída)</div>`;
   if(fondFormOpen)h+=`<div class="tile"><label class="pl">Co se čerpalo</label><input class="pin" id="f-name" placeholder="např. Výtvarný materiál"><label class="pl">Kdy</label><input class="pin" id="f-date" placeholder="např. červen 2026"><label class="pl">Částka na dítě (Kč)</label><input class="pin" id="f-amt" type="number" placeholder="0"><div class="mbtns"><button class="btn-ghost" onclick="togFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout celé třídě</button></div></div>`;
@@ -1963,7 +1990,7 @@ function renderFond(){
       `</tbody></table>`;
   }
   if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
-    FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div><button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button></div>`;});
+    FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div>${hospodar?`<button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button>`:''}</div>`;});
     h+=`<div class="note2">Spletl/a ses? „Vrátit" čerpání stornuje – částka se dětem přičte zpět.</div>`;}
   return h+`</div>`;
 }
@@ -2190,6 +2217,9 @@ const SECTIONS=[
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 
 let section='prehled', drawerOpen=false, wquery='';
+/* Práva hospodářky. Jeden z průvodců vede peníze a kmenová data dětí, ostatní je vidí jen
+   ke čtení. V prototypu se role přepíná klepnutím na štítek v topbaru, ať jde ukázat obojí. */
+let hospodar=true;
 let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
 let modal=null, shiftM=null;
@@ -2209,15 +2239,18 @@ function render(){
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
     : section==='akce' ? `<h1 class="dh-t">Akce</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
-    : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1><button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>`
+    : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1>${hospodar?'<button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>':''}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${jidTydenLabel(JIDELNICEK[jidTyden])}</span><button class="dh-step" onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';
+  const rc=document.getElementById('rolechip');
+  if(rc){rc.textContent=hospodar?'Průvodce · hospodářka':'Průvodce';rc.classList.toggle('role-ro',!hospodar);}
   renderDrawer();
   document.getElementById('content').innerHTML=RENDER[section]();
 }
 window.go=s=>{section=s;drawerOpen=false;detiOpen=-1;fondChild=-1;render();};
+window.togHosp=()=>{hospodar=!hospodar;render();showToast(hospodar?'Role: průvodce s právy hospodářky':'Role: průvodce (jen ke čtení)');};
 window.openDrawer=()=>{drawerOpen=true;render();};
 window.closeDrawer=()=>{drawerOpen=false;render();};
 

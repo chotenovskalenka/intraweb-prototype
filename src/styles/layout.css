@@ -5,7 +5,13 @@
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:13px}
 .burger{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;font-size:21px/* glyf ☰, ne text – mimo typografickou škálu */;line-height:1;color:var(--color-primary-strong);cursor:pointer;padding:2px 4px;margin-left:-8px}
 .ttl{font-family:var(--font-serif);font-size:var(--text-title);color:var(--color-primary-strong)}
-.role{font-size:var(--text-micro);font-weight:500;color:var(--color-primary);background:var(--soft-primary);border:1px solid var(--edge-primary);padding:5px 10px;border-radius:var(--radius-full);white-space:nowrap}
+.role{font-size:var(--text-micro);font-weight:500;color:var(--color-primary);background:var(--soft-primary);border:1px solid var(--edge-primary);padding:5px 10px;border-radius:var(--radius-full);white-space:nowrap;font-family:var(--font-sans);cursor:pointer}
+/* Štítek je zároveň přepínač role → dotykový cíl 44 px přes ::before, aby vizuál zůstal
+   drobný (stejný trik jako u .chk v docházce). */
+.role{position:relative}
+.role::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+/* průvodce bez práv hospodářky – štítek zešedne, aby bylo poznat, proč nejde editovat */
+.role.role-ro{color:var(--color-text-muted);background:var(--color-surface-2);border-color:var(--color-border-strong)}
 .scrim{position:fixed;inset:0;background:rgba(31,42,46,.42);z-index:5;display:none}.scrim.on{display:block}
 .drawer{position:fixed;top:0;left:0;bottom:0;width:76%;max-width:300px;background:var(--color-surface);z-index:6;transform:translateX(-101%);transition:.22s;padding:20px 0 14px;box-shadow:6px 0 28px rgba(0,0,0,.16);overflow-y:auto;display:flex;flex-direction:column}
 .drawer.on{transform:none}
