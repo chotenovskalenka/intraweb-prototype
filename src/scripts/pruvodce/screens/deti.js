@@ -50,7 +50,7 @@ function renderDeti(){
   return h+`</div>`;
 }
 function renderDite(i){
-  const c=data[i],w=worksMap[i]||0,recs=recordsFor(c);
+  const c=data[i],recs=recordsFor(c);
   // hlavička detailu je jeden blok → na desktopu přeskočí masonry sloupce (column-span:all)
   let h=`<div class="dite-head"><button class="back" onclick="closeDite()">← Zpět na seznam</button>`;
   h+=`<div class="pav">${avatar(c,72)}</div><div class="pname">${full(c)}</div><div class="pfull">${c.plan}${c.predskolak?' · předškolák':''}</div></div>`;
@@ -68,19 +68,17 @@ function renderDite(i){
        `<div class="np"><span>Věk</span><b>${c.vek} let</b></div>`+
        `<div class="np"><span>Režim docházky</span><b>${c.plan}</b></div>`+
        `<div class="np"><span>Předškolák</span><b>${c.predskolak?'ano · nástup do ZŠ 2026':'ne'}</b></div>`+
-       `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div>`+
-       `<div class="note2">Údaje dítěte mění průvodce s právy hospodářky.</div>`;
+       `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div>`;
   }
   h+=`</div>`;
-  h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
   if(c.note)h+=`<div class="tile"><div class="ch">Aktuální poznámka</div><div class="tval">${c.note}</div></div>`;
+  // zůstatek fondu je věc hospodářky – řadový průvodce ho v profilu nevidí
+  if(jeHospodar())h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
   h+=`<div class="tile"><div class="ch">Záznamy a hodnocení (${recs.length})</div>`+recs.map(r=>`<div class="np"><span>${r[0]}</span><b style="font-weight:500;color:var(--color-text-muted)">${r[1]}</b></div>`).join('')+`</div>`;
   const ps=parentsFor(c);
   h+=`<div class="tile"><div class="ch">Rodiče</div>`+ps.map((p,k)=>`<div style="padding:8px 0${k?';border-top:1px solid var(--color-border)':''}"><div style="font-size:14px"><b>${p.role}</b> · ${p.name}</div><div class="contact" style="margin-top:6px"><a class="cbtn" href="tel:${p.phone.replace(/ /g,'')}">${p.phone}</a><a class="cbtn" href="mailto:${p.email}" style="font-size:11.5px">${p.email}</a></div></div>`).join('')+`</div>`;
   const rz=rozhovoryFor(i);
   h+=`<div class="tile"><div class="ch">Rozhovory s rodiči (${rz.length})</div>`+rz.map(r=>`<div class="rozh"><div class="rozhd">${r.date}</div>${r.note}</div>`).join('')+`<label class="pl" style="margin-top:10px">Nový záznam</label><textarea class="pta" id="rozh-new" placeholder="zápis z rozhovoru, doporučení na doma…"></textarea><button class="btn-primary btn-block" style="margin-top:var(--space-sm)" onclick="addRozhovor(${i})">Přidat záznam</button></div>`;
-  // placeholdery prací se střídají přes --photo-1..5, ať dlaždice nesplývají v jednu plochu
-  h+=`<div class="tile"><div class="ch">Fotky prací dítěte</div>`+(w?`<div class="works">`+Array.from({length:w}).map((_,k)=>`<div class="work" style="background:var(--photo-${k%5+1})">práce</div>`).join('')+`</div>`:`<div class="note2">Zatím žádné práce.</div>`)+`<button class="addbtn" onclick="addWork(${i})">+ Nahrát práci dítěte</button></div>`;
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
@@ -99,4 +97,3 @@ window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
 window.openDite=i=>{detiOpen=i;render();};
 window.closeDite=()=>{detiOpen=-1;render();};
 window.setDopo=(i,v)=>{dopoMap[i]=v;};
-window.addWork=i=>{worksMap[i]=(worksMap[i]||0)+1;render();showToast('Práce nahrána ✓');};

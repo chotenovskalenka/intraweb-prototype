@@ -68,7 +68,6 @@
 .ubadge{font-size:var(--text-chip);font-weight:600;padding:2px 8px;border-radius:var(--radius-xs);white-space:nowrap}
 .ubadge.ne{color:var(--color-danger);background:var(--state-danger-bg)}
 .ubadge.ano{color:var(--color-success);background:var(--state-ok-bg)}
-.drivelink{font-size:var(--text-micro);font-weight:600;color:var(--color-primary);white-space:nowrap}
 
 /* profil */
 .rozhov{font-size:var(--text-small);padding:8px 0;border-top:1px solid var(--color-border)}

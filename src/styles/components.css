@@ -425,3 +425,4 @@ table.wt td.pastc{opacity:.45}
 .skolka-contact{flex-wrap:wrap}
 .skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
 .gcard-sch{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:1px}
+.drivelink{font-size:var(--text-micro);font-weight:600;color:var(--color-primary);white-space:nowrap}

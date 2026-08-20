@@ -14,6 +14,33 @@ Each app is built from **modular source files in `src/`** and compiled by [build
 
 The restructuring from the original monoliths into this layout is documented in [docs/plan-faze-0.md](docs/plan-faze-0.md); decisions and known bugs are logged in [docs/decision-log.md](docs/decision-log.md). Product brief: [docs/BRIEF.md](docs/BRIEF.md).
 
+## Discovery (výzkum před prototypem)
+
+Podklady z discovery fáze leží ve složce `discovery/`:
+
+- `discovery/příprava/` — Research brief, Design brief, scénáře rozhovorů
+  (stakeholdeři: Terka/Eva/Radka/Pat; hloubkové rozhovory: průvodci a rodiče)
+  a dva desk-research reporty (trh ŠIS, legislativa, outdoor UX).
+- `discovery/přepisy/` — přepisy 8 hloubkových rozhovorů (průvodkyně, rodiče,
+  hospodářka). Obsahují jména respondentů — **osobní data, do veřejného repa
+  nepatří** (stejný režim jako `podklady/`).
+
+Kontext z briefů, který drží celý projekt:
+
+- **Zadání:** Tereza V. (majitelka sítě Maata Modrá + Zelená, Jaata, Vhaaji;
+  Kouzlo lesa je cizí školka, jen chce intraweb). Výzkum: Lenka Ch. + Veronika N.,
+  vývoj: Patrik Ch. Redesign probíhá **v rámci stávajícího systému** — komerční
+  řešení (Twigsee apod.) majitelka odmítla, slouží jen jako benchmark.
+- **Výzkumný problém:** intraweb slouží jen na docházku/matriku/fakturaci;
+  zbytek žije v ~10 Google tabulkách a ~6 typech WA skupin → roztříštěnost,
+  časová zátěž, nízká důvěryhodnost intrawebu jako zdroje pravdy.
+- **Klíčová hodnota z výzkumu:** „telefon před dětmi je tabu" — průvodci pracují
+  v terénu na mobilu, ale nesmí u dětí do telefonu koukat déle než vteřiny.
+  Z toho plyne celý design průvodcovské appky (informace hned vidět, ne hledat).
+- **Tři skupiny uživatelů** (odpovídají třem appkám): průvodci (mobil, terén),
+  rodiče (jedno důvěryhodné místo pro informace), vedení/administrativa
+  (Eva, Radka — fakturace a matrika, duplicitní zadávání dat).
+
 ## Project structure
 
 ```text

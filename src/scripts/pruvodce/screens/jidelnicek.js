@@ -36,9 +36,11 @@ function renderJidelnicek(){
   // Týden i jeho listování patří k sobě: stepper sedí v řádku s nadpisem vedle akcí,
   // ne nahoře u H1 – jinak byl týden napsaný dvakrát a ovládání na dvou místech.
   let h=`<div class="doch"><div class="vhead-row"><div class="vhead">Týden</div><div class="vhead-act">`+
-    (jidEdit
-      ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
-      : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+
+    // jídelníček zadává hospodářka (chystá jídlo); ostatní ho jen čtou
+    (!jeHospodar()?''
+      :jidEdit
+        ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
+        : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+
     `<div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`+
     `<span>${jidTydenLabel(t)}</span>`+
     `<button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`+
@@ -47,7 +49,7 @@ function renderJidelnicek(){
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
     h+=`<div class="tile"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
     den.forEach((it,k)=>{
-      if(jidEdit){
+      if(jidEdit&&jeHospodar()){
         const dr=jidDraft[i][k];
         h+=`<div class="jid-edit"><label class="pl">${it[0]}</label>`+
           `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[i]}">`+

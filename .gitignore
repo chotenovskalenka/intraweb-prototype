@@ -8,3 +8,9 @@ podklady/
 !.claude/
 .claude/*
 !.claude/skills/
+
+# Přepisy hloubkových rozhovorů — obsahují jména respondentů (osobní údaje).
+# Zůstávají jen lokálně, stejný režim jako podklady/.
+discovery/přepisy/
+# Nezávislý AI průchod přepisy — obsahuje citáty respondentů (osobní údaje).
+discovery/validace/
