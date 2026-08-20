@@ -1410,12 +1410,6 @@ function renderPrehled(){
   }
   h+=`</div>`;
   // zdravotní / provozní poznámky (děti s poznámkou od rodičů) – sloupec 1, pod docházkou
-  {const notes=data.filter(c=>c.note);
-   if(notes.length){
-     h+=`<div class="tile"><div class="ch">Zdravotní a provozní poznámky</div>`;
-     notes.forEach(c=>{h+=`<div class="rnote" style="margin:6px 0 0">✉️ <b>${c.n}:</b> ${c.note}</div>`;});
-     h+=`</div>`;
-   }}
   h+=`</div>`;
 
   // ── Sloupec 2: dnešek (program dne, básnička/písnička, dnešní akce) ──
@@ -1453,6 +1447,14 @@ function renderPrehled(){
     todays.forEach(x=>{const d=x.g.days[TODAY];h+=`<div class="np"><span>${x.g.n}${opener&&x.i===opener.i?' · <b style="color:var(--color-primary)">otevírá</b>':''}${x.i===usIdx?' <span style="color:var(--color-info)">☾</span>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
   }else{h+=`<div class="empty" style="padding:6px">Dnes nikdo nemá službu.</div>`;}
   h+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis ›</button></div>`;
+  // Poznámky patří k týmu a provozu, ne k docházce – jinak zůstal třetí sloupec prázdný
+  // a první přetékal (viz CLAUDE.md, pořadí sloupců dashboardu).
+  {const notes=data.filter(c=>c.note);
+   if(notes.length){
+     h+=`<div class="tile"><div class="ch">Zdravotní a provozní poznámky</div>`;
+     notes.forEach(c=>{h+=`<div class="rnote" style="margin:6px 0 0">✉️ <b>${c.n}:</b> ${c.note}</div>`;});
+     h+=`</div>`;
+   }}
   h+=`</div>`;
 
   h+=`</div>`;// .dash3
