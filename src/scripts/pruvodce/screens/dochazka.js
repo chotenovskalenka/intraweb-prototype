@@ -94,12 +94,14 @@ function specialBar(d){
   return `<div class="specbar"><div class="spectit">Zvláštní den · ${name}</div><div class="specnums"><span><b>${skl}</b> školka ráno</span><span><b>${vyp}</b> ${lab.toLowerCase()}</span><span><b>${pres.length}</b> oběd</span></div></div>`;
 }
 function dayRoster(d){
-  const locked=d<TODAYD;
+  // proběhlý den smí opravit jen vedoucí průvodce – ostatní ho mají jen ke čtení
+  const locked=d<TODAYD&&!smiZpetne();
+  const zpetne=d<TODAYD&&smiZpetne();
   // levý panel: zvláštní den + souhrn; pravý: roster dne (listování dne je nahoře ve sloučeném poli)
   let side=specialBar(d);
-  side+=`<div class="tile doch-info"><div class="np"><span>Přítomno</span><b>${presentCount(d)} / ${data.length}</b></div><div class="pwa" style="margin-top:6px">${locked?'Proběhlý den – jen ke čtení.':'Budoucí den – editovatelný.'}</div></div>`;
+  side+=`<div class="tile doch-info"><div class="np"><span>Přítomno</span><b>${presentCount(d)} / ${data.length}</b></div><div class="pwa" style="margin-top:6px">${locked?'Proběhlý den – opravit ho může vedoucí průvodce.':zpetne?'Proběhlý den – zpětná oprava.':'Budoucí den – editovatelný.'}</div></div>`;
   let main=`<div class="ctxhead"><span class="t">Docházka dne</span><span class="pres">přítomno <b>${presentCount(d)}</b> / ${data.length}</span></div>`;
-  main+=`<div class="sectip">${locked?'Proběhlý den – jen ke čtení.':'Klepni na dítě a nastav docházku na tento den.'}</div>`;
+  main+=`<div class="sectip">${locked?'Proběhlý den – jen ke čtení. Opravit ho může vedoucí průvodce.':zpetne?'Proběhlý den – jako vedoucí ho můžeš zpětně opravit.':'Klepni na dítě a nastav docházku na tento den.'}</div>`;
   main+=`<div class="rosterbox">`+data.map((c,ci)=>{const code=getCode(c,d);return `<div class="row"><div class="rmain" ${locked?'style="cursor:default"':`onclick="openCell(${ci},${d})"`}>${avatar(c,30)}<span class="nm">${full(c)}</span><span class="ind" style="margin-left:auto;font-weight:500">${codeLabel(code)}</span></div></div>`;}).join('')+`</div>`;
   return `<div class="doch-den"><aside class="doch-side">${side}</aside><div class="doch-main">${main}</div></div>`;
 }
@@ -110,18 +112,18 @@ function renderTydenD(){
   h+=`<div class="weekbox"><table class="wt"><thead><tr><th class="who">Dítě</th>`+DAYS.map((dn,j)=>`<th class="${weekStart+j===TODAYD?'today':''}">${dn}</th>`).join('')+`</tr></thead><tbody>`;
   const tot=[0,0,0,0,0];
   data.forEach((c,ci)=>{if(wquery&&!norm(full(c)).includes(norm(wquery)))return;h+=`<tr><td class="who">${avatar(c,18)}${full(c)}</td>`;
-    for(let j=0;j<5;j++){const d=weekStart+j;if(d>30){h+=`<td></td>`;continue;}const code=getCode(c,d);if(code&&code!=='OM')tot[j]++;const ed=d>=TODAYD,today=d===TODAYD;
+    for(let j=0;j<5;j++){const d=weekStart+j;if(d>30){h+=`<td></td>`;continue;}const code=getCode(c,d);if(code&&code!=='OM')tot[j]++;const ed=d>=TODAYD||smiZpetne(),today=d===TODAYD;
       h+=`<td class="${today?'today':''}${d<TODAYD?' pastc':''}${ed?' ced':''}" ${ed?`onclick="openCell(${ci},${d})"`:''}>${cellMark(code)}</td>`;}
     h+=`</tr>`;});
   h+=`</tbody><tfoot><tr><td class="who">Přítomno</td>`+tot.map((n,j)=>{const d=weekStart+j;return `<td class="${d===TODAYD?'today':''}">${d>30?'':n}</td>`;}).join('')+`</tr></tfoot></table></div>`;
-  h+=`<div class="hint">Klepni na buňku dneška nebo budoucího dne a změň docházku. Minulé dny jsou uzavřené.</div>`;
+  h+=`<div class="hint">${smiZpetne()?'Jako vedoucí průvodce můžeš opravit i uzavřené dny.':'Klepni na buňku dneška nebo budoucího dne a změň docházku. Minulé dny jsou uzavřené.'}</div>`;
   return h;
 }
 function renderDenRoster(d){
-  const locked=d<=TODAYD;
+  const locked=d<=TODAYD&&!(d<TODAYD&&smiZpetne());
   let h=`<button class="back" onclick="closeMonthDay()">← Zpět na měsíc</button>`+specialBar(d);
   h+=`<div class="ctxhead"><span class="t">${DOW[wd(d)]} ${d}. června</span><span class="pres">přítomno <b>${presentCount(d)}</b> / ${data.length}</span></div>`;
-  h+=`<div class="sectip">${locked?'Tento den už nelze měnit (uzávěrka).':'Klepni na dítě a nastav docházku na tento den.'}</div>`;
+  h+=`<div class="sectip">${locked?'Tento den už nelze měnit (uzávěrka). Opravit ho může vedoucí průvodce.':(d<TODAYD?'Uzavřený den – jako vedoucí ho můžeš zpětně opravit.':'Klepni na dítě a nastav docházku na tento den.')}</div>`;
   h+=`<div class="rosterbox">`+data.map((c,ci)=>{const code=getCode(c,d);
     return `<div class="row"><div class="rmain" ${locked?'style="cursor:default"':`onclick="openCell(${ci},${d})"`}>${avatar(c,30)}<span class="nm">${full(c)}</span><span class="ind" style="margin-left:auto;font-weight:500">${codeLabel(code)}</span></div></div>`;}).join('')+`</div>`;
   return h;
