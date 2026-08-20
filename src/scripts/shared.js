@@ -173,3 +173,11 @@ function stahniCSV(soubor,hlavicky,radky){
 }
 function pocetDeti(n){return n+' '+(n===1?'dítě':(n>=2&&n<=4?'děti':'dětí'));}
 const telnum=p=>p.replace(/ /g,'');
+
+/* Rozsah alba fotek, zkracuje se, kdyz sedi mesic a rok. Cte ho rodic i pruvodce. */
+function fmtAlbum(a){
+  const [d1,m1,y1]=a.od,[d2,m2,y2]=a.do;
+  if(m1===m2&&y1===y2)return `${d1}.–${d2}. ${m1}. ${y1}`;
+  if(y1===y2)return `${d1}. ${m1}. – ${d2}. ${m2}. ${y1}`;
+  return `${d1}. ${m1}. ${y1} – ${d2}. ${m2}. ${y2}`;
+}

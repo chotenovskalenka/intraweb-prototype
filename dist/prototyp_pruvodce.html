@@ -611,6 +611,7 @@ table.wt td.pastc{opacity:.45}
 .skolka-contact{flex-wrap:wrap}
 .skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
 .gcard-sch{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:1px}
+.drivelink{font-size:var(--text-micro);font-weight:600;color:var(--color-primary);white-space:nowrap}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -962,6 +963,14 @@ function stahniCSV(soubor,hlavicky,radky){
 }
 function pocetDeti(n){return n+' '+(n===1?'dítě':(n>=2&&n<=4?'děti':'dětí'));}
 const telnum=p=>p.replace(/ /g,'');
+
+/* Rozsah alba fotek, zkracuje se, kdyz sedi mesic a rok. Cte ho rodic i pruvodce. */
+function fmtAlbum(a){
+  const [d1,m1,y1]=a.od,[d2,m2,y2]=a.do;
+  if(m1===m2&&y1===y2)return `${d1}.–${d2}. ${m1}. ${y1}`;
+  if(y1===y2)return `${d1}. ${m1}. – ${d2}. ${m2}. ${y1}`;
+  return `${d1}. ${m1}. ${y1} – ${d2}. ${m2}. ${y2}`;
+}
 </script>
 <script>
 /* SHARED: ikony menu – čárové (Lucide styl, stroke=currentColor, takže se obarví podle
@@ -1013,6 +1022,17 @@ const DUBANEK="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAEeCAYAAADPSFo
 
 /* Fotka dřevěné cedule "LMŠ vhaaji" – avatar skupiny Rodiče vhaaji v Kontaktech. */
 const WA_SKUPINA="data:image/jpeg;base64,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";
+
+/* Alba fotek na Google Drive – tentýž zdroj pro rodiče i průvodce (fotky nahrávají
+   průvodci, rodiče je čtou). Jedno album = jeden časový úsek, nejnovější první. */
+const FOTO_ALBA=[
+  {nazev:'Červnový týden',od:[2,6,2026],do:[13,6,2026],url:'https://drive.google.com/drive/folders/1a2B3c4D5e6F7g8H9iJkLmNoPqRsTuVw'},
+  {nazev:'Výlet k rybníku',od:[18,5,2026],do:[22,5,2026],url:'https://drive.google.com/drive/folders/2b3C4d5E6f7G8h9I0jKlMnOpQrStUvXy'},
+  {nazev:'Duben v lese',od:[1,4,2026],do:[30,4,2026],url:'https://drive.google.com/drive/folders/3c4D5e6F7g8H9i0JkLmNoPqRsTuVwXyZ'},
+  {nazev:'Zimní dny',od:[12,1,2026],do:[6,2,2026],url:'https://drive.google.com/drive/folders/4d5E6f7G8h9I0j1KlMnOpQrStUvWxYz1'},
+  {nazev:'Vánoční čas',od:[1,12,2025],do:[19,12,2025],url:'https://drive.google.com/drive/folders/5e6F7g8H9i0J1k2LmNoPqRsTuVwXyZ12'},
+  {nazev:'Podzimní putování',od:[6,10,2025],do:[24,10,2025],url:'https://drive.google.com/drive/folders/6f7G8h9I0j1K2l3MnOpQrStUvWxYz123'},
+];
 </script>
 <script>
 /* SHARED (mobilní appky): reálné plakáty tématického plánu na červen,
@@ -1427,11 +1447,10 @@ function renderPrehled(){
 
   // ── Sloupec 3: tým a provoz (průvodci dnes, zdravotní/provozní poznámky) ──
   h+=`<div class="dcol">`;
-  // průvodci dnes s hodinami (řádky .np jako v sekci Průvodci) + kdo uspává
+  // průvodci dnes s hodinami (řádky .np jako v sekci Průvodci); kdo uspává = ☾ u jména
   h+=`<div class="tile"><div class="ch">Průvodci dnes</div>`;
   if(todays.length){
     todays.forEach(x=>{const d=x.g.days[TODAY];h+=`<div class="np"><span>${x.g.n}${opener&&x.i===opener.i?' · <b style="color:var(--color-primary)">otevírá</b>':''}${x.i===usIdx?' <span style="color:var(--color-info)">☾</span>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
-    if(usIdx>=0)h+=`<div class="doch-note" style="margin-top:8px">☾ dnes uspává ${GUIDESHIFT[usIdx].n}</div>`;
   }else{h+=`<div class="empty" style="padding:6px">Dnes nikdo nemá službu.</div>`;}
   h+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis ›</button></div>`;
   h+=`</div>`;
@@ -1662,6 +1681,7 @@ function renderAkce(){
   const o=AKCE_MESICE[akceM], rows=[...akceMesic(akceM)].sort((a,b)=>a.day-b.day), minuly=akceM<AKCE_AKT;
   // bez nadpisu sekce – H1 v topbaru už říká „Akce", řádek nese jen listování měsíci
   let h=`<div class="akce-sec"><div class="vhead-row"><div class="vhead-act">`+
+    `<button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`+
     `<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`+
     `<span>${o.label}${akceM===AKCE_AKT?'<i class="dn-cur"> · aktuální</i>':''}</span>`+
     `<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div></div></div>`;
@@ -1979,7 +1999,7 @@ function renderDeti(){
   return h+`</div>`;
 }
 function renderDite(i){
-  const c=data[i],w=worksMap[i]||0,recs=recordsFor(c);
+  const c=data[i],recs=recordsFor(c);
   // hlavička detailu je jeden blok → na desktopu přeskočí masonry sloupce (column-span:all)
   let h=`<div class="dite-head"><button class="back" onclick="closeDite()">← Zpět na seznam</button>`;
   h+=`<div class="pav">${avatar(c,72)}</div><div class="pname">${full(c)}</div><div class="pfull">${c.plan}${c.predskolak?' · předškolák':''}</div></div>`;
@@ -1997,19 +2017,17 @@ function renderDite(i){
        `<div class="np"><span>Věk</span><b>${c.vek} let</b></div>`+
        `<div class="np"><span>Režim docházky</span><b>${c.plan}</b></div>`+
        `<div class="np"><span>Předškolák</span><b>${c.predskolak?'ano · nástup do ZŠ 2026':'ne'}</b></div>`+
-       `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div>`+
-       `<div class="note2">Údaje dítěte mění průvodce s právy hospodářky.</div>`;
+       `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div>`;
   }
   h+=`</div>`;
-  h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
   if(c.note)h+=`<div class="tile"><div class="ch">Aktuální poznámka</div><div class="tval">${c.note}</div></div>`;
+  // zůstatek fondu je věc hospodářky – řadový průvodce ho v profilu nevidí
+  if(jeHospodar())h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
   h+=`<div class="tile"><div class="ch">Záznamy a hodnocení (${recs.length})</div>`+recs.map(r=>`<div class="np"><span>${r[0]}</span><b style="font-weight:500;color:var(--color-text-muted)">${r[1]}</b></div>`).join('')+`</div>`;
   const ps=parentsFor(c);
   h+=`<div class="tile"><div class="ch">Rodiče</div>`+ps.map((p,k)=>`<div style="padding:8px 0${k?';border-top:1px solid var(--color-border)':''}"><div style="font-size:14px"><b>${p.role}</b> · ${p.name}</div><div class="contact" style="margin-top:6px"><a class="cbtn" href="tel:${p.phone.replace(/ /g,'')}">${p.phone}</a><a class="cbtn" href="mailto:${p.email}" style="font-size:11.5px">${p.email}</a></div></div>`).join('')+`</div>`;
   const rz=rozhovoryFor(i);
   h+=`<div class="tile"><div class="ch">Rozhovory s rodiči (${rz.length})</div>`+rz.map(r=>`<div class="rozh"><div class="rozhd">${r.date}</div>${r.note}</div>`).join('')+`<label class="pl" style="margin-top:10px">Nový záznam</label><textarea class="pta" id="rozh-new" placeholder="zápis z rozhovoru, doporučení na doma…"></textarea><button class="btn-primary btn-block" style="margin-top:var(--space-sm)" onclick="addRozhovor(${i})">Přidat záznam</button></div>`;
-  // placeholdery prací se střídají přes --photo-1..5, ať dlaždice nesplývají v jednu plochu
-  h+=`<div class="tile"><div class="ch">Fotky prací dítěte</div>`+(w?`<div class="works">`+Array.from({length:w}).map((_,k)=>`<div class="work" style="background:var(--photo-${k%5+1})">práce</div>`).join('')+`</div>`:`<div class="note2">Zatím žádné práce.</div>`)+`<button class="addbtn" onclick="addWork(${i})">+ Nahrát práci dítěte</button></div>`;
   return h;
 }
 window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
@@ -2028,7 +2046,16 @@ window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
 window.openDite=i=>{detiOpen=i;render();};
 window.closeDite=()=>{detiOpen=-1;render();};
 window.setDopo=(i,v)=>{dopoMap[i]=v;};
-window.addWork=i=>{worksMap[i]=(worksMap[i]||0)+1;render();showToast('Práce nahrána ✓');};
+</script>
+<script>
+/* SCREEN: PRUVODCE_FOTKY – fotky žijí na Google Drive (mimo IS), sem se jen odkazuje.
+   Průvodci je nahrávají, rodiče je ve své appce čtou – proto stejná alba (FOTO_ALBA
+   v photos.js). Nahrání je odkaz do složky, ne upload do prototypu. */
+function renderFotky(){
+  let h=`<div class="doch"><div class="note2">Fotky se nahrávají na Google Drive školky. Rodiče vidí tatáž alba ve své appce.</div><div class="tile">`;
+  h+=FOTO_ALBA.map(a=>`<a class="doc doc-dl" href="${a.url}" target="_blank" rel="noopener"><span>${a.nazev}<span class="dt2"> · ${fmtAlbum(a)}</span></span><span class="drivelink">Otevřít na Drive ↗</span></a>`).join('');
+  return h+`</div></div>`;
+}
 </script>
 <script>
 /* SCREEN: PRUVODCE_FOND */
@@ -2197,9 +2224,11 @@ function renderJidelnicek(){
   // Týden i jeho listování patří k sobě: stepper sedí v řádku s nadpisem vedle akcí,
   // ne nahoře u H1 – jinak byl týden napsaný dvakrát a ovládání na dvou místech.
   let h=`<div class="doch"><div class="vhead-row"><div class="vhead">Týden</div><div class="vhead-act">`+
-    (jidEdit
-      ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
-      : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+
+    // jídelníček zadává hospodářka (chystá jídlo); ostatní ho jen čtou
+    (!jeHospodar()?''
+      :jidEdit
+        ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
+        : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+
     `<div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`+
     `<span>${jidTydenLabel(t)}</span>`+
     `<button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`+
@@ -2208,7 +2237,7 @@ function renderJidelnicek(){
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
     h+=`<div class="tile"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
     den.forEach((it,k)=>{
-      if(jidEdit){
+      if(jidEdit&&jeHospodar()){
         const dr=jidDraft[i][k];
         h+=`<div class="jid-edit"><label class="pl">${it[0]}</label>`+
           `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[i]}">`+
@@ -2253,9 +2282,6 @@ function renderKontakty(){
   let h=`<div class="doch"><div class="k-sec">Průvodci</div><div class="gcards">`+guides.map(guideCard).join('')+`</div>`;
   h+=`<div class="k-sec">Zázemí</div><div class="gcards">`+ZAZEMI.map(guideCard).join('')+`</div>`;
   h+=`<div class="k-bottom">`;
-  h+=`<div class="tile skolka"><img class="dubanek-pop" src="${DUBANEK}" alt="Dubánek"><div class="skolka-info"><div class="gcard-n">${SCHOOL.name}</div>
-    <div class="contact skolka-contact"><a class="cbtn" href="tel:${telnum(SCHOOL.phone)}">Zavolat</a><a class="cbtn" href="mailto:${SCHOOL.email}">E-mail</a></div>
-    <div class="cinfo">${SCHOOL.phone} · ${SCHOOL.email}<br>${SCHOOL.adresa}</div></div></div>`;
   h+=`<div class="tile k-docs"><div class="ch">Dokumenty ke stažení</div>`+SKOLNI_DOKUMENTY.map((t,i)=>`<button class="doc doc-dl" onclick="downloadSkolniDoc(${i})"><span>${t}</span><span class="pdf">PDF ↓</span></button>`).join('')+`</div>`;
   h+=`</div>`;
   return h+`</div>`;
@@ -2398,10 +2424,15 @@ const SECTIONS=[
   ['pruvodci','Docházka průvodců','◷'],
   ['kalendar','Kalendář','▦'],
   ['deti','Děti','☺'],
+  ['fotky','Fotky','▣'],
   ['fond','Kulturní fond','₵'],
   ['kontakty','Kontakty','✆'],
 ];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
+// Sekce viditelné pro aktuální roli. Kulturní fond vede hospodářka – řadový průvodce
+// ani vedoucí ho v menu nemají (a přímý go('fond') je vrátí na přehled).
+const SEKCE_ROLE={fond:()=>jeHospodar()};
+const sekceVidi=k=>!SEKCE_ROLE[k]||SEKCE_ROLE[k]();
 
 let section='prehled', drawerOpen=false, wquery='';
 /* Role průvodce. Všichni dělají tutéž práci, liší se jedním právem navíc – proto jedna appka
@@ -2425,19 +2456,18 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fond:renderFond,kontakty:renderKontakty};
+const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
   d.classList.toggle('on',drawerOpen);
   document.getElementById('scrim').classList.toggle('on',drawerOpen);
-  d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('');
+  d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`+SECTIONS.filter(s=>sekceVidi(s[0])).map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('');
 }
 function render(){
   // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
-    : section==='akce' ? `<h1 class="dh-t">Akce</h1><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`
     : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1>${jeHospodar()?'<button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>':''}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>`
@@ -2447,9 +2477,10 @@ function render(){
   if(rc){rc.textContent=ROLE_LABEL[role];rc.classList.toggle('role-ro',role==='pruvodce');
     rc.disabled=ROLE_PINNED;rc.title=ROLE_PINNED?'Role je daná odkazem':'Přepnout roli (prototyp)';}
   renderDrawer();
+  if(!sekceVidi(section))section='prehled';
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{section=s;drawerOpen=false;detiOpen=-1;fondChild=-1;render();};
+window.go=s=>{if(!sekceVidi(s))s='prehled';section=s;drawerOpen=false;detiOpen=-1;fondChild=-1;render();};
 window.togHosp=()=>{if(ROLE_PINNED)return;
   const p=['pruvodce','vedouci','hospodarka'];role=p[(p.indexOf(role)+1)%p.length];
   render();showToast('Role: '+ROLE_LABEL[role]);};

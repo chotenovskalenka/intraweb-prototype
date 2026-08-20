@@ -74,11 +74,10 @@ function renderPrehled(){
 
   // ── Sloupec 3: tým a provoz (průvodci dnes, zdravotní/provozní poznámky) ──
   h+=`<div class="dcol">`;
-  // průvodci dnes s hodinami (řádky .np jako v sekci Průvodci) + kdo uspává
+  // průvodci dnes s hodinami (řádky .np jako v sekci Průvodci); kdo uspává = ☾ u jména
   h+=`<div class="tile"><div class="ch">Průvodci dnes</div>`;
   if(todays.length){
     todays.forEach(x=>{const d=x.g.days[TODAY];h+=`<div class="np"><span>${x.g.n}${opener&&x.i===opener.i?' · <b style="color:var(--color-primary)">otevírá</b>':''}${x.i===usIdx?' <span style="color:var(--color-info)">☾</span>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
-    if(usIdx>=0)h+=`<div class="doch-note" style="margin-top:8px">☾ dnes uspává ${GUIDESHIFT[usIdx].n}</div>`;
   }else{h+=`<div class="empty" style="padding:6px">Dnes nikdo nemá službu.</div>`;}
   h+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis ›</button></div>`;
   h+=`</div>`;
