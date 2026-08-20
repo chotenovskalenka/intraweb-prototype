@@ -249,6 +249,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .chk.on{background:var(--color-primary);border-color:var(--color-primary)}
 .rmain .nm{font-weight:500;font-size:var(--text-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:60px}
 .rmain .ind{margin-left:auto;font-size:var(--text-micro);color:var(--color-text-muted);flex-shrink:0;white-space:nowrap}
+/* Stav u chipu docházky (ne u pravého okraje) – viz indicator() v dochazka.js. */
+.rmain .ind.ind-inline{margin-left:0}
+/* Zaškrtávátko přítomnosti je v soupisu poslední → drží si pravý okraj samo.
+   V roleru výběru dětí (fond) je .chk naopak první, tam :last-child nesedí. */
+.rmain>.chk:last-child{margin-left:auto}
 .ind.sleep{color:var(--color-info)}.ind.awake{color:var(--color-accent-ink)}.ind.off{color:var(--color-danger)}
 .pill{font-size:var(--text-chip);font-weight:500;padding:2px 6px;border-radius:var(--radius-xs);flex-shrink:0}
 .p-cel{background:var(--soft-primary);color:var(--color-primary)}.p-odp{background:rgba(73,109,126,.10);color:var(--color-info)}
@@ -1464,12 +1469,16 @@ function counts(){const o={};TABS_BY().forEach(([k])=>o[k]=data.filter(c=>inTab(
 function planPill(c){return c.plan==='celodenní'?'<span class="pill p-cel">celodenní</span>':c.plan==='dopolední'?'<span class="pill p-dop">dopolední</span>':'<span class="pill p-odp">odpolední</span>';}
 function cellMark(code){if(!code)return '<span class="wc c-N">N</span>';if(code==='OM')return '<span class="bdg al" style="font-size:9px">om</span>';return `<span class="wc c-${code}">${code}</span>`;}
 function codeLabel(code){const M={C:['celodenní',CODES.C[1]],D:['dopolední',CODES.D[1]],O:['odpolední',CODES.O[1]],OM:['omluven',CODES.OM[1]]};const m=M[code];return m?`<span style="color:${m[1]}">${m[0]}</span>`:'<span style="color:var(--color-text-hint)">nepřítomen</span>';}
+/* Stav dítěte (spí / omluveno / na výpravě…). Sedí hned za chipem docházky – u pravého
+   okraje vedle zaškrtávátka to čtlo, jako by se odškrtávalo zrovna „spí" nebo „omluveno".
+   Proto ind-inline: ruší margin-left:auto, kterým se .ind jinde tlačí doprava. */
 function indicator(c){
-  if(here(c)&&onTrip(c))return'<span class="ind awake" style="color:var(--color-accent-ink)">na výpravě</span>';
-  if(c.status==='omluveno')return'<span class="ind off">omluveno</span>';
-  if(c.status==='neomluveno')return'<span class="ind off">neomluveno</span>';
-  if(c.plan==='dopolední')return'<span class="ind">po obědě domů</span>';
-  return c.spi?'<span class="ind sleep">spí</span>':'<span class="ind awake">nespí</span>';
+  const cls='ind ind-inline';
+  if(here(c)&&onTrip(c))return`<span class="${cls} awake" style="color:var(--color-accent-ink)">na výpravě</span>`;
+  if(c.status==='omluveno')return`<span class="${cls} off">omluveno</span>`;
+  if(c.status==='neomluveno')return`<span class="${cls} off">neomluveno</span>`;
+  if(c.plan==='dopolední')return`<span class="${cls}">po obědě domů</span>`;
+  return c.spi?`<span class="${cls} sleep">spí</span>`:`<span class="${cls} awake">nespí</span>`;
 }
 function editPanel(c,i){
   const seg=(arr,cur,fn)=>arr.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="${fn}(${i},'${o[0]}')">${o[1]}</button>`).join('');
