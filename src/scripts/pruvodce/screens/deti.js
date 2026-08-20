@@ -56,7 +56,7 @@ function renderDite(i){
   h+=`<div class="pav">${avatar(c,72)}</div><div class="pname">${full(c)}</div><div class="pfull">${c.plan}${c.predskolak?' · předškolák':''}</div></div>`;
   // Kmenová data dítěte mění jen průvodce s právy hospodářky; ostatní je vidí ke čtení.
   h+=`<div class="tile"><div class="ch">Přehled</div>`;
-  if(hospodar){
+  if(jeHospodar()){
     h+=`<label class="pl">Režim docházky</label><div class="pchips">`+
        PLANY.map(o=>`<button class="${c.plan===o?'on':''}" onclick="setDitePlan(${i},'${o}')">${o}</button>`).join('')+`</div>`+
        `<label class="pl">Alergie</label><input class="pin" value="${esc(c.alergie||'')}" oninput="setDiteF(${i},'alergie',this.value)" placeholder="žádné">`+

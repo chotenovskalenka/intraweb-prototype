@@ -41,7 +41,7 @@ function renderFond(){
   const paidAkce=[...AKCE].filter(a=>a.paid>0).sort((a,b)=>a.day-b.day);
   let h=`<div class="doch">`;
   h+=`<div class="vhead">Placené akce</div>`;
-  h+= paidAkce.length? `<div class="fond-akce">`+paidAkce.map(a=>`<div class="frow"><span class="adate">${dayLbl(a)}</span><div style="flex:1"><div class="aname">${a.name}</div><div class="ameta">${a.paid} Kč/dítě</div></div>${a.done?'<span class="bdg pre" style="padding:6px 10px">odečteno ✓</span>':(hospodar?`<button class="odbtn" onclick="startOdecet('${a.id}')">Odečíst</button>`:'<span class="dt-no">čeká na hospodářku</span>')}</div>`).join('')+`</div>` : `<div class="empty">Žádné placené akce. Cenu nastavíš u akce v Plán &amp; program.</div>`;
+  h+= paidAkce.length? `<div class="fond-akce">`+paidAkce.map(a=>`<div class="frow"><span class="adate">${dayLbl(a)}</span><div style="flex:1"><div class="aname">${a.name}</div><div class="ameta">${a.paid} Kč/dítě</div></div>${a.done?'<span class="bdg pre" style="padding:6px 10px">odečteno ✓</span>':(jeHospodar()?`<button class="odbtn" onclick="startOdecet('${a.id}')">Odečíst</button>`:'<span class="dt-no">čeká na hospodářku</span>')}</div>`).join('')+`</div>` : `<div class="empty">Žádné placené akce. Cenu nastavíš u akce v Plán &amp; program.</div>`;
   // „+ Přidat čerpání" je v topbaru (core.js) – stejně jako „+ Nová akce" a „+ Nová novinka"
   h+=`<div class="vhead">Zůstatky dětí</div>`;
   const list=fondList();
@@ -62,7 +62,7 @@ function renderFond(){
       `</tbody></table>`;
   }
   if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
-    FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div>${hospodar?`<button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button>`:''}</div>`;});
+    FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div>${jeHospodar()?`<button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button>`:''}</div>`;});
     h+=`<div class="note2">Spletl/a ses? „Vrátit" čerpání stornuje – částka se dětem přičte zpět.</div>`;}
   return h+`</div>`;
 }
@@ -77,9 +77,9 @@ function renderFondChild(i){
   // dítěti; hromadné čerpání zůstává ostatním. Smí to průvodce s právy hospodářky.
   h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+
     (c.fondLog&&c.fondLog.length
-      ? c.fondLog.map((l,k)=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b>${hospodar?`<button class="odbtn ghostred fond-undo" onclick="vratitDiteti(${i},${k})" title="Vrátit ${l.amt} Kč zpět na fond">Vrátit</button>`:''}</div>`).join('')
+      ? c.fondLog.map((l,k)=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b>${jeHospodar()?`<button class="odbtn ghostred fond-undo" onclick="vratitDiteti(${i},${k})" title="Vrátit ${l.amt} Kč zpět na fond">Vrátit</button>`:''}</div>`).join('')
       : `<div class="empty">Zatím se nic nečerpalo.</div>`)+
-    (hospodar?`<button class="addbtn" onclick="pridatDiteti(${i})">+ Čerpání jen tomuto dítěti</button>`:`<div class="note2">Opravy provádí průvodce s právy hospodářky.</div>`)+`</div>`;
+    (jeHospodar()?`<button class="addbtn" onclick="pridatDiteti(${i})">+ Čerpání jen tomuto dítěti</button>`:`<div class="note2">Opravy provádí průvodce s právy hospodářky.</div>`)+`</div>`;
   h+=`</div>`;
   return h+`</div>`;
 }
