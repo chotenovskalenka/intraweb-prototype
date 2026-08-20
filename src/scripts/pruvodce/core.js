@@ -33,10 +33,14 @@ const ROLE_PINNED=Object.prototype.hasOwnProperty.call(ROLE_LABEL,ROLE_URL);
 let role=ROLE_PINNED?ROLE_URL:'hospodarka';
 // odvozená práva – obrazovky se ptají na právo, ne na roli
 const jeHospodar=()=>role==='hospodarka';
-const smiZpetne=()=>role==='vedouci';
+/* Řadový průvodce zapisuje jen dnešek. Opravit proběhlý den i naplánovat budoucí je
+   administrativní zásah – dělá ho vedoucí průvodce (v ostré verzi i vedení).
+   Pozn.: dřív se jmenovalo smiZpetne() a hlídalo jen minulost; budoucí dny byly volné. */
+const smiJinyDen=()=>role==='vedouci';
+const denEditovatelny=d=>d===TODAYD||smiJinyDen();
 let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
-let modal=null, shiftM=null, fondM=null;
+let modal=null, shiftM=null, fondM=null, galM=null;
 let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;

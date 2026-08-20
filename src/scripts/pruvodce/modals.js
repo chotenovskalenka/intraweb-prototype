@@ -5,6 +5,7 @@ function renderModalRoot(){
   if(modal){r.innerHTML=akceModalHTML();return;}
   if(shiftM){r.innerHTML=shiftModalHTML();return;}
   if(fondM){r.innerHTML=fondModalHTML();return;}
+  if(galM){r.innerHTML=galModalHTML();return;}
   if(cellM){r.innerHTML=cellModalHTML();return;}
   if(detailA){r.innerHTML=akceDetailHTML();return;}
   if(novM){r.innerHTML=novModalHTML();return;}
@@ -72,6 +73,33 @@ function fondModalHTML(){
     <div class="mbtns"><button class="btn-ghost" onclick="closeFond()">Zrušit</button><button class="btn-primary" onclick="addFond()">Strhnout vybraným</button></div>
   </div></div>`;
 }
+/* Nová galerie fotek. Samotné fotky leží na Google Drive – v IS vzniká jen odkaz na složku
+   s názvem a obdobím, aby ho rodiče našli ve své appce. */
+function galModalHTML(){
+  const m=galM;
+  return `<div class="modal-scrim" onclick="if(event.target===this)closeGal()"><div class="modal">
+    <h3>Nová galerie</h3>
+    <label class="pl">Název</label><input class="pin" value="${esc(m.nazev)}" oninput="setGalF('nazev',this.value)" placeholder="např. Výlet k rybníku">
+    <label class="pl">Období (od – do)</label><div class="mrow2"><input class="pin" type="date" value="${m.od}" oninput="setGalF('od',this.value)"><input class="pin" type="date" value="${m.do}" oninput="setGalF('do',this.value)"></div>
+    <label class="pl">Odkaz na složku na Drive</label><input class="pin" value="${esc(m.url)}" oninput="setGalF('url',this.value)" placeholder="https://drive.google.com/drive/folders/…">
+    <div class="note2">Fotky nahraj na Drive; sem patří jen odkaz na složku. Rodiče uvidí tutéž galerii.</div>
+    <div class="mbtns"><button class="btn-ghost" onclick="closeGal()">Zrušit</button><button class="btn-primary" onclick="saveGal()">Přidat galerii</button></div>
+  </div></div>`;
+}
+window.openGal=()=>{galM={nazev:'',od:'',do:'',url:''};renderModalRoot();};
+window.closeGal=()=>{galM=null;renderModalRoot();};
+window.setGalF=(f,v)=>{galM[f]=v;};
+// '2026-06-02' → [2,6,2026]; FOTO_ALBA drží datum po částech (viz fmtAlbum)
+const galDatum=v=>{const p=(v||'').split('-');return p.length===3?[Number(p[2]),Number(p[1]),Number(p[0])]:null;};
+window.saveGal=()=>{
+  const m=galM,od=galDatum(m.od),doo=galDatum(m.do);
+  if(!m.nazev.trim()){showToast('Napiš název galerie');return;}
+  if(!od||!doo){showToast('Vyplň období od–do');return;}
+  if(!m.url.trim()){showToast('Vlož odkaz na složku');return;}
+  FOTO_ALBA.unshift({nazev:m.nazev.trim(),od,do:doo,url:m.url.trim()});
+  galM=null;renderModalRoot();render();showToast('Galerie přidána ✓');
+};
+
 window.togFond=()=>{fondM={name:'',date:MESIC_TED,amt:'',sel:new Set(data.map((c,i)=>i)),group:'vse',q:''};renderModalRoot();};
 window.closeFond=()=>{fondM=null;renderModalRoot();};
 // částka mění souhrn → překreslit; text ne, jinak by utekl kurzor
@@ -117,6 +145,6 @@ window.saveShift=()=>{const m=shiftM;shiftTyden(shiftT)[m.gi].days[m.di]=m.on?{s
 window.openAkceDetail=id=>{detailA=id;renderModalRoot();};
 window.closeAkceDetail=()=>{detailA=null;renderModalRoot();};
 window.editFromDetail=()=>{const id=detailA;detailA=null;openAkce(id);};
-window.openCell=(ci,d)=>{if(d<TODAYD&&!smiZpetne())return;cellM={ci,d};renderModalRoot();};
+window.openCell=(ci,d)=>{if(!denEditovatelny(d))return;cellM={ci,d};renderModalRoot();};
 window.closeCell=()=>{cellM=null;renderModalRoot();};
 window.setCell=code=>{const d=cellM.d;if(d===TODAYD)data[cellM.ci].status=code;else data[cellM.ci].att[d]=code;cellM=null;renderModalRoot();render();showToast('Docházka uložena ✓');};
