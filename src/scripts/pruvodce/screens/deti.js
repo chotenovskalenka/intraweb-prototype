@@ -74,7 +74,10 @@ function renderDite(i){
   if(c.note)h+=`<div class="tile"><div class="ch">Aktuální poznámka</div><div class="tval">${c.note}</div></div>`;
   // zůstatek fondu je věc hospodářky – řadový průvodce ho v profilu nevidí
   if(jeHospodar())h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
-  h+=`<div class="tile"><div class="ch">Záznamy a hodnocení (${recs.length})</div>`+recs.map(r=>`<div class="np"><span>${r[0]}</span><b style="font-weight:500;color:var(--color-text-muted)">${r[1]}</b></div>`).join('')+`</div>`;
+  /* Záznamy jsou hotové dokumenty (depistáž, hodnocení) – ke stažení jako PDF, stejně jako
+     dokumenty v Kontaktech. Jak se do IS dostanou, je otevřená otázka (viz decision-log). */
+  h+=`<div class="tile"><div class="ch">Záznamy a hodnocení (${recs.length})</div>`+
+    recs.map((r,k)=>`<button class="doc doc-dl" onclick="stahniZaznam(${i},${k})"><span>${r[0]}<span class="dt2"> · ${r[1]}</span></span><span class="pdf">PDF ↓</span></button>`).join('')+`</div>`;
   const ps=parentsFor(c);
   h+=`<div class="tile"><div class="ch">Rodiče</div>`+ps.map((p,k)=>`<div style="padding:8px 0${k?';border-top:1px solid var(--color-border)':''}"><div style="font-size:14px"><b>${p.role}</b> · ${p.name}</div><div class="contact" style="margin-top:6px"><a class="cbtn" href="tel:${p.phone.replace(/ /g,'')}">${p.phone}</a><a class="cbtn" href="mailto:${p.email}" style="font-size:11.5px">${p.email}</a></div></div>`).join('')+`</div>`;
   const rz=rozhovoryFor(i);
@@ -89,6 +92,10 @@ window.exportDeti=()=>{
   showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
 window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
+window.stahniZaznam=(i,k)=>{const c=data[i],r=recordsFor(c)[k];if(!r)return;
+  const nazev=`${r[0]} – ${full(c)} (${r[1]})`;
+  downloadBlob(dlName(nazev)+'.pdf',makePDF(nazev),'application/pdf');
+  showToast('Stahuji '+r[0]+' ✓');};
 window.setDitePlan=(i,v)=>{data[i].plan=v;render();};
 window.setDiteF=(i,f,v)=>{data[i][f]=v;};   // bez render() – kurzor v poli musí zůstat
 window.togDitePre=i=>{data[i].predskolak=!data[i].predskolak;render();};
