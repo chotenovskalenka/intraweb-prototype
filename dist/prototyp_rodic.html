@@ -249,6 +249,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .chk.on{background:var(--color-primary);border-color:var(--color-primary)}
 .rmain .nm{font-weight:500;font-size:var(--text-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:60px}
 .rmain .ind{margin-left:auto;font-size:var(--text-micro);color:var(--color-text-muted);flex-shrink:0;white-space:nowrap}
+/* Stav u chipu docházky (ne u pravého okraje) – viz indicator() v dochazka.js. */
+.rmain .ind.ind-inline{margin-left:0}
+/* Zaškrtávátko přítomnosti je v soupisu poslední → drží si pravý okraj samo.
+   V roleru výběru dětí (fond) je .chk naopak první, tam :last-child nesedí. */
+.rmain>.chk:last-child{margin-left:auto}
 .ind.sleep{color:var(--color-info)}.ind.awake{color:var(--color-accent-ink)}.ind.off{color:var(--color-danger)}
 .pill{font-size:var(--text-chip);font-weight:500;padding:2px 6px;border-radius:var(--radius-xs);flex-shrink:0}
 .p-cel{background:var(--soft-primary);color:var(--color-primary)}.p-odp{background:rgba(73,109,126,.10);color:var(--color-info)}
