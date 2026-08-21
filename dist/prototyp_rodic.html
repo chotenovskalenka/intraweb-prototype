@@ -1563,19 +1563,20 @@ const EVENTS={
 /* Denní program (činnost) dle dne v týdnu – zdroj: Pro rodiče 25_26 vhaaji.xlsx, tab ČERVEN.
    Každý pracovní den má téma; speciální akce (výlety, sraz) navíc v EVENTS. */
 const DENNI=['Rytmika','Putování','Pohyb','Tvorba','Hrátky s pohádkou'];
-/* Průvodci – skutečná jména a telefony. photo = klíč do PHOTOS (kdo nemá, dostane generovaný avatar).
+/* Průvodci – skutečná jména a telefony. `plne` = formální křestní jméno pro kontakty;
+   jinde se používá `n`, tedy jméno, kterým průvodce oslovuje školka i rodiče. photo = klíč do PHOTOS (kdo nemá, dostane generovaný avatar).
    h = dnešní hodiny (jen u těch v GUIDES_TODAY, pro dashboard „Průvodci dnes"). */
 const guides=[
   {n:'Tereza',sur:'Vavrečková',phone:'+420 603 200 512',email:'tereza@vhaaji.cz'},
   {n:'Gabriela',sur:'Vašíčková',photo:'Gabča',h:'7:30–16:00',phone:'+420 604 553 246',email:'gabca@vhaaji.cz'},
-  {n:'Darina',sur:'Mikolášová',photo:'Darča',h:'7:30–16:00',phone:'+420 603 290 593',email:'darina@vhaaji.cz',uspava:true},
+  {n:'Darča',plne:'Darina',sur:'Mikolášová',photo:'Darča',h:'7:30–16:00',phone:'+420 603 290 593',email:'darina@vhaaji.cz',uspava:true},
   {n:'Honza',sur:'Kolář',photo:'Honza',h:'8:00–16:30',phone:'+420 605 426 333',email:'honza@vhaaji.cz'},
   {n:'Ksenia',sur:'Andramanova',photo:'Ksenia',phone:'+420 721 472 219',email:'ksenia@vhaaji.cz'},
   {n:'Eva',sur:'Sionová',phone:'+420 777 752 533',email:'eva@vhaaji.cz'},
   {n:'Michaela',sur:'Hrubínová',photo:'Míša',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
   {n:'Táňa',sur:'Kynclová',photo:'Táňa',h:'7:30–16:00',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
 ];
-const GUIDES_TODAY=[7,2,3,1];   // dnes ve školce (Táňa, Darina, Honza, Gabriela) – dashboard „Průvodci dnes"
+const GUIDES_TODAY=[7,2,3,1];   // dnes ve školce (Táňa, Darča, Honza, Gabriela) – dashboard „Průvodci dnes"
 const SCHOOL={name:'Lesní školka Vhaaji',email:'jsme@vhaaji.cz',phone:'+420 603 200 512',adresa:'Ďáblický háj, Praha 8',
   wa:'https://chat.whatsapp.com/K7mQx2vLpR4Nt9wYh3Jd6F'};
 const WEATHER={
@@ -2165,7 +2166,7 @@ function renderFotky(){
 /* SCREEN: RODIC_KONTAKTY – průvodci rovnou rozbalení v mřížce karet (bez vnějšího boxu),
    dole kontakt na školku s maskotem Dubánkem. */
 function guideCard(g){
-  return `<div class="gcard"><div class="gcard-top">${avatar(g,42)}<div class="gcard-id"><div class="gcard-n">${g.n} ${g.sur}${g.uspava?' <span class="moon">☾</span>':''}</div></div></div>
+  return `<div class="gcard"><div class="gcard-top">${avatar(g,42)}<div class="gcard-id"><div class="gcard-n">${g.plne||g.n} ${g.sur}${g.uspava?' <span class="moon">☾</span>':''}</div></div></div>
     <div class="contact"><a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a></div>
     <div class="cinfo">${g.phone} · ${g.email}</div></div>`;
 }

@@ -1,7 +1,7 @@
 /* SCREEN: RODIC_KONTAKTY – průvodci rovnou rozbalení v mřížce karet (bez vnějšího boxu),
    dole kontakt na školku s maskotem Dubánkem. */
 function guideCard(g){
-  return `<div class="gcard"><div class="gcard-top">${avatar(g,42)}<div class="gcard-id"><div class="gcard-n">${g.n} ${g.sur}${g.uspava?' <span class="moon">☾</span>':''}</div></div></div>
+  return `<div class="gcard"><div class="gcard-top">${avatar(g,42)}<div class="gcard-id"><div class="gcard-n">${g.plne||g.n} ${g.sur}${g.uspava?' <span class="moon">☾</span>':''}</div></div></div>
     <div class="contact"><a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a></div>
     <div class="cinfo">${g.phone} · ${g.email}</div></div>`;
 }
