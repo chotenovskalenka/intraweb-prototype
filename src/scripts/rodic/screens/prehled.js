@@ -19,8 +19,11 @@ function renderDashboard(){
   }
 
   // Docházka (mobil: 1.)
-  let blkDochazka=`<div class="tile"><div class="ch">${c.n} dnes</div>`;
-  blkDochazka+=`<div class="doch-line"><span class="doch-code" style="color:${CODES[td][1]}">${CODES[td][0]}</span>${today?'<span class="doch-day">dnes</span>':''}</div>`;
+  let blkDochazka;
+  // „dnes" nese nadpis karty, ne ještě jednou řádek s kódem; při listování na jiný den
+  // musí nadpis říkat ten den, ne pořád „dnes"
+  blkDochazka=`<div class="tile"><div class="ch">${c.n} ${today?'dnes':`· ${DOW[wd(dashDay)]} ${dashDay}. 6.`}</div>`;
+  blkDochazka+=`<div class="doch-line"><span class="doch-code" style="color:${CODES[td][1]}">${CODES[td][0]}</span></div>`;
   if(!absent){const us=guides.find(g=>g.uspava);
     blkDochazka+=`<div class="doch-sleep">${c.spi?`☾ Spinká${us?` · uspává <b>${us.n}</b>`:''}`:'Nespinká'}</div>`;}
   if(c.notes[dashDay])blkDochazka+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;

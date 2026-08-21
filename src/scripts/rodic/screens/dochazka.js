@@ -38,12 +38,12 @@ function bulkControls(){
 function renderDen(){const c=cur();return `<div class="vhead">Denní přehled</div><button class="daycard daycard-btn" onclick="pick(${TODAY})"><div class="dt"><span class="wd">Středa 3. června</span>${chip(code(c,TODAY))}</div><div class="dm-open">Upravit docházku / omluvit ›</div></button>`;}
 function renderTyden(){
   const wend=Math.min(weekStart+4,30);
-  let h=`<div class="vhead vhrow"><span>Týdenní přehled</span><div class="dh-nav"><button class="dh-step" onclick="stepWeek(-1)" ${weekStart<=1?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${weekStart}.–${wend}. 6.</span><button class="dh-step" onclick="stepWeek(1)" ${weekStart+7>30?'disabled':''} aria-label="Další týden">›</button></div></div>`;
+  let h=`<div class="vhead vhrow"><span>Týdenní přehled</span><div class="dnav"><button onclick="stepWeek(-1)" ${weekStart<=1?'disabled':''} aria-label="Předchozí týden">‹</button><span>${weekStart}.–${wend}. 6.</span><button onclick="stepWeek(1)" ${weekStart+7>30?'disabled':''} aria-label="Další týden">›</button></div></div>`;
   h+=bulkControls();
   for(let i=0;i<5;i++){const d=weekStart+i;if(d>30)break;const cd=code(cur(),d);const bs=bulk&&selSet.has(d);
     h+=`<div class="wkrow${d===TODAY?' today':''}${!editable(d)?' locked':''}${bs?' bsel':''}"><div class="wkmain" onclick="pick(${d})">`+(bulk?`<span class="bchk ${selSet.has(d)?'on':''}"></span>`:'')+`<span class="d">${DOW[wd(d)]} <span>${d}. 6.</span></span><span class="cur">${!editable(d)?'<span class="lockflag">🔒 uzavřeno</span>':''}${chip(cd)}</span></div></div>`;}
   return h;}
-function renderMesic(){let h=`<div class="vhead vhrow"><span>Měsíční přehled</span><div class="dh-nav"><button class="dh-step" onclick="stepMonth(-1)" aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">Červen 2026</span><button class="dh-step" onclick="stepMonth(1)" aria-label="Další měsíc">›</button></div></div>`+bulkControls()+'<div class="cal">';
+function renderMesic(){let h=`<div class="vhead vhrow"><span>Měsíční přehled</span><div class="dnav"><button onclick="stepMonth(-1)" aria-label="Předchozí měsíc">‹</button><span>Červen 2026</span><button onclick="stepMonth(1)" aria-label="Další měsíc">›</button></div></div>`+bulkControls()+'<div class="cal">';
   DOW.forEach(x=>h+=`<div class="h">${x}</div>`);
   for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="cell we"><span class="dnum">${d}</span></div>`;continue;}const cd=code(cur(),d),s=bulk?selSet.has(d):sel===d;
     h+=`<div class="cell${d===TODAY?' today':''}${!editable(d)?' lock':''}${s?' sel':''}" onclick="pick(${d})"><span class="dnum">${d}</span><span class="mk" style="color:${CODES[cd][1]}">${CODES[cd][0].toLowerCase()}</span></div>`;}

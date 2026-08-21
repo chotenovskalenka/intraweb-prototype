@@ -34,11 +34,7 @@
   .dfield .dsw button{padding:10px 12px}
   .dfield{gap:8px}
 }
-.dnav{display:flex;align-items:center;gap:2px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:2px}
-.dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
-.dnav button:disabled{color:var(--color-text-hint);cursor:default}
 .dn-cur{font-style:normal}
-.dnav span{font-family:var(--font-serif);font-size:var(--text-body);color:var(--color-primary-strong);padding:0 8px;white-space:nowrap}
 /* Týdenní rytmus jako rozvrh (jen desktop – na mobilu zůstává stoh řádků, .ryt* jsou tam
    průhledné obaly). Sekce se vysazuje z masonry #content, aby týden byl v jedné řadě. */
 @media (min-width:900px){

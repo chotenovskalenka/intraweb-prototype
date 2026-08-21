@@ -29,7 +29,7 @@ function renderAktuality(){
   });
   h+=`</div>`;
   if(stran>1){
-    h+=`<div class="dh-nav novstep"><button class="dh-step" onclick="stepNovStrana(-1)" ${novStrana<=1?'disabled':''} aria-label="Předchozí strana">‹</button><span class="dh-lbl">Strana ${novStrana} z ${stran}</span><button class="dh-step" onclick="stepNovStrana(1)" ${novStrana>=stran?'disabled':''} aria-label="Další strana">›</button></div>`;
+    h+=`<div class="dnav novstep"><button onclick="stepNovStrana(-1)" ${novStrana<=1?'disabled':''} aria-label="Předchozí strana">‹</button><span>Strana ${novStrana} z ${stran}</span><button onclick="stepNovStrana(1)" ${novStrana>=stran?'disabled':''} aria-label="Další strana">›</button></div>`;
   }
   h+=`<div class="note2">Novinky píší průvodci; důležité mohou zároveň sdílet do WhatsAppu.</div>`;
   return h+`</div>`;
