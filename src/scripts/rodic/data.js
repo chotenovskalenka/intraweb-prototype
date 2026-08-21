@@ -188,7 +188,7 @@ const guides=[
   {n:'Honza',sur:'Kolář',photo:'Honza',h:'8:00–16:30',phone:'+420 605 426 333',email:'honza@vhaaji.cz'},
   {n:'Ksenia',sur:'Andramanova',photo:'Ksenia',phone:'+420 721 472 219',email:'ksenia@vhaaji.cz'},
   {n:'Eva',sur:'Sionová',phone:'+420 777 752 533',email:'eva@vhaaji.cz'},
-  {n:'Michaela',sur:'Hrubínová',photo:'Míša',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
+  {n:'Míša',plne:'Michaela',sur:'Hrubínová',photo:'Míša',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
   {n:'Táňa',sur:'Kynclová',photo:'Táňa',h:'7:30–16:00',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
 ];
 const GUIDES_TODAY=[7,2,3,1];   // dnes ve školce (Táňa, Darča, Honza, Gabča) – dashboard „Průvodci dnes"
