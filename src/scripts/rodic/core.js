@@ -32,8 +32,8 @@ function renderHead(){
   dh.innerHTML = overlay ? ''
     : section==='prehled' ? renderDashHead()
     : section==='profil'  ? `<h1 class="dh-t">Profil dítěte</h1><button class="dh-edit" onclick="openProfEdit()">Upravit údaje</button>`
-    : section==='plan'    ? `<h1 class="dh-t">Tématický plán</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepPlan(-1)" ${planIdx<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button><span class="dh-lbl">${planLabel()}</span><button class="dh-step" onclick="stepPlan(1)" ${planIdx>=TEMA_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`
-    : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dh-nav plan-head-nav"><button class="dh-step" onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span class="dh-lbl">${jidLabel()}</span><button class="dh-step" onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
+    : section==='plan'    ? `<h1 class="dh-t">Tématický plán</h1><div class="dnav plan-head-nav"><button onclick="stepPlan(-1)" ${planIdx<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button><span>${planLabel()}</span><button onclick="stepPlan(1)" ${planIdx>=TEMA_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`
+    : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dnav plan-head-nav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span>${jidLabel()}</span><button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${PAGEH[section]||''}</h1>`;
   const el=document.getElementById('kidsel');
   if(overlay){el.style.display='none';return;}

@@ -302,7 +302,7 @@ table.wt td.pastc{opacity:.45}
 .dh-lbl{font-family:var(--font-serif);font-size:var(--text-action);color:var(--color-primary-strong);padding:0 6px;white-space:nowrap}
 /* listovadlo na řádku s H1 v topbaru – přisazené doprava */
 .plan-head-nav{margin-left:auto}
-.plan-head-nav .dh-lbl{min-width:130px;text-align:center}
+.plan-head-nav span{min-width:130px;text-align:center}
 
 /* Napodobenina Google Kalendáře – sdílený kalendář školky, stejný v rodičovské i
    průvodcovské appce. Barvy a kompaktní rozměry jsou záměrná kopie Googlu, nesahat. */
@@ -426,3 +426,10 @@ table.wt td.pastc{opacity:.45}
 .skolka-contact .cbtn{flex:0 0 auto;padding:9px 16px}
 .gcard-sch{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:1px}
 .drivelink{font-size:var(--text-micro);font-weight:600;color:var(--color-primary);white-space:nowrap}
+
+/* Stepper (‹ popisek ›) – jedna pilulka, ne dvě odsazená tlačítka. Používají ho obě appky
+   pro listování týdny a měsíci, proto tady a ne v screens-*.css. */
+.dnav{display:flex;align-items:center;gap:2px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:2px}
+.dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
+.dnav button:disabled{color:var(--color-text-hint);cursor:default}
+.dnav span{font-family:var(--font-serif);font-size:var(--text-body);color:var(--color-primary-strong);padding:0 8px;white-space:nowrap}

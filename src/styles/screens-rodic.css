@@ -19,19 +19,19 @@
 .dh-date{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 .dh-car{font-size:var(--text-body);color:var(--color-text-muted);margin-left:6px;vertical-align:middle}
 /* přisazeno k pravému okraji .dashhead, ať se při změně šířky h1 (jiný název dne) nehýbe – viz plan-head-nav níže */
-.dashhead>.dh-nav{margin-left:auto}
+.dashhead>.dnav{margin-left:auto}
 /* Mobil: hlavička se zalomí na dva řádky a odznak „dnes" zůstával osamocený vlevo, šipky
    odplouvaly doprava a mezi nimi zela díra. Na mobilu proto zarovnáme obojí vlevo – skupina
    lícuje s avatarem i kartami pod sebou a šipky sedí přímo pod datem, které ovládají.
    Na desktopu se vejde vše na jeden řádek, tam přisazení doprava zůstává (drží stabilní pozici). */
 @media (max-width:899px){
   .dashhead>.dh-today{margin-left:0}
-  .dashhead>.dh-nav{margin-left:0}
+  .dashhead>.dnav{margin-left:0}
 }
 /* výběr měsíce v tématickém plánu – na řádku s H1 (dashhead), přisazený úplně doprava */
 /* stránkování seznamu neduležitých novinek */
 .novstep{justify-content:center;margin:14px 0 0}
-.novstep .dh-lbl{min-width:110px;text-align:center}
+.novstep span{min-width:110px;text-align:center}
 /* „dnes" – pasivní indikátor zobrazeného dne (jen když je zobrazený den dnešek) */
 .dh-today{display:inline-flex;align-items:center;min-height:32px;background:var(--tint-green);color:var(--color-primary-strong);font-weight:600;font-size:var(--text-small);padding:0 14px;border-radius:var(--radius-full);font-family:var(--font-sans)}
 .dh-name-link{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:text-decoration-color .15s}
