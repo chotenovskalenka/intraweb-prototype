@@ -21,9 +21,16 @@ Podklady z discovery fáze leží ve složce `discovery/`:
 - `discovery/příprava/` — Research brief, Design brief, scénáře rozhovorů
   (stakeholdeři: Terka/Eva/Radka/Pat; hloubkové rozhovory: průvodci a rodiče)
   a dva desk-research reporty (trh ŠIS, legislativa, outdoor UX).
-- `discovery/přepisy/` — přepisy 8 hloubkových rozhovorů (průvodkyně, rodiče,
-  hospodářka). Obsahují jména respondentů — **osobní data, do veřejného repa
-  nepatří** (stejný režim jako `podklady/`).
+- `discovery/přepisy/` — přepisy hloubkových rozhovorů s 9 respondenty (majitelka,
+  vedení, vývojář, průvodkyně, rodiče; 12 nahrávek). Obsahují jména respondentů —
+  **osobní data, do veřejného repa nepatří** (stejný režim jako `podklady/`).
+- `discovery/validace/` — nezávislý průchod přepisy: analýza po respondentech,
+  verifikace a rozpory, syntéza s citacemi, srovnání s původním Miro boardem.
+  Obsahuje citace a jména, **rovněž mimo git**.
+
+**Zjištění bez osobních údajů:** [docs/vyzkum-zjisteni.md](docs/vyzkum-zjisteni.md) —
+12 témat s uvedenou mírou opory (kolik respondentů které zjištění doložilo), omezení
+vzorku a sekce „co data neříkají". Tohle je verze, ze které se má citovat.
 
 Kontext z briefů, který drží celý projekt:
 

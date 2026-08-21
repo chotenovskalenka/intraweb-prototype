@@ -3,7 +3,14 @@
 .scroll{padding:14px 16px 30px;min-height:100vh;display:flex;flex-direction:column}
 .scroll>#content{flex:1}
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:13px}
-.burger{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;font-size:21px/* glyf ☰, ne text – mimo typografickou škálu */;line-height:1;color:var(--color-primary-strong);cursor:pointer;padding:2px 4px;margin-left:-8px}
+/* Otvírák menu: tři linky + popisek „Menu". Samotný glyf ☰ respondenti přehlíželi,
+   proto je pod ním slovo; prostřední linka je kratší (viz design systém). */
+.burger{min-width:44px;min-height:44px;display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;
+  border:none;background:none;cursor:pointer;padding:2px 4px;margin-left:-4px;font-family:var(--font-sans)}
+.burger-ic{display:flex;flex-direction:column;gap:4px;width:22px}
+.burger-ic i{display:block;height:2.5px;border-radius:2px;background:var(--color-text)}
+.burger-ic i:nth-child(2){width:62%}
+.burger-lb{font-size:var(--text-micro);font-weight:700;color:var(--color-text);line-height:1}
 .ttl{font-family:var(--font-serif);font-size:var(--text-title);color:var(--color-primary-strong)}
 .role{font-size:var(--text-micro);font-weight:500;color:var(--color-primary);background:var(--soft-primary);border:1px solid var(--edge-primary);padding:5px 10px;border-radius:var(--radius-full);white-space:nowrap;font-family:var(--font-sans);cursor:pointer}
 /* Štítek je zároveň přepínač role → dotykový cíl 44 px přes ::before, aby vizuál zůstal

@@ -1,0 +1,441 @@
+<title>Vhaaji Intraweb</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EFEEE9; --surface:#F9F7F1; --surface-2:#E7E4DA;
+  --text:#1F2A2E; --muted:#5C6560; --hint:#767B74;
+  --primary:#2B7059; --primary-strong:#1F5344;
+  --accent:#C8BC85; --accent-ink:#6F5F1C; --rose:#C99C93;
+  --danger:#B0492F; --info:#496D7E;
+  --line:rgba(31,42,46,.12); --line-strong:rgba(31,42,46,.20);
+  --wash:rgba(43,112,89,.06); --soft:rgba(43,112,89,.12);
+  --dot-off:rgba(31,42,46,.14);
+  --shadow:0 1px 2px rgba(31,42,46,.05), 0 8px 24px -12px rgba(31,42,46,.18);
+  --display:"Bricolage Grotesque",system-ui,-apple-system,sans-serif;
+  --body:"Inter",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121917; --surface:#1A2320; --surface-2:#232E2A;
+    --text:#E9E6DC; --muted:#A3ABA3; --hint:#8B938B;
+    --primary:#74AE92; --primary-strong:#8FC4A9;
+    --accent:#C8BC85; --accent-ink:#D8CC97; --rose:#CFA79E;
+    --danger:#DD8168; --info:#8AAEC0;
+    --line:rgba(233,230,220,.13); --line-strong:rgba(233,230,220,.22);
+    --wash:rgba(116,174,146,.08); --soft:rgba(116,174,146,.16);
+    --dot-off:rgba(233,230,220,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121917; --surface:#1A2320; --surface-2:#232E2A;
+  --text:#E9E6DC; --muted:#A3ABA3; --hint:#8B938B;
+  --primary:#74AE92; --primary-strong:#8FC4A9;
+  --accent:#C8BC85; --accent-ink:#D8CC97; --rose:#CFA79E;
+  --danger:#DD8168; --info:#8AAEC0;
+  --line:rgba(233,230,220,.13); --line-strong:rgba(233,230,220,.22);
+  --wash:rgba(116,174,146,.08); --soft:rgba(116,174,146,.16);
+  --dot-off:rgba(233,230,220,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:var(--body); font-size:16.5px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:0 24px 96px}
+.col{max-width:660px}
+h1,h2,h3,h4{font-family:var(--display); text-wrap:balance; margin:0; line-height:1.12; font-weight:600}
+p{margin:0}
+a{color:var(--primary-strong)}
+
+/* ---------- hero ---------- */
+.hero{padding:88px 0 56px; border-bottom:1px solid var(--line)}
+.eyebrow{
+  font-size:11.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--accent-ink); margin-bottom:20px; font-family:var(--body);
+}
+h1{font-size:clamp(40px,7vw,72px); font-weight:800; letter-spacing:-.025em}
+.lede{
+  font-size:clamp(19px,2.2vw,23px); line-height:1.5; color:var(--muted);
+  margin-top:24px; max-width:620px;
+}
+.lede strong{color:var(--text); font-weight:600}
+.meta{
+  display:flex; flex-wrap:wrap; gap:0 40px; margin-top:44px;
+  padding-top:26px; border-top:1px solid var(--line);
+}
+.meta div{padding:6px 0}
+.meta dt{font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--hint); font-weight:600}
+.meta dd{margin:5px 0 0; font-size:15px; color:var(--text)}
+
+/* ---------- structure ---------- */
+section{padding:64px 0; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+h2{font-size:clamp(27px,3.4vw,38px); letter-spacing:-.02em; margin-bottom:8px}
+.sub{color:var(--muted); font-size:17px; margin-bottom:32px; max-width:620px}
+h3{font-size:21px; margin:40px 0 10px; letter-spacing:-.01em}
+.col p + p{margin-top:18px}
+.col h3 + p{margin-top:0}
+
+/* ---------- evidence meter ---------- */
+.finding{
+  padding:24px 0; border-top:1px solid var(--line);
+  display:grid; grid-template-columns:150px 1fr; gap:28px; align-items:start;
+}
+.finding:first-of-type{border-top:0}
+.ev{display:flex; flex-direction:column; gap:7px; padding-top:3px}
+.dots{display:flex; gap:4px}
+.dots i{width:9px; height:9px; border-radius:50%; background:var(--dot-off); display:block}
+.dots i.on{background:var(--primary)}
+.dots.weak i.on{background:var(--accent)}
+.ev b{font-family:var(--display); font-size:15px; font-weight:600; letter-spacing:-.01em}
+.ev span{font-size:11.5px; color:var(--hint); line-height:1.35}
+.finding h4{font-size:18.5px; margin-bottom:7px; letter-spacing:-.01em}
+.finding p{font-size:15.5px; color:var(--muted)}
+.finding p strong{color:var(--text); font-weight:600}
+
+/* ---------- quote ---------- */
+blockquote{
+  margin:34px 0; padding:26px 30px; background:var(--surface);
+  border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:0 12px 12px 0; box-shadow:var(--shadow);
+}
+blockquote p{font-family:var(--display); font-size:21px; line-height:1.4; letter-spacing:-.01em}
+blockquote cite{
+  display:block; margin-top:14px; font-style:normal; font-size:12.5px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--hint); font-weight:600;
+}
+blockquote.big p{font-size:26px}
+
+/* ---------- exhibits (UI recreations) ---------- */
+.exhibits{display:grid; grid-template-columns:repeat(auto-fit,minmax(272px,1fr)); gap:24px; margin-top:36px}
+.ex{display:flex; flex-direction:column; gap:12px}
+.ex figcaption{font-size:13.5px; color:var(--muted); line-height:1.45}
+.ex figcaption b{color:var(--text); font-weight:600; display:block; margin-bottom:3px; font-family:var(--display); font-size:15px}
+.screen{
+  background:var(--bg); border:1px solid var(--line-strong); border-radius:16px;
+  padding:16px; box-shadow:var(--shadow); font-size:13px;
+}
+.screen .bar{display:flex; align-items:center; gap:8px; margin-bottom:14px; color:var(--hint); font-size:11px}
+.screen .bar .burger{width:15px; height:11px; border-top:2px solid var(--muted); border-bottom:2px solid var(--muted); position:relative}
+.screen .bar .burger::after{content:""; position:absolute; top:3.5px; left:0; right:0; border-top:2px solid var(--muted)}
+.screen .pill{
+  margin-left:auto; background:var(--surface-2); border-radius:999px;
+  padding:4px 11px; font-size:10.5px; color:var(--muted); font-weight:500;
+}
+.screen .stitle{font-family:var(--display); font-size:19px; font-weight:600; letter-spacing:-.01em; margin-bottom:2px}
+.screen .ssub{font-size:11.5px; color:var(--hint); margin-bottom:14px}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:10px}
+.card > .ch{font-family:var(--display); font-size:14px; font-weight:600; margin-bottom:11px}
+.nums{display:grid; grid-template-columns:repeat(3,1fr); gap:7px}
+.nums.two{grid-template-columns:repeat(2,1fr); margin-top:7px}
+.num{background:var(--bg); border:1px solid var(--line); border-radius:11px; padding:9px 4px; text-align:center}
+.num b{display:block; font-family:var(--display); font-size:23px; font-weight:600; color:var(--primary-strong); line-height:1.1; font-variant-numeric:tabular-nums}
+.num span{font-size:10.5px; color:var(--muted)}
+.cta{
+  margin-top:11px; background:var(--primary); color:#F4EEDF; border-radius:11px;
+  padding:11px; text-align:center; font-weight:600; font-size:13px;
+}
+.row{display:flex; align-items:center; gap:9px; padding:9px 0; border-top:1px solid var(--line); font-size:12.5px}
+.row:first-of-type{border-top:0}
+.av{width:24px; height:24px; border-radius:50%; background:var(--soft); flex:none}
+.row .nm{font-weight:500}
+.row .st{margin-left:auto; text-align:right; font-size:11px; color:var(--danger); line-height:1.3}
+.bignum{font-family:var(--display); font-size:44px; font-weight:800; color:var(--primary-strong); line-height:1; font-variant-numeric:tabular-nums}
+.hintline{font-size:11.5px; color:var(--muted); margin-top:7px; line-height:1.45}
+.caps{display:flex; flex-direction:column; gap:11px}
+.cap .cn{display:flex; font-size:11.5px; margin-bottom:5px}
+.cap .cn b{font-weight:600}
+.cap .cn span{margin-left:auto; color:var(--muted); font-variant-numeric:tabular-nums}
+.track{height:6px; border-radius:999px; background:var(--surface-2); overflow:hidden}
+.track i{display:block; height:100%; border-radius:999px; background:var(--primary)}
+.track i.full{background:var(--accent-ink)}
+.tag{display:inline-block; padding:2px 7px; border-radius:5px; font-size:10px; font-weight:600; letter-spacing:.02em}
+.tag.warn{background:rgba(200,188,133,.22); color:var(--accent-ink)}
+.tag.dang{background:rgba(176,73,47,.10); color:var(--danger)}
+
+/* ---------- verdict list ---------- */
+.verdicts{display:grid; gap:2px; margin-top:32px; border-radius:12px; overflow:hidden}
+.v{display:grid; grid-template-columns:26px 1fr; gap:14px; padding:18px 20px; background:var(--surface); align-items:start}
+.v .mk{font-family:var(--display); font-size:20px; line-height:1; font-weight:800}
+.v.ok .mk{color:var(--primary)}
+.v.no .mk{color:var(--danger)}
+.v.gap .mk{color:var(--accent-ink)}
+.v b{font-family:var(--display); font-size:16px; display:block; margin-bottom:4px}
+.v p{font-size:14.5px; color:var(--muted)}
+
+/* ---------- callout ---------- */
+.callout{
+  margin:36px 0; padding:26px 28px; border-radius:14px;
+  background:var(--wash); border:1px solid var(--line);
+}
+.callout h4{font-size:17px; margin-bottom:9px}
+.callout p{font-size:15.5px; color:var(--muted)}
+.callout p + p{margin-top:13px}
+
+/* ---------- numbers strip ---------- */
+.strip{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-top:36px}
+.strip div{background:var(--surface); padding:22px}
+.strip b{display:block; font-family:var(--display); font-size:34px; font-weight:800; letter-spacing:-.02em; line-height:1; color:var(--primary-strong); font-variant-numeric:tabular-nums}
+.strip span{display:block; margin-top:8px; font-size:13px; color:var(--muted); line-height:1.4}
+
+footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid var(--line)}
+
+@media (max-width:720px){
+  .hero{padding:56px 0 40px}
+  section{padding:48px 0}
+  .finding{grid-template-columns:1fr; gap:14px}
+  .meta{gap:0 28px}
+  blockquote{padding:22px 20px}
+  blockquote p{font-size:19px}
+  blockquote.big p{font-size:21px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">UX výzkum a design · 2026</div>
+  <h1>Náhrady se počítaly tužkou</h1>
+  <p class="lede">Redesign intrawebu pro síť čtyř soukromých školek. <strong>Majitelka o redesign nestála, tým byl spokojený</strong> — a přesto hospodářka každý měsíc přepočítávala nároky dětí ručně na papíře, protože systému nevěřila.</p>
+  <dl class="meta">
+    <div><dt>Moje role</dt><dd>Výzkum, UX, design systém, prototypy</dd></div>
+    <div><dt>Tým</dt><dd>2 výzkumnice, 1 vývojář</dd></div>
+    <div><dt>Metoda</dt><dd>9 hloubkových rozhovorů, 12 nahrávek</dd></div>
+    <div><dt>Výstup</dt><dd>3 proklikávací prototypy, design systém</dd></div>
+  </dl>
+</header>
+
+<section>
+  <div class="col">
+    <h2>Zadání, které si nikdo neobjednal</h2>
+    <p class="sub">Síť čtyř školek — dvě kamenné, dvě lesní. Interní systém, který vznikl před jedenácti lety pro jednu z nich a postupně se rozšířil na všechny.</p>
+    <p>Intraweb dnes umí tři věci: docházku, matriku a fakturaci. Všechno ostatní žije v deseti Google tabulkách a v šesti typech WhatsAppových skupin. Průvodkyně drží kolem sedmnácti skupin, vedení kolem třiceti.</p>
+    <p>Zadání znělo jednoduše — sjednotit to. Jenže hned první rozhovory ukázaly, že problém není tam, kde ho zadání hledalo. Zeptala jsem se majitelky, proč je podle ní redesign potřeba:</p>
+  </div>
+
+  <blockquote class="big">
+    <p>„Já si to nemyslím. Si myslím, tys to říkala.“</p>
+    <cite>Majitelka sítě školek</cite>
+  </blockquote>
+
+  <div class="col">
+    <p>Za úspěch projektu označila stav, kdy tým nezareaguje vůbec: <em>„zhoršit funkce asi nezhoršíte, takže ta odezva bude buďto žádná, nebo dobrá. Takže když bude žádná, tak už to je úspěch.“</em></p>
+    <p>To je pro designéra nepříjemný, ale zásadní nález. Znamená totiž, že projekt nemá mandát na přestavbu — má mandát na opravu. A že cokoli, co rozbije zaběhnuté návyky týmu, bude odmítnuto bez ohledu na to, jak dobře je to navržené.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Co ukázal výzkum</h2>
+    <p class="sub">Devět respondentů napříč všemi rolemi: majitelka, vedení a hospodářka, vývojář, tři průvodkyně, dva rodiče. U každého zjištění jsem sledovala, kolik lidí ho doložilo vlastní zkušeností — ne kolik z nich s ním souhlasilo.</p>
+  </div>
+
+  <div class="findings">
+    <div class="finding">
+      <div class="ev">
+        <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+        <b>8 z 9</b><span>napříč všemi rolemi</span>
+      </div>
+      <div>
+        <h4>Náhradám nerozumí ani lidé, kteří o nich rozhodují</h4>
+        <p>Za včas omluvený den vzniká dítěti náhrada. Pravidlo zní jednoduše — a přesto ho neuměl vysvětlit nikdo kromě hospodářky. Majitelka se počítání vzdala a náhradu raději daruje. Koordinátorka týmu ho nazvala šedou zónou a rodiče posílá dál. Rodiče nevědí, kolik náhrad mají, ani kde to zjistit. <strong>Systém výpočet nabízí, ale nikdo mu nevěří.</strong></p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="ev">
+        <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+        <b>7 z 9</b><span>všichni, kdo pracují v terénu</span>
+      </div>
+      <div>
+        <h4>Odpověď se musí přečíst, ne poskládat</h4>
+        <p>Průvodkyně potřebuje ráno jediné číslo: kolik dětí přijde a kolik z nich bude spát. Systém jí dal počet odpoledních a zbytek si musela dopočítat po jednotlivých dětech. <strong>Skutečným zdrojem pravdy bylo fyzické přepočítání dětí na ranním kruhu</strong> — systém sloužil jako odhad, který se ověřoval realitou.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="ev">
+        <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+        <b>6 z 9</b><span>+ 1 protipříklad</span>
+      </div>
+      <div>
+        <h4>Funkce existují. Nikdo o nich neví</h4>
+        <p>Poznámka u docházky je učebnicový případ: skrytá pro rodiče, neviditelná pro průvodce a na mobilu na ni nejde kliknout. Jeden rodič ji používá a tvrdí, že funguje — <strong>ale informaci pro jistotu ještě zopakuje ústně.</strong> Funkce technicky funguje. Jen jí nikdo nevěří.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="ev">
+        <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+        <b>7 z 9</b><span>říkají obojí zároveň</span>
+      </div>
+      <div>
+        <h4>WhatsApp není konkurent. Je to nervový systém</h4>
+        <p>Sedm respondentů mluvilo o WhatsAppu pochvalně i odmítavě v jedné odpovědi. Umí dvě věci, které systém neuměl: <strong>potvrzení, že informaci někdo přijal, a doručení celému týmu naráz</strong> — včetně těch, kdo zrovna nemají službu. Nahradit ho nechtěl nikdo. Ani vývojář.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="ev">
+        <div class="dots weak"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <b>2 z 9</b><span>ale mají právo veta</span>
+      </div>
+      <div>
+        <h4>Statické informace ano, živý zápis ne</h4>
+        <p>Majitelka a koordinátorka týmu nezávisle nakreslily stejnou čáru. Přesunout do systému lze to, co je stabilní — kontakty, jídelníček, akce. <strong>Ne to, co se dopisuje zpětně</strong>, protože formulář, který se odešle a uzavře, to neumožní. Dva hlasy z devíti, ale právě ti dva rozhodují o nasazení.</p>
+      </div>
+    </div>
+  </div>
+
+  <blockquote>
+    <p>„Já prostě ti tu náhradu radši dám, než aby to počítala.“</p>
+    <cite>Majitelka o tom, proč se náhrady neřeší</cite>
+  </blockquote>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Jak se to promítlo do návrhu</h2>
+    <p class="sub">Tři aplikace, jedna pro každou roli. Průvodcovská a rodičovská mobilní, administrativa desktopová — protože vedení pracuje odpoledne u počítače, zatímco průvodkyně mají v ruce jen telefon.</p>
+  </div>
+
+  <div class="exhibits">
+    <figure class="ex">
+      <div class="screen">
+        <div class="bar"><span class="burger"></span><span class="pill">Průvodce</span></div>
+        <div class="stitle">Středa 3. června</div>
+        <div class="ssub">Dnes ve školce · tři průvodkyně</div>
+        <div class="card">
+          <div class="ch">Docházka dnes</div>
+          <div class="nums">
+            <div class="num"><b>22</b><span>Přítomno</span></div>
+            <div class="num"><b>22</b><span>Obědy</span></div>
+            <div class="num"><b>13</b><span>Spí</span></div>
+          </div>
+          <div class="nums two">
+            <div class="num"><b>2</b><span>Po obědě</span></div>
+            <div class="num"><b>3</b><span>Nepřítomní</span></div>
+          </div>
+          <div class="cta">Otevřít dnešní docházku →</div>
+        </div>
+      </div>
+      <figcaption><b>Pět čísel místo listování</b>Přesně ta čísla, která si průvodkyně dopočítávaly v hlavě — včetně rozdělení na spáče a nespáče, o které nezávisle požádaly všechny čtyři.</figcaption>
+    </figure>
+
+    <figure class="ex">
+      <div class="screen">
+        <div class="bar"><span class="burger"></span><span class="pill">Rodič</span></div>
+        <div class="stitle">Docházka a náhrady</div>
+        <div class="ssub">Týdenní přehled · 1.–5. 6.</div>
+        <div class="card">
+          <div class="ch">Dostupné náhrady</div>
+          <div class="bignum">3</div>
+          <p class="hintline">Náhradu lze vyčerpat i na příměstský tábor. Vzniká za každý včas omluvený den.</p>
+        </div>
+        <div class="card">
+          <div class="row"><span class="nm">omluva 12. 5.</span><span class="st" style="color:var(--muted)">vznik 12. 5.</span></div>
+          <div class="row"><span class="nm">omluva 20. 5.</span><span class="st" style="color:var(--muted)">vznik 20. 5.</span></div>
+        </div>
+      </div>
+      <figcaption><b>Zůstatek jako velké číslo</b>Nejsilnější zjištění výzkumu dostalo nejviditelnější místo — plus jedna věta, která vysvětluje pravidlo tam, kde na něj člověk kouká.</figcaption>
+    </figure>
+
+    <figure class="ex">
+      <div class="screen">
+        <div class="bar"><span class="pill" style="margin-left:0">Vedení</span></div>
+        <div class="stitle">Přehled</div>
+        <div class="ssub">Přehled všech čtyř školek</div>
+        <div class="card">
+          <div class="ch">Kapacity školek</div>
+          <div class="caps">
+            <div class="cap"><div class="cn"><b>Vhaaji</b><span>25/28</span></div><div class="track"><i style="width:89%"></i></div></div>
+            <div class="cap"><div class="cn"><b>Jaata</b><span>12/12 · plno</span></div><div class="track"><i class="full" style="width:100%"></i></div></div>
+            <div class="cap"><div class="cn"><b>Kouzlo lesa</b><span>12/14</span></div><div class="track"><i style="width:86%"></i></div></div>
+            <div class="cap"><div class="cn"><b>Maata</b><span>16/20</span></div><div class="track"><i style="width:80%"></i></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch">Chybějící platby</div>
+          <div class="row"><span class="av"></span><span class="nm">Školné · březen</span><span class="st"><span class="tag dang">Po splatnosti</span></span></div>
+          <div class="row"><span class="av"></span><span class="nm">Školné · květen</span><span class="st"><span class="tag warn">Čeká na spárování</span></span></div>
+        </div>
+      </div>
+      <figcaption><b>Čtyři školky na jedné obrazovce</b>Vedení jako jediné potřebuje vidět napříč sítí. Stav platby je tvar a barva, ne jen číslo — protože „uhrazeno / neuhrazeno“ bylo léta zdrojem dotazů od rodičů.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Co prototyp trefil a co ne</h2>
+    <p class="sub">Prototyp vznikal souběžně s analýzou dat, takže část návrhu předběhla důkazy. Po dokončení analýzy jsem ho proti zjištěním prošla položku po položce.</p>
+  </div>
+
+  <div class="verdicts">
+    <div class="v ok"><span class="mk">✓</span><div><b>Rozdělení spáčů a nespáčů</b><p>Nezávisle si o něj řekly všechny průvodkyně ve vzorku. V prototypu byl dřív, než jsem to věděla.</p></div></div>
+    <div class="v ok"><span class="mk">✓</span><div><b>Zůstatek náhrad jako velké číslo u rodiče</b><p>Přímá odpověď na nejsilnější zjištění výzkumu.</p></div></div>
+    <div class="v ok"><span class="mk">✓</span><div><b>Fotky mimo Facebook</b><p>Oba dotázaní rodiče měli k platformě výhradu, kterou tým nikdy neslyšel.</p></div></div>
+    <div class="v no"><span class="mk">✕</span><div><b>Počítadlo opakování u svačin</b><p>Měřilo špatnou věc. Svačinářka neplánuje podle četnosti, ale podle programu — když třída peče něco sladkého, druhá svačina má být slaná. Užitečnější je u dne ukázat výlet nebo pečení. <strong>Funkce šla ven.</strong></p></div></div>
+    <div class="v gap"><span class="mk">△</span><div><b>Třídnice</b><p>Ve výzkumu nejoceňovanější nástroj vůbec — a prototyp ji vědomě odložil. Největší rozpor mezi výzkumem a návrhem. Zároveň o její přesun nikdo z devíti sám nepožádal a čtyři ji aktivně brání.</p></div></div>
+    <div class="v gap"><span class="mk">△</span><div><b>Rozlišení důležitosti zpráv</b><p>Jádro whatsappové bolesti. Prototyp neřeší — a upřímně, není jasné, jestli to jde vyřešit uvnitř systému, když komunikace zůstává jinde.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Kde jsem se spletla</h2>
+    <p class="sub">Byl to můj první větší výzkum. Po roce jsem se k datům vrátila a nechala je projít nezávisle — analýzu po respondentech, verifikaci rozporů a teprve pak syntézu, bez nahlédnutí do původních závěrů. Až úplně nakonec jsem obě verze porovnala.</p>
+    <p>Osm z deseti původních zjištění obstálo. Ve dvou případech byla původní analýza <em>lepší</em> než nový průchod — formulace „nejde o večerní zprávy, ale o to, aby šlo rozhodnutí o zítřku udělat dřív“ spojuje do jedné příčiny to, co jsem podruhé rozepsala na čtyři samostatné bolesti.</p>
+    <p>Tři věci ale neobstály.</p>
+  </div>
+
+  <div class="callout">
+    <h4>Nosná teze stála na citacích, které nejdou dohledat</h4>
+    <p>Celý projekt jsem postavila na zjištění „telefon před dětmi je tabu“ — a označila ho za klíčovou hodnotu, ze které plyne skoro všechno. V přepisech pro něj ale doslovná opora není: tři citace, na kterých teze stojí, se v nich nevyskytují. Buď jsou přepisy neúplné, nebo jsem si při syntéze poznámky přeformulovala do uvozovek.</p>
+    <p>Navíc k tezi existuje protipříklad, který jsem přehlédla: jedna z průvodkyň na telefonu běžně pracuje v terénu i cestou do práce a situace u dětí si fotí, aby je zapsala později. <strong>Formulace, kterou data unesou, zní jinak: pozornost lidí v přímé péči je vzácná a měří se ve vteřinách.</strong> Pro návrh to znamená totéž. Rozdíl je v tom, že tohle můžu doložit.</p>
+  </div>
+
+  <div class="callout">
+    <h4>Premisa ze zadání se mi proměnila ve zjištění</h4>
+    <p>„Průvodci pracují ze 70 % na mobilu“ jsem používala jako výsledek výzkumu. Ve skutečnosti to bylo v zadání, které jsem si napsala na začátku. Žádný respondent to číslo nikdy neřekl. Závěr o mobilu platí — doložilo ho sedm z devíti lidí popisem vlastního dne. Jen to číslo k němu nepatří.</p>
+  </div>
+
+  <div class="callout">
+    <h4>Vzorek nebyl dosycený a nepřiznala jsem to</h4>
+    <p>Plánovala jsem dva až tři rodiče a dva až tři průvodce za každou školku. Skončila jsem u dvou rodičů celkem — a oba shodou okolností pracují profesně s digitálními nástroji, jeden z nich má dokonce vlastní zkušenost průvodce. To jsou ti nejméně typičtí rodiče, jaké jsem mohla vybrat.</p>
+    <p>Z kamenné školky nemám ani jednoho běžného průvodce ani rodiče, jen vedení. <strong>Všechna zjištění jsou fakticky o lesních školkách</strong> — a to je věta, která měla být v původní syntéze, ne až v její revizi.</p>
+  </div>
+
+  <div class="col">
+    <h3>Co si z toho beru</h3>
+    <p>Přímá otázka „co vám na tom vadí“ v tomhle vzorku nefungovala. Vyvolala odpověď „nic zásadního“ — a týž člověk pak při popisu konkrétního dne vyjmenoval sedmnáct věcí, které ho denně brzdí. <strong>Ptát se na poslední konkrétní výskyt, ne na obecné hodnocení.</strong></p>
+    <p>A druhá věc, kterou beru dál do každého projektu: v malé komunitě se silnými vztahy se mlčení nedá číst jako souhlas. Tým si byl jistý, že rodičům sdílení fotek přes Facebook nevadí, protože si nikdo nestěžoval. Oba dotázaní rodiče měli výhradu. Hospodářka půl roku ručně opravovala chybu ve slevě, než se o ní vývojář vůbec dozvěděl.</p>
+  </div>
+
+  <div class="strip">
+    <div><b>8/10</b><span>původních zjištění obstálo v nezávislé revizi</span></div>
+    <div><b>3</b><span>citace k nosné tezi, které nejdou dohledat</span></div>
+    <div><b>2</b><span>rodiče místo plánovaných deseti</span></div>
+    <div><b>1</b><span>funkce, kterou data vyvrátila a šla ven</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Kde to stojí teď</h2>
+    <p>Tři proklikávací prototypy, design systém postavený na identitě školky a rozhodovací log, ve kterém je u každé volby napsané proč. Priority pro vývoj jsou seřazené podle síly opory v datech, ne podle toho, co zní nejlíp: náhrady, mobilní čitelnost docházky, viditelnost existujících funkcí, zaučení nových rodičů.</p>
+    <p>Čeho se v téhle fázi nedotýkáme: WhatsApp, třídnice a sloučení databází. U prvních dvou proto, že je nikdo nechce měnit. U třetí proto, že před tím varuje sám vývojář.</p>
+    <p>A než se začne stavět: doplnit vzorek o rodiče bez digitální profese a o kamennou školku. To je jediná věc, kterou tenhle výzkum sám o sobě nevyřeší.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="col"><p>Případová studie redesignu interního systému pro síť lesních a kamenných školek. Jména respondentů a citlivé údaje jsou z podkladů odstraněny; ukázky rozhraní jsou rekonstrukce prototypu.</p></div>
+</footer>
+
+</div>
