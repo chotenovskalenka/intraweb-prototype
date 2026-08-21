@@ -6,25 +6,33 @@ Zkopíruj do nového souboru `docs/testovani/kolo-1/R1-rodic.md` a vyplňuj **b�
 
 ## Jak psát (přečti si jednou, pak už ne)
 
-**Nahrávej zvuk i obrazovku.** Všechno, co jde dohledat ze záznamu, během sezení nepiš – ztratíš
-tím to jediné, co ze záznamu nevyčteš: kam se respondent díval první, kde zaváhal a co se mu
-mihlo po obličeji.
+Píšeš na notebooku a **obrazovku nenahráváš** – nemáš si tedy co přehrát. Všechno, co budeš
+chtít vědět při vyhodnocení, musí vzniknout tady a teď. Zároveň platí, že když píšeš, nekoukáš –
+proto je arch stavěný na **zaškrtávání a útržky**, ne na věty.
 
-**Piš jen čtyři věci:**
+**Zachyť především cestu.** Je to jediná věc, kterou si bez záznamu nezrekonstruuješ. Stačí
+šipky, ne popis: `menu → docházka → zpět → přehled ✓`. Zpětný krok („zpět") je nález sám o sobě.
 
-1. **Výsledek úkolu** – zaškrtni, nepopisuj.
-2. **Doslovné formulace** – hlavně slova, kterými věc pojmenuje **jinak než appka**
-   („bonusy" místo „náhrady", „zprávy" místo „novinky"). Tohle je nejcennější věc z celého testu
-   a ze záznamu se to hledá špatně.
-3. **Kde hledal(a) první.** Jedno slovo: „menu", „přehled", „scroll".
-4. **Co tě překvapilo.** Cokoli, co jsi nečekala.
+**Citace piš jako útržky.** Tři až pět slov stačí, abys větu po sezení doplnila z hlavy –
+celou ji stejně nestihneš. Nejcennější jsou slova, kterými respondent věc pojmenuje **jinak
+než appka** („bonusy" místo „náhrady", „zprávy" místo „novinky").
+
+**Nesnaž se psát a moderovat zároveň v jednu chvíli.** Když se něco děje, dívej se. Pauzu na
+zápis si klidně řekni nahlas: *„Počkejte vteřinku, jen si to poznamenám."* Je to legitimní
+a respondenta to neruší tak jako to, že na něj nekoukáš.
+
+**Nech si 5 minut po každém sezení** a poznámky rozepiš, dokud si to pamatuješ. Bez záznamu
+je tohle nejdůležitější návyk celého testování – za hodinu si vybavíš zlomek.
 
 **Odděl pozorování od výkladu.** Piš „třikrát scrolloval nahoru a dolů", ne „nechápal to".
-Interpretace přijde při vyhodnocení, ne teď – jinak si zafixuješ první vysvětlení a přestaneš
-vidět ostatní.
+Interpretace přijde při vyhodnocení; když si ji zapíšeš teď, zafixuješ první vysvětlení
+a přestaneš vidět ostatní.
 
-**Nepomáhej dřív než po 30 vteřinách.** Ticho je data. Když pomůžeš, poznamenej to –
-úkol se pak nepočítá jako úspěch.
+**Nepomáhej dřív než po 30 vteřinách** – ticho je data. Když pomůžeš, poznamenej to; úkol se
+pak nepočítá jako úspěch.
+
+**Praktické:** seď **vedle**, ne naproti · notebook níž, ať ti nestíní ve výhledu na telefon ·
+zvuk si nahraj aspoň na mobil, i když obrazovku ne – citace se pak dají doplnit přesně.
 
 ---
 
@@ -37,7 +45,7 @@ vidět ostatní.
 | Role | rodič / průvodce / vedoucí / hospodářka |
 | Zařízení | vlastní mobil / půjčený / desktop |
 | Používá dnes intraweb? | denně / občas / skoro ne |
-| Souhlas s nahráváním | ano / ne |
+| Souhlas se zápisem (a zvukem) | ano / ne |
 
 **Zahřívačka – poslední konkrétní případ:**
 
@@ -53,18 +61,24 @@ vidět ostatní.
 U každého: **✓ zvládl sám** / **~ zvládl se zaváhaním** / **✗ nezvládl nebo jsem pomohla**
 
 ### 1 · Ráno před odchodem
-Výsledek: ✓ ~ ✗ Kde hledal(a) první:
+Výsledek: ✓ ~ ✗
+Cesta:
+Kde hledal(a) první:
 Doslova řekl(a):
 Pozorování:
 
 ### 2 · Náhrady (před omluvenkou)
-Výsledek: ✓ ~ ✗ Kde hledal(a) první:
+Výsledek: ✓ ~ ✗
+Cesta:
+Kde hledal(a) první:
 Použil(a) slovo „náhrada" sám/sama? ano / ne → říká tomu:
 Všiml(a) si expirace 30. 6.? ano / ne
 Doslova řekl(a):
 
 ### 3 · Omluvenka na zítřek *(hlavní úkol)*
-Výsledek: ✓ ~ ✗ Kde hledal(a) první:
+Výsledek: ✓ ~ ✗
+Cesta:
+Kde hledal(a) první:
 Přečetl(a) box s deadlinem 20:00? četl / proklikl
 Po odeslání ví, jestli vznikla náhrada? ano / ne / neví jistě
 Odpověď na „kdyby bylo 21:00":
@@ -72,15 +86,18 @@ Doslova řekl(a):
 
 ### 4 · Absence na poslední chvíli
 Výsledek: ✓ ~ ✗
+Cesta:
 Pochopil(a), že za dnešek náhrada nevznikne? ano / ne
 Zeptal(a) se na oběd sám/sama? ano / ne
 
 ### 5 · Novinky
 Výsledek: ✓ ~ ✗
+Cesta:
 **„Přestal(a) byste to hledat ve skupině?"** → odpověď (doslova):
 
 ### 6 · Peníze *(když zbyde čas)*
 Výsledek: ✓ ~ ✗
+Cesta:
 Chápe, za co se odečítalo z fondu? ano / ne
 
 ---
