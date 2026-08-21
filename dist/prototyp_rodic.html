@@ -135,9 +135,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .burger{min-width:44px;min-height:44px;display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;
   border:none;background:none;cursor:pointer;padding:2px 4px;margin-left:-4px;font-family:var(--font-sans)}
 .burger-ic{display:flex;flex-direction:column;gap:4px;width:22px}
-.burger-ic i{display:block;height:2.5px;border-radius:2px;background:var(--color-text)}
+.burger-ic i{display:block;height:2.5px;border-radius:2px;background:var(--color-primary-strong)}
 .burger-ic i:nth-child(2){width:62%}
-.burger-lb{font-size:var(--text-micro);font-weight:700;color:var(--color-text);line-height:1}
+.burger-lb{font-size:var(--text-micro);font-weight:700;color:var(--color-primary-strong);line-height:1}
 .ttl{font-family:var(--font-serif);font-size:var(--text-title);color:var(--color-primary-strong)}
 .role{font-size:var(--text-micro);font-weight:500;color:var(--color-primary);background:var(--soft-primary);border:1px solid var(--edge-primary);padding:5px 10px;border-radius:var(--radius-full);white-space:nowrap;font-family:var(--font-sans);cursor:pointer}
 /* Štítek je zároveň přepínač role → dotykový cíl 44 px přes ::before, aby vizuál zůstal
@@ -151,6 +151,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .drawer.on{transform:none}
 .dh{display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-size:var(--text-heading);font-weight:700;color:var(--color-primary-strong);padding:0 20px 14px;border-bottom:1px solid var(--color-border);margin-bottom:8px}
 .dh .brand-mark{width:32px;height:32px;flex:none;object-fit:contain}
+/* Zavření menu. Klepnutí vedle draweru ho zavře taky, ale nic to neříká – proto viditelný ✕.
+   Na desktopu je sidebar stálý, tam tlačítko nedává smysl (skrývá se s celým drawerem). */
+.dclose{margin-left:auto;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  border:none;background:none;font-size:var(--text-title);line-height:1;color:var(--color-text-muted);cursor:pointer;margin-right:-10px}
 .dh small{display:block;font-family:var(--font-sans);font-size:var(--text-micro);color:var(--color-text-muted);font-weight:400}
 .ditem{display:flex;align-items:center;gap:11px;min-height:44px;padding:12px 20px;font-size:var(--text-action);color:var(--color-text);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--font-sans)}
 .ditem.on{background:var(--soft-primary);color:var(--color-primary);font-weight:600}
@@ -172,6 +176,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
     flex:none;height:100vh;border-radius:0;box-shadow:none;border-right:1px solid var(--color-border);z-index:1;padding:24px 0 16px}
   .scrim{display:none!important}
   .burger{display:none}
+  .dclose{display:none}   /* sidebar je tu stálý – není co zavírat */
   .scroll{flex:1;min-width:0;max-width:1060px;margin:0 auto;padding:26px 36px 48px}
   .topbar{margin-bottom:20px}
   /* obsah do dvou vyvážených sloupců (fokus, ne rozsyp) */
@@ -2359,7 +2364,7 @@ function renderDrawer(){
   const d=document.getElementById('drawer');
   d.classList.toggle('on',drawerOpen);
   document.getElementById('scrim').classList.toggle('on',drawerOpen);
-  d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')
+  d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span><button class="dclose" onclick="closeDrawer()" aria-label="Zavřít menu">✕</button></div>`+SECTIONS.map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')
     +`<div class="dfoot"><button class="ditem" onclick="openUcet()"><span class="dfoot-acc">${ACCOUNT.jmeno}<small>Nastavení účtu</small></span></button>
       <button class="ditem" onclick="showToast('Odhlášení – jen náhled, v prototypu nefunguje')"><span class="ic">${icon('odhlasit')||'⏻'}</span>Odhlásit se</button></div>`;
 }
