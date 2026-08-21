@@ -20,12 +20,47 @@ hotových zjištění.
 | Co | Kde | Stav |
 |---|---|---|
 | Export Miro boardu (618 řádků) | `podklady/1. tým – Intranet školky.csv` | **přečteno**, shrnuto níž |
-| Přepisy rozhovorů | zatím nedodané | doplnit před session |
+| Přepisy rozhovorů (9 respondentů, 12 nahrávek) | `discovery/přepisy/` | **dodané a projité** — viz níž |
 | Research brief, stakeholder interview | odkazy na Google Docs uvnitř boardu | nepřečteno |
 | Printscreeny produkčního intrawebu | odkaz na Drive uvnitř boardu | nepřečteno |
 
 `podklady/` je v `.gitignore` – obsahuje osobní údaje a do veřejného repa nesmí.
 **Do dokumentace patří zjištění, ne surová data.**
+
+---
+
+## Stav: průchod přepisy proběhl (20. 8. 2026)
+
+Přepisy jsou projité nezávisle na tomto boardu (analýza vznikla naslepo, board se otevřel až
+na konci). Výstupy:
+
+| Co | Kde |
+|---|---|
+| Analýza po respondentech (citace, intenzity) | `discovery/validace/analyza_*.md` |
+| Verifikace, rozpory, síla zjištění | `discovery/validace/krok2_verifikace.md` |
+| Syntéza s citacemi | `discovery/validace/krok3_synteza.md` |
+| Srovnání s tímto boardem (shody / co chybí / co navíc) | `discovery/validace/krok4_srovnani.md` |
+| **Odosobněná zjištění pro dokumentaci** | [vyzkum-zjisteni.md](vyzkum-zjisteni.md) |
+
+**Odpovědi na otevřené otázky z konce tohoto dokumentu:**
+
+1. **Drží insighty?** Ano — 8 z 10 hlavních insightů se potvrdilo nezávisle. Ve dvou případech
+   je board v pojmenování příčiny lepší než nový průchod.
+2. **Nasycení.** Nedosycené. Chybí rodiče bez digitální profese, chybí průvodce i rodič
+   z kamenné školky, chybí Kouzlo lesa. Board si sám plánoval „2–3 rodiče a 2–3 průvodce per
+   školka" — to naplněné není.
+3. **Vzorek.** 9 respondentů: majitelka, 2× vedení, vývojář, 3 průvodkyně, 2 rodiče. Sedm
+   z devíti je z lesních školek.
+4. **Návodnost otázek.** Ano, na několika místech — tazatelka nabídne řešení a respondent
+   přitaká. Konkrétní místa jsou označená v `analyza_*.md`. Zároveň platí, že přímá otázka
+   „co vám vadí" v tomto vzorku nefunguje: vyvolá „nic zásadního", zatímco popis konkrétního
+   dne vynese 17–20 bolestí.
+5. **Co se do syntézy nevešlo.** Hlavně mandát projektu — zadavatelka redesign nepožaduje
+   a úspěch definuje jako „nezhoršit". Board to neobsahuje.
+
+**K ověření:** tři citace, na kterých stojí teze „telefon před dětmi je tabu", se v dodaných
+přepisech nevyskytují (fulltext na „zalézt", „30 sekund", „vyndat ten telefon"). Buď jsou
+přepisy neúplné, nebo jde o parafráze. Detail v `krok4_srovnani.md`.
 
 ---
 
