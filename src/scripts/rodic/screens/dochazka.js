@@ -7,11 +7,11 @@ function editor(d){const c=cur();
   const note=dr.note!==undefined?dr.note:(c.notes[d]||'');
   const dirty=dr.code!==undefined||dr.note!==undefined||dr.obed!==undefined;
   if(!editable(d)){
-    const isNE=cd==='NE';
-    let h=`<div class="lockwrap"><span class="chip" style="background:${CODES[code(c,d)][2]};color:${CODES[code(c,d)][1]}">${CODES[code(c,d)][0]}</span><div class="lockmsg">🔒 Změna byla možná do 20:00 předchozího dne, nyní je možné pouze neomluveno.</div>`;
+    const jeOml=cd==='OM';
+    let h=`<div class="lockwrap"><span class="chip" style="background:${CODES[code(c,d)][2]};color:${CODES[code(c,d)][1]}">${CODES[code(c,d)][0]}</span><div class="lockmsg">🔒 Docházku šlo změnit do 20:00 předchozího dne. Omluvit ještě můžete – náhrada už ale nevznikne.</div>`;
     if(d===TODAY){
-      h+=`<div class="choices"><button class="abs ${isNE?'on':''}" onclick="draftCode(${d},'NE')">Neomluveno</button></div>`;
-      if(isNE){
+      h+=`<div class="choices"><button class="abs ${jeOml?'on':''}" onclick="draftCode(${d},'OM')">Omluvit po termínu</button></div>`;
+      if(jeOml){
         const ob=dr.obed!==undefined?dr.obed:(c.obed&&c.obed[d]);
         h+=`<div class="notelab">Vyzvednete si oběd?</div><div class="choices"><button class="${ob===true?'on':''}" onclick="draftObed(${d},true)">Ano</button><button class="${ob===false?'on':''}" onclick="draftObed(${d},false)">Ne</button></div>`;
         h+=`<div class="notelab">Důvod absence – nepovinné</div><textarea class="note" placeholder="např. nemoc, rodinný důvod…" oninput="draftNote(${d},this.value)">${note}</textarea>`;

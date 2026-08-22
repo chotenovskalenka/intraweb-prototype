@@ -1236,3 +1236,25 @@ záměrně – reakce při testování řekne víc než abstraktní dotaz –, a
 schválená funkce**. Otázky k ověření: `docs/vyzkum-svacinarka.md` (5 otázek, stačí dvě svačinářky).
 
 Rozhodnout až podle nálezů, v rámci fáze 5.2.
+
+## Pozdní omluvenka = omluveno, ne neomluveno (nález z testování, kolo 1)
+
+**Nález:** respondentka omluvila dítě na dnešek (tedy po deadlinu) a appka den označila
+**„Neomluveno"**. Formulace čte jako obvinění: *„Já to omluvila, ale pozdě."*
+
+**Šlo o rozpor s vlastním modelem**, ne o překlep v textu. `objekty-systemu.md` říká:
+*„Omluvenka odeslaná po deadlinu **projde** (dítě je omluvené), jen bez náhrady."* Kód ale
+zakládal omluvenku se stavem `po-deadlinu` a zároveň zapisoval do docházky kód `NE`.
+
+**Rozhodnutí:** pozdní omluvenka zapisuje `OM` jako každá jiná. Rozdíl mezi včasnou a pozdní
+nese **důsledek**, ne přejmenování stavu:
+
+- včas → „Omluveno včas – **náhrada vznikla**"
+- po termínu → „Omluveno po termínu – **náhrada nevznikla**"
+
+`NE` zůstává v číselníku pro případ, kdy rodič neřekl nic — rodičovská appka ho ale sama
+nikdy nenastaví (to může jen škola).
+
+**Vedlejší efekt:** dashboard teď po odeslání explicitně říká, jestli náhrada vznikla. Testovací
+scénář se přesně na tohle ptá („ví po odeslání, jestli vznikla náhrada?"), takže další kolo
+ukáže, jestli to stačí.
