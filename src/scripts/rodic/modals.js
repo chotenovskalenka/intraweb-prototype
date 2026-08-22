@@ -76,32 +76,25 @@ function omDeadline(){
   if(late.length)h+=`<div class="omdrow bad">⚠ Omluva na ${late.map(d=>d+'. 6.').join(', ')} je po deadlinu – <b>náhrada nevznikne</b>. Dítě je omluvené.</div>`;
   return h+`</div>`;
 }
+/* Omluvenka jako modal nad tím, kde rodič právě je. Dřív to byl overlay přes celý obsah –
+   respondenti po odeslání nevěděli, kde skončili. Uložením se modal zavře a nový stav je
+   rovnou vidět pod ním (na dashboardu i v sekci Docházka). */
 function renderOmluvenka(){
   const c=cur();
-  let h=`<button class="back" onclick="closeOverlay()">← Zpět</button><div class="pname">Omluvit ${c.ak}</div>`;
-  if(omDraft.step==='done')return h+renderOmluvenkaDone(c);
-  h+=`<div class="pfull">Vyberte dny, kdy ${c.n} nebude ve školce</div>`;
-  h+=`<div class="tile"><div class="tlab">Od</div>${omGrid('od')}</div>`;
-  h+=`<div class="tile"><div class="tlab">Do</div>${omGrid('do')}</div>`;
-  h+=`<div class="tile"><div class="tlab">Důvod</div><div class="pchips">`+[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['jiné','Jiné']].map(([k,l])=>`<button class="${omDraft.duvod===k?'on':''}" onclick="omReason('${k}')">${l}</button>`).join('')+`</div>`;
-  h+=`<textarea class="note" placeholder="Poznámka pro průvodce (nepovinné)" oninput="omNote(this.value)">${escTa(omDraft.pozn)}</textarea></div>`;
+  let h=`<div class="modal-scrim" onclick="if(event.target===this)closeOmluvenka()"><div class="modal modal-wide">`;
+  h+=`<h3>Omluvit ${c.ak}</h3><div class="abs-sub">Vyberte dny, kdy ${c.n} nebude ve školce</div>`;
+  h+=`<div class="notelab">Od</div>${omGrid('od')}`;
+  h+=`<div class="notelab">Do</div>${omGrid('do')}`;
+  h+=`<div class="notelab">Důvod</div><div class="pchips">`+[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['jiné','Jiné']].map(([k,l])=>`<button class="${omDraft.duvod===k?'on':''}" onclick="omReason('${k}')">${l}</button>`).join('')+`</div>`;
+  h+=`<textarea class="note" placeholder="Poznámka pro průvodce (nepovinné)" oninput="omNote(this.value)">${escTa(omDraft.pozn)}</textarea>`;
   h+=omDeadline();
-  h+=`<button class="omluvbtn" onclick="omSubmit()">Odeslat omluvenku</button>`;
-  return h;
+  h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeOmluvenka()">Zrušit</button><button class="btn-primary" onclick="omSubmit()">Odeslat omluvenku</button></div>`;
+  return h+`</div></div>`;
 }
-function renderOmluvenkaDone(c){
-  const r=omDraft.result;
-  let h=`<div class="tile omdone"><div class="omcheck">✓</div><div class="omdt">Omluvenka odeslána</div><div class="omsub">${c.n} · ${fmtRange(omDraft.od,omDraft.do)} · ${DUVODLAB[omDraft.duvod]}</div>`;
-  if(r.timely)h+=`<div class="omres ok">Vznikl${r.timely===1?'a':'y'} <b>${r.timely} ${nplural(r.timely)}</b> – najdeš ${r.timely===1?'ji':'je'} níže v Docházce a náhradách.</div>`;
-  if(r.late)h+=`<div class="omres bad">Za ${r.late} ${plural(r.late)} po termínu <b>náhrada nevznikla</b>.</div>`;
-  h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce – všechny dny jsou omluvené.${r.late?` Za dny po termínu jen nevznikla náhrada.`:''}</div></div>`;
-  h+=`<button class="omluvbtn" onclick="go('dochazka')">Zobrazit náhrady</button>`;
-  h+=`<button class="omdonebtn" onclick="closeOverlay()">Hotovo</button>`;
-  return h;
-}
-/* Volitelný prefill dne (z dashboardu: dnešek = pozdní omluva, budoucí den = včasná).
-   Bez argumentu (sekce Docházka) předvyplní nejbližší omluvitelný den. */
-window.openOmluvenka=day=>{let t;if(day>NOW.d&&day<=30&&!isWE(day)){t=day;}else{t=NOW.d+1;while(t<=30&&isWE(t))t++;}omDraft={od:t,do:t,duvod:'nemoc',pozn:'',step:'form',result:null};overlay={type:'omluvenka'};render();};
+/* Volitelný prefill dne (z dashboardu). Bez argumentu předvyplní nejbližší omluvitelný den. */
+window.openOmluvenka=day=>{let t;if(day>NOW.d&&day<=30&&!isWE(day)){t=day;}else{t=NOW.d+1;while(t<=30&&isWE(t))t++;}
+  omDraft={od:t,do:t,duvod:'nemoc',pozn:''};omModal=true;render();};
+window.closeOmluvenka=()=>{omModal=false;render();};
 window.omPick=(which,d)=>{omDraft[which]=d;if(which==='od'&&omDraft.do<d)omDraft.do=d;if(which==='do'&&d<omDraft.od)omDraft.od=d;render();};
 window.omReason=k=>{omDraft.duvod=k;render();};
 window.omNote=v=>{omDraft.pozn=v;};
@@ -111,13 +104,15 @@ window.omSubmit=()=>{
   const om={id:uid(),od:omDraft.od,do:omDraft.do,duvod:omDraft.duvod,pozn:omDraft.pozn,
     stav:beforeDeadline(omDraft.od)?'vcas':'po-deadlinu',nahradaIds:[]};
   // po termínu je dítě taky omluvené – liší se jen tím, že nevznikne náhrada
-  timely.forEach(d=>{c.att[d]='OM';});late.forEach(d=>{c.att[d]='OM';});
-  days.forEach(d=>{if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
+  days.forEach(d=>{c.att[d]='OM';if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
   timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id});c.nahrady.push(n);om.nahradaIds.push(n.id);});
   late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'–',expT:Infinity});c.nahrady.push(n);om.nahradaIds.push(n.id);});
   c.omluvenky.unshift(om);
-  omDraft.step='done';omDraft.result={timely:timely.length,late:late.length};
-  render();
+  // na dashboardu přepneme na první omluvený den, ať je nový stav vidět bez hledání
+  if(section==='prehled')dashDay=days[0];
+  omModal=false;render();
+  showToast(timely.length?`Omluvenka odeslána · vznikl${timely.length===1?'a':'y'} ${timely.length} ${nplural(timely.length)}`
+    :'Omluvenka odeslána · náhrada nevznikla (po termínu)');
 };
 window.omCancel=id=>{
   const c=cur(), om=c.omluvenky.find(o=>o.id===id); if(!om)return;

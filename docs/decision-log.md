@@ -1267,8 +1267,10 @@ ukáže, jestli to stačí.
 **Nález:** tlačítko „Omluvit na …" na dashboardu volalo `goEditDay()`, které přepnulo sekci na
 **Docházku** a otevřelo den v kalendáři. Respondenti nevěděli, kde skončili.
 
-**Rozhodnutí:** dashboard volá `openOmluvenka(den)` – tedy tentýž tok jako ze sekce Docházka.
-Sekce zůstává `prehled`, takže „Hotovo" i „Zpět" vrátí tam, odkud rodič vyšel.
+**Rozhodnutí:** omluvenka je **modal**, ne překryvná stránka. Flow je
+`dashboard → Omluvit → modal → uložit → nový stav rovnou na dashboardu`; sekce se nemění,
+takže z Docházky se vrátíš do Docházky. Potvrzovací mezikrok („Omluvenka odeslána" na celou
+obrazovku) tím odpadl – co se stalo, shrne toast a hlavně **nový stav pod modalem**.
 
 **Vedlejší nález:** `goEditDay()` zapisoval jen kód docházky, ale **nezakládal omluvenku** –
 den se tvářil jako omluvený, ale nevznikl záznam ani náhrada a na dashboardu chyběl řádek
