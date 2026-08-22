@@ -1249,8 +1249,11 @@ zakládal omluvenku se stavem `po-deadlinu` a zároveň zapisoval do docházky k
 **Rozhodnutí:** pozdní omluvenka zapisuje `OM` jako každá jiná. Rozdíl mezi včasnou a pozdní
 nese **důsledek**, ne přejmenování stavu:
 
-- včas → „Omluveno včas – **náhrada vznikla**"
-- po termínu → „Omluveno po termínu – **náhrada nevznikla**"
+- včas → **Včas** – s náhradou
+- po termínu → **Po termínu** – bez náhrady
+
+Formulace vznikla při ladění: slovo „Omluveno" nese kód nad tím, druhý řádek proto neopakuje
+stav, ale říká jen to, čím se den liší (tučně) a jaký to má důsledek (normálně).
 
 `NE` zůstává v číselníku pro případ, kdy rodič neřekl nic — rodičovská appka ho ale sama
 nikdy nenastaví (to může jen škola).
