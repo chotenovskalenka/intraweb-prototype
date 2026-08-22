@@ -43,7 +43,7 @@ function genFaktury(cvar,cena,unpaid){
 const fondCerpano=c=>c.fondlog.reduce((s,x)=>s+x[2],0);
 
 const children=[
-  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',spi:true,att:{2:'NE',11:'OM'},notes:{11:'rodinná oslava'},
+  {n:'Eliška',sur:'Dvořáková',ak:'Elišku',dat:'Elišce',base:'O',spi:true,att:{2:'OM',11:'OM'},notes:{11:'rodinná oslava'},
     wa:'https://chat.whatsapp.com/D8pQz1cVsX0Bm4Kr7NyT2A',
     fond:{rocni:2000},
     fondlog:[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]],
@@ -216,6 +216,9 @@ const dayLabel=d=>d===TODAY?'Dnes · St 3. 6.':DOW[wd(d)]+' '+d+'. 6.';
 
 // celodenní docházka je jen v úterý – v ostatní dny platí odpolední
 const code=(c,d)=>c.att[d]||(c.base==='C'&&wd(d)!==1?'O':c.base);
+/* Omluvenka pokrývající daný den (kvůli rozlišení „včas" vs „po termínu" – kód docházky
+   je v obou případech OM, liší se jen důsledek: náhrada vznikla / nevznikla). */
+const omluvenkaProDen=(c,d)=>(c.omluvenky||[]).find(o=>o.stav!=='zrusena'&&d>=o.od&&d<=o.do);
 const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${CODES[cd][1]}">${CODES[cd][0]}</span>`;
 const cur=()=>children[ci];
 const plural=n=>n===1?'den':(n>=2&&n<=4?'dny':'dní');

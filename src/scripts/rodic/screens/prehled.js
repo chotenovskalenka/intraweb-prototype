@@ -26,9 +26,15 @@ function renderDashboard(){
   blkDochazka+=`<div class="doch-line"><span class="doch-code" style="color:${CODES[td][1]}">${CODES[td][0]}</span></div>`;
   if(!absent){const us=guides.find(g=>g.uspava);
     blkDochazka+=`<div class="doch-sleep">${c.spi?`☾ Spinká${us?` · uspává <b>${us.n}</b>`:''}`:'Nespinká'}</div>`;}
+  // U omluveného dne je pro rodiče podstatný důsledek, ne jen kód: vznikla náhrada, nebo ne?
+  // (Testování ukázalo, že „Neomluveno" u pozdní omluvenky čte rodič jako obvinění.)
+  if(absent){const om=omluvenkaProDen(c,dashDay);
+    if(om)blkDochazka+=`<div class="doch-sleep">${om.stav==='po-deadlinu'
+      ?'Omluveno po termínu – <b>náhrada nevznikla</b>'
+      :'Omluveno včas – <b>náhrada vznikla</b>'}</div>`;}
   if(c.notes[dashDay])blkDochazka+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;
   if(c.obed&&c.obed[dashDay]!==undefined&&absent)blkDochazka+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
-  if(today&&td!=='NE')blkDochazka+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
+  if(today&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
   else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="goEditDay(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
   else if(!today&&!editable(dashDay))blkDochazka+=`<div class="edlock">Proběhlý den – jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
