@@ -1261,3 +1261,15 @@ nikdy nenastaví (to může jen škola).
 **Vedlejší efekt:** dashboard teď po odeslání explicitně říká, jestli náhrada vznikla. Testovací
 scénář se přesně na tohle ptá („ví po odeslání, jestli vznikla náhrada?"), takže další kolo
 ukáže, jestli to stačí.
+
+## Omluvenka se otevírá z dashboardu, ne přes Docházku (nález z testování, kolo 1)
+
+**Nález:** tlačítko „Omluvit na …" na dashboardu volalo `goEditDay()`, které přepnulo sekci na
+**Docházku** a otevřelo den v kalendáři. Respondenti nevěděli, kde skončili.
+
+**Rozhodnutí:** dashboard volá `openOmluvenka(den)` – tedy tentýž tok jako ze sekce Docházka.
+Sekce zůstává `prehled`, takže „Hotovo" i „Zpět" vrátí tam, odkud rodič vyšel.
+
+**Vedlejší nález:** `goEditDay()` zapisoval jen kód docházky, ale **nezakládal omluvenku** –
+den se tvářil jako omluvený, ale nevznikl záznam ani náhrada a na dashboardu chyběl řádek
+o důsledku. Teď vzniká vždy.

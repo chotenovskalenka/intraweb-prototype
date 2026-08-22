@@ -93,8 +93,8 @@ function renderOmluvenkaDone(c){
   const r=omDraft.result;
   let h=`<div class="tile omdone"><div class="omcheck">✓</div><div class="omdt">Omluvenka odeslána</div><div class="omsub">${c.n} · ${fmtRange(omDraft.od,omDraft.do)} · ${DUVODLAB[omDraft.duvod]}</div>`;
   if(r.timely)h+=`<div class="omres ok">Vznikl${r.timely===1?'a':'y'} <b>${r.timely} ${nplural(r.timely)}</b> – najdeš ${r.timely===1?'ji':'je'} níže v Docházce a náhradách.</div>`;
-  if(r.late)h+=`<div class="omres bad">Za ${r.late} ${plural(r.late)} po deadlinu <b>náhrada nevznikla</b>.</div>`;
-  h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce. ${r.timely?'Včas omluvené dny jsme označili jako omluvené (OM).':''}${r.late?' Dny po deadlinu jsou neomluvené (NE).':''}</div></div>`;
+  if(r.late)h+=`<div class="omres bad">Za ${r.late} ${plural(r.late)} po termínu <b>náhrada nevznikla</b>.</div>`;
+  h+=`<div class="omnext">Průvodci teď vidí, že ${c.n} nebude ve školce – všechny dny jsou omluvené.${r.late?` Za dny po termínu jen nevznikla náhrada.`:''}</div></div>`;
   h+=`<button class="omluvbtn" onclick="go('dochazka')">Zobrazit náhrady</button>`;
   h+=`<button class="omdonebtn" onclick="closeOverlay()">Hotovo</button>`;
   return h;
