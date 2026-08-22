@@ -18,7 +18,9 @@ function renderDashboard(){
     h+=`<button class="tile neuhr" onclick="go('platby')"><div class="np"><span class="tlab" style="margin:0"><span class="nwarn">⚠</span>${lbl}</span><b>${kc(dluh)} Kč ›</b></div></button>`;
   }
 
-  // Docházka (mobil: 1.)
+  // Docházka (mobil: 1.). Omluvenka se otevírá odsud (openOmluvenka), ne přes Docházku –
+  // goEditDay respondenty odhodil do kalendáře a nevěděli, kde skončili. Sekce zůstává
+  // 'prehled', takže po „Hotovo" jsou zpátky tady.
   let blkDochazka;
   // „dnes" nese nadpis karty, ne ještě jednou řádek s kódem; při listování na jiný den
   // musí nadpis říkat ten den, ne pořád „dnes"
@@ -35,7 +37,7 @@ function renderDashboard(){
   if(c.notes[dashDay])blkDochazka+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;
   if(c.obed&&c.obed[dashDay]!==undefined&&absent)blkDochazka+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
   if(today&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
-  else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="goEditDay(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
+  else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
   else if(!today&&!editable(dashDay))blkDochazka+=`<div class="edlock">Proběhlý den – jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
   blkDochazka+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
