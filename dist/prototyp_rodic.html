@@ -976,6 +976,10 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .kev .kevt{margin-left:auto;font-size:var(--text-micro);color:var(--color-text-muted)}
 .knone{font-size:var(--text-meta);color:var(--color-text-hint);font-style:italic;padding:8px 2px}
 .doch-sleep{font-size:var(--text-small);color:var(--color-text-muted);margin:-6px 0 10px}
+/* Důsledek omluvenky pod kódem docházky: tučně to, čím se den liší (Po termínu / Včas),
+   normálně důsledek. Slovo „Omluveno" se neopakuje – nese ho kód nad tím. */
+.doch-nasl{font-size:var(--text-small);color:var(--color-text-muted);margin:-6px 0 10px}
+.doch-nasl b{color:var(--color-text)}
 .doch-sleep b{color:var(--color-text)}
 .doch-pozn{background:var(--tint-ochre);border-radius:var(--radius-sm);padding:8px 11px;font-size:var(--text-small);line-height:var(--leading-normal);margin:0 0 10px}
 .glist{display:flex;flex-direction:column;gap:2px}
@@ -1641,9 +1645,9 @@ function renderDashboard(){
   // U omluveného dne je pro rodiče podstatný důsledek, ne jen kód: vznikla náhrada, nebo ne?
   // (Testování ukázalo, že „Neomluveno" u pozdní omluvenky čte rodič jako obvinění.)
   if(absent){const om=omluvenkaProDen(c,dashDay);
-    if(om)blkDochazka+=`<div class="doch-sleep">${om.stav==='po-deadlinu'
-      ?'Omluveno po termínu – <b>náhrada nevznikla</b>'
-      :'Omluveno včas – <b>náhrada vznikla</b>'}</div>`;}
+    if(om)blkDochazka+=`<div class="doch-nasl">${om.stav==='po-deadlinu'
+      ?'<b>Po termínu</b> – bez náhrady'
+      :'<b>Včas</b> – s náhradou'}</div>`;}
   if(c.notes[dashDay])blkDochazka+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;
   if(c.obed&&c.obed[dashDay]!==undefined&&absent)blkDochazka+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
   if(today&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;

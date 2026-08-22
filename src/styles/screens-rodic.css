@@ -341,6 +341,10 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .kev .kevt{margin-left:auto;font-size:var(--text-micro);color:var(--color-text-muted)}
 .knone{font-size:var(--text-meta);color:var(--color-text-hint);font-style:italic;padding:8px 2px}
 .doch-sleep{font-size:var(--text-small);color:var(--color-text-muted);margin:-6px 0 10px}
+/* Důsledek omluvenky pod kódem docházky: tučně to, čím se den liší (Po termínu / Včas),
+   normálně důsledek. Slovo „Omluveno" se neopakuje – nese ho kód nad tím. */
+.doch-nasl{font-size:var(--text-small);color:var(--color-text-muted);margin:-6px 0 10px}
+.doch-nasl b{color:var(--color-text)}
 .doch-sleep b{color:var(--color-text)}
 .doch-pozn{background:var(--tint-ochre);border-radius:var(--radius-sm);padding:8px 11px;font-size:var(--text-small);line-height:var(--leading-normal);margin:0 0 10px}
 .glist{display:flex;flex-direction:column;gap:2px}
