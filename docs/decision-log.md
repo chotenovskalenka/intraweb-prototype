@@ -1275,3 +1275,36 @@ obrazovku) tím odpadl – co se stalo, shrne toast a hlavně **nový stav pod m
 **Vedlejší nález:** `goEditDay()` zapisoval jen kód docházky, ale **nezakládal omluvenku** –
 den se tvářil jako omluvený, ale nevznikl záznam ani náhrada a na dashboardu chyběl řádek
 o důsledku. Teď vzniká vždy.
+
+## Docházka: jeden slovník stavů a zápis jen pro vedoucí roli (nálezy z testování s průvodci)
+
+Zdroj: [vyzkum-testovani-pruvodci.md](vyzkum-testovani-pruvodci.md), nálezy **P2** a **Z1**.
+
+**Z1 – zápis docházky patří vedoucí roli.** Prototyp pouštěl zápis dnešního dne komukoli;
+řadový průvodce to při testu potvrdil („šlo mi to měnit… ale nedělal jsem to, protože nemám
+proč") a o právo nestojí. Ve školce docházku zapisuje vedoucí průvodce a hospodářka, ostatní ji
+kontrolují. Přibylo právo `smiZapisovat()` (= role není `pruvodce`) a `denEditovatelny()` se o něj
+nově opírá. Řadový průvodce nemá v seznamu zaškrtávátko (na jeho místě je text **ve školce** /
+**absence**), řádek se mu nerozklikává a všechny zápisové handlery mají tvrdou pojistku —
+právo se nekontroluje jen v šabloně. `smiJinyDen()` zůstává navíc jen vedoucímu (proběhlé
+a budoucí dny).
+
+**P2 – jeden slovník napříč appkou: přítomni · dopolední · odpolední · absence.**
+Vzniklo z jediného skutečného zaseknutí v celém testování: respondentka odškrtla políčko
+u spícího dítěte, nevěděla, co způsobila, ani jak to vrátit („Když to odškrtnu a je tam spí,
+tak to přesně evokuje to, že nespí"). Změny:
+
+- záložky `Ráno → Přítomni` (číslo platí celý den, ne jen ráno), `Po obědě → Dopolední`
+  (popisovalo důsledek místo režimu docházky), `Nepřítomní → Absence`;
+- **„Spí" zůstává** — spáči v maringotce jsou provozní fakt, ne režim docházky. Respondentka je
+  ve svém modelu ztotožnila s odpolední docházkou, ale data je vedou zvlášť a přejmenování by
+  lhalo o tom, co číslo počítá;
+- zaškrtávátko dostalo `role="checkbox"`, `aria-label` a title, který říká **oba směry**
+  („odškrtnutím zapíšeš absenci" / „zaškrtnutím vrátíš do školky"), a záložka Spí k tomu má
+  vysvětlující větu. Toast nově pojmenuje výsledek slovy: **„Meda Nováková → absence"**;
+- `neomluveno → absence bez omluvy`, `omluveno → omluveno průvodcem` (druhý respondent se ptal,
+  proč u rodičovské omluvy stojí „omluveno rodičem", když u té školkové není původce vidět);
+- stejný slovník i na dashboardu a v legendě týdenního přehledu.
+
+**Vědomě neuděláno:** zaškrtávátko zůstává zaškrtávátkem. Nahradit ho pojmenovaným přepínačem
+(„tu / není") je vizuální rozhodnutí a patří designérce, ne do opravy nálezu.
