@@ -60,6 +60,58 @@ uveď s příklady i zdůvodněním (few-shot) — jinak AI označí všechno za
 - Náhodně vyber vzorek odpovědí a zkontroluj konzistenci kódů i intenzit.
 - **Četnosti a procenta počítej vždy Pythonem** (napiš a spusť skript), nikdy v textu.
 
+## C. Testování použitelnosti (moderované, se záznamem)
+
+Jiný druh dat než A: jednotkou není téma, ale **nález** — konkrétní místo v UI, kde se
+respondent zasekl, zaváhal nebo udělal něco jiného, než návrh čekal. Kroky jsou stejné
+(kontext → granulární → verifikace → syntéza), mění se to, co se extrahuje.
+
+### Pravidlo č. 1 — chování má přednost před výrokem
+Co respondent **udělal** (kam klikl, kde hledal, co přeskočil) je tvrdá data. Co **řekl** o tom,
+jak to bude používat, je hypotéza. Chvála je nejměkčí data ze všech — respondent mluví
+k autorovi prototypu a je vstřícný. „To je super" bez chování, které to potvrzuje, není nález.
+Do syntézy piš vždy chování a teprve k němu výrok.
+
+### Krok 1 — Granulární: nálezy po respondentech
+Jeden soubor na respondenta. Pro každý nález:
+
+- **Kde** — obrazovka / úkol
+- **Co se stalo** — pozorovatelně, bez interpretace („hledal omluvení v kartě dítěte,
+  našel až v docházce"), a doslovný citát, pokud u toho mluvil
+- **Závažnost** (viz škála níž)
+- **Typ** — `bariéra` (nedokončil / špatná cesta) · `porozumění` (nechápe pojem, štítek, pravidlo)
+  · `očekávání` (čekal jinou reakci) · `chybějící funkce` (chce něco, co tam není)
+  · `kosmetika`
+- **Moderace** — označ `NAPOVĚZENO`, pokud moderátor těsně předtím vysvětlil funkci, poradil
+  nebo nabídl řešení. Takový nález má sníženou váhu a **nesmí** sloužit jako doklad, že věc
+  je srozumitelná.
+
+**Škála závažnosti** (u testování se nepoužívá intenzita 1–5 ze sekce A):
+- **blokující** — úkol nedokončil, nebo dokončil jen po nápovědě
+- **zaváhání** — došel sám, ale hledal, vracel se, zkusil špatnou cestu
+- **kosmetika** — všiml si, nezdrželo ho to
+- **přání** — funguje, ale chce navíc (není to chyba, ale patří do backlogu)
+
+### Krok 2 — Verifikace
+- Ke každému nálezu spočítej, **kolik respondentů ho doložilo chováním** (ne výrokem) — jmenovitě.
+- Odděl nálezy, které vznikly po nápovědě moderátora.
+- Hledej **protipříklad**: udělal to někdo bez zaváhání? Pak nejde o vlastnost návrhu,
+  ale o rozdíl mezi lidmi (role, zkušenost) — a to je jiné doporučení.
+- Rozliš **nález** (návrh selhal) od **rozporu s realitou** (návrh předpokládá jiný provoz,
+  než jaký ve skutečnosti je) — druhé se neopravuje v UI, ale v zadání.
+
+### Krok 3 — Syntéza
+Dva oddělené výstupy, každý s jinou laťkou důkazu:
+
+1. **Nálezy k opravě** — seřazené podle závažnosti a počtu respondentů; u každého citace
+   a doporučení. Tři respondenti na hledání problémů v UI **stačí**.
+2. **Generativní zjištění** — co se u testu dozvíš o jejich praxi mimo prototyp (workflow,
+   kanály, pravidla provozu). Zpracuj postupem ze sekce A, ale **laťka je vyšší**: tři lidé
+   jsou na tvrzení o tom, jak organizace funguje, málo — označ jako slabě podložené
+   a k ověření.
+
+**Nepočítej úspěšnost úkolů v procentech** při hrstce respondentů. Piš „2 ze 3", nikdy „67 %".
+
 ## Pravidla napříč
 
 - **Step-by-step:** nikdy nespojuj kroky do jednoho průchodu; výstup kroku ulož do souboru,
