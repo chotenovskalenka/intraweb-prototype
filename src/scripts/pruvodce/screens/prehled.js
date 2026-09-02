@@ -20,7 +20,8 @@ function renderPrehled(){
   h+=`<div class="dcol">`;
   // počty dětí dnes – odvozené z counts() (stejný zdroj jako docházka)
   h+=`<div class="tile"><div class="ch">Docházka dnes</div>`;
-  const strip=[['Přítomno',c.pres,'rano'],['Obědy',c.pres,'rano'],['Spí',c.spi,'spi'],['Po obědě',c.poobede,'poobede'],['Nepřítomní',c.neprit,'neprit']];
+  // stejný slovník jako v Docházce: přítomni · dopolední · odpolední · absence (P2)
+  const strip=[['Přítomni',c.pres,'rano'],['Obědy',c.pres,'rano'],['Spí',c.spi,'spi'],['Dopolední',c.poobede,'poobede'],['Absence',c.neprit,'neprit']];
   h+=`<div class="tabs wrap">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`;
   h+=`<button class="addbig" style="margin-top:11px" onclick="go('dochazka')">Otevřít dnešní docházku →</button>`;
   h+=`</div>`;
@@ -29,7 +30,7 @@ function renderPrehled(){
   h+=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div>`;
   if(absent.length){
     absent.forEach(({c})=>{
-      const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno':'neomluveno');
+      const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
       h+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${full(c)}</span><span class="pa-r">${r}</span></button>`;
     });
   }else{

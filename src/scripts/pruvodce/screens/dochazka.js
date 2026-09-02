@@ -11,20 +11,24 @@ const inTab=(c,t)=>{
   if(t==='poobede')return here(c)&&c.plan==='dopolední';
   if(t==='neprit')return !here(c);
 };
-const TABS_BEZNY=[['rano','Ráno'],['spi','Spí'],['poobede','Po obědě'],['neprit','Nepřítomní']];
-const TABS_SPEC=g=>[['skolka','Školka ráno'],['vyprava',g],['obed','Oběd'],['spi','Spí'],['neprit','Nepřítomní']];
+/* Pojmenování stavů drží jeden slovník napříč appkou: přítomni · dopolední · odpolední · absence.
+   „Ráno" bylo matoucí (číslo platí celý den, ne jen ráno) a „Po obědě" popisovalo důsledek
+   místo režimu docházky. Viz docs/vyzkum-testovani-pruvodci.md, P2.
+   Záložka „Spí" zůstává – spáči v maringotce jsou provozní fakt, ne režim docházky. */
+const TABS_BEZNY=[['rano','Přítomni'],['spi','Spí'],['poobede','Dopolední'],['neprit','Absence']];
+const TABS_SPEC=g=>[['skolka','Školka ráno'],['vyprava',g],['obed','Oběd'],['spi','Spí'],['neprit','Absence']];
 const TABS_BY=()=>mode==='bezny'?TABS_BEZNY:TABS_SPEC(mode==='pred'?'Předškoláci':'Lezci');
 const CTX={rano:['Kdo dnes přišel',''],
   skolka:['Ráno ve školce',''],
   vyprava:['Na výpravě',''],
   obed:['Oběd – všichni',''],
-  spi:['Maringotka · spáči',''],
-  poobede:['Po obědě domů','Dopolední děti – odcházejí po obědě.'],
-  neprit:['Nepřítomní','']};
+  spi:['Maringotka · spáči','Zaškrtnuté dítě je ve školce. Odškrtnutím ho zapíšeš jako absenci – zaškrtnutím ho vrátíš zpět.'],
+  poobede:['Dopolední docházka','Tyhle děti odcházejí po obědě.'],
+  neprit:['Absence','']};
 function counts(){const o={};TABS_BY().forEach(([k])=>o[k]=data.filter(c=>inTab(c,k)).length);o.pres=data.filter(here).length;return o;}
 function planPill(c){return c.plan==='celodenní'?'<span class="pill p-cel">celodenní</span>':c.plan==='dopolední'?'<span class="pill p-dop">dopolední</span>':'<span class="pill p-odp">odpolední</span>';}
 function cellMark(code){if(!code)return '<span class="wc c-N">N</span>';if(code==='OM')return '<span class="bdg al" style="font-size:9px">om</span>';return `<span class="wc c-${code}">${code}</span>`;}
-function codeLabel(code){const M={C:['celodenní',CODES.C[1]],D:['dopolední',CODES.D[1]],O:['odpolední',CODES.O[1]],OM:['omluven',CODES.OM[1]]};const m=M[code];return m?`<span style="color:${m[1]}">${m[0]}</span>`:'<span style="color:var(--color-text-hint)">nepřítomen</span>';}
+function codeLabel(code){const M={C:['celodenní',CODES.C[1]],D:['dopolední',CODES.D[1]],O:['odpolední',CODES.O[1]],OM:['omluveno',CODES.OM[1]]};const m=M[code];return m?`<span style="color:${m[1]}">${m[0]}</span>`:'<span style="color:var(--color-text-hint)">absence</span>';}
 /* Stav dítěte (spí / omluveno / na výpravě…). Sedí hned za chipem docházky – u pravého
    okraje vedle zaškrtávátka to čtlo, jako by se odškrtávalo zrovna „spí" nebo „omluveno".
    Proto ind-inline: ruší margin-left:auto, kterým se .ind jinde tlačí doprava. */
@@ -39,7 +43,7 @@ function indicator(c){
 function editPanel(c,i){
   const seg=(arr,cur,fn)=>arr.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="${fn}(${i},'${o[0]}')">${o[1]}</button>`).join('');
   let h=`<div class="field"><div class="l">Docházka</div><div class="mini">${seg([['dopolední','Dopol.'],['odpolední','Odpol.'],['celodenní','Celodenní']],c.plan,'setPlan')}</div></div>`;
-  h+=`<div class="field"><div class="l">Stav</div><div class="mini warn">${seg([['pritomen','Přítomen'],['omluveno','Omluveno'],['neomluveno','Neomluveno']],c.status,'setStatus')}</div></div>`;
+  h+=`<div class="field"><div class="l">Stav</div><div class="mini warn">${seg([['pritomen','Přítomen'],['omluveno','Omluveno'],['neomluveno','Absence bez omluvy']],c.status,'setStatus')}</div></div>`;
   if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}</div></div>`;
   if(c.note)h+=`<div class="field"><div class="l">Poznámka od rodiče</div><div class="pnote">${c.note}</div></div>`;
   if(staysPM(c))h+=`<div class="field"><div class="l">Odpoledne</div><div class="mini">${seg([[true,'Spí'],[false,'Nespí']],c.spi,'setSpi')}</div></div>`;
@@ -115,7 +119,7 @@ function dayRoster(d){
   main+=`<div class="rosterbox">`+data.map((c,ci)=>{const code=getCode(c,d);return `<div class="row"><div class="rmain" ${locked?'style="cursor:default"':`onclick="openCell(${ci},${d})"`}>${avatar(c,30)}<span class="nm">${full(c)}</span><span class="ind" style="margin-left:auto;font-weight:500">${codeLabel(code)}</span></div></div>`;}).join('')+`</div>`;
   return `<div class="doch-den"><aside class="doch-side">${side}</aside><div class="doch-main">${main}</div></div>`;
 }
-const dlegend=`<div class="legend"><span><b style="color:${CODES.C[1]}">C</b> celodenní</span><span><b style="color:${CODES.D[1]}">D</b> dopolední</span><span><b style="color:${CODES.O[1]}">O</b> odpolední</span><span><b style="color:${CODES.OM[1]}">om</b> omluven</span><span><b style="color:${CODES.NE[1]}">N</b> nepřítomen</span></div>`;
+const dlegend=`<div class="legend"><span><b style="color:${CODES.C[1]}">C</b> celodenní</span><span><b style="color:${CODES.D[1]}">D</b> dopolední</span><span><b style="color:${CODES.O[1]}">O</b> odpolední</span><span><b style="color:${CODES.OM[1]}">om</b> omluveno</span><span><b style="color:${CODES.NE[1]}">N</b> absence</span></div>`;
 function renderTydenD(){
   let h=dlegend;// listování týdne je nahoře ve sloučeném poli
   h+=`<input class="search" placeholder="Najít dítě…" value="${esc(wquery)}" oninput="onWSearch(this.value)">`;
@@ -142,7 +146,8 @@ window.setDView=v=>{view=v;open=-1;query='';monthDay=-1;if(v==='den')denDay=TODA
 window.setTab=k=>{tab=k;open=-1;render();};
 window.toggle=i=>{if(!smiZapisovat())return;open=open===i?-1:i;document.getElementById('roster').innerHTML=rosterHTML();};
 window.onSearch=v=>{query=v;document.getElementById('roster').innerHTML=rosterHTML();};
-window.presence=i=>{if(!smiZapisovat())return;data[i].status=here(data[i])?'neomluveno':'pritomen';render();showToast('Docházka uložena ✓');};
+window.presence=i=>{if(!smiZapisovat())return;const c=data[i];const bylTu=here(c);c.status=bylTu?'neomluveno':'pritomen';
+  render();showToast(bylTu?`${full(c)} → absence`:`${full(c)} → ve školce`);};
 window.setPlan=(i,v)=>{if(!smiZapisovat())return;data[i].plan=v;render();showToast('Docházka uložena ✓');};
 window.setStatus=(i,v)=>{if(!smiZapisovat())return;data[i].status=v;render();showToast('Docházka uložena ✓');};
 window.onWSearch=v=>{wquery=v;renderKeepFocus();};
