@@ -33,11 +33,14 @@ const ROLE_PINNED=Object.prototype.hasOwnProperty.call(ROLE_LABEL,ROLE_URL);
 let role=ROLE_PINNED?ROLE_URL:'hospodarka';
 // odvozená práva – obrazovky se ptají na právo, ne na roli
 const jeHospodar=()=>role==='hospodarka';
-/* Řadový průvodce zapisuje jen dnešek. Opravit proběhlý den i naplánovat budoucí je
-   administrativní zásah – dělá ho vedoucí průvodce (v ostré verzi i vedení).
-   Pozn.: dřív se jmenovalo smiZpetne() a hlídalo jen minulost; budoucí dny byly volné. */
+/* Docházku zapisuje jen vedoucí průvodce a hospodářka; řadový průvodce ji čte a kontroluje.
+   Nález z testování (srpen 2026): prototyp pouštěl zápis dnešního dne i řadovému průvodci,
+   což neodpovídá provozu školky – a sám o to právo nestojí („šlo mi to měnit, ale nedělal
+   jsem to, protože nemám proč"). Viz docs/vyzkum-testovani-pruvodci.md, Z1. */
+const smiZapisovat=()=>role!=='pruvodce';
+/* Opravit proběhlý den i naplánovat budoucí je administrativní zásah navíc – jen vedoucí. */
 const smiJinyDen=()=>role==='vedouci';
-const denEditovatelny=d=>d===TODAYD||smiJinyDen();
+const denEditovatelny=d=>smiZapisovat()&&(d===TODAYD||smiJinyDen());
 let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
 let modal=null, shiftM=null, fondM=null, galM=null;
