@@ -384,3 +384,12 @@ vidět je všechny najednou (docházkové kódy D/O/C/OM, ano/ne).
 **rozsahu** (omluvenka od–do), kde je vidět souvislost dnů. U jednoho dne zabírala půlku
 modalu a nabízela i dny, které vybrat nejdou; dropdown nabídne rovnou jen platné dny
 a pojmenuje je („dnes · středa 3. 6.").
+
+**Navazující pole se ukazují až po volbě.** Formulář, jehož obsah závisí na jednom výběru,
+začíná jen tím výběrem (`Vyberte…`); zbytek se objeví, teprve když je z čeho vyjít. Prázdný
+formulář se šesti poli nutí člověka přečíst všechno, než pochopí, že polovina se ho netýká.
+
+**Datum a čas = nativní `<input type="date">` / `type="time"`.** Vlastní mřížka jen tam, kde
+se vybírá rozsah. Nativní picker přinese klávesnici i formát z telefonu; omezení se dává
+přes `min`/`max` a to, co jimi nejde vyjádřit (víkendy), se odmítne s vysvětlením.
+

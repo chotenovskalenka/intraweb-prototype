@@ -159,42 +159,43 @@ function renderAbsModal(){
    otevře se nad tím, kde rodič právě je, a po odeslání je nový stav rovnou vidět pod ním.
    Na rozdíl od omluvenky tu není deadline – vzkaz na dnešek dává smysl i v 7:50 ráno. */
 let zpDraft=null;
-/* Dny jako dropdown, ne mřížka celého měsíce: vybírá se jeden den, ne rozsah (na rozdíl
-   od omluvenky), a mřížka zabírala víc než půlku modalu. Víkendy a proběhlé dny se
-   do nabídky vůbec nedostanou – nejde je tedy vybrat omylem. */
-function zpDny(){
-  const a=[];
-  for(let d=NOW.d;d<=30;d++){if(isWE(d))continue;
-    const zaklad=`${DOWFULL[wd(d)]} ${d}. 6.`;
-    a.push([d,d===TODAY?`dnes · ${zaklad}`:d===TODAY+1?`zítra · ${zaklad}`:zaklad]);}
-  return a;
-}
 function renderZprava(){
   const c=cur(), p=zpPotrebuje(zpDraft.typ);
   let h=`<div class="modal-scrim" onclick="if(event.target===this)closeZprava()"><div class="modal modal-wide">`;
-  h+=`<h3>Informace pro průvodce</h3><div class="abs-sub">${c.n} · ${DOWFULL[wd(zpDraft.den)]} ${zpDraft.den}. 6.${zpDraft.den===TODAY?' (dnes)':''}</div>`;
+  h+=`<h3>Informace pro průvodce</h3><div class="abs-sub">${c.n} · uvidí to průvodci ve službě na svém přehledu dne</div>`;
   h+=`<div class="notelab">Čeho se to týká</div><select class="pin" onchange="zpTyp(this.value)">`
+    +`<option value=""${zpDraft.typ?'':' selected'}>Vyberte…</option>`
     +ZPRAVA_TYPY.map(([k,l])=>`<option value="${k}"${zpDraft.typ===k?' selected':''}>${l}</option>`).join('')+`</select>`;
-  if(p==='kdo')h+=`<div class="notelab">Kdo ${c.ak} vyzvedne</div><input class="pin" value="${esc(zpDraft.kdo)}" placeholder="jméno a vztah – např. babička Jana Nováková" oninput="zpSet('kdo',this.value)">`;
-  if(p==='cas')h+=`<div class="notelab">V kolik hodin</div><input class="pin" value="${esc(zpDraft.cas)}" placeholder="např. 9:30" oninput="zpSet('cas',this.value)">`;
-  h+=`<div class="notelab">Podrobnosti${zpDraft.typ==='jine'?'':' – nepovinné'}</div>`;
-  h+=`<textarea class="note" placeholder="Co mají průvodci vědět" oninput="zpSet('text',this.value)">${escTa(zpDraft.text)}</textarea>`;
-  h+=`<div class="notelab">Na který den</div><select class="pin" onchange="zpPick(+this.value)">`
-    +zpDny().map(([d,l])=>`<option value="${d}"${zpDraft.den===d?' selected':''}>${l}</option>`).join('')+`</select>`;
-  h+=`<div class="tile note-info"><div class="omdrow">Uvidí to <b>průvodci ve službě</b> na svém přehledu dne. Není to omluvenka – docházku to nemění.</div></div>`;
+  /* Navazující pole se objeví teprve po výběru – prázdný formulář se šesti poli
+     nutí rodiče přečíst všechno, než pochopí, že polovina se ho netýká. */
+  if(zpDraft.typ){
+    if(p==='kdo')h+=`<div class="notelab">Kdo ${c.ak} vyzvedne</div><input class="pin" value="${esc(zpDraft.kdo)}" placeholder="jméno a vztah – např. babička Jana Nováková" oninput="zpSet('kdo',this.value)">`;
+    if(p==='cas')h+=`<div class="notelab">V kolik hodin</div><input class="pin" type="time" value="${esc(zpDraft.cas)}" oninput="zpSet('cas',this.value)">`;
+    h+=`<div class="notelab">Podrobnosti${p?' – nepovinné':''}</div>`;
+    h+=`<textarea class="note" placeholder="Co mají průvodci vědět" oninput="zpSet('text',this.value)">${escTa(zpDraft.text)}</textarea>`;
+    h+=`<div class="notelab">Na který den</div><input class="pin" type="date" value="${zpISO(zpDraft.den)}" min="${zpISO(NOW.d)}" max="${zpISO(30)}" onchange="zpDatum(this.value)">`;
+  }
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeZprava()">Zrušit</button><button class="btn-primary" onclick="zpSubmit()">Odeslat průvodcům</button></div>`;
   return h+`</div></div>`;
 }
+// Prototyp žije v červnu 2026 – převod den ↔ hodnota <input type="date">.
+const zpISO=d=>`2026-06-${String(d).padStart(2,'0')}`;
 window.openZprava=day=>{const d=(day>=NOW.d&&day<=30&&!isWE(day))?day:TODAY;
-  zpDraft={den:d,typ:'vyzvednuti',kdo:'',cas:'',text:''};zpModal=true;render();};
+  zpDraft={den:d,typ:'',kdo:'',cas:'',text:''};zpModal=true;render();};
 window.closeZprava=()=>{zpModal=false;render();};
-window.zpPick=d=>{zpDraft.den=d;render();};
+/* Datum z nativního pickeru. Víkend jde v pickeru vybrat (zakázat konkrétní dny neumí),
+   proto se odmítá tady – s vysvětlením, ne tichým přeskočením. */
+window.zpDatum=v=>{const d=+String(v).slice(-2);
+  if(!d||d<NOW.d||d>30){showToast('Vyberte den v červnu, ode dneška dál');render();return;}
+  if(isWE(d)){showToast('O víkendu se do školky nechodí');render();return;}
+  zpDraft.den=d;render();};
 window.zpTyp=k=>{zpDraft.typ=k;render();};
 /* Bez render() – překreslení by zničilo <input> a rodič by přišel o kurzor uprostřed psaní
    (týž důvod, proč hledání používá renderKeepFocus). */
 window.zpSet=(f,v)=>{zpDraft[f]=v;};
 window.zpSubmit=()=>{
   const c=cur(), p=zpPotrebuje(zpDraft.typ);
+  if(!zpDraft.typ){showToast('Vyberte, čeho se to týká');return;}
   if(p==='kdo'&&!zpDraft.kdo.trim()){showToast('Doplňte, kdo dítě vyzvedne');return;}
   if(p==='cas'&&!zpDraft.cas.trim()){showToast('Doplňte čas');return;}
   if(!p&&!zpDraft.text.trim()){showToast('Napište, co mají průvodci vědět');return;}
