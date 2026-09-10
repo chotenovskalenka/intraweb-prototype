@@ -367,3 +367,20 @@ flex kontejneru – a mimo něj se to obcházelo inline `width:100%` (6×). Odsu
 - **Focus:** `:focus-visible` (2px `--color-primary` ring) jen při klávesové navigaci; `:focus{outline:none}`
   potlačuje ring po kliknutí myší. Hlavně pro desktop/admin.
 - **Oslovení:** **průvodce tyká, rodič vyká**, admin neosobní. Formát dat „D. M. RRRR".
+
+## Formulářové popisky a výběr z možností (10. 9. 2026)
+
+**Popisek pole (`.notelab`) je 13,5 px / 600, barvou `--color-text`** – dřív 11 px v muted
+šedi, což na mobilu splývalo s poznámkami pod poli. Popisek říká, co se po člověku chce;
+musí být čitelnější než vysvětlivka vedle. Platí pro všechny formuláře rodičovské appky
+(omluvenka, absence, docházka, informace pro průvodce).
+
+**Výběr z pojmenovaných možností = nativní `<select class="pin">`**, ne řada chipů, když:
+možností je víc než čtyři, vejde se jich na řádek různý počet, nebo je vybraná právě jedna.
+Chipy (`.pchips` / `.choices`) zůstávají tam, kde jsou možnosti dvě až čtyři a je žádoucí
+vidět je všechny najednou (docházkové kódy D/O/C/OM, ano/ne).
+
+**Jeden den se vybírá dropdownem, ne mřížkou měsíce.** Mřížka (`.dpcal`) patří k výběru
+**rozsahu** (omluvenka od–do), kde je vidět souvislost dnů. U jednoho dne zabírala půlku
+modalu a nabízela i dny, které vybrat nejdou; dropdown nabídne rovnou jen platné dny
+a pojmenuje je („dnes · středa 3. 6.").
