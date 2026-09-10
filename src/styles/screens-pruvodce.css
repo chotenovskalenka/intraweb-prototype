@@ -96,3 +96,5 @@
 .jid-edit{margin-bottom:var(--space-md)}
 .jid-edit .pin{margin-top:4px;min-height:44px}
 .jid-edit .jid-alg{max-width:260px}
+/* Čas odeslání u informace od rodiče – tichý, ale podstatný (ráno v 6:55 vs. v 9:30). */
+.zp-cas{flex-shrink:0;font-size:var(--text-note);color:var(--color-text-hint)}

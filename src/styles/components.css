@@ -433,3 +433,12 @@ table.wt td.pastc{opacity:.45}
 .dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
 .dnav button:disabled{color:var(--color-text-hint);cursor:default}
 .dnav span{font-family:var(--font-serif);font-size:var(--text-body);color:var(--color-primary-strong);padding:0 8px;white-space:nowrap}
+/* Informace pro průvodce (rodičovská appka je zakládá, průvodcovská je čte) – proto sdílené.
+   Řádek je text + tichý křížek pro stažení; u průvodce se křížek nerenderuje. */
+.zprow{display:flex;align-items:flex-start;gap:8px;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text)}
+.zprow:first-of-type{border-top:none}
+.zp-txt{flex:1;min-width:0}
+.zp-who{display:block;font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.zp-del{flex-shrink:0;min-width:44px;min-height:44px;margin:-11px -8px -11px 0;background:none;border:none;color:var(--color-text-hint);font-size:var(--text-body);cursor:pointer;line-height:1}
+.zp-del:hover{color:var(--color-danger)}
+.zp-empty{font-size:var(--text-small);color:var(--color-text-muted);line-height:var(--leading-normal);margin-bottom:11px}

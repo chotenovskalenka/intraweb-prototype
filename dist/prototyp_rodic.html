@@ -631,6 +631,15 @@ table.wt td.pastc{opacity:.45}
 .dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
 .dnav button:disabled{color:var(--color-text-hint);cursor:default}
 .dnav span{font-family:var(--font-serif);font-size:var(--text-body);color:var(--color-primary-strong);padding:0 8px;white-space:nowrap}
+/* Informace pro průvodce (rodičovská appka je zakládá, průvodcovská je čte) – proto sdílené.
+   Řádek je text + tichý křížek pro stažení; u průvodce se křížek nerenderuje. */
+.zprow{display:flex;align-items:flex-start;gap:8px;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text)}
+.zprow:first-of-type{border-top:none}
+.zp-txt{flex:1;min-width:0}
+.zp-who{display:block;font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.zp-del{flex-shrink:0;min-width:44px;min-height:44px;margin:-11px -8px -11px 0;background:none;border:none;color:var(--color-text-hint);font-size:var(--text-body);cursor:pointer;line-height:1}
+.zp-del:hover{color:var(--color-danger)}
+.zp-empty{font-size:var(--text-small);color:var(--color-text-muted);line-height:var(--leading-normal);margin-bottom:11px}
 </style>
 <style>
 /* SCREENS: RODIC – rodičovské obrazovky + rodičovské varianty sdílených tříd.
@@ -998,6 +1007,8 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .abs-warn{background:var(--state-danger-bg);border:1px solid var(--edge-danger);color:var(--color-danger);border-radius:var(--radius-sm);padding:9px 12px;font-size:var(--text-small);line-height:var(--leading-normal);margin-bottom:10px}
 .abs-menu{background:var(--color-surface-2);border-radius:var(--radius-sm);padding:6px 11px;margin-bottom:8px}
 .abs-hint{font-size:var(--text-note);color:var(--color-text-hint);margin:6px 0 2px}
+/* „Přidat informaci" je druhotná akce – primární zelené tlačítko v téže kartě patří docházce. */
+.omluvbtn.ghost{background:transparent;border:1px solid var(--color-primary);color:var(--color-primary-strong)}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1252,6 +1263,33 @@ function fmtAlbum(a){
   if(m1===m2&&y1===y2)return `${d1}.–${d2}. ${m1}. ${y1}`;
   if(y1===y2)return `${d1}. ${m1}. – ${d2}. ${m2}. ${y1}`;
   return `${d1}. ${m1}. ${y1} – ${d2}. ${m2}. ${y2}`;
+}
+
+/* --- Informace pro průvodce (Flow „nepíšu to do WhatsAppu") ---
+   Jednosměrné, na jeden den a jedno dítě. Zakládá je rodičovská appka, čte průvodcovská –
+   proto model bydlí tady. Typy vycházejí z obsahové analýzy rodičovské WA skupiny:
+   rodičovské zprávy mají dvě denní špičky, 8:00 a 14:00, a obě padají na předání dítěte.
+   Vyzvedávání je 7,7 % rodičovských zpráv, ale nese největší důsledek – proto je první
+   a jako jediné vyžaduje jméno.
+   Ztráty a nálezy (nejčastější téma rodičů, 24,6 %) tu SCHVÁLNĚ nejsou: jsou obousměrné,
+   hodnota je v tom, že se ozve jiný rodič. Na ně patří nástěnka, ne vzkaz průvodcům. */
+const ZPRAVA_TYPY=[
+  ['vyzvednuti','Vyzvedne někdo jiný','kdo'],
+  ['pozdeji','Přijdeme později','cas'],
+  ['driv','Vyzvedneme dřív','cas'],
+  ['zdravi','Zdravotní informace',''],
+  ['vybaveni','Vybavení',''],
+  ['jine','Jiné',''],
+];
+const ZPLAB=Object.fromEntries(ZPRAVA_TYPY.map(t=>[t[0],t[1]]));
+const zpPotrebuje=typ=>(ZPRAVA_TYPY.find(t=>t[0]===typ)||[])[2]||'';
+// Shrnutí do jednoho řádku – používá se u rodiče i v průvodcovské appce.
+function zpravaShrnuti(z){
+  const p=zpPotrebuje(z.typ);
+  const hlava=p==='kdo'?`${ZPLAB[z.typ]}: <b>${esc(z.kdo)}</b>`
+    :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(z.cas)}</b>`
+    :`<b>${ZPLAB[z.typ]}</b>`;
+  return hlava+(z.text?` · ${esc(z.text)}`:'');
 }
 </script>
 <script>
@@ -1612,6 +1650,11 @@ const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${COD
 const cur=()=>children[ci];
 const plural=n=>n===1?'den':(n>=2&&n<=4?'dny':'dní');
 const kc=n=>n.toLocaleString('cs-CZ');
+
+const zpravyProDen=(c,d)=>(c.zpravy||[]).filter(z=>z.den===d);
+children.forEach(c=>{c.zpravy=c.zpravy||[];});
+// Seed: jedna informace na dnešek, ať je vidět, jak se to průvodcům ukáže.
+children[0].zpravy.push({id:uid(),den:TODAY,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'dnes 7:12'});
 </script>
 <script>
 /* SCREEN: RODIC_PREHLED – „soupis dne" dle priorit rodiče:
@@ -1657,6 +1700,16 @@ function renderDashboard(){
   else if(!today&&!editable(dashDay))blkDochazka+=`<div class="edlock">Proběhlý den – jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
   blkDochazka+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
+
+  /* Informace pro průvodce – to, co dnes končí ve WhatsAppu (kdo dítě vyzvedne, pozdější
+     příchod, lék). Vlastní karta hned pod docházkou: je to týž okamžik dne, ale jiná věc –
+     docházku to nemění. Vzkazy se vážou na vybraný den, ne jen na dnešek. */
+  const zpr=zpravyProDen(c,dashDay);
+  let blkZpravy=`<div class="tile"><div class="ch">Informace pro průvodce</div>`;
+  if(zpr.length)blkZpravy+=zpr.map(z=>`<div class="zprow"><span class="zp-txt">${zpravaShrnuti(z)}</span><button class="zp-del" onclick="zpSmazat('${z.id}')" aria-label="Stáhnout informaci">✕</button></div>`).join('');
+  else blkZpravy+=`<div class="zp-empty">Na ${dashDay===TODAY?'dnešek':`${DOW[wd(dashDay)]} ${dashDay}. 6.`} jste průvodcům nic nevzkázali.</div>`;
+  blkZpravy+=`<button class="omluvbtn ghost" onclick="openZprava(${dashDay})">Přidat informaci</button>`;
+  blkZpravy+=`</div>`;
 
   // Co bude dělat (mobil: 2.)
   let blkDela=`<div class="tile"><div class="ch">Co bude ${c.n} dělat</div>`;
@@ -1705,7 +1758,7 @@ function renderDashboard(){
 
   // Sloupce (mobil stohuje A, pak B, pak C → dá přesně požadované pořadí 1–8 výše).
   h+=`<div class="dash3">`;
-  h+=`<div class="dcol">${blkDochazka}${blkDela}${blkJist}</div>`;
+  h+=`<div class="dcol">${blkDochazka}${blkZpravy}${blkDela}${blkJist}</div>`;
   h+=`<div class="dcol">${blkPruvodci}${blkBasnicky}${blkNovinky}</div>`;
   h+=`<div class="dcol">${blkMesicni}${blkNarozeniny}</div>`;
   h+=`</div>`;
@@ -2361,6 +2414,56 @@ function renderAbsModal(){
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="absClose()">Zrušit</button><button class="omluvbtn danger" style="margin:0" onclick="absSubmit()">Nahlásit absenci</button></div>`;
   return h+`</div></div>`;
 }
+
+/* --- INFORMACE PRO PRŮVODCE --- modal, stejný vzorec jako omluvenka:
+   otevře se nad tím, kde rodič právě je, a po odeslání je nový stav rovnou vidět pod ním.
+   Na rozdíl od omluvenky tu není deadline – vzkaz na dnešek dává smysl i v 7:50 ráno. */
+let zpDraft=null;
+function zpGrid(){
+  let h=`<div class="dpcal">`;['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);
+  for(let d=1;d<=30;d++){
+    if(isWE(d)||d<NOW.d){h+=`<div class="dpcell we">${d}</div>`;continue;}
+    h+=`<div class="dpcell${zpDraft.den===d?' sel':''}${d===TODAY?' today':''}" onclick="zpPick(${d})">${d}</div>`;
+  }
+  return h+`</div>`;
+}
+function renderZprava(){
+  const c=cur(), p=zpPotrebuje(zpDraft.typ);
+  let h=`<div class="modal-scrim" onclick="if(event.target===this)closeZprava()"><div class="modal modal-wide">`;
+  h+=`<h3>Informace pro průvodce</h3><div class="abs-sub">${c.n} · ${DOWFULL[wd(zpDraft.den)]} ${zpDraft.den}. 6.${zpDraft.den===TODAY?' (dnes)':''}</div>`;
+  // .choices (ne .pchips): dotykový cíl 44 px – tenhle výběr je první krok celého vzkazu
+  h+=`<div class="notelab">Čeho se to týká</div><div class="choices">`
+    +ZPRAVA_TYPY.map(([k,l])=>`<button class="${zpDraft.typ===k?'on':''}" onclick="zpTyp('${k}')">${l}</button>`).join('')+`</div>`;
+  if(p==='kdo')h+=`<div class="notelab">Kdo ${c.ak} vyzvedne</div><input class="pin" value="${esc(zpDraft.kdo)}" placeholder="jméno a vztah – např. babička Jana Nováková" oninput="zpSet('kdo',this.value)">`;
+  if(p==='cas')h+=`<div class="notelab">V kolik hodin</div><input class="pin" value="${esc(zpDraft.cas)}" placeholder="např. 9:30" oninput="zpSet('cas',this.value)">`;
+  h+=`<div class="notelab">Podrobnosti${zpDraft.typ==='jine'?'':' – nepovinné'}</div>`;
+  h+=`<textarea class="note" placeholder="Co mají průvodci vědět" oninput="zpSet('text',this.value)">${escTa(zpDraft.text)}</textarea>`;
+  h+=`<div class="notelab">Na který den</div>${zpGrid()}`;
+  h+=`<div class="tile note-info"><div class="omdrow">Uvidí to <b>průvodci ve službě</b> na svém přehledu dne. Není to omluvenka – docházku to nemění.</div></div>`;
+  h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeZprava()">Zrušit</button><button class="btn-primary" onclick="zpSubmit()">Odeslat průvodcům</button></div>`;
+  return h+`</div></div>`;
+}
+window.openZprava=day=>{const d=(day>=NOW.d&&day<=30&&!isWE(day))?day:TODAY;
+  zpDraft={den:d,typ:'vyzvednuti',kdo:'',cas:'',text:''};zpModal=true;render();};
+window.closeZprava=()=>{zpModal=false;render();};
+window.zpPick=d=>{zpDraft.den=d;render();};
+window.zpTyp=k=>{zpDraft.typ=k;render();};
+/* Bez render() – překreslení by zničilo <input> a rodič by přišel o kurzor uprostřed psaní
+   (týž důvod, proč hledání používá renderKeepFocus). */
+window.zpSet=(f,v)=>{zpDraft[f]=v;};
+window.zpSubmit=()=>{
+  const c=cur(), p=zpPotrebuje(zpDraft.typ);
+  if(p==='kdo'&&!zpDraft.kdo.trim()){showToast('Doplňte, kdo dítě vyzvedne');return;}
+  if(p==='cas'&&!zpDraft.cas.trim()){showToast('Doplňte čas');return;}
+  if(!p&&!zpDraft.text.trim()){showToast('Napište, co mají průvodci vědět');return;}
+  c.zpravy.unshift({id:uid(),den:zpDraft.den,typ:zpDraft.typ,kdo:zpDraft.kdo.trim(),
+    cas:zpDraft.cas.trim(),text:zpDraft.text.trim(),odeslano:zpDraft.den===TODAY?'dnes':`${zpDraft.den}. 6.`});
+  // ať je nový vzkaz vidět bez hledání – dashboard přepneme na den, kterého se týká
+  if(section==='prehled')dashDay=zpDraft.den;
+  zpModal=false;render();
+  showToast('Informace odeslána průvodcům');
+};
+window.zpSmazat=id=>{const c=cur();c.zpravy=c.zpravy.filter(z=>z.id!==id);render();showToast('Informace stažena');};
 </script>
 <script>
 /* CORE: RODIC – stav, sekce, drawer/hlavička, render(), go(), toast, úvodní spuštění */
@@ -2375,6 +2478,7 @@ let dashEdit=false;
 let draft={};   // {den: {code, note}}
 let dashPickerOpen=false;
 let omModal=false;   // omluvenka jako modal (viz modals.js)
+let zpModal=false;   // informace pro průvodce – modal (viz modals.js)
 let pfEdit=null;   // rozpracovaná editace profilu (overlay 'profedit')
 let faktRok='2025/26', faktStav='vse';   // filtr faktur (rok/stav)
 let planIdx=9;   // vybraný měsíc v tématickém plánu (index do TEMA_MESICE; 9 = červen)
@@ -2414,7 +2518,7 @@ function render(){
      Titulek zůstává jen u overlayů, které vlastní nadpis nemají. */
   document.getElementById('ttl').textContent=overlay?(overlay.type==='novinka'?'Novinka':(overlay.type==='profedit'||overlay.type==='ucet')?'':'Akce'):'';
   renderHead();renderDrawer();
-  document.getElementById('modalRoot').innerHTML = omModal?renderOmluvenka():(typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
+  document.getElementById('modalRoot').innerHTML = omModal?renderOmluvenka():zpModal?renderZprava():(typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
   document.getElementById('content').innerHTML = overlay?(overlay.type==='novinka'?renderNovinka():overlay.type==='profedit'?renderProfEdit():overlay.type==='ucet'?renderUcet():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;render();};

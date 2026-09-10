@@ -1360,3 +1360,39 @@ tím ví, že u školky není, a je to případ pro dvojku.
   zase šest.
 - **Zátěž průvodců se tímto neměří.** Analýza vidí jen velkou skupinu. Rodinné skupiny, kde
   školka inzeruje dostupnost 7–20 hodin, jsou mimo záběr a skutečná zátěž je pravděpodobně tam.
+
+## Informace pro průvodce v rodičovské appce (návrh z analýzy WA skupiny)
+
+**Problém:** rodič nemá v systému kam napsat „dnes vyzvedne babička" / „přijdeme v 9:30" /
+„má v batohu kapky". Píše to do WhatsAppu, kde se to ztratí dřív, než na to při předávání
+dojde řeč. Průvodci měli dodat seznam toho, co rodiče do skupin nejčastěji píšou; místo toho
+se vycházelo z obsahové analýzy rodičovské skupiny (1080 zakódovaných zpráv, dva školní roky).
+
+**Co z dat plyne.** Rodičovské zprávy mají dvě denní špičky, **8:00 a 14:00**, a obě padají na
+předání dítěte. Podle podílu na rodičovských zprávách: ztráty a nálezy 24,6 %, komunitní
+výpomoc 20,9 %, akce 18,8 %, vyzvedávání 7,7 %.
+
+**Rozhodnutí — co do vzkazu patří a co ne.** Nabídnuté typy jsou jen ty **jednosměrné,
+vázané na jeden den a jedno dítě**: vyzvedne někdo jiný (jako jediný vyžaduje jméno),
+přijdeme později, vyzvedneme dřív, zdravotní informace, vybavení, jiné.
+
+**Ztráty a nálezy — největší téma rodičů — tu vědomě nejsou.** Jsou obousměrné (66 % zpráv
+od rodičů, 34 % od školky) a hodnota je právě v tom, že se ozve *jiný rodič*. Vzkaz průvodcům
+to nenahradí; na to patří nástěnka s fotkou a „to je naše" — samostatná věc, ne tohle.
+Totéž platí pro komunitní výpomoc a parkování/sousedy.
+
+**Není to omluvenka.** Docházku vzkaz nemění a nemá deadline — vzkaz na dnešek dává smysl
+i v 7:50 ráno. Vzorec je jinak shodný: modal nad tím, kde rodič právě je, po odeslání se
+zavře a nový stav je vidět pod ním.
+
+**Na straně průvodce jedna dlaždice, ne dvě.** Vzkazy se slily do stávající karty poznámek,
+která se přejmenovala na „Informace od rodičů": dnešní vzkazy nahoře (s časem odeslání),
+trvalejší zdravotní/provozní poznámky pod nimi. Dva samostatné boxy poznámek od rodičů na
+jednom přehledu by byly přesně ta roztříštěnost, kterou odbouráváme.
+
+**Model je ve `shared.js`** (`ZPRAVA_TYPY`, `zpravaShrnuti`), protože se na tutéž věc dívají
+obě appky. Data ale nadále nesdílejí — u průvodce jde o zobrazení ze seedu, stejně jako
+u `parentExcuse`.
+
+**Otevřené:** notifikace (rodič nevidí, že si to průvodce přečetl), vzkaz na víc dní najednou,
+a jestli má mít průvodce možnost odpovědět — zatím ne, jinak z toho vznikne druhý chat.

@@ -42,6 +42,16 @@ function renderDashboard(){
   if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;
   blkDochazka+=`<button class="cardlink" onclick="go('dochazka')">Docházka a náhrady ›</button></div>`;
 
+  /* Informace pro průvodce – to, co dnes končí ve WhatsAppu (kdo dítě vyzvedne, pozdější
+     příchod, lék). Vlastní karta hned pod docházkou: je to týž okamžik dne, ale jiná věc –
+     docházku to nemění. Vzkazy se vážou na vybraný den, ne jen na dnešek. */
+  const zpr=zpravyProDen(c,dashDay);
+  let blkZpravy=`<div class="tile"><div class="ch">Informace pro průvodce</div>`;
+  if(zpr.length)blkZpravy+=zpr.map(z=>`<div class="zprow"><span class="zp-txt">${zpravaShrnuti(z)}</span><button class="zp-del" onclick="zpSmazat('${z.id}')" aria-label="Stáhnout informaci">✕</button></div>`).join('');
+  else blkZpravy+=`<div class="zp-empty">Na ${dashDay===TODAY?'dnešek':`${DOW[wd(dashDay)]} ${dashDay}. 6.`} jste průvodcům nic nevzkázali.</div>`;
+  blkZpravy+=`<button class="omluvbtn ghost" onclick="openZprava(${dashDay})">Přidat informaci</button>`;
+  blkZpravy+=`</div>`;
+
   // Co bude dělat (mobil: 2.)
   let blkDela=`<div class="tile"><div class="ch">Co bude ${c.n} dělat</div>`;
   blkDela+=`<div class="prog-day">${DENNI[wd(dashDay)]||'Volný program'}</div>`;
@@ -89,7 +99,7 @@ function renderDashboard(){
 
   // Sloupce (mobil stohuje A, pak B, pak C → dá přesně požadované pořadí 1–8 výše).
   h+=`<div class="dash3">`;
-  h+=`<div class="dcol">${blkDochazka}${blkDela}${blkJist}</div>`;
+  h+=`<div class="dcol">${blkDochazka}${blkZpravy}${blkDela}${blkJist}</div>`;
   h+=`<div class="dcol">${blkPruvodci}${blkBasnicky}${blkNovinky}</div>`;
   h+=`<div class="dcol">${blkMesicni}${blkNarozeniny}</div>`;
   h+=`</div>`;

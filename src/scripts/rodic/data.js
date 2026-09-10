@@ -223,3 +223,8 @@ const chip=cd=>`<span class="chip" style="background:${CODES[cd][2]};color:${COD
 const cur=()=>children[ci];
 const plural=n=>n===1?'den':(n>=2&&n<=4?'dny':'dní');
 const kc=n=>n.toLocaleString('cs-CZ');
+
+const zpravyProDen=(c,d)=>(c.zpravy||[]).filter(z=>z.den===d);
+children.forEach(c=>{c.zpravy=c.zpravy||[];});
+// Seed: jedna informace na dnešek, ať je vidět, jak se to průvodcům ukáže.
+children[0].zpravy.push({id:uid(),den:TODAY,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'dnes 7:12'});
