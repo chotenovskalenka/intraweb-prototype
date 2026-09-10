@@ -9,6 +9,12 @@ jako doklad cesty.
 
 Pracovní extrakt (logo, hero, vzorky) je v `podklady/web-extract/` (gitignore).
 
+**Figma zrcadlo:** [Vhaaji – design systém](https://www.figma.com/design/ps63MrawqhqAOj7p0csTLJ/Vhaaji-%E2%80%93-design-syst%C3%A9m).
+Stav (k 3. 9. 2026): jen obálka + **foundations** – barevné proměnné pojmenované názvy CSS
+tokenů a textové styly podle tabulky „Typografická škála" níže. **Komponenty ani obrazovky
+v něm nejsou** (to je fáze 4.6) a soubor není publikovaný jako knihovna. Zdroj pravdy zůstává
+`tokens.css`; při změně tokenu je potřeba Figmu dosynchronizovat ručně.
+
 ---
 
 ## Foundations – zdroj: web (vhaaji.cz)

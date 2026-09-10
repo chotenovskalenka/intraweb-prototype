@@ -122,7 +122,8 @@ Z fází 0–4.7 plyne pro efektivitu:
 
 ## Co NEdělat (celá fáze 5)
 
-- Nestavět Figma obrazovky ani rozšiřovat Figma knihovnu (v1 stačí; rozhodnuto dřív).
+- Nestavět Figma obrazovky ani rozšiřovat Figma knihovnu (rozhodnuto dřív). Soubor dnes drží
+  jen foundations – viz odkaz v `design-system.md`; komponenty jsou fáze 4.6, ne fáze 5.
 - Nestavět fakturační modul, plánování využití náhrady, offline/sync, třídnici (trvá z fáze 2–3).
 - Neměnit schválenou identitu (paleta, typografie) — case study ji používá, ne předělává.
 - Nedělat anglickou verzi case study, dokud není hotová a schválená česká.
