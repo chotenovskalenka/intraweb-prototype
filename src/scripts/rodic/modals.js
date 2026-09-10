@@ -85,8 +85,11 @@ function renderOmluvenka(){
   h+=`<h3>Omluvit ${c.ak}</h3><div class="abs-sub">Vyberte dny, kdy ${c.n} nebude ve školce</div>`;
   h+=`<div class="notelab">Od</div>${omGrid('od')}`;
   h+=`<div class="notelab">Do</div>${omGrid('do')}`;
-  h+=`<div class="notelab">Důvod</div><div class="pchips">`+[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['jiné','Jiné']].map(([k,l])=>`<button class="${omDraft.duvod===k?'on':''}" onclick="omReason('${k}')">${l}</button>`).join('')+`</div>`;
-  h+=`<textarea class="note" placeholder="Poznámka pro průvodce (nepovinné)" oninput="omNote(this.value)">${escTa(omDraft.pozn)}</textarea>`;
+  // select, ne chipy – ať omluvenka a informace pro průvodce vypadají jako jeden formulář
+  h+=`<div class="notelab">Důvod</div><select class="pin" onchange="omReason(this.value)">`
+    +[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['jiné','Jiné']].map(([k,l])=>`<option value="${k}"${omDraft.duvod===k?' selected':''}>${l}</option>`).join('')+`</select>`;
+  h+=`<div class="notelab">Poznámka pro průvodce – nepovinné</div>`;
+  h+=`<textarea class="note" placeholder="Co mají průvodci vědět" oninput="omNote(this.value)">${escTa(omDraft.pozn)}</textarea>`;
   h+=omDeadline();
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeOmluvenka()">Zrušit</button><button class="btn-primary" onclick="omSubmit()">Odeslat omluvenku</button></div>`;
   return h+`</div></div>`;
