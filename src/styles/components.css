@@ -442,3 +442,8 @@ table.wt td.pastc{opacity:.45}
 .zp-del{flex-shrink:0;min-width:44px;min-height:44px;margin:-11px -8px -11px 0;background:none;border:none;color:var(--color-text-hint);font-size:var(--text-body);cursor:pointer;line-height:1}
 .zp-del:hover{color:var(--color-danger)}
 .zp-empty{font-size:var(--text-small);color:var(--color-text-muted);line-height:var(--leading-normal);margin-bottom:11px}
+/* Nativní <select> ve formulářích – stejná schránka jako .pin, jen s vlastní šipkou
+   (výchozí systémová šipka je v každém prohlížeči jiná a rozbíjí řádek). */
+select.pin{appearance:none;-webkit-appearance:none;min-height:44px;padding-right:34px;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--color-text-muted) 50%),linear-gradient(135deg,var(--color-text-muted) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}

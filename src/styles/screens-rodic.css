@@ -284,7 +284,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .choices button.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}
 .choices button.abs.on{background:var(--color-danger);border-color:var(--color-danger)}
 .bulkbar .choices{margin-top:9px}
-.notelab{font-size:var(--text-micro);color:var(--color-text-muted);margin-top:10px}
+.notelab{font-size:var(--text-small);font-weight:600;color:var(--color-text);margin-top:var(--space-lg);margin-bottom:5px}
 .chip{display:inline-block;font-size:var(--text-micro);font-weight:600;padding:3px 9px;border-radius:var(--radius-xs)}
 .deadline{font-size:var(--text-micro);color:var(--color-accent-ink);font-style:italic;margin-top:10px}
 /* Docházka a náhrady – desktop layout ve stylu Přehledu (velký nadpis + dva sloupce). Mobil: stoh. */

@@ -156,26 +156,28 @@ function renderAbsModal(){
    otevře se nad tím, kde rodič právě je, a po odeslání je nový stav rovnou vidět pod ním.
    Na rozdíl od omluvenky tu není deadline – vzkaz na dnešek dává smysl i v 7:50 ráno. */
 let zpDraft=null;
-function zpGrid(){
-  let h=`<div class="dpcal">`;['P','Ú','S','Č','P','S','N'].forEach(x=>h+=`<div class="dph">${x}</div>`);
-  for(let d=1;d<=30;d++){
-    if(isWE(d)||d<NOW.d){h+=`<div class="dpcell we">${d}</div>`;continue;}
-    h+=`<div class="dpcell${zpDraft.den===d?' sel':''}${d===TODAY?' today':''}" onclick="zpPick(${d})">${d}</div>`;
-  }
-  return h+`</div>`;
+/* Dny jako dropdown, ne mřížka celého měsíce: vybírá se jeden den, ne rozsah (na rozdíl
+   od omluvenky), a mřížka zabírala víc než půlku modalu. Víkendy a proběhlé dny se
+   do nabídky vůbec nedostanou – nejde je tedy vybrat omylem. */
+function zpDny(){
+  const a=[];
+  for(let d=NOW.d;d<=30;d++){if(isWE(d))continue;
+    const zaklad=`${DOWFULL[wd(d)]} ${d}. 6.`;
+    a.push([d,d===TODAY?`dnes · ${zaklad}`:d===TODAY+1?`zítra · ${zaklad}`:zaklad]);}
+  return a;
 }
 function renderZprava(){
   const c=cur(), p=zpPotrebuje(zpDraft.typ);
   let h=`<div class="modal-scrim" onclick="if(event.target===this)closeZprava()"><div class="modal modal-wide">`;
   h+=`<h3>Informace pro průvodce</h3><div class="abs-sub">${c.n} · ${DOWFULL[wd(zpDraft.den)]} ${zpDraft.den}. 6.${zpDraft.den===TODAY?' (dnes)':''}</div>`;
-  // .choices (ne .pchips): dotykový cíl 44 px – tenhle výběr je první krok celého vzkazu
-  h+=`<div class="notelab">Čeho se to týká</div><div class="choices">`
-    +ZPRAVA_TYPY.map(([k,l])=>`<button class="${zpDraft.typ===k?'on':''}" onclick="zpTyp('${k}')">${l}</button>`).join('')+`</div>`;
+  h+=`<div class="notelab">Čeho se to týká</div><select class="pin" onchange="zpTyp(this.value)">`
+    +ZPRAVA_TYPY.map(([k,l])=>`<option value="${k}"${zpDraft.typ===k?' selected':''}>${l}</option>`).join('')+`</select>`;
   if(p==='kdo')h+=`<div class="notelab">Kdo ${c.ak} vyzvedne</div><input class="pin" value="${esc(zpDraft.kdo)}" placeholder="jméno a vztah – např. babička Jana Nováková" oninput="zpSet('kdo',this.value)">`;
   if(p==='cas')h+=`<div class="notelab">V kolik hodin</div><input class="pin" value="${esc(zpDraft.cas)}" placeholder="např. 9:30" oninput="zpSet('cas',this.value)">`;
   h+=`<div class="notelab">Podrobnosti${zpDraft.typ==='jine'?'':' – nepovinné'}</div>`;
   h+=`<textarea class="note" placeholder="Co mají průvodci vědět" oninput="zpSet('text',this.value)">${escTa(zpDraft.text)}</textarea>`;
-  h+=`<div class="notelab">Na který den</div>${zpGrid()}`;
+  h+=`<div class="notelab">Na který den</div><select class="pin" onchange="zpPick(+this.value)">`
+    +zpDny().map(([d,l])=>`<option value="${d}"${zpDraft.den===d?' selected':''}>${l}</option>`).join('')+`</select>`;
   h+=`<div class="tile note-info"><div class="omdrow">Uvidí to <b>průvodci ve službě</b> na svém přehledu dne. Není to omluvenka – docházku to nemění.</div></div>`;
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeZprava()">Zrušit</button><button class="btn-primary" onclick="zpSubmit()">Odeslat průvodcům</button></div>`;
   return h+`</div></div>`;
