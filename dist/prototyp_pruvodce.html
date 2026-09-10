@@ -645,6 +645,8 @@ table.wt td.pastc{opacity:.45}
 select.pin{appearance:none;-webkit-appearance:none;min-height:44px;padding-right:34px;cursor:pointer;
   background-image:linear-gradient(45deg,transparent 50%,var(--color-text-muted) 50%),linear-gradient(135deg,var(--color-text-muted) 50%,transparent 50%);
   background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+/* Nativní date/time picker – stejná výška i schránka jako ostatní pole. */
+input.pin[type=date],input.pin[type=time]{min-height:44px}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -1024,8 +1026,10 @@ const zpPotrebuje=typ=>(ZPRAVA_TYPY.find(t=>t[0]===typ)||[])[2]||'';
 // Shrnutí do jednoho řádku – používá se u rodiče i v průvodcovské appce.
 function zpravaShrnuti(z){
   const p=zpPotrebuje(z.typ);
+  // <input type=time> vrací 09:30; česky se píše 9:30
+  const cas=String(z.cas||'').replace(/^0/,'');
   const hlava=p==='kdo'?`${ZPLAB[z.typ]}: <b>${esc(z.kdo)}</b>`
-    :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(z.cas)}</b>`
+    :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(cas)}</b>`
     :`<b>${ZPLAB[z.typ]}</b>`;
   return hlava+(z.text?` · ${esc(z.text)}`:'');
 }
@@ -1433,7 +1437,7 @@ const serving=d=>d&&!d.off;
    je ve shared.js, ať se rodič i průvodce dívají na tutéž věc. */
 data.forEach(c=>{c.zpravy=[];});
 data[3].zpravy.push({id:'zp1',den:TODAYD,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'7:12'});
-data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'9:30',text:'Jdeme na kontrolu k zubaři.',odeslano:'6:55'});
+data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'09:30',text:'Jdeme na kontrolu k zubaři.',odeslano:'6:55'});
 data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po ránu kapky do očí, má je v batohu.',odeslano:'7:40'});
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));
 </script>

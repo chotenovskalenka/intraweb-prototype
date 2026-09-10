@@ -203,8 +203,10 @@ const zpPotrebuje=typ=>(ZPRAVA_TYPY.find(t=>t[0]===typ)||[])[2]||'';
 // Shrnutí do jednoho řádku – používá se u rodiče i v průvodcovské appce.
 function zpravaShrnuti(z){
   const p=zpPotrebuje(z.typ);
+  // <input type=time> vrací 09:30; česky se píše 9:30
+  const cas=String(z.cas||'').replace(/^0/,'');
   const hlava=p==='kdo'?`${ZPLAB[z.typ]}: <b>${esc(z.kdo)}</b>`
-    :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(z.cas)}</b>`
+    :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(cas)}</b>`
     :`<b>${ZPLAB[z.typ]}</b>`;
   return hlava+(z.text?` · ${esc(z.text)}`:'');
 }

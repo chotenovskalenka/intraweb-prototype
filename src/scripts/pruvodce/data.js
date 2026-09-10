@@ -268,6 +268,6 @@ const serving=d=>d&&!d.off;
    je ve shared.js, ať se rodič i průvodce dívají na tutéž věc. */
 data.forEach(c=>{c.zpravy=[];});
 data[3].zpravy.push({id:'zp1',den:TODAYD,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'7:12'});
-data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'9:30',text:'Jdeme na kontrolu k zubaři.',odeslano:'6:55'});
+data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'09:30',text:'Jdeme na kontrolu k zubaři.',odeslano:'6:55'});
 data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po ránu kapky do očí, má je v batohu.',odeslano:'7:40'});
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));
