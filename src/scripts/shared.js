@@ -181,3 +181,30 @@ function fmtAlbum(a){
   if(y1===y2)return `${d1}. ${m1}. – ${d2}. ${m2}. ${y1}`;
   return `${d1}. ${m1}. ${y1} – ${d2}. ${m2}. ${y2}`;
 }
+
+/* --- Informace pro průvodce (Flow „nepíšu to do WhatsAppu") ---
+   Jednosměrné, na jeden den a jedno dítě. Zakládá je rodičovská appka, čte průvodcovská –
+   proto model bydlí tady. Typy vycházejí z obsahové analýzy rodičovské WA skupiny:
+   rodičovské zprávy mají dvě denní špičky, 8:00 a 14:00, a obě padají na předání dítěte.
+   Vyzvedávání je 7,7 % rodičovských zpráv, ale nese největší důsledek – proto je první
+   a jako jediné vyžaduje jméno.
+   Ztráty a nálezy (nejčastější téma rodičů, 24,6 %) tu SCHVÁLNĚ nejsou: jsou obousměrné,
+   hodnota je v tom, že se ozve jiný rodič. Na ně patří nástěnka, ne vzkaz průvodcům. */
+const ZPRAVA_TYPY=[
+  ['vyzvednuti','Vyzvedne někdo jiný','kdo'],
+  ['pozdeji','Přijdeme později','cas'],
+  ['driv','Vyzvedneme dřív','cas'],
+  ['zdravi','Zdravotní informace',''],
+  ['vybaveni','Vybavení',''],
+  ['jine','Jiné',''],
+];
+const ZPLAB=Object.fromEntries(ZPRAVA_TYPY.map(t=>[t[0],t[1]]));
+const zpPotrebuje=typ=>(ZPRAVA_TYPY.find(t=>t[0]===typ)||[])[2]||'';
+// Shrnutí do jednoho řádku – používá se u rodiče i v průvodcovské appce.
+function zpravaShrnuti(z){
+  const p=zpPotrebuje(z.typ);
+  const hlava=p==='kdo'?`${ZPLAB[z.typ]}: <b>${esc(z.kdo)}</b>`
+    :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(z.cas)}</b>`
+    :`<b>${ZPLAB[z.typ]}</b>`;
+  return hlava+(z.text?` · ${esc(z.text)}`:'');
+}

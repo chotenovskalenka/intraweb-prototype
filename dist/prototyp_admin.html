@@ -597,6 +597,15 @@ table.wt td.pastc{opacity:.45}
 .dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
 .dnav button:disabled{color:var(--color-text-hint);cursor:default}
 .dnav span{font-family:var(--font-serif);font-size:var(--text-body);color:var(--color-primary-strong);padding:0 8px;white-space:nowrap}
+/* Informace pro průvodce (rodičovská appka je zakládá, průvodcovská je čte) – proto sdílené.
+   Řádek je text + tichý křížek pro stažení; u průvodce se křížek nerenderuje. */
+.zprow{display:flex;align-items:flex-start;gap:8px;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text)}
+.zprow:first-of-type{border-top:none}
+.zp-txt{flex:1;min-width:0}
+.zp-who{display:block;font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.zp-del{flex-shrink:0;min-width:44px;min-height:44px;margin:-11px -8px -11px 0;background:none;border:none;color:var(--color-text-hint);font-size:var(--text-body);cursor:pointer;line-height:1}
+.zp-del:hover{color:var(--color-danger)}
+.zp-empty{font-size:var(--text-small);color:var(--color-text-muted);line-height:var(--leading-normal);margin-bottom:11px}
 </style>
 <style>
 /* SCREENS: ADMIN – obrazovkové styly (dashboard vedení). Skládá z existujících komponent
@@ -995,6 +1004,33 @@ function fmtAlbum(a){
   if(m1===m2&&y1===y2)return `${d1}.–${d2}. ${m1}. ${y1}`;
   if(y1===y2)return `${d1}. ${m1}. – ${d2}. ${m2}. ${y1}`;
   return `${d1}. ${m1}. ${y1} – ${d2}. ${m2}. ${y2}`;
+}
+
+/* --- Informace pro průvodce (Flow „nepíšu to do WhatsAppu") ---
+   Jednosměrné, na jeden den a jedno dítě. Zakládá je rodičovská appka, čte průvodcovská –
+   proto model bydlí tady. Typy vycházejí z obsahové analýzy rodičovské WA skupiny:
+   rodičovské zprávy mají dvě denní špičky, 8:00 a 14:00, a obě padají na předání dítěte.
+   Vyzvedávání je 7,7 % rodičovských zpráv, ale nese největší důsledek – proto je první
+   a jako jediné vyžaduje jméno.
+   Ztráty a nálezy (nejčastější téma rodičů, 24,6 %) tu SCHVÁLNĚ nejsou: jsou obousměrné,
+   hodnota je v tom, že se ozve jiný rodič. Na ně patří nástěnka, ne vzkaz průvodcům. */
+const ZPRAVA_TYPY=[
+  ['vyzvednuti','Vyzvedne někdo jiný','kdo'],
+  ['pozdeji','Přijdeme později','cas'],
+  ['driv','Vyzvedneme dřív','cas'],
+  ['zdravi','Zdravotní informace',''],
+  ['vybaveni','Vybavení',''],
+  ['jine','Jiné',''],
+];
+const ZPLAB=Object.fromEntries(ZPRAVA_TYPY.map(t=>[t[0],t[1]]));
+const zpPotrebuje=typ=>(ZPRAVA_TYPY.find(t=>t[0]===typ)||[])[2]||'';
+// Shrnutí do jednoho řádku – používá se u rodiče i v průvodcovské appce.
+function zpravaShrnuti(z){
+  const p=zpPotrebuje(z.typ);
+  const hlava=p==='kdo'?`${ZPLAB[z.typ]}: <b>${esc(z.kdo)}</b>`
+    :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(z.cas)}</b>`
+    :`<b>${ZPLAB[z.typ]}</b>`;
+  return hlava+(z.text?` · ${esc(z.text)}`:'');
 }
 </script>
 <script>

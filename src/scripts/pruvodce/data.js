@@ -262,3 +262,12 @@ function presentCount(d){return data.filter(c=>{const k=getCode(c,d);return k&&k
 
 function dayLbl(a){return (a.dayEnd&&a.dayEnd!==a.day)?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`;}
 const serving=d=>d&&!d.off;
+
+/* Informace od rodičů na dnešek – propsané z rodičovské appky. Jako u parentExcuse jde
+   jen o zobrazení: appky spolu žádná data nesdílejí. Model (ZPRAVA_TYPY, zpravaShrnuti)
+   je ve shared.js, ať se rodič i průvodce dívají na tutéž věc. */
+data.forEach(c=>{c.zpravy=[];});
+data[3].zpravy.push({id:'zp1',den:TODAYD,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'7:12'});
+data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'9:30',text:'Jdeme na kontrolu k zubaři.',odeslano:'6:55'});
+data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po ránu kapky do očí, má je v batohu.',odeslano:'7:40'});
+const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));

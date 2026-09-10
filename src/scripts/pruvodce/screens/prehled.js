@@ -37,8 +37,7 @@ function renderPrehled(){
     h+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
   }
   h+=`</div>`;
-  // zdravotní / provozní poznámky (děti s poznámkou od rodičů) – sloupec 1, pod docházkou
-  h+=`</div>`;
+  h+=`</div>`;   // konec sloupce 1
 
   // ── Sloupec 2: dnešek (program dne, básnička/písnička, dnešní akce) ──
   h+=`<div class="dcol">`;
@@ -77,9 +76,16 @@ function renderPrehled(){
   h+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis ›</button></div>`;
   // Poznámky patří k týmu a provozu, ne k docházce – jinak zůstal třetí sloupec prázdný
   // a první přetékal (viz CLAUDE.md, pořadí sloupců dashboardu).
-  {const notes=data.filter(c=>c.note);
-   if(notes.length){
-     h+=`<div class="tile"><div class="ch">Zdravotní a provozní poznámky</div>`;
+  /* Jedna dlaždice, ne dvě: dnešní vzkazy od rodičů (kdo vyzvedne, pozdější příchod, lék)
+     nahoře, trvalejší zdravotní/provozní poznámky pod nimi. Dva samostatné boxy poznámek
+     od rodičů na jednom přehledu by byly přesně ta roztříštěnost, kterou odbouráváme.
+     Vzkazy zakládá rodič ve své appce; tady jsou jen ke čtení (appky data nesdílejí). */
+  {const notes=data.filter(c=>c.note), zpr=zpravyDnes();
+   if(notes.length||zpr.length){
+     h+=`<div class="tile"><div class="ch">Informace od rodičů</div>`;
+     zpr.forEach(({c})=>{c.zpravy.filter(z=>z.den===TODAYD).forEach(z=>{
+       h+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${c.n}</b><span class="zp-who">${zpravaShrnuti(z)}</span></span><span class="zp-cas">${z.odeslano}</span></div>`;
+     });});
      notes.forEach(c=>{h+=`<div class="rnote" style="margin:6px 0 0">✉️ <b>${c.n}:</b> ${c.note}</div>`;});
      h+=`</div>`;
    }}

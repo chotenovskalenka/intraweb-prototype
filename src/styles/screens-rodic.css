@@ -363,3 +363,5 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .abs-warn{background:var(--state-danger-bg);border:1px solid var(--edge-danger);color:var(--color-danger);border-radius:var(--radius-sm);padding:9px 12px;font-size:var(--text-small);line-height:var(--leading-normal);margin-bottom:10px}
 .abs-menu{background:var(--color-surface-2);border-radius:var(--radius-sm);padding:6px 11px;margin-bottom:8px}
 .abs-hint{font-size:var(--text-note);color:var(--color-text-hint);margin:6px 0 2px}
+/* „Přidat informaci" je druhotná akce – primární zelené tlačítko v téže kartě patří docházce. */
+.omluvbtn.ghost{background:transparent;border:1px solid var(--color-primary);color:var(--color-primary-strong)}

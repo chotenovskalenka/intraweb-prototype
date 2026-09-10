@@ -10,6 +10,7 @@ let dashEdit=false;
 let draft={};   // {den: {code, note}}
 let dashPickerOpen=false;
 let omModal=false;   // omluvenka jako modal (viz modals.js)
+let zpModal=false;   // informace pro průvodce – modal (viz modals.js)
 let pfEdit=null;   // rozpracovaná editace profilu (overlay 'profedit')
 let faktRok='2025/26', faktStav='vse';   // filtr faktur (rok/stav)
 let planIdx=9;   // vybraný měsíc v tématickém plánu (index do TEMA_MESICE; 9 = červen)
@@ -49,7 +50,7 @@ function render(){
      Titulek zůstává jen u overlayů, které vlastní nadpis nemají. */
   document.getElementById('ttl').textContent=overlay?(overlay.type==='novinka'?'Novinka':(overlay.type==='profedit'||overlay.type==='ucet')?'':'Akce'):'';
   renderHead();renderDrawer();
-  document.getElementById('modalRoot').innerHTML = omModal?renderOmluvenka():(typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
+  document.getElementById('modalRoot').innerHTML = omModal?renderOmluvenka():zpModal?renderZprava():(typeof absModal!=='undefined'&&absModal)?renderAbsModal():((typeof dayModal!=='undefined'&&dayModal!=null)?renderDayModal():'');
   document.getElementById('content').innerHTML = overlay?(overlay.type==='novinka'?renderNovinka():overlay.type==='profedit'?renderProfEdit():overlay.type==='ucet'?renderUcet():renderAkceDetail(overlay.idx)):RENDER[section]();
 }
 window.go=s=>{section=s;overlay=null;drawerOpen=false;render();};

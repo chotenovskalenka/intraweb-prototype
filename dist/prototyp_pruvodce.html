@@ -631,6 +631,15 @@ table.wt td.pastc{opacity:.45}
 .dnav button{min-width:44px;min-height:44px;border:none;background:none;font-size:var(--text-title);color:var(--color-primary);cursor:pointer;font-family:var(--font-serif);line-height:1;border-radius:var(--radius-full)}
 .dnav button:disabled{color:var(--color-text-hint);cursor:default}
 .dnav span{font-family:var(--font-serif);font-size:var(--text-body);color:var(--color-primary-strong);padding:0 8px;white-space:nowrap}
+/* Informace pro průvodce (rodičovská appka je zakládá, průvodcovská je čte) – proto sdílené.
+   Řádek je text + tichý křížek pro stažení; u průvodce se křížek nerenderuje. */
+.zprow{display:flex;align-items:flex-start;gap:8px;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text)}
+.zprow:first-of-type{border-top:none}
+.zp-txt{flex:1;min-width:0}
+.zp-who{display:block;font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.zp-del{flex-shrink:0;min-width:44px;min-height:44px;margin:-11px -8px -11px 0;background:none;border:none;color:var(--color-text-hint);font-size:var(--text-body);cursor:pointer;line-height:1}
+.zp-del:hover{color:var(--color-danger)}
+.zp-empty{font-size:var(--text-small);color:var(--color-text-muted);line-height:var(--leading-normal);margin-bottom:11px}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -731,6 +740,8 @@ table.wt td.pastc{opacity:.45}
 .jid-edit{margin-bottom:var(--space-md)}
 .jid-edit .pin{margin-top:4px;min-height:44px}
 .jid-edit .jid-alg{max-width:260px}
+/* Čas odeslání u informace od rodiče – tichý, ale podstatný (ráno v 6:55 vs. v 9:30). */
+.zp-cas{flex-shrink:0;font-size:var(--text-note);color:var(--color-text-hint)}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -985,6 +996,33 @@ function fmtAlbum(a){
   if(m1===m2&&y1===y2)return `${d1}.–${d2}. ${m1}. ${y1}`;
   if(y1===y2)return `${d1}. ${m1}. – ${d2}. ${m2}. ${y1}`;
   return `${d1}. ${m1}. ${y1} – ${d2}. ${m2}. ${y2}`;
+}
+
+/* --- Informace pro průvodce (Flow „nepíšu to do WhatsAppu") ---
+   Jednosměrné, na jeden den a jedno dítě. Zakládá je rodičovská appka, čte průvodcovská –
+   proto model bydlí tady. Typy vycházejí z obsahové analýzy rodičovské WA skupiny:
+   rodičovské zprávy mají dvě denní špičky, 8:00 a 14:00, a obě padají na předání dítěte.
+   Vyzvedávání je 7,7 % rodičovských zpráv, ale nese největší důsledek – proto je první
+   a jako jediné vyžaduje jméno.
+   Ztráty a nálezy (nejčastější téma rodičů, 24,6 %) tu SCHVÁLNĚ nejsou: jsou obousměrné,
+   hodnota je v tom, že se ozve jiný rodič. Na ně patří nástěnka, ne vzkaz průvodcům. */
+const ZPRAVA_TYPY=[
+  ['vyzvednuti','Vyzvedne někdo jiný','kdo'],
+  ['pozdeji','Přijdeme později','cas'],
+  ['driv','Vyzvedneme dřív','cas'],
+  ['zdravi','Zdravotní informace',''],
+  ['vybaveni','Vybavení',''],
+  ['jine','Jiné',''],
+];
+const ZPLAB=Object.fromEntries(ZPRAVA_TYPY.map(t=>[t[0],t[1]]));
+const zpPotrebuje=typ=>(ZPRAVA_TYPY.find(t=>t[0]===typ)||[])[2]||'';
+// Shrnutí do jednoho řádku – používá se u rodiče i v průvodcovské appce.
+function zpravaShrnuti(z){
+  const p=zpPotrebuje(z.typ);
+  const hlava=p==='kdo'?`${ZPLAB[z.typ]}: <b>${esc(z.kdo)}</b>`
+    :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(z.cas)}</b>`
+    :`<b>${ZPLAB[z.typ]}</b>`;
+  return hlava+(z.text?` · ${esc(z.text)}`:'');
 }
 </script>
 <script>
@@ -1384,6 +1422,15 @@ function presentCount(d){return data.filter(c=>{const k=getCode(c,d);return k&&k
 
 function dayLbl(a){return (a.dayEnd&&a.dayEnd!==a.day)?`${a.day}.–${a.dayEnd}. 6.`:`${a.day}. 6.`;}
 const serving=d=>d&&!d.off;
+
+/* Informace od rodičů na dnešek – propsané z rodičovské appky. Jako u parentExcuse jde
+   jen o zobrazení: appky spolu žádná data nesdílejí. Model (ZPRAVA_TYPY, zpravaShrnuti)
+   je ve shared.js, ať se rodič i průvodce dívají na tutéž věc. */
+data.forEach(c=>{c.zpravy=[];});
+data[3].zpravy.push({id:'zp1',den:TODAYD,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'7:12'});
+data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'9:30',text:'Jdeme na kontrolu k zubaři.',odeslano:'6:55'});
+data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po ránu kapky do očí, má je v batohu.',odeslano:'7:40'});
+const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));
 </script>
 <script>
 /* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce (stejný přístup jako rodič):
@@ -1425,8 +1472,7 @@ function renderPrehled(){
     h+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
   }
   h+=`</div>`;
-  // zdravotní / provozní poznámky (děti s poznámkou od rodičů) – sloupec 1, pod docházkou
-  h+=`</div>`;
+  h+=`</div>`;   // konec sloupce 1
 
   // ── Sloupec 2: dnešek (program dne, básnička/písnička, dnešní akce) ──
   h+=`<div class="dcol">`;
@@ -1465,9 +1511,16 @@ function renderPrehled(){
   h+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis ›</button></div>`;
   // Poznámky patří k týmu a provozu, ne k docházce – jinak zůstal třetí sloupec prázdný
   // a první přetékal (viz CLAUDE.md, pořadí sloupců dashboardu).
-  {const notes=data.filter(c=>c.note);
-   if(notes.length){
-     h+=`<div class="tile"><div class="ch">Zdravotní a provozní poznámky</div>`;
+  /* Jedna dlaždice, ne dvě: dnešní vzkazy od rodičů (kdo vyzvedne, pozdější příchod, lék)
+     nahoře, trvalejší zdravotní/provozní poznámky pod nimi. Dva samostatné boxy poznámek
+     od rodičů na jednom přehledu by byly přesně ta roztříštěnost, kterou odbouráváme.
+     Vzkazy zakládá rodič ve své appce; tady jsou jen ke čtení (appky data nesdílejí). */
+  {const notes=data.filter(c=>c.note), zpr=zpravyDnes();
+   if(notes.length||zpr.length){
+     h+=`<div class="tile"><div class="ch">Informace od rodičů</div>`;
+     zpr.forEach(({c})=>{c.zpravy.filter(z=>z.den===TODAYD).forEach(z=>{
+       h+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${c.n}</b><span class="zp-who">${zpravaShrnuti(z)}</span></span><span class="zp-cas">${z.odeslano}</span></div>`;
+     });});
      notes.forEach(c=>{h+=`<div class="rnote" style="margin:6px 0 0">✉️ <b>${c.n}:</b> ${c.note}</div>`;});
      h+=`</div>`;
    }}
