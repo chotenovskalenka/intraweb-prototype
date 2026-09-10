@@ -14,3 +14,14 @@ podklady/
 discovery/přepisy/
 # Nezávislý AI průchod přepisy — obsahuje citáty respondentů (osobní údaje).
 discovery/validace/
+
+# Syrové exporty WhatsApp skupin — obsahují jména reálných lidí (osobní údaje).
+# Do veřejného repa nepatří, stejný režim jako podklady/ a discovery/přepisy/.
+*.txt
+
+# WhatsApp analýza a podklady k ní — drženy mimo veřejné repo na přání zadavatelky
+# (3. 9. 2026). Zjištění bez osobních údajů patří do docs/vyzkum-zjisteni.md.
+# Kdyby se to mělo změnit, stačí smazat těchto pár řádků.
+docs/vyzkum-whatsapp.*
+docs/kanaly-wa.html
+docs/skill-rozhovory-chatgpt.*
