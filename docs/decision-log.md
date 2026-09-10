@@ -1308,3 +1308,55 @@ tak to přesně evokuje to, že nespí"). Změny:
 
 **Vědomě neuděláno:** zaškrtávátko zůstává zaškrtávátkem. Nahradit ho pojmenovaným přepínačem
 („tu / není") je vizuální rozhodnutí a patří designérce, ne do opravy nálezu.
+
+## 2. 9. 2026 – Kanály: tři živé WA skupiny místo šesti typů (rozhodnutí)
+
+Zdroj: [vyzkum-whatsapp.md](vyzkum-whatsapp.md) — obsahová analýza skupiny „Rodiče vhaaji"
+(1 080 zakódovaných zpráv, 27. 7. 2024 – 27. 8. 2026) a časová analýza z exportu (1 180 zpráv).
+
+Skupiny se nově dělí podle toho, **kdo v nich je**, ne podle tématu — protože v okamžiku psaní
+si člověk vybaví adresáta, ne kategorii. Že samotné „na tohle máme jinou skupinu" nefunguje, je
+v datech doloženo: skupina *Vhaaji – rady, tipy* existuje minimálně od srpna 2025 a ztráty
+a nálezy stejně zůstaly ve velké skupině.
+
+1. **Vhaaji (všichni)** — připomínky akcí a rychlé změny. Píše jen školka, neodpovídá se.
+2. **Rodiče vhaaji (bez průvodců)** — hlídání při zpoždění, ztráty a nálezy, akce po školce,
+   rady a tipy.
+3. **Rodičovské skupiny** (rodina + průvodci + Terka) — důvěrná komunikace, schůzky.
+4. **Rady a tipy** — dožívá; nahrazuje ji dvojka. Zůstane nanejvýš pro rodiny, které už
+   v haaji nejsou. Nic se do ní nestěhuje.
+
+**Jednička musí zůstat záměrně chudá.** Časově kritické je jen to, kde pozdní přečtení stojí
+rodiče cestu navíc — *„Horo dnes bylo kvůli soukromé akci v džungli zrušeno."*, *„Nabrali jsme
+na výletě zpoždění, vyzvedávání prosím o deset minut později."* Když do stejné skupiny půjde
+i jídelníček a výzvy k podepisování věcí, lidé si ji ztlumí a kritická zpráva zapadne s nimi.
+Cíl je jedna až dvě zprávy týdně, všechno ostatní jen ukazatel do intrawebu.
+
+**Tvrdé pravidlo u předávání dítěte.** Domluva o hlídání při zpoždění probíhá ve dvojce, kde
+průvodci nejsou — ale výsledek *„dnes ho vyzvedne X"* musí skončit ve trojce (nebo později jako
+poznámka u docházky). Jinak si dítě odvádí někdo, koho průvodce nečeká. Je to jediné místo
+struktury, kde chyba není nepohodlí, ale bezpečnost. Školka o to dnes prosí ručně: *„Pokud Vaše
+dítko vyzvedává jiný rodič, napište nám o tom prosím předem."*
+
+Právní stránku tím nikdo neřeší a řešit nemůže — zpráva není podpis. Patří k tomu **stálé
+pověření podepsané u zápisu** (seznam osob, které dítě vyzvedávat smí); denní zpráva pak jen
+vybírá z už schválených lidí. Dnes to běží ad hoc: *„Fedorek bude s chůvou (Julia)"* a jméno té
+osoby se doupřesňovalo až v chatu.
+
+**Pořadí zavádění.** Nejdřív nástěnka ztrát a nálezů v intrawebu, teprve pak přesun zbytku do
+dvojky. Obráceně to neuspěje: dokud rodič nemá jak zjistit, jestli je věc u školky, půjde tam,
+kde je větší šance na odpověď. Nástěnka zároveň dělá rozcestník — když věc není v systému, rodič
+tím ví, že u školky není, a je to případ pro dvojku.
+
+**Vědomě neuděláno:**
+
+- **Nezakládá se čtvrtá paralelní skupina** „Rodiče vhaaji bez průvodců" *vedle* stávající velké.
+  Zadáním je roztříštěnost (šest typů skupin, deset tabulek); přidání dalšího kanálu jde proti
+  ní. Dvě skupiny s téměř shodným členstvem lidé nerozliší a údržba se zdvojí — každý srpen se
+  odebírá 8–14 lidí a školka u části skupin ani nemá správcovská práva.
+- **Kroužkové a dočasné skupiny se neruší.** Tanečky, Shaun a plavání mají v sobě lidi mimo
+  Vhaaji; skupiny k akcím (ŠVP, tábor) zanikají samy. Komunikovat se to má jako **tři stálé
+  skupiny, kroužky zvlášť, akce dočasně** — ne jako „máme tři skupiny", aby jich za rok nebylo
+  zase šest.
+- **Zátěž průvodců se tímto neměří.** Analýza vidí jen velkou skupinu. Rodinné skupiny, kde
+  školka inzeruje dostupnost 7–20 hodin, jsou mimo záběr a skutečná zátěž je pravděpodobně tam.
