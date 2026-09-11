@@ -1482,3 +1482,24 @@ i pro běžný text, nejen pro velká čísla.
 Prohození dělá CSS `order` na `.dash-swap`, **ne pořadí v DOM** – na mobilu dál platí
 priorita „soupisu dne" (program dne dřív než rozpis služeb).
 
+## Docházka: u dítěte je vidět všechno, co dnes přišlo od rodiče (10. 9. 2026)
+
+Vzkazy z rodičovské appky a volný text z omluvenky končily jen na přehledu, respektive
+nikde – průvodce u konkrétního dítěte je neviděl. Teď jsou v soupisu docházky **na řádku
+dítěte** i v rozbaleném detailu:
+
+1. **vzkazy na dnešek** (kdo vyzvedne, pozdější příchod, lék) – tlumeným tónem
+   (`.rnote-info`, `--wash-primary`), je to provozní informace, ne varování;
+2. **poznámka z omluvenky** („K omluvence: …") – to, co rodič napsal do pole
+   „Poznámka pro průvodce" při omlouvání; v seedu ji nese `parentExcuse.pozn`;
+3. **trvalá poznámka o dítěti** – beze změny, v danger tónu.
+
+Červená tak zůstává rezervovaná pro nemoc a absenci.
+
+**Řazení soupisu** bere nahoru všechny děti, u kterých je dnes co číst (dřív jen ty
+s trvalou poznámkou). **Dlouhé vzkazy se krátí na tři řádky** stejně jako na přehledu,
+jinak jeden odstavec odtlačí zbytek soupisu pod okraj obrazovky (měřeno na mobilu:
+188 px zkrácený řádek vs. 296 px rozbalený).
+
+Data se dál nesdílejí – u průvodce jde o zobrazení ze seedu, stejně jako u `parentExcuse`.
+

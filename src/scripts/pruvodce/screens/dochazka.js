@@ -46,18 +46,35 @@ function editPanel(c,i){
   const seg=(arr,cur,fn)=>arr.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="${fn}(${i},'${o[0]}')">${o[1]}</button>`).join('');
   let h=`<div class="field"><div class="l">Docházka</div><div class="mini">${seg([['dopolední','Dopol.'],['odpolední','Odpol.'],['celodenní','Celodenní']],c.plan,'setPlan')}</div></div>`;
   h+=`<div class="field"><div class="l">Stav</div><div class="mini warn">${seg([['pritomen','Přítomen'],['omluveno','Omluveno'],['neomluveno','Absence bez omluvy']],c.status,'setStatus')}</div></div>`;
-  if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}</div></div>`;
+  if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}${c.parentExcuse.pozn?`<div class="pn-pozn">${esc(c.parentExcuse.pozn)}</div>`:''}</div></div>`;
+  {const zpr=(c.zpravy||[]).filter(z=>z.den===TODAYD);
+   if(zpr.length)h+=`<div class="field"><div class="l">Vzkazy od rodičů dnes</div>`
+     +zpr.map(z=>`<div class="pnote">${zpravaShrnuti(z)}<div class="pn-pozn">odesláno ${z.odeslano}</div></div>`).join('')+`</div>`;}
   if(c.note)h+=`<div class="field"><div class="l">Poznámka od rodiče</div><div class="pnote">${c.note}</div></div>`;
   if(staysPM(c))h+=`<div class="field"><div class="l">Odpoledne</div><div class="mini">${seg([[true,'Spí'],[false,'Nespí']],c.spi,'setSpi')}</div></div>`;
   return h;
 }
 function rosterHTML(){
   let out='',shown=0;
-  const lst=data.map((c,i)=>({c,i})).sort((a,b)=>{const an=a.c.note?0:1,bn=b.c.note?0:1;if(an!==bn)return an-bn;return byAlpha(a,b);});
+  // nahoru děti, u kterých je dnes co číst (vzkaz, poznámka z omluvenky, trvalá poznámka)
+  const maPozn=c=>(c.note||(c.parentExcuse&&c.parentExcuse.pozn)||(c.zpravy||[]).some(z=>z.den===TODAYD))?0:1;
+  const lst=data.map((c,i)=>({c,i})).sort((a,b)=>{const an=maPozn(a.c),bn=maPozn(b.c);if(an!==bn)return an-bn;return byAlpha(a,b);});
   lst.forEach(({c,i})=>{
     const match=query?norm(full(c)).includes(norm(query)):inTab(c,tab);
     if(!match)return;shown++;
-    const noteLine=c.note?`<div class="rnote">✉️ ${c.note}</div>`:'';
+    /* Všechno, co dnes přišlo od rodiče, na jednom místě u dítěte: vzkazy z rodičovské appky
+       (kdo vyzvedne, pozdější příchod, lék), volný text z omluvenky a trvalá poznámka.
+       Vzkazy jsou provozní (neutrální), poznámka a omluvenka nesou zdravotní/absenční
+       kontext – proto zůstávají v danger tónu .rnote. */
+    // dlouhý vzkaz se krátí stejně jako na přehledu – jinak jeden odstavec odtlačí
+    // pod okraj obrazovky celý zbytek soupisu
+    let noteLine=(c.zpravy||[]).filter(z=>z.den===TODAYD).map(z=>{
+      const dlouhy=(z.text||'').length>ZP_DELKA, rozbalen=zpRozbalene.has(z.id);
+      return `<div class="rnote rnote-info"><span class="${dlouhy&&!rozbalen?'zp-clamp':''}">✉️ ${zpravaShrnuti(z)}</span> <span class="rn-cas">${z.odeslano}</span>`
+        +(dlouhy?`<button class="zp-vic" onclick="event.stopPropagation();zpToggle('${z.id}')">${rozbalen?'zkrátit ›':'celý vzkaz ›'}</button>`:'')+`</div>`;
+    }).join('');
+    if(c.parentExcuse&&c.parentExcuse.pozn)noteLine+=`<div class="rnote">✉️ K omluvence: ${esc(c.parentExcuse.pozn)}</div>`;
+    if(c.note)noteLine+=`<div class="rnote">✉️ ${c.note}</div>`;
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();
     const chk=zapis

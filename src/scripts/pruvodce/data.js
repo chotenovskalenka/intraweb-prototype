@@ -27,8 +27,8 @@ data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='O
 data[10].note='Od pondělí má vši, prosím o kontrolu hlavičky. Doma jsme to řešili, ale pro jistotu hlídejte.';
 data[3].note='Eliška je po nemoci, prosíme dnes klidnější režim a hlídat pití.';
 // dnes nepřítomné děti – 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená
-data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc'};
-data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody'};
+data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',pozn:'Zvracela v noci, dnes ji necháme doma. Zítra dáme vědět.'};
+data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',pozn:''};
 data[20].status='neomluveno';
 // zobrazení propsané omluvenky (jen text; žádná logika ani sdílení dat mezi appkami)
 function parentExcuseLine(c){return c.parentExcuse?`omluveno rodičem dnes ${c.parentExcuse.time} · ${c.parentExcuse.reason}`:'';}
