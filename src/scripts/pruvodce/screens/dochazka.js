@@ -45,7 +45,18 @@ function indicator(c){
 function editPanel(c,i){
   const seg=(arr,cur,fn)=>arr.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="${fn}(${i},'${o[0]}')">${o[1]}</button>`).join('');
   let h=`<div class="field"><div class="l">Docházka</div><div class="mini">${seg([['dopolední','Dopol.'],['odpolední','Odpol.'],['celodenní','Celodenní']],c.plan,'setPlan')}</div></div>`;
-  h+=`<div class="field"><div class="l">Stav</div><div class="mini warn">${seg([['pritomen','Přítomen'],['omluveno','Omluveno'],['neomluveno','Absence bez omluvy']],c.status,'setStatus')}</div></div>`;
+  h+=`<div class="field"><div class="l">Stav</div><div class="mini warn">${seg([['pritomen','Přítomen'],['omluveno','Omluveno'],['neomluveno','Nepřišlo']],c.status,'setStatus')}</div></div>`;
+  /* Uzavření absence vedoucím: dokud to nikdo neudělá, dítě se počítá jako přítomné (vaří se
+     mu oběd). Důvod je povinný stejně jako u rodiče – „omluveno" bez důvodu by byla výmluva
+     za rodinu, o které nic nevíme. Vzniklá omluvenka je vždy bez náhrady (po 8:30). */
+  if(c.status!=='pritomen'&&!c.parentExcuse){
+    const cur=c.guideExcuse?c.guideExcuse.reason:'';
+    h+=`<div class="field"><div class="l">Uzavřít jako omluveno bez náhrady</div>`
+      +`<select class="pin" onchange="setGuideReason(${i},this.value)">`
+      +`<option value=""${cur?'':' selected'}>Vyberte důvod…</option>`
+      +DUVODY_P.map(([k,l])=>`<option value="${k}"${cur===k?' selected':''}>${l}</option>`).join('')+`</select>`
+      +`<textarea class="pta" style="margin-top:8px" placeholder="Co ti rodič řekl (nepovinné)" oninput="setGuidePozn(${i},this.value)">${c.guideExcuse?esc(c.guideExcuse.pozn||''):''}</textarea></div>`;
+  }
   if(c.guideExcuse)h+=`<div class="field"><div class="l">Omluveno vedoucí – po 8:30, bez náhrady</div><div class="pnote">${guideExcuseDetail(c)}</div></div>`;
   if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}${c.parentExcuse.pozn?`<div class="pn-pozn">${esc(c.parentExcuse.pozn)}</div>`:''}</div></div>`;
   {const zpr=(c.zpravy||[]).filter(z=>z.den===TODAYD);
@@ -173,7 +184,15 @@ window.onSearch=v=>{query=v;document.getElementById('roster').innerHTML=rosterHT
 window.presence=i=>{if(!smiZapisovat())return;const c=data[i];const bylTu=here(c);c.status=bylTu?'neomluveno':'pritomen';
   render();showToast(bylTu?`${full(c)} → absence`:`${full(c)} → ve školce`);};
 window.setPlan=(i,v)=>{if(!smiZapisovat())return;data[i].plan=v;render();showToast('Docházka uložena ✓');};
-window.setStatus=(i,v)=>{if(!smiZapisovat())return;data[i].status=v;render();showToast('Docházka uložena ✓');};
+window.setStatus=(i,v)=>{if(!smiZapisovat())return;const c=data[i];c.status=v;
+  if(v==='pritomen')delete c.guideExcuse;   // vrácení do školky ruší i ruční omluvenku
+  render();showToast('Docházka uložena ✓');};
+/* Vedoucí uzavírá absenci: důvod → vznikne ruční omluvenka (vždy bez náhrady) a stav omluveno. */
+window.setGuideReason=(i,v)=>{if(!smiZapisovat())return;const c=data[i];
+  if(!v){delete c.guideExcuse;c.status='neomluveno';render();return;}
+  c.guideExcuse={by:role==='hospodarka'?'Míša':'Táňa',time:TEDCAS,reason:v,pozn:(c.guideExcuse&&c.guideExcuse.pozn)||''};
+  c.status='omluveno';render();showToast(`${kratke(c)} → omluveno bez náhrady`);};
+window.setGuidePozn=(i,v)=>{const c=data[i];if(c.guideExcuse)c.guideExcuse.pozn=v;};
 window.onWSearch=v=>{wquery=v;renderKeepFocus();};
 window.setSpi=(i,v)=>{if(!smiZapisovat())return;data[i].spi=(v==='true');render();showToast('Uloženo ✓');};
 window.openMonthDay=d=>{if(isWE(d))return;denDay=d;view='den';render();};

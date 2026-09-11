@@ -27,6 +27,12 @@ data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='O
 // dnes nepřítomné děti – 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená
 data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',pozn:'Zvracela v noci, dnes ji necháme doma. Zítra dáme vědět.'};
 data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',pozn:''};
+/* Simulované „teď" – stejný okamžik jako v rodičovské appce (NOW={d:3,h:10}). Žádný Date.now(). */
+const TEDCAS='10:00';
+/* Číselník důvodů absence je společný s rodičovskou appkou (tam DUVODY v rodic/data.js);
+   průvodcovská appka ho drží zvlášť, appky spolu kód nesdílejí. */
+const DUVODY_P=[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['dovolená','Dovolená'],['jiné','Jiné']];
+
 /* Po 8:30 (začátek programu) už rodič absenci nenahlásí – zapíše ji ručně vedoucí průvodce
    a je to vždy „omluveno bez náhrady". Odlišeno od rodičovské omluvenky: jiný autor, jiný
    důsledek. `neomluveno` zůstává pro dítě, které nepřišlo a zatím to nikdo nezapsal. */
