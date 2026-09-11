@@ -24,8 +24,6 @@ const LEZ=[0,2,3,6,8,11,14,18,21,24];
 const data=raw.map(([n,sur,plan,spi],i)=>({n,sur,plan,spi,status:'pritomen',note:'',att:{},predskolak:meta[i][0],lez:LEZ.includes(i),alergie:meta[i][1]}));
 // demo odchylky docházky na konkrétní dny
 data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='OM'; data[1].att[18]='OM'; data[20].att[12]='';
-data[10].note='Od pondělí má vši, prosím o kontrolu hlavičky. Doma jsme to řešili, ale pro jistotu hlídejte.';
-data[3].note='Eliška je po nemoci, prosíme dnes klidnější režim a hlídat pití.';
 // dnes nepřítomné děti – 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená
 data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',pozn:'Zvracela v noci, dnes ji necháme doma. Zítra dáme vědět.'};
 data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',pozn:''};
