@@ -21,9 +21,13 @@ function renderPrehled(){
 
   // ── Ranní řada: počty · vzkazy od rodičů · kdo nepřijde ──
   // stejný slovník jako v Docházce: přítomni · dopolední · odpolední · absence (P2)
-  const strip=[['Přítomni',c.pres,'rano'],['Obědy',c.pres,'rano'],['Spí',c.spi,'spi'],['Dopolední',c.poobede,'poobede'],['Absence',c.neprit,'neprit']];
+  /* Bez „Obědů": dlaždice ukazovala počet přítomných (c.pres), ne počet obědů – v běžném
+     režimu se obědy vůbec nepočítají. Souhrn pro kuchyni (obědy, svačiny) dostane vlastní
+     roli s vlastním pohledem, ne dlaždici v průvodcovském přehledu. Zbylá čtyři čísla
+     odpovídají záložkám v Docházce i slovníku z testování (P2). */
+  const strip=[['Přítomni',c.pres,'rano'],['Spí',c.spi,'spi'],['Dopolední',c.poobede,'poobede'],['Absence',c.neprit,'neprit']];
   let blkDochazka=`<div class="tile"><div class="ch">Docházka dnes</div>`
-    +`<div class="tabs wrap">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
+    +`<div class="tabs wrap dash-counts">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
     +`<button class="addbig" style="margin-top:11px" onclick="go('dochazka')">Otevřít dnešní docházku →</button></div>`;
 
   /* Vzkazy od rodičů na dnešek. Zakládá je rodič ve své appce, tady jsou jen ke čtení

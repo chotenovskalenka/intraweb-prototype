@@ -274,4 +274,6 @@ data.forEach(c=>{c.zpravy=[];});
 data[3].zpravy.push({id:'zp1',den:TODAYD,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'7:12'});
 data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'09:30',text:'Jdeme na kontrolu k zubaři.',odeslano:'6:55'});
 data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po ránu kapky do očí, má je v batohu.',odeslano:'7:40'});
+// Záměrně dlouhý vzkaz – rodiče píšou do skupin celé odstavce a přehled to musí unést.
+data[12].zpravy.push({id:'zp4',den:TODAYD,typ:'jine',kdo:'',cas:'',text:'Dobrý den, chtěla jsem vás poprosit – Kubík od víkendu hodně řeší, že se mu kluci smějí kvůli tomu, jak mluví. Doma o tom mluví každý večer a ráno se mu do školky nechce, dnes jsme šli asi dvacet minut od auta. Nechci z toho dělat velkou věc a vůbec netvrdím, že se něco stalo ve školce, jen jsem chtěla, abyste o tom věděli a případně se na to v kruhu nenápadně podívali. Kdyby to vydrželo do konce týdne, ozvu se a domluvíme se na schůzce.',odeslano:'6:38'});
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));
