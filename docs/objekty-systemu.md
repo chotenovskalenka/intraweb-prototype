@@ -168,3 +168,28 @@ Kategorizační značka odstavce zápisu; propojuje konkrétní podklad s témat
 **Umístění v kódu:** `STITKY` v `src/scripts/admin/data.js` (pole názvů); použití na `odstavec.stitky`.
 
 Hodnoty: `hygiena`, `bezpečnost`, `personál`, `provoz`, `pedagogika`, `inspekce`. Štítek je prostý řetězec (žádné id) – odstavec jich může mít víc. Filtr výpisu pracuje nad jedním vybraným štítkem; ve výsledku je shodný štítek zvýrazněný (`.stitek.hi`).
+
+## Absence a kdo ji zapisuje (10. 9. 2026)
+
+Výchozí stav dítěte je **přítomen**. Absence v systému **neexistuje, dokud ji někdo nezapíše** –
+a to je jádro celého pravidla: když dítě nepřijde a nikdo nic neudělá, **počítá se dál jako
+přítomné** a vaří se mu oběd. (Reálný doklad z WA analýzy: jeden den byl rozdíl mezi
+nahlášenými a skutečně příchozími dětmi **pět dětí**.)
+
+Tři cesty, jak absence vznikne:
+
+| Stav | Kdo a kdy | Náhrada |
+|---|---|---|
+| **omluveno rodičem** | rodič ve své appce, do **8:30** (začátek programu) | podle deadlinu 20:00 předchozího dne: včas → vznikne, po termínu → ne |
+| **nepřišlo · nevyřešeno** (`neomluveno`) | průvodce odškrtne dítě v soupisu – „není tu a zatím nevím proč" | – |
+| **omluveno vedoucí** (`guideExcuse`) | vedoucí průvodce / hospodářka uzavře nevyřešenou absenci; po 8:30 to je jediná cesta | **nikdy** |
+
+**`neomluveno` je pracovní stav, ne verdikt o rodině.** Proto se v UI píše „nepřišlo ·
+nevyřešeno", ne „absence bez omluvy". Uzavírá ho vedoucí výběrem důvodu ze stejného číselníku,
+jaký má rodič (nemoc · rodinné důvody · dovolená · jiné); **důvod je povinný** – „omluveno"
+bez důvodu by byla výmluva za rodinu, o které nic nevíme. Vrácení stavu na „přítomen" ruční
+omluvenku smaže.
+
+Ruční omluvenka nese autora a čas (`{by,time,reason,pozn}`) – u hospodářky je to podklad
+k tomu, proč za tento den nevznikla náhrada.
+

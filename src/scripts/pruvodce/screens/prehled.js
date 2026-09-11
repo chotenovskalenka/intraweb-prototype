@@ -72,7 +72,7 @@ function renderPrehled(){
          teplotu nebo vyrážku; to rodič píše právě do poznámky. */
       const r=c.parentExcuse?parentExcuseLine(c)
         :c.guideExcuse?'omluveno vedoucí'
-        :(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
+        :(c.status==='omluveno'?'omluveno průvodcem':'nepřišlo · nevyřešeno');
       const det=parentExcuseDetail(c)||guideExcuseDetail(c);
       blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span>`
         +(det?`<span class="pa-pozn">${det}</span>`:'')+`</button>`;
