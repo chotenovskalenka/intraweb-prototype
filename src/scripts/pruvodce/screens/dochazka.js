@@ -70,14 +70,14 @@ function rosterHTML(){
     // pod okraj obrazovky celý zbytek soupisu
     let noteLine=(c.zpravy||[]).filter(z=>z.den===TODAYD).map(z=>{
       const dlouhy=(z.text||'').length>ZP_DELKA, rozbalen=zpRozbalene.has(z.id);
-      return `<div class="rnote rnote-info"><span class="${dlouhy&&!rozbalen?'zp-clamp':''}">✉️ ${zpravaShrnuti(z)}</span> <span class="rn-cas">${z.odeslano}</span>`
+      return `<div class="rnote rnote-info"><span class="${dlouhy&&!rozbalen?'zp-clamp':''}">${zpravaShrnuti(z)}</span> <span class="rn-cas">${z.odeslano}</span>`
         +(dlouhy?`<button class="zp-vic" onclick="event.stopPropagation();zpToggle('${z.id}')">${rozbalen?'zkrátit ›':'celý vzkaz ›'}</button>`:'')+`</div>`;
     }).join('');
     /* Poznámku z omluvenky uvozuje důvod, který rodič vybral (nemoc / rodinné důvody / jiné) –
        „K omluvence" nic neříkalo, přitom příznak omluvenka nese a na řádku jinak není vidět. */
     if(c.parentExcuse&&c.parentExcuse.pozn){const d=c.parentExcuse.reason||'omluvenka';
-      noteLine+=`<div class="rnote">✉️ <b>${d.charAt(0).toUpperCase()+d.slice(1)}</b> · ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
-    if(c.note)noteLine+=`<div class="rnote">✉️ ${c.note}</div>`;
+      noteLine+=`<div class="rnote"><b>${d.charAt(0).toUpperCase()+d.slice(1)}</b> · ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
+    if(c.note)noteLine+=`<div class="rnote">${c.note}</div>`;
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();
     const chk=zapis
