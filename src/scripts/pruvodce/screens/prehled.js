@@ -68,7 +68,11 @@ function renderPrehled(){
   if(absent.length){
     absent.forEach(({c})=>{
       const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
-      blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span></button>`;
+      /* Volný text z omluvenky patří sem: „nemoc" neřekne, jestli má průvodce čekat zvracení,
+         teplotu nebo vyrážku. Vlastní řádek pod jménem – vedle důvodu by se ukousl na dvě slova. */
+      const pozn=c.parentExcuse&&c.parentExcuse.pozn?c.parentExcuse.pozn:'';
+      blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span>`
+        +(pozn?`<span class="pa-pozn">✉️ ${esc(pozn)}</span>`:'')+`</button>`;
     });
   }else{
     blkNeprijde+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
