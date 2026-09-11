@@ -46,6 +46,7 @@ function editPanel(c,i){
   const seg=(arr,cur,fn)=>arr.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="${fn}(${i},'${o[0]}')">${o[1]}</button>`).join('');
   let h=`<div class="field"><div class="l">Docházka</div><div class="mini">${seg([['dopolední','Dopol.'],['odpolední','Odpol.'],['celodenní','Celodenní']],c.plan,'setPlan')}</div></div>`;
   h+=`<div class="field"><div class="l">Stav</div><div class="mini warn">${seg([['pritomen','Přítomen'],['omluveno','Omluveno'],['neomluveno','Absence bez omluvy']],c.status,'setStatus')}</div></div>`;
+  if(c.guideExcuse)h+=`<div class="field"><div class="l">Omluveno vedoucí – po 8:30, bez náhrady</div><div class="pnote">${guideExcuseDetail(c)}</div></div>`;
   if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}${c.parentExcuse.pozn?`<div class="pn-pozn">${esc(c.parentExcuse.pozn)}</div>`:''}</div></div>`;
   {const zpr=(c.zpravy||[]).filter(z=>z.den===TODAYD);
    if(zpr.length)h+=`<div class="field"><div class="l">Vzkazy od rodičů dnes</div>`
@@ -77,6 +78,7 @@ function rosterHTML(){
        „K omluvence" nic neříkalo, přitom příznak omluvenka nese a na řádku jinak není vidět. */
     if(c.parentExcuse&&c.parentExcuse.pozn){const d=c.parentExcuse.reason||'omluvenka';
       noteLine+=`<div class="rnote"><b>${d.charAt(0).toUpperCase()+d.slice(1)}</b> · ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
+    if(c.guideExcuse)noteLine+=`<div class="rnote">${guideExcuseDetail(c)}</div>`;
     if(c.note)noteLine+=`<div class="rnote">${c.note}</div>`;
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();

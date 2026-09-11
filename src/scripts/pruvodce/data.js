@@ -27,11 +27,21 @@ data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='O
 // dnes nepřítomné děti – 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená
 data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',pozn:'Zvracela v noci, dnes ji necháme doma. Zítra dáme vědět.'};
 data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',pozn:''};
-data[20].status='neomluveno';
+/* Po 8:30 (začátek programu) už rodič absenci nenahlásí – zapíše ji ručně vedoucí průvodce
+   a je to vždy „omluveno bez náhrady". Odlišeno od rodičovské omluvenky: jiný autor, jiný
+   důsledek. `neomluveno` zůstává pro dítě, které nepřišlo a zatím to nikdo nezapsal. */
+data[20].status='omluveno'; data[20].guideExcuse={by:'Táňa',time:'9:10',reason:'nemoc',pozn:'Volala maminka, má teplotu.'};
+data[15].status='neomluveno';
 // zobrazení propsané omluvenky (jen text; žádná logika ani sdílení dat mezi appkami)
 function parentExcuseLine(c){return c.parentExcuse?'omluveno rodičem':'';}
 /* Detail omluvenky pod jménem – stejný tvar jako v soupisu docházky: důvod tučně, za ním
    text od rodiče a čas odeslání. Obálka jen když rodič opravdu něco napsal. */
+function guideExcuseDetail(c){
+  const e=c.guideExcuse; if(!e)return '';
+  const d=(e.reason||'').replace(/^./,m=>m.toUpperCase());
+  return `<b>${d}</b>`+(e.pozn?` · ${esc(e.pozn)}`:'')
+    +` <span class="rn-cas">zapsala ${esc(e.by)} ${e.time}</span> <span class="rn-bez">bez náhrady</span>`;
+}
 function parentExcuseDetail(c){
   const e=c.parentExcuse; if(!e)return '';
   const d=(e.reason||'').replace(/^./,m=>m.toUpperCase());
