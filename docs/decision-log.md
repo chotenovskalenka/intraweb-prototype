@@ -1396,3 +1396,23 @@ u `parentExcuse`.
 
 **Otevřené:** notifikace (rodič nevidí, že si to průvodce přečetl), vzkaz na víc dní najednou,
 a jestli má mít průvodce možnost odpovědět — zatím ne, jinak z toho vznikne druhý chat.
+
+## Přehled průvodce: ranní řada nahoře (10. 9. 2026)
+
+Vzkazy od rodičů byly ve třetím sloupci vedle rozpisu služeb – průvodce je při ranním
+pohledu na telefon míjel. Přesun pod docházku problém vyřešil, ale rozhodil sloupce
+(811 / 641 / 246 px).
+
+**Rozhodnutí:** na desktopu je nahoře **ranní řada přes celou šířku** – počty docházky ·
+informace od rodičů · kdo nepřijde. Je to jeden okamžik dne a průvodce ho má přečíst
+najednou. Pod ní teprve kontext dne ve sloupcích (program + akce · básnička · průvodci).
+Sloupce jsou po změně 307 / 355 / 246 px. Na mobilu se řada stohuje, pořadí se nemění.
+
+**Zrušeny červené poznámky na dashboardu** (`.rnote` se `c.note`). Trvalejší poznámka
+o dítěti není zpráva o dnešku; zůstává u dítěte v Docházce a v profilu.
+
+**Opravena chyba:** v `renderPrehled` chyběla proměnná `opener`, takže výraz sahal na
+`window.opener` (standardní globál, normálně `null`) a značka „otevírá" se v seznamu
+průvodců na dashboardu nikdy neukázala. V hlavičce dashboardu byla počítaná správně,
+proto si toho nikdo nevšiml.
+
