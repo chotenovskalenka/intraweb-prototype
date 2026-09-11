@@ -16,7 +16,14 @@ function nahFrom(origin,stav,extra){
 }
 const NAHLAB={dostupna:'Dostupná',naplanovana:'Naplánovaná',vyuzita:'Využitá',expirovana:'Expirovaná',nevznikla:'Nevznikla'};
 const OMLAB={vcas:'Včas',['po-deadlinu']:'Po deadlinu',zrusena:'Zrušena'};
-const DUVODLAB={nemoc:'Nemoc',['rodinné důvody']:'Rodinné důvody',['jiné']:'Jiné'};
+/* Číselník důvodů absence. Výběr je povinný (rozhodnutí 10. 9. 2026) – proto má „jiné"
+   zůstat: vynucený výběr bez únikové kategorie vyrábí nepravdivá data, ne lepší. */
+const DUVODY=[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['dovolená','Dovolená'],['jiné','Jiné']];
+const DUVODLAB=Object.fromEntries(DUVODY);
+// <select> s povinným výběrem – prázdná hodnota drží „Vyberte…", ať nikdo neodešle omylem „Nemoc"
+const duvodSelect=(val,onchange)=>`<select class="pin" onchange="${onchange}">`
+  +`<option value=""${val?'':' selected'}>Vyberte…</option>`
+  +DUVODY.map(([k,l])=>`<option value="${k}"${val===k?' selected':''}>${l}</option>`).join('')+`</select>`;
 const dostupne=c=>c.nahrady.filter(n=>n.stav==='dostupna').length;     // počet se všude odvozuje z pole
 function nextExp(c){const a=c.nahrady.filter(n=>n.stav==='dostupna'&&isFinite(n.expT)).sort((x,y)=>x.expT-y.expT);return a[0]?a[0].exp:null;}
 const nplural=n=>n===1?'náhrada':(n>=2&&n<=4?'náhrady':'náhrad');
@@ -225,6 +232,6 @@ const plural=n=>n===1?'den':(n>=2&&n<=4?'dny':'dní');
 const kc=n=>n.toLocaleString('cs-CZ');
 
 const zpravyProDen=(c,d)=>(c.zpravy||[]).filter(z=>z.den===d);
-children.forEach(c=>{c.zpravy=c.zpravy||[];});
+children.forEach(c=>{c.zpravy=c.zpravy||[];c.duvody=c.duvody||{};});   // duvody: důvod absence per den
 // Seed: jedna informace na dnešek, ať je vidět, jak se to průvodcům ukáže.
 children[0].zpravy.push({id:uid(),den:TODAY,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'dnes 7:12'});

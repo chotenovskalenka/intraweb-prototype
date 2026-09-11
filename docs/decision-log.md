@@ -1531,3 +1531,24 @@ protože je to důsledek, ne stav.
 absenci" nemělo jít použít a celý ten tok by z prototypu zmizel. Buď posunout `NOW` před 8:30,
 nebo rodiči ukázat zavřený stav („Po 8:30 už absenci nenahlásíte, ozvěte se průvodcům").
 
+## Důvod absence je povinný a vybírá se z číselníku (10. 9. 2026, rodičovská appka)
+
+Číselník `DUVODY`: **nemoc · rodinné důvody · dovolená · jiné**. Platí ve všech třech místech,
+kde rodič absenci zadává – omluvenka, nahlášení dnešní absence i editor dne v Docházce.
+Select **nemá předvolbu** („Vyberte…"), jinak by většina omluvenek odešla jako „Nemoc"
+jen setrvačností. Bez důvodu se neuloží nic, hláška je „Vyberte důvod absence".
+
+**„Dovolená" je nová** – výzkum s průvodci ji jmenoval jako reálnou kategorii
+(navržený kompromis u sporu o povinný důvod). **„Jiné" zůstává schválně:** vynucený výběr
+bez únikové kategorie nevyrábí lepší data, jen nepravdivá.
+
+Důvod se ukládá i **ke konkrétnímu dni** (`child.duvody[den]`), ne jen do omluvenky – editor
+docházky ho pak umí ukázat a doplnit u dne, který omluvenka nezaložila.
+
+**Pozor na rozpor s výzkumem:** povinný důvod je **sporné téma**, ne shoda. Z testování
+s průvodci: dva pro, jeden proti; rodiče z dřívějšího testu také proti. Věcný důvod pro
+povinnost je zákonná povinnost hlásit infekční onemocnění, kterou tým podle dvou respondentů
+dlouhodobě nedodržuje. Tohle je **rozhodnutí zadavatelky**, ne závěr z dat – a v dalším kole
+testování stojí za to sledovat, jestli rodiče nezačnou volit „Jiné" paušálně.
+Nezavedena zatím druhá část navrženého kompromisu: *upřesnění povinné jen u nemoci*.
+

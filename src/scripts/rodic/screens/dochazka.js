@@ -5,7 +5,11 @@ function editor(d){const c=cur();
   const dr=draft[d]||{};
   const cd=dr.code!==undefined?dr.code:code(c,d);
   const note=dr.note!==undefined?dr.note:(c.notes[d]||'');
-  const dirty=dr.code!==undefined||dr.note!==undefined||dr.obed!==undefined;
+  // důvod absence je povinný a vybírá se z číselníku (DUVODY); ukládá se do draftu vedle poznámky
+  const duv=dr.duvod!==undefined?dr.duvod:(c.duvody[d]||'');
+  const duvodPole=`<div class="notelab">Důvod absence</div>${duvodSelect(duv,`draftDuvod(${d},this.value)`)}`
+    +`<div class="notelab">Podrobnosti – nepovinné</div><textarea class="note" placeholder="Co mají průvodci vědět" oninput="draftNote(${d},this.value)">${note}</textarea>`;
+  const dirty=dr.code!==undefined||dr.note!==undefined||dr.obed!==undefined||dr.duvod!==undefined;
   if(!editable(d)){
     const jeOml=cd==='OM';
     let h=`<div class="lockwrap"><span class="chip" style="background:${CODES[code(c,d)][2]};color:${CODES[code(c,d)][1]}">${CODES[code(c,d)][0]}</span><div class="lockmsg">🔒 Docházku šlo změnit do 20:00 předchozího dne. Omluvit ještě můžete – náhrada už ale nevznikne.</div>`;
@@ -14,7 +18,7 @@ function editor(d){const c=cur();
       if(jeOml){
         const ob=dr.obed!==undefined?dr.obed:(c.obed&&c.obed[d]);
         h+=`<div class="notelab">Vyzvednete si oběd?</div><div class="choices"><button class="${ob===true?'on':''}" onclick="draftObed(${d},true)">Ano</button><button class="${ob===false?'on':''}" onclick="draftObed(${d},false)">Ne</button></div>`;
-        h+=`<div class="notelab">Důvod absence – nepovinné</div><textarea class="note" placeholder="např. nemoc, rodinný důvod…" oninput="draftNote(${d},this.value)">${note}</textarea>`;
+        h+=duvodPole;
       }
       if(dirty)h+=`<button class="savebtn" onclick="saveDay(${d})">Uložit</button>`;
     }
@@ -23,7 +27,7 @@ function editor(d){const c=cur();
   const OPTS=[['D','Dopolední'],['O','Odpolední'],['C','Celodenní'],['OM','Omluvit']];
   let h='<div class="choices">'+OPTS.map(([k,l])=>{const abs=(k==='OM');
     return `<button class="${cd===k?'on':''}${abs?' abs':''}" onclick="draftCode(${d},'${k}')">${l}</button>`;}).join('')+'</div>';
-  if(cd==='OM'){h+=`<div class="notelab">Důvod absence – nepovinné</div><textarea class="note" placeholder="např. nemoc, rodinný důvod…" oninput="draftNote(${d},this.value)">${note}</textarea>`;}
+  if(cd==='OM')h+=duvodPole;
   h+=`<button class="savebtn${dirty?'':' dis'}" ${dirty?'':'disabled'} onclick="saveDay(${d})">Uložit</button>`;
   return h;}
 function bulkControls(){
@@ -105,7 +109,13 @@ window.pickBulkCode=k=>{bulkCode=(bulkCode===k?null:k);render();};
 window.saveBulk=()=>{if(!bulkCode||!selSet.size)return;const n=selSet.size;selSet.forEach(d=>{cur().att[d]=bulkCode;});selSet.clear();bulkCode=null;render();showToast('Docházka uložena · '+n+' '+plural(n)+' ✓');};
 window.draftCode=(d,k)=>{draft[d]={...(draft[d]||{}),code:k};render();};
 window.draftNote=(d,v)=>{draft[d]={...(draft[d]||{}),note:v};};
+window.draftDuvod=(d,v)=>{draft[d]={...(draft[d]||{}),duvod:v};render();};
 window.draftObed=(d,v)=>{draft[d]={...(draft[d]||{}),obed:v};render();};
-window.saveDay=d=>{const dr=draft[d]||{};if(dr.code!==undefined)cur().att[d]=dr.code;if(dr.note!==undefined)cur().notes[d]=dr.note;if(dr.obed!==undefined){cur().obed=cur().obed||{};cur().obed[d]=dr.obed;}delete draft[d];dayModal=null;render();showToast('Docházka uložena ✓');};
+window.saveDay=d=>{const dr=draft[d]||{};
+  // důvod absence je povinný – bez něj se omluvení neuloží (rozhodnutí 10. 9. 2026)
+  const kod=dr.code!==undefined?dr.code:code(cur(),d);
+  if(kod==='OM'&&!(dr.duvod||cur().duvody[d])){showToast('Vyberte důvod absence');return;}
+  if(dr.duvod!==undefined)cur().duvody[d]=dr.duvod;
+  if(dr.code!==undefined)cur().att[d]=dr.code;if(dr.note!==undefined)cur().notes[d]=dr.note;if(dr.obed!==undefined){cur().obed=cur().obed||{};cur().obed[d]=dr.obed;}delete draft[d];dayModal=null;render();showToast('Docházka uložena ✓');};
 window.setCode=(d,k)=>{cur().att[d]=k;render();};
 window.setNote=(d,v)=>{cur().notes[d]=v;};
