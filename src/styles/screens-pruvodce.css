@@ -102,3 +102,8 @@
    (absence) zůstávalo samo na řádku, takže vypadalo jako jiná kategorie než zbytek. */
 .dash-counts{display:grid;grid-template-columns:1fr 1fr}
 .dash-counts .tab{flex:none}
+/* Spinkání pod počty docházky – řádek, ne dlaždice (jiná osa než docházkový stav). */
+.dash-spi{display:block;width:100%;min-height:44px;margin-top:10px;padding:10px 0 0;text-align:left;
+  background:none;border:none;border-top:1px solid var(--color-border);
+  font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);cursor:pointer}
+.dash-spi b{color:var(--color-text)}

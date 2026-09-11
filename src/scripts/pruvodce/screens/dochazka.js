@@ -9,13 +9,14 @@ const inTab=(c,t)=>{
   if(t==='obed')return here(c);
   if(t==='spi')return staysPM(c)&&c.spi&&!onTrip(c);
   if(t==='poobede')return here(c)&&c.plan==='dopolední';
+  if(t==='odpoledni')return here(c)&&c.plan==='odpolední';
   if(t==='neprit')return !here(c);
 };
 /* Pojmenování stavů drží jeden slovník napříč appkou: přítomni · dopolední · odpolední · absence.
    „Ráno" bylo matoucí (číslo platí celý den, ne jen ráno) a „Po obědě" popisovalo důsledek
    místo režimu docházky. Viz docs/vyzkum-testovani-pruvodci.md, P2.
    Záložka „Spí" zůstává – spáči v maringotce jsou provozní fakt, ne režim docházky. */
-const TABS_BEZNY=[['rano','Přítomni'],['spi','Spí'],['poobede','Dopolední'],['neprit','Absence']];
+const TABS_BEZNY=[['rano','Přítomni'],['spi','Spí'],['poobede','Dopolední'],['odpoledni','Odpolední'],['neprit','Absence']];
 const TABS_SPEC=g=>[['skolka','Školka ráno'],['vyprava',g],['obed','Oběd'],['spi','Spí'],['neprit','Absence']];
 const TABS_BY=()=>mode==='bezny'?TABS_BEZNY:TABS_SPEC(mode==='pred'?'Předškoláci':'Lezci');
 const CTX={rano:['Kdo dnes přišel',''],
@@ -24,6 +25,7 @@ const CTX={rano:['Kdo dnes přišel',''],
   obed:['Oběd – všichni',''],
   spi:['Maringotka · spáči','Zaškrtnuté dítě je ve školce. Odškrtnutím ho zapíšeš jako absenci – zaškrtnutím ho vrátíš zpět.'],
   poobede:['Dopolední docházka','Tyhle děti odcházejí po obědě.'],
+  odpoledni:['Odpolední docházka','Tyhle děti přicházejí až po obědě.'],
   neprit:['Absence','']};
 function counts(){const o={};TABS_BY().forEach(([k])=>o[k]=data.filter(c=>inTab(c,k)).length);o.pres=data.filter(here).length;return o;}
 function planPill(c){return c.plan==='celodenní'?'<span class="pill p-cel">celodenní</span>':c.plan==='dopolední'?'<span class="pill p-dop">dopolední</span>':'<span class="pill p-odp">odpolední</span>';}
