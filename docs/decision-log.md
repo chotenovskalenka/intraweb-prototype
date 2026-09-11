@@ -1458,3 +1458,22 @@ zbylo pod počty i pod nepřítomnými skoro 300 px prázdna. Se zkrácením 411
 textu (140 znaků), ne na změřeném přetečení – `render()` staví HTML jako řetězec, takže
 v tu chvíli není co měřit.
 
+## Ranní řada: výšku drží docházka, zbytek roluje (10. 9. 2026)
+
+Rámec sjednocuje výšku sloupců, takže nejdelší obsah natáhl celý vršek obrazovky – jeden
+ukecaný rodič nebo nemocná třída a průvodce musí rolovat, aby viděl počty.
+
+**Rozhodnutí:** výšku řady určuje **dlaždice docházky** (má pevný obsah: čtyři počty, řádek
+spinkání, tlačítko). Vzkazy od rodičů a seznam nepřítomných se do téže výšky **rolují uvnitř**
+(`.dash-scroll`, `--dash-h:274px` = 329 px dlaždice − 24 px padding − 31 px nadpis). Ověřeno
+zátěží: 12 vzkazů a 12 nepřítomných – řada zůstává 341 px. Pod 900 px se strop neuplatní,
+na mobilu se stohuje a roluje celá stránka.
+
+**Pořadí a barvy počtů.** Nahoře **Přítomni · Absence** (na to se průvodce ptá ráno jako první),
+pod nimi rozpad dne **Dopolední · Odpolední**. Barva nese význam přes stavovou paletu:
+absence `--state-danger-ink`, dopolední/odpolední `--state-neutral-ink`, přítomni zůstávají
+značkově zelení. Kontrast ověřen skriptem: 5,10 / 5,62 / 8,24 : 1 – všechno projde AA
+i pro běžný text, nejen pro velká čísla.
+
+**Podnadpis** má dvojtečku a čárky: „Dnes ve školce: Táňa (otevírá), Darča, Honza, Míša."
+

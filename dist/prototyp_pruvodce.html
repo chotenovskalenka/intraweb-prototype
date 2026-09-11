@@ -448,6 +448,13 @@ table.wt td.pastc{opacity:.45}
   .dash-row>.tile{flex:1 1 0;min-width:0;margin:0;background:none;box-shadow:none;border-radius:0;
     border-left:1px solid var(--color-border)}
   .dash-row>.tile:first-child{border-left:none}
+  /* Výšku řady určuje dlaždice docházky – ta má pevný obsah (čtyři počty, řádek spinkání,
+     tlačítko). Vzkazy od rodičů a seznam nepřítomných se do téže výšky rolují, jinak jeden
+     ukecaný rodič nebo nemocná třída natáhne celý vršek obrazovky.
+     --dash-h = vnitřní výška dlaždice docházky (329 px celkem − 24 px padding − 31 px nadpis). */
+  .dash-row{--dash-h:274px}
+  .dash-row .dash-scroll{max-height:var(--dash-h);overflow-y:auto;overscroll-behavior:contain}
+  .dash-row .dash-scroll>:last-child{margin-bottom:0}
   .dash3{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start}
   .dcol{min-width:0}
 }
@@ -661,6 +668,11 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .zp-clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .zp-vic{display:block;min-height:44px;margin:2px 0 -11px;padding:0;background:none;border:none;
   color:var(--color-primary);font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;cursor:pointer;text-align:left}
+/* Barva čísla v dlaždici nese význam, ne dekoraci: absence je stav vyžadující pozornost,
+   dopolední/odpolední je jen rozvrh dne. Obojí přes stavovou paletu, nikdy natvrdo. */
+.tab.num-danger .num{color:var(--state-danger-ink)}
+.tab.num-neutral .num{color:var(--state-neutral-ink)}
+.tab.on.num-danger .num,.tab.on.num-neutral .num{color:#F9F7F1}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -1489,7 +1501,7 @@ function renderPrehledHead(){
   const den=PDOWFULL[wd(TODAYD)];
   const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
   const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
-  return `<h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. června 2026</h1><div class="dh-sub">Dnes ve školce · ${todays.length?todays.map(x=>`${x.g.n}${opener&&x.i===opener.i?' (otevírá)':''}`).join(' · '):'nikdo nemá službu'}</div>`;
+  return `<h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. června 2026</h1><div class="dh-sub">Dnes ve školce: ${todays.length?todays.map(x=>`${x.g.n}${opener&&x.i===opener.i?' (otevírá)':''}`).join(', '):'nikdo nemá službu'}</div>`;
 }
 function renderPrehled(){
   const c=counts();
@@ -1505,9 +1517,13 @@ function renderPrehled(){
      režimu se obědy vůbec nepočítají. Souhrn pro kuchyni (obědy, svačiny) dostane vlastní
      roli s vlastním pohledem, ne dlaždici v průvodcovském přehledu. Zbylá čtyři čísla
      odpovídají záložkám v Docházce i slovníku z testování (P2). */
-  const strip=[['Přítomni',c.pres,'rano'],['Dopolední',c.poobede,'poobede'],['Odpolední',c.odpoledni,'odpoledni'],['Absence',c.neprit,'neprit']];
+  /* Pořadí: nahoře dvě čísla, na která se průvodce ptá ráno jako první (kolik jich je,
+     kolik chybí), pod nimi rozpad dne. Barva nese význam: absence je stav, který vyžaduje
+     pozornost (danger), dopolední/odpolední jsou jen rozvrh (neutral). */
+  const strip=[['Přítomni',c.pres,'rano',''],['Absence',c.neprit,'neprit','num-danger'],
+    ['Dopolední',c.poobede,'poobede','num-neutral'],['Odpolední',c.odpoledni,'odpoledni','num-neutral']];
   let blkDochazka=`<div class="tile"><div class="ch">Docházka dnes</div>`
-    +`<div class="tabs wrap dash-counts">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
+    +`<div class="tabs wrap dash-counts">`+strip.map(([lab,n,k,cls])=>`<div class="tab ${cls}" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
     /* Spinkání není stav docházky, ale informace k odpoledni (kolik lehátek v maringotce) –
        proto řádek, ne pátá stejně velká dlaždice. */
     +`<button class="dash-spi" onclick="goDochTab('spi')">☾ Spí dnes <b>${c.spi}</b> ${c.spi===1?'dítě':(c.spi>=2&&c.spi<=4?'děti':'dětí')} ›</button>`
@@ -1519,7 +1535,7 @@ function renderPrehled(){
   let blkZpravy='';
   {const zpr=zpravyDnes();
    if(zpr.length){
-     blkZpravy=`<div class="tile"><div class="ch">Informace od rodičů</div>`;
+     blkZpravy=`<div class="tile"><div class="ch">Informace od rodičů</div><div class="dash-scroll">`;
      zpr.forEach(({c})=>{c.zpravy.filter(z=>z.den===TODAYD).forEach(z=>{
        const dlouhy=(z.text||'').length>ZP_DELKA, open=zpRozbalene.has(z.id);
        blkZpravy+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${kratke(c)}</b>`
@@ -1527,12 +1543,12 @@ function renderPrehled(){
          +(dlouhy?`<button class="zp-vic" onclick="zpToggle('${z.id}')">${open?'zkrátit ›':'celý vzkaz ›'}</button>`:'')
          +`</span><span class="zp-cas">${z.odeslano}</span></div>`;
      });});
-     blkZpravy+=`</div>`;
+     blkZpravy+=`</div></div>`;
    }}
 
   // kdo dnes nepřijde – jmenovitě, s důvodem (barva i text, ne jen barva)
   const absent=data.map((x,i)=>({c:x,i})).filter(x=>x.c.status!=='pritomen');
-  let blkNeprijde=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div>`;
+  let blkNeprijde=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div><div class="dash-scroll">`;
   if(absent.length){
     absent.forEach(({c})=>{
       const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
@@ -1541,7 +1557,7 @@ function renderPrehled(){
   }else{
     blkNeprijde+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
   }
-  blkNeprijde+=`</div>`;
+  blkNeprijde+=`</div></div>`;
 
   // ── Pod řadou: dnešek a tým ──
   const ryt=RYTMUS[wd(TODAYD)];

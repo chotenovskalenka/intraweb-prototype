@@ -16,7 +16,7 @@ function renderPrehledHead(){
   const den=PDOWFULL[wd(TODAYD)];
   const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
   const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
-  return `<h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. června 2026</h1><div class="dh-sub">Dnes ve školce · ${todays.length?todays.map(x=>`${x.g.n}${opener&&x.i===opener.i?' (otevírá)':''}`).join(' · '):'nikdo nemá službu'}</div>`;
+  return `<h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. června 2026</h1><div class="dh-sub">Dnes ve školce: ${todays.length?todays.map(x=>`${x.g.n}${opener&&x.i===opener.i?' (otevírá)':''}`).join(', '):'nikdo nemá službu'}</div>`;
 }
 function renderPrehled(){
   const c=counts();
@@ -32,9 +32,13 @@ function renderPrehled(){
      režimu se obědy vůbec nepočítají. Souhrn pro kuchyni (obědy, svačiny) dostane vlastní
      roli s vlastním pohledem, ne dlaždici v průvodcovském přehledu. Zbylá čtyři čísla
      odpovídají záložkám v Docházce i slovníku z testování (P2). */
-  const strip=[['Přítomni',c.pres,'rano'],['Dopolední',c.poobede,'poobede'],['Odpolední',c.odpoledni,'odpoledni'],['Absence',c.neprit,'neprit']];
+  /* Pořadí: nahoře dvě čísla, na která se průvodce ptá ráno jako první (kolik jich je,
+     kolik chybí), pod nimi rozpad dne. Barva nese význam: absence je stav, který vyžaduje
+     pozornost (danger), dopolední/odpolední jsou jen rozvrh (neutral). */
+  const strip=[['Přítomni',c.pres,'rano',''],['Absence',c.neprit,'neprit','num-danger'],
+    ['Dopolední',c.poobede,'poobede','num-neutral'],['Odpolední',c.odpoledni,'odpoledni','num-neutral']];
   let blkDochazka=`<div class="tile"><div class="ch">Docházka dnes</div>`
-    +`<div class="tabs wrap dash-counts">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
+    +`<div class="tabs wrap dash-counts">`+strip.map(([lab,n,k,cls])=>`<div class="tab ${cls}" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
     /* Spinkání není stav docházky, ale informace k odpoledni (kolik lehátek v maringotce) –
        proto řádek, ne pátá stejně velká dlaždice. */
     +`<button class="dash-spi" onclick="goDochTab('spi')">☾ Spí dnes <b>${c.spi}</b> ${c.spi===1?'dítě':(c.spi>=2&&c.spi<=4?'děti':'dětí')} ›</button>`
@@ -46,7 +50,7 @@ function renderPrehled(){
   let blkZpravy='';
   {const zpr=zpravyDnes();
    if(zpr.length){
-     blkZpravy=`<div class="tile"><div class="ch">Informace od rodičů</div>`;
+     blkZpravy=`<div class="tile"><div class="ch">Informace od rodičů</div><div class="dash-scroll">`;
      zpr.forEach(({c})=>{c.zpravy.filter(z=>z.den===TODAYD).forEach(z=>{
        const dlouhy=(z.text||'').length>ZP_DELKA, open=zpRozbalene.has(z.id);
        blkZpravy+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${kratke(c)}</b>`
@@ -54,12 +58,12 @@ function renderPrehled(){
          +(dlouhy?`<button class="zp-vic" onclick="zpToggle('${z.id}')">${open?'zkrátit ›':'celý vzkaz ›'}</button>`:'')
          +`</span><span class="zp-cas">${z.odeslano}</span></div>`;
      });});
-     blkZpravy+=`</div>`;
+     blkZpravy+=`</div></div>`;
    }}
 
   // kdo dnes nepřijde – jmenovitě, s důvodem (barva i text, ne jen barva)
   const absent=data.map((x,i)=>({c:x,i})).filter(x=>x.c.status!=='pritomen');
-  let blkNeprijde=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div>`;
+  let blkNeprijde=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div><div class="dash-scroll">`;
   if(absent.length){
     absent.forEach(({c})=>{
       const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
@@ -68,7 +72,7 @@ function renderPrehled(){
   }else{
     blkNeprijde+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
   }
-  blkNeprijde+=`</div>`;
+  blkNeprijde+=`</div></div>`;
 
   // ── Pod řadou: dnešek a tým ──
   const ryt=RYTMUS[wd(TODAYD)];

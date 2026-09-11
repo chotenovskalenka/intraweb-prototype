@@ -448,6 +448,13 @@ table.wt td.pastc{opacity:.45}
   .dash-row>.tile{flex:1 1 0;min-width:0;margin:0;background:none;box-shadow:none;border-radius:0;
     border-left:1px solid var(--color-border)}
   .dash-row>.tile:first-child{border-left:none}
+  /* Výšku řady určuje dlaždice docházky – ta má pevný obsah (čtyři počty, řádek spinkání,
+     tlačítko). Vzkazy od rodičů a seznam nepřítomných se do téže výšky rolují, jinak jeden
+     ukecaný rodič nebo nemocná třída natáhne celý vršek obrazovky.
+     --dash-h = vnitřní výška dlaždice docházky (329 px celkem − 24 px padding − 31 px nadpis). */
+  .dash-row{--dash-h:274px}
+  .dash-row .dash-scroll{max-height:var(--dash-h);overflow-y:auto;overscroll-behavior:contain}
+  .dash-row .dash-scroll>:last-child{margin-bottom:0}
   .dash3{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start}
   .dcol{min-width:0}
 }
@@ -661,6 +668,11 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .zp-clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .zp-vic{display:block;min-height:44px;margin:2px 0 -11px;padding:0;background:none;border:none;
   color:var(--color-primary);font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;cursor:pointer;text-align:left}
+/* Barva čísla v dlaždici nese význam, ne dekoraci: absence je stav vyžadující pozornost,
+   dopolední/odpolední je jen rozvrh dne. Obojí přes stavovou paletu, nikdy natvrdo. */
+.tab.num-danger .num{color:var(--state-danger-ink)}
+.tab.num-neutral .num{color:var(--state-neutral-ink)}
+.tab.on.num-danger .num,.tab.on.num-neutral .num{color:#F9F7F1}
 </style>
 <style>
 /* SCREENS: RODIC – rodičovské obrazovky + rodičovské varianty sdílených tříd.
