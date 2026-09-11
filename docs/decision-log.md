@@ -1477,3 +1477,8 @@ i pro běžný text, nejen pro velká čísla.
 
 **Podnadpis** má dvojtečku a čárky: „Dnes ve školce: Táňa (otevírá), Darča, Honza, Míša."
 
+**Sloupce pod ranní řadou** (10. 9. 2026): zleva **průvodci ve službě · básnička · program dne
++ dnešní akce**. Tým sedí pod docházkou, se kterou souvisí; kontext dne je vpravo.
+Prohození dělá CSS `order` na `.dash-swap`, **ne pořadí v DOM** – na mobilu dál platí
+priorita „soupisu dne" (program dne dřív než rozpis služeb).
+
