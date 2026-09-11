@@ -240,6 +240,10 @@ table.wt td.pastc{opacity:.45}
 .prog-day{font-family:var(--font-serif);font-size:var(--text-title);font-weight:600;color:var(--color-primary);margin:0 0 4px}
 .cardlink{display:block;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);margin-top:12px;padding:12px 0 2px;color:var(--color-primary);font-weight:600;font-size:var(--text-small);font-family:var(--font-sans);cursor:pointer}
 @media (min-width:900px){
+  /* Ranní řada nad sloupci: flex (ne grid), ať se dvě dlaždice roztáhnou na půlky,
+     když na dnešek žádné vzkazy od rodičů nejsou. */
+  .dash-row{display:flex;gap:20px;align-items:start;margin-bottom:20px}
+  .dash-row>.tile{flex:1 1 0;min-width:0;margin-bottom:0}
   .dash3{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start}
   .dcol{min-width:0}
 }
