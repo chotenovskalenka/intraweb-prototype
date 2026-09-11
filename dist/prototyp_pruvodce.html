@@ -770,7 +770,7 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
   .fond-detail{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
 }
 /* Přehled (dashboard) */
-.prehl-abs{display:flex;align-items:center;gap:9px;min-height:44px;width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
+.prehl-abs{display:flex;flex-wrap:wrap;align-items:center;gap:9px;min-height:44px;width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
 .prehl-abs .pa-nm{font-size:var(--text-body);font-weight:500;color:var(--color-text)}
 .prehl-abs .pa-r{margin-left:auto;font-size:var(--text-note);color:var(--color-danger);text-align:right;max-width:52%;line-height:var(--leading-snug)}
 .pa-cap{font-size:var(--text-note);color:var(--color-text-muted);margin-bottom:2px}
@@ -794,6 +794,10 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
   background:none;border:none;border-top:1px solid var(--color-border);
   font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text-muted);cursor:pointer}
 .dash-spi b{color:var(--color-text)}
+/* Poznámka z omluvenky pod jménem – celá šířka řádku, tlumeně: červená drží stav
+   (omluveno / bez omluvy), text je upřesnění, ne další varování. */
+.pa-pozn{flex:0 0 100%;margin-top:2px;font-size:var(--text-note);color:var(--color-text-muted);
+  line-height:var(--leading-normal);text-align:left}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1561,7 +1565,11 @@ function renderPrehled(){
   if(absent.length){
     absent.forEach(({c})=>{
       const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
-      blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span></button>`;
+      /* Volný text z omluvenky patří sem: „nemoc" neřekne, jestli má průvodce čekat zvracení,
+         teplotu nebo vyrážku. Vlastní řádek pod jménem – vedle důvodu by se ukousl na dvě slova. */
+      const pozn=c.parentExcuse&&c.parentExcuse.pozn?c.parentExcuse.pozn:'';
+      blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span>`
+        +(pozn?`<span class="pa-pozn">✉️ ${esc(pozn)}</span>`:'')+`</button>`;
     });
   }else{
     blkNeprijde+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;

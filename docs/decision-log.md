@@ -1503,3 +1503,8 @@ jinak jeden odstavec odtlačí zbytek soupisu pod okraj obrazovky (měřeno na m
 
 Data se dál nesdílejí – u průvodce jde o zobrazení ze seedu, stejně jako u `parentExcuse`.
 
+**Poznámka z omluvenky je i na dashboardu** (10. 9. 2026), v „Kdo dnes nepřijde", vlastním
+řádkem pod jménem. Samotné „nemoc" neřekne, jestli má průvodce čekat zvracení, teplotu nebo
+vyrážku – a právě tohle rodič do omluvenky píše. Důvod zůstává vpravo u stavu, v textu se
+neopakuje; řádek je tlumený, červená drží stav (omluveno / bez omluvy), ne upřesnění.
+
