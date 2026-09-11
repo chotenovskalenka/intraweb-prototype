@@ -1436,3 +1436,25 @@ dostane vlastní roli s vlastním pohledem** (Ksenia, obědy a svačiny), ne dla
 v průvodcovském přehledu. Zbylá čtyři čísla jsou v mřížce 2×2; ve flexu se lámala 3+1
 a absence zůstávala sama na řádku, jako by byla jiná kategorie.
 
+## Přehled průvodce: čísla podle slovníku z testování (10. 9. 2026)
+
+Nález **P2** skončil dohodnutou sadou **přítomni · dopolední · odpolední · absence** (varianta
+s časy respondentkou odmítnuta). V kódu je ten slovník i zapsaný v komentáři u `inTab`, ale
+**„odpolední" na přehledu i mezi záložkami Docházky chybělo** – a naopak tam jako rovnocenné
+číslo bylo „spí", které v dohodnuté sadě není a je to ta věc, u které se respondentka zasekla.
+
+**Rozhodnutí:** přehled ukazuje čtyři čísla ze slovníku (22 · 2 · 3 · 3); **spinkání je řádek
+pod nimi**, ne pátá dlaždice – je to jiná osa (kolik lehátek v maringotce), ne stav docházky.
+Do Docházky přibyla odpovídající záložka **Odpolední** (`inTab` + `CTX`), aby proklik z čísla
+někam vedl a slovník byl úplný na obou obrazovkách.
+
+**Poctivá výhrada:** dohodnutá sada padla nad pojmenováním stavů u dítěte, ne nad tím, která
+čísla patří na dashboard. Chybějící „odpolední" je doložený nesoulad slovníku, ne doklad,
+že respondenti tu dlaždici vyžadovali.
+
+**Dlouhé vzkazy od rodičů se krátí na tři řádky** s odkazem „celý vzkaz ›". Jeden odstavec
+od jednoho rodiče zvedl ranní řadu z 287 na 550 px a protože rámec sjednocuje výšku sloupců,
+zbylo pod počty i pod nepřítomnými skoro 300 px prázdna. Se zkrácením 411 px. Práh je na délce
+textu (140 znaků), ne na změřeném přetečení – `render()` staví HTML jako řetězec, takže
+v tu chvíli není co měřit.
+

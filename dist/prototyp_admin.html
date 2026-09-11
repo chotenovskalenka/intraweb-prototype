@@ -623,6 +623,10 @@ select.pin{appearance:none;-webkit-appearance:none;min-height:44px;padding-right
   background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
 /* Nativní date/time picker – stejná výška i schránka jako ostatní pole. */
 input.pin[type=date],input.pin[type=time]{min-height:44px}
+/* Dlouhý vzkaz od rodiče se krátí na tři řádky; „celý vzkaz ›" ho rozbalí. */
+.zp-clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.zp-vic{display:block;min-height:44px;margin:2px 0 -11px;padding:0;background:none;border:none;
+  color:var(--color-primary);font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;cursor:pointer;text-align:left}
 </style>
 <style>
 /* SCREENS: ADMIN – obrazovkové styly (dashboard vedení). Skládá z existujících komponent

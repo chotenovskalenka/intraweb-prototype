@@ -3,6 +3,13 @@
    Na desktopu nahoře ranní řada (.dash-row): počty docházky · informace od rodičů ·
    kdo nepřijde. Pod ní kontext dne ve sloupcích (.dash3): program + dnešní akce ·
    básnička a písnička · průvodci ve službě. Na mobilu se všechno stohuje v tomto pořadí. */
+/* Dlouhé vzkazy se krátí na tři řádky. Jeden ukecaný rodič jinak zdvojnásobí výšku celé
+   ranní řady (měřeno: 287 → 550 px) a průvodce při předávání dítěte potřebuje hlavně vědět,
+   že něco přišlo a od koho. Práh je na délce textu, ne na změřeném přetečení – render()
+   staví HTML jako řetězec, takže v tu chvíli není co měřit. */
+const ZP_DELKA=140;
+let zpRozbalene=new Set();
+window.zpToggle=id=>{zpRozbalene.has(id)?zpRozbalene.delete(id):zpRozbalene.add(id);render();};
 const PDOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
 // Hlavička dashboardu (datum + kdo dnes slouží) – renderuje se do topbaru (viz core.js).
 function renderPrehledHead(){
@@ -25,9 +32,12 @@ function renderPrehled(){
      režimu se obědy vůbec nepočítají. Souhrn pro kuchyni (obědy, svačiny) dostane vlastní
      roli s vlastním pohledem, ne dlaždici v průvodcovském přehledu. Zbylá čtyři čísla
      odpovídají záložkám v Docházce i slovníku z testování (P2). */
-  const strip=[['Přítomni',c.pres,'rano'],['Spí',c.spi,'spi'],['Dopolední',c.poobede,'poobede'],['Absence',c.neprit,'neprit']];
+  const strip=[['Přítomni',c.pres,'rano'],['Dopolední',c.poobede,'poobede'],['Odpolední',c.odpoledni,'odpoledni'],['Absence',c.neprit,'neprit']];
   let blkDochazka=`<div class="tile"><div class="ch">Docházka dnes</div>`
     +`<div class="tabs wrap dash-counts">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
+    /* Spinkání není stav docházky, ale informace k odpoledni (kolik lehátek v maringotce) –
+       proto řádek, ne pátá stejně velká dlaždice. */
+    +`<button class="dash-spi" onclick="goDochTab('spi')">☾ Spí dnes <b>${c.spi}</b> ${c.spi===1?'dítě':(c.spi>=2&&c.spi<=4?'děti':'dětí')} ›</button>`
     +`<button class="addbig" style="margin-top:11px" onclick="go('dochazka')">Otevřít dnešní docházku →</button></div>`;
 
   /* Vzkazy od rodičů na dnešek. Zakládá je rodič ve své appce, tady jsou jen ke čtení
@@ -38,7 +48,11 @@ function renderPrehled(){
    if(zpr.length){
      blkZpravy=`<div class="tile"><div class="ch">Informace od rodičů</div>`;
      zpr.forEach(({c})=>{c.zpravy.filter(z=>z.den===TODAYD).forEach(z=>{
-       blkZpravy+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${kratke(c)}</b><span class="zp-who">${zpravaShrnuti(z)}</span></span><span class="zp-cas">${z.odeslano}</span></div>`;
+       const dlouhy=(z.text||'').length>ZP_DELKA, open=zpRozbalene.has(z.id);
+       blkZpravy+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${kratke(c)}</b>`
+         +`<span class="zp-who${dlouhy&&!open?' zp-clamp':''}">${zpravaShrnuti(z)}</span>`
+         +(dlouhy?`<button class="zp-vic" onclick="zpToggle('${z.id}')">${open?'zkrátit ›':'celý vzkaz ›'}</button>`:'')
+         +`</span><span class="zp-cas">${z.odeslano}</span></div>`;
      });});
      blkZpravy+=`</div>`;
    }}
