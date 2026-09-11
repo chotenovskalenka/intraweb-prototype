@@ -1422,3 +1422,17 @@ linkami; vlastní nadpisy zůstávají, protože pojmenovávají tři různé v�
 rámec neuplatní a zůstávají samostatné karty – na mobilu se stohují pod sebe a hranice
 karty je tam to jediné, co je odděluje.
 
+## Obědy z přehledu pryč, kuchyně dostane vlastní roli (10. 9. 2026)
+
+Dlaždice „Obědy" na průvodcovském přehledu ukazovala `c.pres`, tedy **počet přítomných dětí,
+ne počet obědů** – proto tam byla dvakrát stejná dvaadvacítka a proklik vedl na záložku
+„Přítomni". V běžném režimu docházky se obědy vůbec nepočítají (záložka `obed` existuje jen
+v režimech předškoláci/lezci). Věcně to sedět nemůže: dítě na dopolední docházce oběd sní
+a odejde, omluvené dítě si oběd může vyzvednout (rodičovská appka se na to ptá).
+
+**Rozhodnutí:** dlaždice pryč. Falešné číslo v prototypu, který jde na testování, je horší
+než chybějící. **Souhrn pro kuchyni (obědy, svačiny) – nález P3 z testování, 2 ze 3 –
+dostane vlastní roli s vlastním pohledem** (Ksenia, obědy a svačiny), ne dlaždici
+v průvodcovském přehledu. Zbylá čtyři čísla jsou v mřížce 2×2; ve flexu se lámala 3+1
+a absence zůstávala sama na řádku, jako by byla jiná kategorie.
+

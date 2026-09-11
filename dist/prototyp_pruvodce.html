@@ -759,6 +759,10 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .jid-edit .jid-alg{max-width:260px}
 /* Čas odeslání u informace od rodiče – tichý, ale podstatný (ráno v 6:55 vs. v 9:30). */
 .zp-cas{flex-shrink:0;font-size:var(--text-note);color:var(--color-text-hint)}
+/* Čtyři počty na přehledu jako mřížka 2×2. Ve flexu se lámaly 3+1 a poslední číslo
+   (absence) zůstávalo samo na řádku, takže vypadalo jako jiná kategorie než zbytek. */
+.dash-counts{display:grid;grid-template-columns:1fr 1fr}
+.dash-counts .tab{flex:none}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1453,6 +1457,8 @@ data.forEach(c=>{c.zpravy=[];});
 data[3].zpravy.push({id:'zp1',den:TODAYD,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'7:12'});
 data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'09:30',text:'Jdeme na kontrolu k zubaři.',odeslano:'6:55'});
 data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po ránu kapky do očí, má je v batohu.',odeslano:'7:40'});
+// Záměrně dlouhý vzkaz – rodiče píšou do skupin celé odstavce a přehled to musí unést.
+data[12].zpravy.push({id:'zp4',den:TODAYD,typ:'jine',kdo:'',cas:'',text:'Dobrý den, chtěla jsem vás poprosit – Kubík od víkendu hodně řeší, že se mu kluci smějí kvůli tomu, jak mluví. Doma o tom mluví každý večer a ráno se mu do školky nechce, dnes jsme šli asi dvacet minut od auta. Nechci z toho dělat velkou věc a vůbec netvrdím, že se něco stalo ve školce, jen jsem chtěla, abyste o tom věděli a případně se na to v kruhu nenápadně podívali. Kdyby to vydrželo do konce týdne, ozvu se a domluvíme se na schůzce.',odeslano:'6:38'});
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));
 </script>
 <script>
@@ -1479,9 +1485,13 @@ function renderPrehled(){
 
   // ── Ranní řada: počty · vzkazy od rodičů · kdo nepřijde ──
   // stejný slovník jako v Docházce: přítomni · dopolední · odpolední · absence (P2)
-  const strip=[['Přítomni',c.pres,'rano'],['Obědy',c.pres,'rano'],['Spí',c.spi,'spi'],['Dopolední',c.poobede,'poobede'],['Absence',c.neprit,'neprit']];
+  /* Bez „Obědů": dlaždice ukazovala počet přítomných (c.pres), ne počet obědů – v běžném
+     režimu se obědy vůbec nepočítají. Souhrn pro kuchyni (obědy, svačiny) dostane vlastní
+     roli s vlastním pohledem, ne dlaždici v průvodcovském přehledu. Zbylá čtyři čísla
+     odpovídají záložkám v Docházce i slovníku z testování (P2). */
+  const strip=[['Přítomni',c.pres,'rano'],['Spí',c.spi,'spi'],['Dopolední',c.poobede,'poobede'],['Absence',c.neprit,'neprit']];
   let blkDochazka=`<div class="tile"><div class="ch">Docházka dnes</div>`
-    +`<div class="tabs wrap">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
+    +`<div class="tabs wrap dash-counts">`+strip.map(([lab,n,k])=>`<div class="tab" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
     +`<button class="addbig" style="margin-top:11px" onclick="go('dochazka')">Otevřít dnešní docházku →</button></div>`;
 
   /* Vzkazy od rodičů na dnešek. Zakládá je rodič ve své appce, tady jsou jen ke čtení
