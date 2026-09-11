@@ -34,11 +34,11 @@ function codeLabel(code){const M={C:['celodenní',CODES.C[1]],D:['dopolední',CO
 /* Stav dítěte (spí / omluveno / na výpravě…). Sedí hned za chipem docházky – u pravého
    okraje vedle zaškrtávátka to čtlo, jako by se odškrtávalo zrovna „spí" nebo „omluveno".
    Proto ind-inline: ruší margin-left:auto, kterým se .ind jinde tlačí doprava. */
-function indicator(c){
-  const cls='ind ind-inline';
+function indicator(c,vpravo){
+  const cls='ind'+(vpravo?'':' ind-inline');
   if(here(c)&&onTrip(c))return`<span class="${cls} awake" style="color:var(--color-accent-ink)">na výpravě</span>`;
   if(c.status==='omluveno')return`<span class="${cls} off">omluveno</span>`;
-  if(c.status==='neomluveno')return`<span class="${cls} off">neomluveno</span>`;
+  if(c.status==='neomluveno')return`<span class="${cls} off">nepřišlo</span>`;
   if(c.plan==='dopolední')return`<span class="${cls}">po obědě domů</span>`;
   return c.spi?`<span class="${cls} sleep">spí</span>`:`<span class="${cls} awake">nespí</span>`;
 }
@@ -93,11 +93,14 @@ function rosterHTML(){
     if(c.note)noteLine+=`<div class="rnote">${c.note}</div>`;
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();
+    /* Zapisující role má vpravo zaškrtávátko, stav tedy sedí hned za jménem. Role, která
+       docházku jen čte, zaškrtávátko nemá – stav jde na jeho místo doprava. Dřív tam navíc
+       viselo druhé slovo („absence"), které říkalo totéž co stav vedle jména. */
     const chk=zapis
       ? `<span class="chk ${here(c)?'on':''}" role="checkbox" aria-checked="${here(c)}" aria-label="${full(c)} je ve školce" title="${here(c)?'Je ve školce – odškrtnutím zapíšeš absenci':'Zapsáno jako absence – zaškrtnutím vrátíš do školky'}" onclick="event.stopPropagation();presence(${i})">${here(c)?'✓':''}</span>`
-      : `<span class="ind ${here(c)?'awake':'off'}" style="margin-left:auto">${here(c)?'ve školce':'absence'}</span>`;
+      : '';
     out+=`<div class="row${c.status!=='pritomen'?' absent':''}${open===i?' open':''}"><div class="rmain"${zapis?` onclick="toggle(${i})"`:' style="cursor:default"'}>`+
-      `${avatar(c,30)}<span class="nm">${full(c)}</span>${planPill(c)}${indicator(c)}`+
+      `${avatar(c,30)}<span class="nm">${full(c)}</span>${planPill(c)}${indicator(c,!zapis)}`+
       chk+`</div>`+
       noteLine+
       `<div class="edit" style="display:${open===i&&zapis?'block':'none'}">${open===i&&zapis?editPanel(c,i):''}</div></div>`;
@@ -127,7 +130,9 @@ function todayRoster(){
   let side=`<div class="tabs wrap doch-counts">`+TABS_BY().map(([k,l])=>`<div class="tab${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
   // pod řadou: kontext + hledání + roster + souhrn jídel na plnou šířku
   let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${c.pres}</b> / ${data.length}</span></div>`;
-  main+=`<div class="sectip">${smiZapisovat()?(CTX[tab][1]||''):'Docházku zapisuje vedoucí průvodce – tady ji jen kontroluješ.'}</div>`;
+  // vysvětlivku k záložce má jen zapisující role; roli samotnou nese odznak v topbaru
+  {const tip=smiZapisovat()?(CTX[tab][1]||''):'';
+   if(tip)main+=`<div class="sectip">${tip}</div>`;}
   main+=`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)">`;
   main+=`<div class="rosterbox"><div id="roster">${rosterHTML()}</div></div>`;
   main+=`<div class="doch-mealsfoot"><span class="meals">Obědy <b>${c.pres}</b> · svačiny <b>${c.pres}</b></span><span class="pwa">nainstalovatelné · offline (PWA)</span></div>`;
