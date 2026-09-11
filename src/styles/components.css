@@ -480,3 +480,8 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .tab.num-danger .num{color:var(--state-danger-ink)}
 .tab.num-neutral .num{color:var(--state-neutral-ink)}
 .tab.on.num-danger .num,.tab.on.num-neutral .num{color:#F9F7F1}
+/* Vzkaz od rodiče v soupisu docházky – provozní informace, ne varování: tlumený tón
+   místo danger, aby červená zůstala rezervovaná pro nemoc a absenci. */
+.rnote-info{background:var(--wash-primary);color:var(--color-text)}
+.rnote .rn-cas{color:var(--color-text-hint);font-weight:400}
+.pn-pozn{margin-top:4px;font-size:var(--text-note);color:var(--color-text-muted);font-weight:400}

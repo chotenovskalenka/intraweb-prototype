@@ -678,6 +678,11 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .tab.num-danger .num{color:var(--state-danger-ink)}
 .tab.num-neutral .num{color:var(--state-neutral-ink)}
 .tab.on.num-danger .num,.tab.on.num-neutral .num{color:#F9F7F1}
+/* Vzkaz od rodiče v soupisu docházky – provozní informace, ne varování: tlumený tón
+   místo danger, aby červená zůstala rezervovaná pro nemoc a absenci. */
+.rnote-info{background:var(--wash-primary);color:var(--color-text)}
+.rnote .rn-cas{color:var(--color-text-hint);font-weight:400}
+.pn-pozn{margin-top:4px;font-size:var(--text-note);color:var(--color-text-muted);font-weight:400}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -1236,8 +1241,8 @@ data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='O
 data[10].note='Od pondělí má vši, prosím o kontrolu hlavičky. Doma jsme to řešili, ale pro jistotu hlídejte.';
 data[3].note='Eliška je po nemoci, prosíme dnes klidnější režim a hlídat pití.';
 // dnes nepřítomné děti – 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená
-data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc'};
-data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody'};
+data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',pozn:'Zvracela v noci, dnes ji necháme doma. Zítra dáme vědět.'};
+data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',pozn:''};
 data[20].status='neomluveno';
 // zobrazení propsané omluvenky (jen text; žádná logika ani sdílení dat mezi appkami)
 function parentExcuseLine(c){return c.parentExcuse?`omluveno rodičem dnes ${c.parentExcuse.time} · ${c.parentExcuse.reason}`:'';}
@@ -1491,8 +1496,9 @@ const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=
 /* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce (stejný přístup jako rodič):
    velký datumový nadpis, prioritní sloupce (.dash3), nadpisy karet .ch.
    Na desktopu nahoře ranní řada (.dash-row): počty docházky · informace od rodičů ·
-   kdo nepřijde. Pod ní kontext dne ve sloupcích (.dash3): program + dnešní akce ·
-   básnička a písnička · průvodci ve službě. Na mobilu se všechno stohuje v tomto pořadí. */
+   kdo nepřijde. Pod ní ve sloupcích (.dash3) zleva: průvodci ve službě · básnička a písnička ·
+   program dne + dnešní akce. Pořadí sloupců na desktopu dělá CSS `order` (.dash-swap);
+   v DOM zůstává mobilní priorita program → básnička → průvodci. */
 /* Dlouhé vzkazy se krátí na tři řádky. Jeden ukecaný rodič jinak zdvojnásobí výšku celé
    ranní řady (měřeno: 287 → 550 px) a průvodce při předávání dítěte potřebuje hlavně vědět,
    že něco přišlo a od koho. Práh je na délce textu, ne na změřeném přetečení – render()
@@ -1663,18 +1669,35 @@ function editPanel(c,i){
   const seg=(arr,cur,fn)=>arr.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="${fn}(${i},'${o[0]}')">${o[1]}</button>`).join('');
   let h=`<div class="field"><div class="l">Docházka</div><div class="mini">${seg([['dopolední','Dopol.'],['odpolední','Odpol.'],['celodenní','Celodenní']],c.plan,'setPlan')}</div></div>`;
   h+=`<div class="field"><div class="l">Stav</div><div class="mini warn">${seg([['pritomen','Přítomen'],['omluveno','Omluveno'],['neomluveno','Absence bez omluvy']],c.status,'setStatus')}</div></div>`;
-  if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}</div></div>`;
+  if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}${c.parentExcuse.pozn?`<div class="pn-pozn">${esc(c.parentExcuse.pozn)}</div>`:''}</div></div>`;
+  {const zpr=(c.zpravy||[]).filter(z=>z.den===TODAYD);
+   if(zpr.length)h+=`<div class="field"><div class="l">Vzkazy od rodičů dnes</div>`
+     +zpr.map(z=>`<div class="pnote">${zpravaShrnuti(z)}<div class="pn-pozn">odesláno ${z.odeslano}</div></div>`).join('')+`</div>`;}
   if(c.note)h+=`<div class="field"><div class="l">Poznámka od rodiče</div><div class="pnote">${c.note}</div></div>`;
   if(staysPM(c))h+=`<div class="field"><div class="l">Odpoledne</div><div class="mini">${seg([[true,'Spí'],[false,'Nespí']],c.spi,'setSpi')}</div></div>`;
   return h;
 }
 function rosterHTML(){
   let out='',shown=0;
-  const lst=data.map((c,i)=>({c,i})).sort((a,b)=>{const an=a.c.note?0:1,bn=b.c.note?0:1;if(an!==bn)return an-bn;return byAlpha(a,b);});
+  // nahoru děti, u kterých je dnes co číst (vzkaz, poznámka z omluvenky, trvalá poznámka)
+  const maPozn=c=>(c.note||(c.parentExcuse&&c.parentExcuse.pozn)||(c.zpravy||[]).some(z=>z.den===TODAYD))?0:1;
+  const lst=data.map((c,i)=>({c,i})).sort((a,b)=>{const an=maPozn(a.c),bn=maPozn(b.c);if(an!==bn)return an-bn;return byAlpha(a,b);});
   lst.forEach(({c,i})=>{
     const match=query?norm(full(c)).includes(norm(query)):inTab(c,tab);
     if(!match)return;shown++;
-    const noteLine=c.note?`<div class="rnote">✉️ ${c.note}</div>`:'';
+    /* Všechno, co dnes přišlo od rodiče, na jednom místě u dítěte: vzkazy z rodičovské appky
+       (kdo vyzvedne, pozdější příchod, lék), volný text z omluvenky a trvalá poznámka.
+       Vzkazy jsou provozní (neutrální), poznámka a omluvenka nesou zdravotní/absenční
+       kontext – proto zůstávají v danger tónu .rnote. */
+    // dlouhý vzkaz se krátí stejně jako na přehledu – jinak jeden odstavec odtlačí
+    // pod okraj obrazovky celý zbytek soupisu
+    let noteLine=(c.zpravy||[]).filter(z=>z.den===TODAYD).map(z=>{
+      const dlouhy=(z.text||'').length>ZP_DELKA, rozbalen=zpRozbalene.has(z.id);
+      return `<div class="rnote rnote-info"><span class="${dlouhy&&!rozbalen?'zp-clamp':''}">✉️ ${zpravaShrnuti(z)}</span> <span class="rn-cas">${z.odeslano}</span>`
+        +(dlouhy?`<button class="zp-vic" onclick="event.stopPropagation();zpToggle('${z.id}')">${rozbalen?'zkrátit ›':'celý vzkaz ›'}</button>`:'')+`</div>`;
+    }).join('');
+    if(c.parentExcuse&&c.parentExcuse.pozn)noteLine+=`<div class="rnote">✉️ K omluvence: ${esc(c.parentExcuse.pozn)}</div>`;
+    if(c.note)noteLine+=`<div class="rnote">✉️ ${c.note}</div>`;
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();
     const chk=zapis
