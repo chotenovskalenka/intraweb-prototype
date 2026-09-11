@@ -1508,3 +1508,26 @@ Data se dál nesdílejí – u průvodce jde o zobrazení ze seedu, stejně jako
 vyrážku – a právě tohle rodič do omluvenky píše. Důvod zůstává vpravo u stavu, v textu se
 neopakuje; řádek je tlumený, červená drží stav (omluveno / bez omluvy), ne upřesnění.
 
+## Po 8:30 omlouvá vedoucí průvodce, vždy bez náhrady (10. 9. 2026, NÁVRH k odsouhlasení)
+
+**Pravidlo (od Lenky):** po **8:30**, kdy začíná program, už rodič absenci na dnešek
+nenahlásí. Od té chvíle ji zapisuje ručně **vedoucí průvodce** a je to vždy
+**„omluveno bez náhrady"**.
+
+Tím vznikají tři různé absence, které se dosud slévaly do dvou:
+
+| Stav | Kdo zapsal | Náhrada |
+|---|---|---|
+| omluveno rodičem | rodič ve své appce | podle deadlinu 20:00 předchozího dne |
+| omluveno vedoucí | vedoucí průvodce po 8:30 | **nikdy** |
+| absence bez omluvy | nikdo – dítě nepřišlo a zatím to nikdo nezapsal | – |
+
+V průvodcovské appce jsou všechny tři vidět na přehledu i v soupisu docházky
+(`guideExcuse={by,time,reason,pozn}` vedle `parentExcuse`). „bez náhrady" je u ní odznáček,
+protože je to důsledek, ne stav.
+
+**Otevřené – nutné rozhodnout před dalším testováním:** v rodičovské appce je simulovaný čas
+`NOW={d:3,h:10}`, tedy **10:00 – po 8:30**. Podle nového pravidla by tlačítko „Nahlásit dnešní
+absenci" nemělo jít použít a celý ten tok by z prototypu zmizel. Buď posunout `NOW` před 8:30,
+nebo rodiči ukázat zavřený stav („Po 8:30 už absenci nenahlásíte, ozvěte se průvodcům").
+
