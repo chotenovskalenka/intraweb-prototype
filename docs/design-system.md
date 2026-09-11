@@ -393,3 +393,9 @@ formulář se šesti poli nutí člověka přečíst všechno, než pochopí, ž
 se vybírá rozsah. Nativní picker přinese klávesnici i formát z telefonu; omezení se dává
 přes `min`/`max` a to, co jimi nejde vyjádřit (víkendy), se odmítne s vysvětlením.
 
+**Jména dětí: v přehledech krátce, v soupisech celá.** Na dashboardu se píše `Tonička P.`
+(křestní jméno + iniciála příjmení, helper `kratke()`). Křestní jméno samotné nestačí – v jedné
+třídě bývají dvě Toničky; celé jméno se v úzkém sloupci láme na dva řádky. Celé jméno
+(`full()`) zůstává tam, kde se jméno čte jako údaj: soupis dětí, docházkové tabulky, detail
+dítěte, kulturní fond a CSV exporty.
+
