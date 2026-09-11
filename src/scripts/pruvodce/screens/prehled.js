@@ -34,7 +34,7 @@ function renderPrehled(){
    if(zpr.length){
      blkZpravy=`<div class="tile"><div class="ch">Informace od rodičů</div>`;
      zpr.forEach(({c})=>{c.zpravy.filter(z=>z.den===TODAYD).forEach(z=>{
-       blkZpravy+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${c.n}</b><span class="zp-who">${zpravaShrnuti(z)}</span></span><span class="zp-cas">${z.odeslano}</span></div>`;
+       blkZpravy+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${kratke(c)}</b><span class="zp-who">${zpravaShrnuti(z)}</span></span><span class="zp-cas">${z.odeslano}</span></div>`;
      });});
      blkZpravy+=`</div>`;
    }}
@@ -45,7 +45,7 @@ function renderPrehled(){
   if(absent.length){
     absent.forEach(({c})=>{
       const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
-      blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${full(c)}</span><span class="pa-r">${r}</span></button>`;
+      blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span></button>`;
     });
   }else{
     blkNeprijde+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;

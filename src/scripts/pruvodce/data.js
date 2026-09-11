@@ -251,6 +251,10 @@ const DAYS=['Po','Út','St','Čt','Pá'], TODAY=2;
 const here=c=>c.status==='pritomen';
 const staysPM=c=>here(c)&&c.plan!=='dopolední';
 const full=c=>c.n+' '+c.sur;
+/* Krátký tvar jména pro přehledové výpisy: „Tonička P.". Křestní jméno samo nestačí (v jedné
+   třídě bývají dvě Toničky), celé jméno se v úzkém sloupci láme na dva řádky. V soupisech,
+   tabulkách, detailu dítěte a exportech zůstává full() – tam se jméno čte jako údaj. */
+const kratke=c=>c.sur?`${c.n} ${c.sur.charAt(0)}.`:c.n;
 const byAlpha=(a,b)=>a.c.n.localeCompare(b.c.n,'cs');
 
 const TODAYD=3;
