@@ -1247,7 +1247,14 @@ data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',pozn
 data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',pozn:''};
 data[20].status='neomluveno';
 // zobrazení propsané omluvenky (jen text; žádná logika ani sdílení dat mezi appkami)
-function parentExcuseLine(c){return c.parentExcuse?`omluveno rodičem dnes ${c.parentExcuse.time} · ${c.parentExcuse.reason}`:'';}
+function parentExcuseLine(c){return c.parentExcuse?'omluveno rodičem':'';}
+/* Detail omluvenky pod jménem – stejný tvar jako v soupisu docházky: důvod tučně, za ním
+   text od rodiče a čas odeslání. Obálka jen když rodič opravdu něco napsal. */
+function parentExcuseDetail(c){
+  const e=c.parentExcuse; if(!e)return '';
+  const d=(e.reason||'').replace(/^./,m=>m.toUpperCase());
+  return `<b>${d}</b>`+(e.pozn?` · ${esc(e.pozn)}`:'')+` <span class="rn-cas">${e.time}</span>`;
+}
 data.forEach((c,i)=>{const dd=((i*7)%27)+1,mm=((i*5)%12)+1,yy=c.predskolak?2020:2021;c.nar=`${dd}. ${mm}. ${yy}`;c.vek=2026-yy;});
 function recordsFor(c){const r=[['Vstupní depistáž','9/2025'],['Čtvrtletní hodnocení','1/2026'],['Pozorování v lese','3/2026']];if(c.predskolak)r.push(['Posouzení školní zralosti','4/2026']);return r;}
 function parentsFor(c){const base=c.n.normalize('NFD').replace(/[^a-zA-Z]/g,'').toLowerCase();return [
@@ -1564,12 +1571,13 @@ function renderPrehled(){
   let blkNeprijde=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div><div class="dash-scroll">`;
   if(absent.length){
     absent.forEach(({c})=>{
+      /* Vpravo u jména jen stav, pod jménem detail – stejný tvar jako v soupisu docházky:
+         důvod tučně, text od rodiče, čas. Samotné „nemoc" neřekne, jestli čekat zvracení,
+         teplotu nebo vyrážku; to rodič píše právě do poznámky. */
       const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
-      /* Volný text z omluvenky patří sem: „nemoc" neřekne, jestli má průvodce čekat zvracení,
-         teplotu nebo vyrážku. Vlastní řádek pod jménem – vedle důvodu by se ukousl na dvě slova. */
-      const pozn=c.parentExcuse&&c.parentExcuse.pozn?c.parentExcuse.pozn:'';
+      const det=parentExcuseDetail(c);
       blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span>`
-        +(pozn?`<span class="pa-pozn">✉️ ${esc(pozn)}</span>`:'')+`</button>`;
+        +(det?`<span class="pa-pozn">${det}</span>`:'')+`</button>`;
     });
   }else{
     blkNeprijde+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
@@ -1699,14 +1707,14 @@ function rosterHTML(){
     // pod okraj obrazovky celý zbytek soupisu
     let noteLine=(c.zpravy||[]).filter(z=>z.den===TODAYD).map(z=>{
       const dlouhy=(z.text||'').length>ZP_DELKA, rozbalen=zpRozbalene.has(z.id);
-      return `<div class="rnote rnote-info"><span class="${dlouhy&&!rozbalen?'zp-clamp':''}">✉️ ${zpravaShrnuti(z)}</span> <span class="rn-cas">${z.odeslano}</span>`
+      return `<div class="rnote rnote-info"><span class="${dlouhy&&!rozbalen?'zp-clamp':''}">${zpravaShrnuti(z)}</span> <span class="rn-cas">${z.odeslano}</span>`
         +(dlouhy?`<button class="zp-vic" onclick="event.stopPropagation();zpToggle('${z.id}')">${rozbalen?'zkrátit ›':'celý vzkaz ›'}</button>`:'')+`</div>`;
     }).join('');
     /* Poznámku z omluvenky uvozuje důvod, který rodič vybral (nemoc / rodinné důvody / jiné) –
        „K omluvence" nic neříkalo, přitom příznak omluvenka nese a na řádku jinak není vidět. */
     if(c.parentExcuse&&c.parentExcuse.pozn){const d=c.parentExcuse.reason||'omluvenka';
-      noteLine+=`<div class="rnote">✉️ <b>${d.charAt(0).toUpperCase()+d.slice(1)}</b> · ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
-    if(c.note)noteLine+=`<div class="rnote">✉️ ${c.note}</div>`;
+      noteLine+=`<div class="rnote"><b>${d.charAt(0).toUpperCase()+d.slice(1)}</b> · ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
+    if(c.note)noteLine+=`<div class="rnote">${c.note}</div>`;
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();
     const chk=zapis

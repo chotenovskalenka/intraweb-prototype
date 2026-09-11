@@ -67,12 +67,13 @@ function renderPrehled(){
   let blkNeprijde=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div><div class="dash-scroll">`;
   if(absent.length){
     absent.forEach(({c})=>{
+      /* Vpravo u jména jen stav, pod jménem detail – stejný tvar jako v soupisu docházky:
+         důvod tučně, text od rodiče, čas. Samotné „nemoc" neřekne, jestli čekat zvracení,
+         teplotu nebo vyrážku; to rodič píše právě do poznámky. */
       const r=c.parentExcuse?parentExcuseLine(c):(c.status==='omluveno'?'omluveno průvodcem':'absence bez omluvy');
-      /* Volný text z omluvenky patří sem: „nemoc" neřekne, jestli má průvodce čekat zvracení,
-         teplotu nebo vyrážku. Vlastní řádek pod jménem – vedle důvodu by se ukousl na dvě slova. */
-      const pozn=c.parentExcuse&&c.parentExcuse.pozn?c.parentExcuse.pozn:'';
+      const det=parentExcuseDetail(c);
       blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span>`
-        +(pozn?`<span class="pa-pozn">✉️ ${esc(pozn)}</span>`:'')+`</button>`;
+        +(det?`<span class="pa-pozn">${det}</span>`:'')+`</button>`;
     });
   }else{
     blkNeprijde+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;

@@ -29,7 +29,14 @@ data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',pozn
 data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',pozn:''};
 data[20].status='neomluveno';
 // zobrazení propsané omluvenky (jen text; žádná logika ani sdílení dat mezi appkami)
-function parentExcuseLine(c){return c.parentExcuse?`omluveno rodičem dnes ${c.parentExcuse.time} · ${c.parentExcuse.reason}`:'';}
+function parentExcuseLine(c){return c.parentExcuse?'omluveno rodičem':'';}
+/* Detail omluvenky pod jménem – stejný tvar jako v soupisu docházky: důvod tučně, za ním
+   text od rodiče a čas odeslání. Obálka jen když rodič opravdu něco napsal. */
+function parentExcuseDetail(c){
+  const e=c.parentExcuse; if(!e)return '';
+  const d=(e.reason||'').replace(/^./,m=>m.toUpperCase());
+  return `<b>${d}</b>`+(e.pozn?` · ${esc(e.pozn)}`:'')+` <span class="rn-cas">${e.time}</span>`;
+}
 data.forEach((c,i)=>{const dd=((i*7)%27)+1,mm=((i*5)%12)+1,yy=c.predskolak?2020:2021;c.nar=`${dd}. ${mm}. ${yy}`;c.vek=2026-yy;});
 function recordsFor(c){const r=[['Vstupní depistáž','9/2025'],['Čtvrtletní hodnocení','1/2026'],['Pozorování v lese','3/2026']];if(c.predskolak)r.push(['Posouzení školní zralosti','4/2026']);return r;}
 function parentsFor(c){const base=c.n.normalize('NFD').replace(/[^a-zA-Z]/g,'').toLowerCase();return [
