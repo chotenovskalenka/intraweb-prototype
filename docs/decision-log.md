@@ -1416,3 +1416,9 @@ o dítěti není zpráva o dnešku; zůstává u dítěte v Docházce a v profil
 průvodců na dashboardu nikdy neukázala. V hlavičce dashboardu byla počítaná správně,
 proto si toho nikdo nevšiml.
 
+**Ranní řada je jeden rámec, ne tři karty.** Tři karty vedle sebe nutí oko zastavit třikrát,
+i když jde o jeden okamžik. Na desktopu je tedy jedna plocha rozdělená tenkými svislými
+linkami; vlastní nadpisy zůstávají, protože pojmenovávají tři různé věci. Pod 900 px se
+rámec neuplatní a zůstávají samostatné karty – na mobilu se stohují pod sebe a hranice
+karty je tam to jediné, co je odděluje.
+
