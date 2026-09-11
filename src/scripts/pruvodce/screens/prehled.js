@@ -1,8 +1,9 @@
 /* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce (stejný přístup jako rodič):
    velký datumový nadpis, prioritní sloupce (.dash3), nadpisy karet .ch.
    Na desktopu nahoře ranní řada (.dash-row): počty docházky · informace od rodičů ·
-   kdo nepřijde. Pod ní kontext dne ve sloupcích (.dash3): program + dnešní akce ·
-   básnička a písnička · průvodci ve službě. Na mobilu se všechno stohuje v tomto pořadí. */
+   kdo nepřijde. Pod ní ve sloupcích (.dash3) zleva: průvodci ve službě · básnička a písnička ·
+   program dne + dnešní akce. Pořadí sloupců na desktopu dělá CSS `order` (.dash-swap);
+   v DOM zůstává mobilní priorita program → básnička → průvodci. */
 /* Dlouhé vzkazy se krátí na tři řádky. Jeden ukecaný rodič jinak zdvojnásobí výšku celé
    ranní řady (měřeno: 287 → 550 px) a průvodce při předávání dítěte potřebuje hlavně vědět,
    že něco přišlo a od koho. Práh je na délce textu, ne na změřeném přetečení – render()
@@ -112,7 +113,10 @@ function renderPrehled(){
      (kolik jich je · co vzkázali rodiče · kdo nepřijde) a průvodce ho má přečíst najednou.
      Pod ní teprve kontext dne. Na mobilu se .dash-row stohuje, takže pořadí zůstává stejné. */
   let h=`<div class="dash-row">${blkDochazka}${blkZpravy}${blkNeprijde}</div>`;
-  h+=`<div class="dash3">`;
+  /* Pořadí v DOM = pořadí na mobilu (program dne → básnička → průvodci, viz „soupis dne"
+     v CLAUDE.md). Na desktopu se sloupce prohazují přes CSS `order`: vlevo pod docházkou
+     sedí průvodci ve službě (tým k týmu), vpravo kontext dne. */
+  h+=`<div class="dash3 dash-swap">`;
   h+=`<div class="dcol">${blkProgram}${blkAkce}</div>`;
   h+=`<div class="dcol">${blkBasnicka}</div>`;
   h+=`<div class="dcol">${blkPruvodci}</div>`;

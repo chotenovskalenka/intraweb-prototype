@@ -258,6 +258,11 @@ table.wt td.pastc{opacity:.45}
   .dash-row .dash-scroll{max-height:var(--dash-h);overflow-y:auto;overscroll-behavior:contain}
   .dash-row .dash-scroll>:last-child{margin-bottom:0}
   .dash3{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start}
+  /* Průvodcovský přehled: na desktopu vlevo tým (pod docházkou), vpravo kontext dne.
+     Na mobilu platí pořadí z DOM, kde je program dne dřív než rozpis služeb. */
+  .dash3.dash-swap>.dcol:nth-child(1){order:3}
+  .dash3.dash-swap>.dcol:nth-child(2){order:2}
+  .dash3.dash-swap>.dcol:nth-child(3){order:1}
   .dcol{min-width:0}
 }
 @media (min-width:1200px){.dash3{grid-template-columns:repeat(3,1fr)}}
