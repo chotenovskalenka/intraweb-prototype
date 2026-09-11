@@ -76,7 +76,7 @@ function renderPrehled(){
    if(akToday.length){
      blkAkce=`<div class="tile"><div class="ch">Dnešní akce</div>`;
      akToday.forEach(a=>{const m=[a.time,a.place].filter(Boolean).join(' · ');blkAkce+=`<button class="acard" style="margin:6px 0 0" onclick="openAkceDetail('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;});
-     blkAkce+=`</div>`;
+     blkAkce+=`<button class="cardlink" onclick="go('akce')">Všechny akce ›</button></div>`;
    }}
 
   // průvodci dnes s hodinami (řádky .np jako v sekci Průvodci); kdo uspává = ☾ u jména
