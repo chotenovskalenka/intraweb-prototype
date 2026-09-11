@@ -242,8 +242,14 @@ table.wt td.pastc{opacity:.45}
 @media (min-width:900px){
   /* Ranní řada nad sloupci: flex (ne grid), ať se dvě dlaždice roztáhnou na půlky,
      když na dnešek žádné vzkazy od rodičů nejsou. */
-  .dash-row{display:flex;gap:20px;align-items:start;margin-bottom:20px}
-  .dash-row>.tile{flex:1 1 0;min-width:0;margin-bottom:0}
+  /* Ráno je jedna věc, ne tři – na desktopu tedy jedna plocha rozdělená tenkými linkami,
+     ne tři samostatné karty. Vlastní nadpisy zůstávají: pojmenovávají tři různé věci.
+     Na mobilu (pod 900 px) se rámec neuplatní a dlaždice zůstávají samostatné karty. */
+  .dash-row{display:flex;align-items:stretch;margin-bottom:20px;
+    background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:0 1px 3px rgba(31,42,46,.06)}
+  .dash-row>.tile{flex:1 1 0;min-width:0;margin:0;background:none;box-shadow:none;border-radius:0;
+    border-left:1px solid var(--color-border)}
+  .dash-row>.tile:first-child{border-left:none}
   .dash3{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start}
   .dcol{min-width:0}
 }
