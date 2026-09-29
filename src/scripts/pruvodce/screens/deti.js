@@ -11,7 +11,7 @@ function narKey(v){const p=(v||'').split('.').map(x=>Number(x.trim()));return (p
 // právě zobrazený výřez (filtr + hledání + řazení) – čte ho výpis i export
 function detiList(){
   return data.map((c,i)=>({c,i}))
-    .filter(x=>detiFilter==='all'||(detiFilter==='pre'&&x.c.predskolak)||(detiFilter==='al'&&x.c.alergie))
+    .filter(x=>detiFilter==='all'||(detiFilter==='al'?!!x.c.alergie:veSeznamu(x.c,x.i,detiFilter)))
     .filter(x=>!detiQuery||norm(full(x.c)).includes(norm(detiQuery)))
     .sort(detiCmp);
 }
@@ -27,9 +27,12 @@ function detiCmp(a,b){
 function renderDeti(){
   if(detiOpen>=0)return renderDite(detiOpen);
   // počty u filtrů – ať je poznat, že filtrují, ne že něco spouštějí
-  const pocty={all:data.length,pre:data.filter(c=>c.predskolak).length,al:data.filter(c=>c.alergie).length};
-  let h=`<div class="deti"><div class="filters">`+[['all','Všechny'],['pre','Předškoláci'],['al','Alergici']]
-    .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocty[f[0]]}</span></button>`).join('')+`</div>`;
+  // Všechny · Alergici · pak seznamy (vestavěné i vlastní) · + Nový seznam
+  const pocet=id=>id==='all'?data.length:id==='al'?data.filter(c=>c.alergie).length:data.filter((c,i)=>veSeznamu(c,i,id)).length;
+  const filtry=[['all','Všechny'],['al','Alergici'],...SEZNAMY.map(s=>[s.id,s.nazev])];
+  let h=`<div class="deti"><div class="filters">`+filtry
+    .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocet(f[0])}</span></button>`).join('')
+    +`<button class="filters-add" onclick="openSeznam()">+ Nový seznam</button></div>`;
   const list=detiList();
   h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`+
     `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button>`+

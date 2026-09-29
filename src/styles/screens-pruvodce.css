@@ -141,3 +141,10 @@
 .rozh-top .zsdil{margin:-12px 0}   /* dotykový cíl zůstává 44 px, řádek se nenafoukne */
 .rozh-chybi{margin-top:4px;font-size:var(--text-note);color:var(--state-warn-ink)}
 .jid-kdo{margin:0 0 var(--space-md);border-top:none;padding-top:0}
+/* P4 – seznamy dětí. „+ Nový seznam" sedí na konci řady filtrů, ale nesmí vypadat jako filtr:
+   bez podtržení, barvou akce. */
+.filters .filters-add{color:var(--color-primary);font-weight:600;border-bottom-color:transparent}
+.dsez{display:flex;align-items:center;gap:10px;margin:0 0 var(--space-sm)}
+.dsez .pl{margin:0;flex-shrink:0}
+.dsez .pin{max-width:260px}
+.sez-box{max-height:46vh;overflow-y:auto;margin-top:4px}
