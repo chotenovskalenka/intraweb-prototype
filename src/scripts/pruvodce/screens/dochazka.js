@@ -26,7 +26,7 @@ const CTX={rano:['Kdo dnes přišel',''],
   obed:['Oběd – všichni',''],
   spi:['Maringotka · spáči','Zaškrtnuté dítě je ve školce. Odškrtnutím ho zapíšeš jako absenci – zaškrtnutím ho vrátíš zpět.'],
   poobede:['Dopolední docházka','Tyhle děti odcházejí po obědě.'],
-  odpoledni:['Odpolední docházka','Tyhle děti přicházejí až po obědě.'],
+  odpoledni:['Odpolední docházka','Tyhle děti zůstávají i odpoledne (do 15:00).'],
   neprit:['Absence','']};
 function counts(){const o={};TABS_BY().forEach(([k])=>o[k]=data.filter(c=>inTab(c,k)).length);o.pres=data.filter(here).length;return o;}
 function planPill(c){return c.plan==='celodenní'?'<span class="pill p-cel">celodenní</span>':c.plan==='dopolední'?'<span class="pill p-dop">dopolední</span>':'<span class="pill p-odp">odpolední</span>';}
@@ -145,7 +145,10 @@ function todayRoster(){
    if(tip)main+=`<div class="sectip">${tip}</div>`;}
   main+=`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)">`;
   main+=`<div class="rosterbox"><div id="roster">${rosterHTML()}</div></div>`;
-  main+=`<div class="doch-mealsfoot"><span class="meals">Obědy <b>${c.pres}</b> · svačiny <b>${c.pres}</b></span><span class="pwa">nainstalovatelné · offline (PWA)</span></div>`;
+  /* Dřív „Obědy X · svačiny X" s počtem přítomných dětí – oběd ani odpolední svačina se tak
+     nepočítají. Teď týž výpočet jako přehled kuchyně (porceDne), za celou školku. */
+  {const pk=porceDne(TODAYD);
+   main+=`<div class="doch-mealsfoot"><span class="meals">Kuchyň: dop. svačina <b>${pk.dop}</b> · oběd <b>${pk.obed}</b> · odp. svačina <b>${pk.odpN}</b></span><span class="pwa">nainstalovatelné · offline (PWA)</span></div>`;}
   return `<div class="doch-today">${side}<div class="doch-main">${main}</div></div>`;
 }
 function specialBar(d){
