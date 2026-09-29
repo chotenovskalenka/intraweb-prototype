@@ -115,8 +115,8 @@ window.vratitDiteti=(i,k)=>{
 };
 // čerpání jen za tohle dítě – tentýž modal, jen s předvybraným jediným dítětem
 window.pridatDiteti=i=>{fondM={name:'',date:MESIC_TED,amt:'',sel:new Set([i]),group:'vlastni',q:''};renderModalRoot();};
-window.openFondChild=i=>{fondChild=i;render();};
-window.closeFondChild=()=>{fondChild=-1;render();};
+window.openFondChild=i=>{fondChild=i;render();navPush();};
+window.closeFondChild=()=>navZpet();
 window.onOdSearch=v=>{odQuery=v;renderKeepFocus();};
 window.stornoFond=id=>{const k=FONDHIST.findIndex(x=>x.id===id);if(k<0)return;const x=FONDHIST[k];x.idxs.forEach(i=>{data[i].fond+=x.amt;const li=data[i].fondLog.findIndex(l=>l.name===x.name&&l.amt===x.amt);if(li>=0)data[i].fondLog.splice(li,1);});if(x.akceId){const a=AKCE.find(y=>y.id===x.akceId);if(a)a.done=false;}FONDHIST.splice(k,1);render();showToast('Čerpání vráceno ✓');};
 window.startOdecet=id=>{const a=AKCE.find(x=>x.id===id);odecet={akceId:id,group:'vse',sel:new Set(presentIdx(a))};render();};

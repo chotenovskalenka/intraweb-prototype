@@ -152,6 +152,6 @@ window.setDiteF=(i,f,v)=>{data[i][f]=v;};   // bez render() – kurzor v poli mu
 window.togDitePre=i=>{data[i].predskolak=!data[i].predskolak;render();};
 window.setDetiF=f=>{detiFilter=f;render();};
 window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
-window.openDite=i=>{detiOpen=i;rozhEdit=null;render();};
-window.closeDite=()=>{detiOpen=-1;rozhEdit=null;render();};
+window.openDite=i=>{detiOpen=i;rozhEdit=null;render();navPush();};
+window.closeDite=()=>{rozhEdit=null;navZpet();};
 window.setDopo=(i,v)=>{dopoMap[i]=v;};
