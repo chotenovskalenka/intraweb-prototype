@@ -316,4 +316,19 @@ data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'09:30',text:'
 data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po ránu kapky do očí, má je v batohu.',odeslano:'7:40'});
 // Záměrně dlouhý vzkaz – rodiče píšou do skupin celé odstavce a přehled to musí unést.
 data[12].zpravy.push({id:'zp4',den:TODAYD,typ:'jine',kdo:'',cas:'',text:'Dobrý den, chtěla jsem vás poprosit – Kubík od víkendu hodně řeší, že se mu kluci smějí kvůli tomu, jak mluví. Doma o tom mluví každý večer a ráno se mu do školky nechce, dnes jsme šli asi dvacet minut od auta. Nechci z toho dělat velkou věc a vůbec netvrdím, že se něco stalo ve školce, jen jsem chtěla, abyste o tom věděli a případně se na to v kruhu nenápadně podívali. Kdyby to vydrželo do konce týdne, ozvu se a domluvíme se na schůzce.',odeslano:'6:38'});
+/* P4 z testování (2 ze 3): vlastní seznamy dětí. Průvodce v docházce nepoznal, kdo z dětí
+   je předškolák; druhá respondentka to zobecnila – „můžete si přidat jakýkoliv seznam,
+   který řešíte" (horolezci, kroužky). Předškoláci a Horolezci se odvozují z karet dětí,
+   další seznamy si tým zakládá sám a drží v nich indexy dětí. */
+let SEZNAMY=[
+  {id:'pre',nazev:'Předškoláci',vestaveny:true},
+  {id:'lez',nazev:'Horolezci',vestaveny:true},
+  {id:'s1',nazev:'Haaj band',deti:[1,4,7,9,12,16]},
+];
+function veSeznamu(c,i,sid){
+  if(sid==='pre')return c.predskolak;
+  if(sid==='lez')return c.lez;
+  const s=SEZNAMY.find(x=>x.id===sid);return !!(s&&s.deti&&s.deti.includes(i));
+}
+const nazevSeznamu=sid=>(SEZNAMY.find(x=>x.id===sid)||{}).nazev||'';
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));

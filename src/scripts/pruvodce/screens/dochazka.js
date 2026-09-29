@@ -1,3 +1,4 @@
+let dochSeznam='all';   // P4: filtr soupisu podle seznamu dětí
 /* SCREEN: PRUVODCE_DOCHAZKA */
 const SPECIAL={4:'hor',14:'pred',15:'pred',16:'pred'}; // v ostré verzi odvozeno z akcí v IS
 let mode=SPECIAL[3]||'bezny';
@@ -72,7 +73,7 @@ function rosterHTML(){
   const maPozn=c=>(c.note||(c.parentExcuse&&c.parentExcuse.pozn)||(c.zpravy||[]).some(z=>z.den===TODAYD))?0:1;
   const lst=data.map((c,i)=>({c,i})).sort((a,b)=>{const an=maPozn(a.c),bn=maPozn(b.c);if(an!==bn)return an-bn;return byAlpha(a,b);});
   lst.forEach(({c,i})=>{
-    const match=query?norm(full(c)).includes(norm(query)):inTab(c,tab);
+    const match=(query?norm(full(c)).includes(norm(query)):inTab(c,tab))&&(dochSeznam==='all'||veSeznamu(c,i,dochSeznam));
     if(!match)return;shown++;
     /* Všechno, co dnes přišlo od rodiče, na jednom místě u dítěte: vzkazy z rodičovské appky
        (kdo vyzvedne, pozdější příchod, lék), volný text z omluvenky a trvalá poznámka.
@@ -125,11 +126,20 @@ function renderDochNav(){
 }
 function renderDen(){return denDay===TODAYD?todayRoster():dayRoster(denDay);}
 function todayRoster(){
-  const c=counts();
+  // počty na záložkách se počítají ze stejného výběru jako soupis (celá školka, nebo seznam)
+  const c=dochSeznam==='all'?counts():(()=>{const o={};const v=data.filter((x,i)=>veSeznamu(x,i,dochSeznam));
+    TABS_BY().forEach(([k])=>o[k]=v.filter(x=>inTab(x,k)).length);o.pres=v.filter(here).length;return o;})();
   // počty (zároveň filtry) – vodorovná řada nad seznamem; listování dne je nahoře ve sloučeném poli
   let side=`<div class="tabs wrap doch-counts">`+TABS_BY().map(([k,l])=>`<div class="tab${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
   // pod řadou: kontext + hledání + roster + souhrn jídel na plnou šířku
-  let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${c.pres}</b> / ${data.length}</span></div>`;
+  /* P4: seznam jako druhý filtr k záložce – „Absence" × „Předškoláci" odpoví na otázku
+     z testování, kdo z nepřítomných je předškolák. Počet přítomných se pak vztahuje k seznamu. */
+  const vSez=data.map((x,i)=>({x,i})).filter(({x,i})=>dochSeznam==='all'||veSeznamu(x,i,dochSeznam));
+  const presS=vSez.filter(({x})=>here(x)).length;
+  let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` · ${nazevSeznamu(dochSeznam).toLowerCase()}`}</span></div>`;
+  main+=`<div class="dsez"><label class="pl" for="dsez">Seznam</label><select class="pin" id="dsez" onchange="setDochSeznam(this.value)">`
+    +`<option value="all"${dochSeznam==='all'?' selected':''}>Všechny děti</option>`
+    +SEZNAMY.map(s=>`<option value="${s.id}"${dochSeznam===s.id?' selected':''}>${s.nazev}</option>`).join('')+`</select></div>`;
   // vysvětlivku k záložce má jen zapisující role; roli samotnou nese odznak v topbaru
   {const tip=smiZapisovat()?(CTX[tab][1]||''):'';
    if(tip)main+=`<div class="sectip">${tip}</div>`;}
@@ -199,6 +209,7 @@ window.setGuideReason=(i,v)=>{if(!smiZapisovat())return;const c=data[i];
   c.status='omluveno';render();showToast(`${kratke(c)} → omluveno bez náhrady`);};
 window.setGuidePozn=(i,v)=>{const c=data[i];if(c.guideExcuse)c.guideExcuse.pozn=v;};
 window.onWSearch=v=>{wquery=v;renderKeepFocus();};
+window.setDochSeznam=v=>{dochSeznam=v;render();};
 window.setSpi=(i,v)=>{if(!smiZapisovat())return;data[i].spi=(v==='true');render();showToast('Uloženo ✓');};
 window.openMonthDay=d=>{if(isWE(d))return;denDay=d;view='den';render();};
 window.closeMonthDay=()=>{monthDay=-1;render();};

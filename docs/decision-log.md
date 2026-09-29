@@ -1596,3 +1596,19 @@ která je zatím odložená.
 
 Souhrn pro kuchyň (kolik porcí dnes, pro přítomné děti) patří do role Kuchyň.
 
+## P4: vlastní seznamy dětí (29. 9. 2026)
+
+**Nález (2 ze 3, jeden doložen chováním):** průvodce v docházce hledal, kdo z nepřítomných je
+předškolák, a nepoznal to („teď nepoznám z hlavy, který z nich je předškolák"); druhá
+respondentka to zobecnila – vlastní seznamy (horolezci, kroužky).
+
+**Rozhodnutí:** `SEZNAMY` – Předškoláci a Horolezci se odvozují z karet dětí, další si tým
+zakládá sám („+ Nový seznam": název + zaškrtnutí dětí).
+- **Děti:** seznamy jsou další filtry vedle Všechny / Alergici, s počty.
+- **Docházka (dnes):** výběr „Seznam" nad soupisem funguje jako druhý filtr k záložce –
+  Absence × Předškoláci odpoví přesně na otázku z testování. Počty na záložkách i „přítomno
+  X / Y" se pak počítají ze seznamu. Přehled (dashboard) zůstává za celou školku.
+
+**Neřešeno:** mazání a úprava seznamu, seznamy platné jen na jeden den (výjezd) –
+výjezdní dny dál řeší zvláštní režim docházky (`SPECIAL`).
+

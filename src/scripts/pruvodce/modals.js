@@ -10,6 +10,7 @@ function renderModalRoot(){
   if(detailA){r.innerHTML=akceDetailHTML();return;}
   if(novM){r.innerHTML=novModalHTML();return;}
   if(novForm){r.innerHTML=novFormHTML();return;}
+  if(seznamM){r.innerHTML=seznamModalHTML();return;}
   r.innerHTML='';
 }
 function akceDetailHTML(){
@@ -148,3 +149,28 @@ window.editFromDetail=()=>{const id=detailA;detailA=null;openAkce(id);};
 window.openCell=(ci,d)=>{if(!denEditovatelny(d))return;cellM={ci,d};renderModalRoot();};
 window.closeCell=()=>{cellM=null;renderModalRoot();};
 window.setCell=code=>{const d=cellM.d;if(d===TODAYD)data[cellM.ci].status=code;else data[cellM.ci].att[d]=code;cellM=null;renderModalRoot();render();showToast('Docházka uložena ✓');};
+
+/* --- P4: nový seznam dětí (kroužek, výjezd, …) --- název + zaškrtnutí dětí. */
+let seznamM=null;
+function seznamModalHTML(){
+  const m=seznamM;
+  const rows=data.map((c,i)=>({c,i})).sort(byAlpha).map(({c,i})=>`<div class="row"><div class="rmain" onclick="togSeznamDite(${i})"><span class="chk ${m.deti.has(i)?'on':''}" role="checkbox" aria-checked="${m.deti.has(i)}">${m.deti.has(i)?'✓':''}</span>${avatar(c,26)}<span class="nm">${full(c)}</span></div></div>`).join('');
+  return `<div class="modal-scrim" onclick="if(event.target===this)closeSeznam()"><div class="modal">
+    <h3>Nový seznam dětí</h3>
+    <label class="pl">Název</label><input class="pin" id="sez-nazev" value="${esc(m.nazev)}" placeholder="např. Tanečky, výjezd do ZOO" oninput="seznamM.nazev=this.value">
+    <label class="pl" style="margin-top:10px">Děti <span class="cnt">${m.deti.size}</span></label>
+    <div class="rosterbox sez-box">${rows}</div>
+    <div class="mbtns"><button class="btn-ghost" onclick="closeSeznam()">Zrušit</button><button class="btn-primary" onclick="ulozSeznam()">Uložit seznam</button></div>
+  </div></div>`;
+}
+window.openSeznam=()=>{seznamM={nazev:'',deti:new Set()};renderModalRoot();};
+window.closeSeznam=()=>{seznamM=null;renderModalRoot();};
+window.togSeznamDite=i=>{seznamM.deti.has(i)?seznamM.deti.delete(i):seznamM.deti.add(i);
+  const y=document.querySelector('.sez-box')?.scrollTop||0;renderModalRoot();const b=document.querySelector('.sez-box');if(b)b.scrollTop=y;};
+window.ulozSeznam=()=>{const n=(seznamM.nazev||'').trim();
+  if(!n){showToast('Pojmenuj seznam');return;}
+  if(!seznamM.deti.size){showToast('Vyber aspoň jedno dítě');return;}
+  const id='s'+(SEZNAMY.length+1);   // bez Date.now() – prototyp čas nesimuluje přes hodiny
+  SEZNAMY.push({id,nazev:n,deti:[...seznamM.deti]});seznamM=null;renderModalRoot();
+  detiFilter=id;render();showToast(`Seznam „${n}“ uložen`);};
+
