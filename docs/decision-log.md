@@ -1570,7 +1570,12 @@ nepatří".
 - **Rodič** vidí jen sdílené: „Hodnocení od průvodců" (čtvrtletní hodnocení) a domluvy
   z konzultací. Depistáž ani pozorování už ne.
 
-**Otevřené:** kdo smí sdílet (dnes kdokoli z týmu – nemá to být jen vedoucí?); záznam
-z konzultace bez domluvy nejde uložit; legislativní bod o jménech dětí ve veřejné části
-třídnice se týká třídnice, která je zatím odložená.
+**Dořešeno 29. 9. 2026:**
+- **Sdílet s rodiči smí kdokoli z týmu** – zatím, dokud se neukáže důvod to omezit.
+- **Ani jedna část záznamu z konzultace není povinná** (stačí jedna z nich) a **záznam jde
+  upravit** – průvodce se k němu průběžně vrací, domluvu často dopisuje až po poradě. Záznam
+  bez domluvy nese v interní zóně upozornění „rodič z konzultace nic nevidí".
+
+**Otevřené:** legislativní bod o jménech dětí ve veřejné části třídnice se týká třídnice,
+která je zatím odložená.
 

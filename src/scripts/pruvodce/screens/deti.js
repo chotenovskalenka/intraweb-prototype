@@ -3,6 +3,8 @@
    jména (stejné pořadí jako dřív). Řadí se i karty na mobilu, i když tam hlavička není –
    ať se seznam po přepnutí šířky nepřeskládá. */
 let detiSort='nm', detiDir=1;
+// rozpracovaný záznam z konzultace: null = nový, jinak index do rozhovoryFor(dítě)
+let rozhEdit=null;
 const DETI_SLOUPCE=[['nm','Dítě'],['plan','Režim docházky'],['vek','Věk'],['nar','Narozeniny'],['predskolak','Předškolák'],['alergie','Alergie']];
 // „16. 7. 2020" → 20200716, aby se narozeniny řadily podle data, ne podle textu
 function narKey(v){const p=(v||'').split('.').map(x=>Number(x.trim()));return (p[2]||0)*10000+(p[1]||0)*100+(p[0]||0);}
@@ -86,12 +88,17 @@ function renderDite(i){
   h+=`<div class="zona"><div class="zona-h"><span class="zona-t">Vidí rodiče</span><span class="zona-s">Tohle je v rodičovské aplikaci u dítěte.</span></div>`;
   const sd=zz.map((r,k)=>[r,k]).filter(([r])=>r.sdileno);
   h+=`<div class="tile"><div class="ch">Hodnocení a dokumenty</div>`+(sd.length?sd.map(([r,k])=>docRow(r,k)).join(''):`<div class="empty-l">Rodičům zatím nic nesdílíte.</div>`)+`</div>`;
-  h+=`<div class="tile"><div class="ch">Domluveno s rodiči</div>`+rz.map(r=>`<div class="rozh"><div class="rozhd">${r.typ} · ${r.date}</div>${esc(r.domluva)}</div>`).join('')+`</div></div>`;
+  /* Každý záznam z konzultace jde upravit – průvodce se k němu průběžně vrací (domluvu
+     často dopisuje až po poradě s kolegy), proto ani jedna část není povinná. */
+  const upr=k=>`<button class="zsdil" onclick="upravRozhovor(${k})">Upravit</button>`;
+  const rzDom=rz.map((r,k)=>[r,k]).filter(([r])=>r.domluva);
+  h+=`<div class="tile"><div class="ch">Domluveno s rodiči</div>`+(rzDom.length?rzDom.map(([r,k])=>`<div class="rozh"><div class="rozh-top"><span class="rozhd">${r.typ} · ${r.date}</span>${upr(k)}</div>${esc(r.domluva)}</div>`).join(''):`<div class="empty-l">S rodiči zatím nic nesdílíte.</div>`)+`</div></div>`;
 
   h+=`<div class="zona zona-int"><div class="zona-h"><span class="zona-t">Jen pro tým</span><span class="zona-s">Rodič tohle nikdy neuvidí.</span></div>`;
   const int=zz.map((r,k)=>[r,k]).filter(([r])=>!r.sdileno);
   h+=`<div class="tile"><div class="ch">Pracovní dokumenty</div>`+(int.length?int.map(([r,k])=>docRow(r,k)).join(''):`<div class="empty-l">Všechny dokumenty jsou sdílené.</div>`)+`</div>`;
-  const zRozh=rz.filter(r=>r.interni).map(r=>`<div class="rozh"><div class="rozhd">${r.typ} · ${r.date}</div>${esc(r.interni)}</div>`);
+  // interní části konzultací; záznam bez domluvy tu nese upozornění, že rodič z něj zatím nic nevidí
+  const zRozh=rz.map((r,k)=>[r,k]).filter(([r])=>r.interni||!r.domluva).map(([r,k])=>`<div class="rozh"><div class="rozh-top"><span class="rozhd">${r.typ} · ${r.date}</span>${upr(k)}</div>${esc(r.interni||'')}${r.domluva?'':`<div class="rozh-chybi">Domluva s rodiči zatím chybí – rodič z konzultace nic nevidí.</div>`}</div>`);
   const zPozn=tp.map(p=>`<div class="rozh"><div class="rozhd">${p.date} · ${esc(p.kdo)}</div>${esc(p.text)}</div>`);
   h+=`<div class="tile"><div class="ch">Poznámky týmu</div>`+([...zPozn,...zRozh].join('')||`<div class="empty-l">Zatím žádné poznámky.</div>`)
     +`<label class="pl" style="margin-top:10px">Nová poznámka</label><textarea class="pta" id="tym-new" placeholder="upřímně – jen pro kolegy"></textarea>`
@@ -99,17 +106,23 @@ function renderDite(i){
   h+=`</div>`;
 
   // Záznam z konzultace: obě části naráz, každá s jasnou viditelností
-  h+=`<div class="tile"><div class="ch">Nový záznam z konzultace</div>`
-    +`<label class="pl">Co jste s rodiči domluvili <span class="vis vis-r">uvidí rodiče</span></label><textarea class="pta" id="rozh-dom" placeholder="shrnutí a doporučení na doma"></textarea>`
-    +`<label class="pl" style="margin-top:10px">Interní poznámka <span class="vis vis-t">jen tým</span></label><textarea class="pta" id="rozh-int" placeholder="co rodiče číst nemají (nepovinné)"></textarea>`
-    +`<button class="btn-primary btn-block" style="margin-top:var(--space-sm)" onclick="addRozhovor(${i})">Uložit záznam</button></div>`;
+  const re=rozhEdit!=null?rz[rozhEdit]:null;
+  h+=`<div class="tile" id="rozh-form"><div class="ch">${re?`Upravit záznam · ${re.typ} ${re.date}`:'Nový záznam z konzultace'}</div>`
+    +`<label class="pl">Co jste s rodiči domluvili <span class="vis vis-r">uvidí rodiče</span></label><textarea class="pta" id="rozh-dom" placeholder="shrnutí a doporučení na doma – můžeš doplnit později">${re?esc(re.domluva):''}</textarea>`
+    +`<label class="pl" style="margin-top:10px">Interní poznámka <span class="vis vis-t">jen tým</span></label><textarea class="pta" id="rozh-int" placeholder="co rodiče číst nemají">${re?esc(re.interni):''}</textarea>`
+    +`<button class="btn-primary btn-block" style="margin-top:var(--space-sm)" onclick="addRozhovor(${i})">${re?'Uložit změny':'Uložit záznam'}</button>`
+    +(re?`<button class="btn-ghost btn-block" style="margin-top:var(--space-xs)" onclick="zrusUpravuRozh()">Zrušit úpravy</button>`:'')+`</div>`;
   return h;
 }
 window.addRozhovor=i=>{const g=id=>{const t=document.getElementById(id);return t?t.value.trim():'';};
   const dom=g('rozh-dom'),int=g('rozh-int');
-  if(!dom){showToast('Napiš, co jste s rodiči domluvili');return;}
-  rozhovoryFor(i).unshift({date:'3. 6. 2026',typ:'Konzultace',domluva:dom,interni:int});render();
-  showToast(int?'Uloženo · domluvu uvidí rodiče, poznámku jen tým':'Uloženo · uvidí rodiče');};
+  if(!dom&&!int){showToast('Napiš aspoň jednu část záznamu');return;}
+  if(rozhEdit!=null){const r=rozhovoryFor(i)[rozhEdit];r.domluva=dom;r.interni=int;rozhEdit=null;}
+  else rozhovoryFor(i).unshift({date:'3. 6. 2026',typ:'Konzultace',domluva:dom,interni:int});
+  render();
+  showToast(dom&&int?'Uloženo · domluvu uvidí rodiče, poznámku jen tým':dom?'Uloženo · uvidí rodiče':'Uloženo · zatím jen pro tým');};
+window.upravRozhovor=k=>{rozhEdit=k;render();const f=document.getElementById('rozh-form');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});};
+window.zrusUpravuRozh=()=>{rozhEdit=null;render();};
 window.addTymPozn=i=>{const t=document.getElementById('tym-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš poznámku');return;}
   tymPoznFor(i).unshift({date:'3. 6. 2026',kdo:role==='hospodarka'?'Míša':role==='vedouci'?'Táňa':'Darča',text:v});render();showToast('Poznámka uložena · jen pro tým');};
 window.sdilejZaznam=(i,k,ano)=>{const r=zaznamyFor(i)[k];if(!r)return;r.sdileno=ano;render();
@@ -130,6 +143,6 @@ window.setDiteF=(i,f,v)=>{data[i][f]=v;};   // bez render() – kurzor v poli mu
 window.togDitePre=i=>{data[i].predskolak=!data[i].predskolak;render();};
 window.setDetiF=f=>{detiFilter=f;render();};
 window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
-window.openDite=i=>{detiOpen=i;render();};
-window.closeDite=()=>{detiOpen=-1;render();};
+window.openDite=i=>{detiOpen=i;rozhEdit=null;render();};
+window.closeDite=()=>{detiOpen=-1;rozhEdit=null;render();};
 window.setDopo=(i,v)=>{dopoMap[i]=v;};
