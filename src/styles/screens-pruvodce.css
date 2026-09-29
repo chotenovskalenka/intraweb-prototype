@@ -151,3 +151,6 @@
 /* Rozpis služeb – den bez služby a nepřítomnost s důvodem (P6). */
 .sh-off{display:inline-block;font-size:var(--text-chip);color:var(--state-muted-ink);line-height:1.2}
 .sh-duvod{font-weight:600;color:var(--state-warn-ink);background:var(--state-warn-bg);border-radius:var(--radius-xs);padding:2px 5px}
+/* Můj profil – výkaz hodin: plán tlumeně, součet odpracovaného s předělem. */
+.vyk-plan{color:var(--color-text-muted);font-weight:500}
+.vyk-suma{border-top:1px solid var(--color-border);margin-top:4px;padding-top:9px}

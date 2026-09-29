@@ -14,6 +14,7 @@ const SECTIONS=[
   ['kontakty','Kontakty','✆'],
 ];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
+TITLES.mujprofil='Můj profil';   // mimo menu – otevírá se z paty menu
 // Sekce viditelné pro aktuální roli. Kulturní fond vede hospodářka – řadový průvodce
 // ani vedoucí ho v menu nemají (a přímý go('fond') je vrátí na přehled).
 const SEKCE_ROLE={fond:()=>jeHospodar()};
@@ -48,13 +49,16 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty};
+const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
   d.classList.toggle('on',drawerOpen);
   document.getElementById('scrim').classList.toggle('on',drawerOpen);
-  d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span><button class="dclose" onclick="closeDrawer()" aria-label="Zavřít menu">✕</button></div>`+SECTIONS.filter(s=>sekceVidi(s[0])).map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('');
+  d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span><button class="dclose" onclick="closeDrawer()" aria-label="Zavřít menu">✕</button></div>`+SECTIONS.filter(s=>sekceVidi(s[0])).map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')
+    // pata menu jako v rodičovské appce: kdo je přihlášený (→ profil s výkazem) a odhlášení (P6)
+    +`<div class="dfoot"><button class="ditem ${section==='mujprofil'?'on':''}" onclick="go('mujprofil')"><span class="dfoot-acc">${ja().n} ${ja().sur}<small>Můj profil · výkaz hodin</small></span></button>`
+    +`<button class="ditem" onclick="showToast('Odhlášení – jen náhled, v prototypu nefunguje')"><span class="ic">${icon('odhlasit')||'⏻'}</span>Odhlásit se</button></div>`;
 }
 function render(){
   // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
