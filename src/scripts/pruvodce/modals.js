@@ -138,7 +138,8 @@ window.saveAkce=()=>{
   modal=null;renderModalRoot();render();showToast('Uloženo ✓');
 };
 window.delAkce=()=>{AKCE=AKCE.filter(x=>x.id!==modal.id);modal=null;renderModalRoot();render();showToast('Akce smazána');};
-window.openShift=(gi,di)=>{const d=shiftTyden(shiftT)[gi].days[di];shiftM={gi,di,on:serving(d)||!d,s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
+// den bez služby (null) se otevírá jako Neslouží – dřív naskočilo Slouží 7:30–16:00
+window.openShift=(gi,di)=>{const d=shiftTyden(shiftT)[gi].days[di];shiftM={gi,di,on:serving(d),s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
 window.closeShift=()=>{shiftM=null;renderModalRoot();};
 window.setShiftOn=b=>{shiftM.on=b;renderModalRoot();};
 window.setShiftF=(f,v)=>{shiftM[f]=v;};

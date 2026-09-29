@@ -839,6 +839,9 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .dsez .pl{margin:0;flex-shrink:0}
 .dsez .pin{max-width:260px}
 .sez-box{max-height:46vh;overflow-y:auto;margin-top:4px}
+/* Rozpis služeb – den bez služby a nepřítomnost s důvodem (P6). */
+.sh-off{display:inline-block;font-size:var(--text-chip);color:var(--state-muted-ink);line-height:1.2}
+.sh-duvod{font-weight:600;color:var(--state-warn-ink);background:var(--state-warn-bg);border-radius:var(--radius-xs);padding:2px 5px}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -2206,9 +2209,12 @@ window.temaAdopt=(fromKey,toKey)=>{
 <script>
 /* SCREEN: PRUVODCE_PRUVODCI */
 function startMin(d){return serving(d)?(+d.s.split(':')[0])*60+(+d.s.split(':')[1]):9999;}
+/* P6 z testování: rozpis nevyznačoval, kdo neslouží – den bez služby byl jen tečka, k nerozeznání
+   od prázdné buňky, a nepřítomnost s důvodem se kreslila stylem alergie. Teď obojí slovem,
+   tlumeně (stavová paleta), aby služby zůstaly to nejvýraznější v tabulce. */
 function shiftCell(d){
-  if(!d)return '<span class="wc e">·</span>';
-  if(d.off)return `<span class="bdg al" style="font-size:9px">${d.off}</span>`;
+  if(!d)return '<span class="sh-off">neslouží</span>';
+  if(d.off)return `<span class="sh-off sh-duvod">${d.off}</span>`;
   return `<div style="line-height:1.25"><div style="color:var(--color-primary);font-weight:600;font-size:10.5px">${fmt(d.s)}</div><div style="color:var(--color-text-muted);font-size:10px">${fmt(d.e)}</div></div>`;
 }
 function renderPruvodci(){
@@ -2828,7 +2834,8 @@ window.saveAkce=()=>{
   modal=null;renderModalRoot();render();showToast('Uloženo ✓');
 };
 window.delAkce=()=>{AKCE=AKCE.filter(x=>x.id!==modal.id);modal=null;renderModalRoot();render();showToast('Akce smazána');};
-window.openShift=(gi,di)=>{const d=shiftTyden(shiftT)[gi].days[di];shiftM={gi,di,on:serving(d)||!d,s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
+// den bez služby (null) se otevírá jako Neslouží – dřív naskočilo Slouží 7:30–16:00
+window.openShift=(gi,di)=>{const d=shiftTyden(shiftT)[gi].days[di];shiftM={gi,di,on:serving(d),s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
 window.closeShift=()=>{shiftM=null;renderModalRoot();};
 window.setShiftOn=b=>{shiftM.on=b;renderModalRoot();};
 window.setShiftF=(f,v)=>{shiftM[f]=v;};

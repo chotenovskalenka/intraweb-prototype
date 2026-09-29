@@ -148,3 +148,6 @@
 .dsez .pl{margin:0;flex-shrink:0}
 .dsez .pin{max-width:260px}
 .sez-box{max-height:46vh;overflow-y:auto;margin-top:4px}
+/* Rozpis služeb – den bez služby a nepřítomnost s důvodem (P6). */
+.sh-off{display:inline-block;font-size:var(--text-chip);color:var(--state-muted-ink);line-height:1.2}
+.sh-duvod{font-weight:600;color:var(--state-warn-ink);background:var(--state-warn-bg);border-radius:var(--radius-xs);padding:2px 5px}

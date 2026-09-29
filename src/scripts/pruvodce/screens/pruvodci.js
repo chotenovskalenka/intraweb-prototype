@@ -1,8 +1,11 @@
 /* SCREEN: PRUVODCE_PRUVODCI */
 function startMin(d){return serving(d)?(+d.s.split(':')[0])*60+(+d.s.split(':')[1]):9999;}
+/* P6 z testování: rozpis nevyznačoval, kdo neslouží – den bez služby byl jen tečka, k nerozeznání
+   od prázdné buňky, a nepřítomnost s důvodem se kreslila stylem alergie. Teď obojí slovem,
+   tlumeně (stavová paleta), aby služby zůstaly to nejvýraznější v tabulce. */
 function shiftCell(d){
-  if(!d)return '<span class="wc e">·</span>';
-  if(d.off)return `<span class="bdg al" style="font-size:9px">${d.off}</span>`;
+  if(!d)return '<span class="sh-off">neslouží</span>';
+  if(d.off)return `<span class="sh-off sh-duvod">${d.off}</span>`;
   return `<div style="line-height:1.25"><div style="color:var(--color-primary);font-weight:600;font-size:10.5px">${fmt(d.s)}</div><div style="color:var(--color-text-muted);font-size:10px">${fmt(d.e)}</div></div>`;
 }
 function renderPruvodci(){
