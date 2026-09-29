@@ -136,3 +136,7 @@
   .zona>.zona-h{grid-column:1/-1}
   .zona>.tile{margin-bottom:0}
 }
+/* záznam z konzultace: hlavička (datum) + „Upravit" na jednom řádku */
+.rozh-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
+.rozh-top .zsdil{margin:-12px 0}   /* dotykový cíl zůstává 44 px, řádek se nenafoukne */
+.rozh-chybi{margin-top:4px;font-size:var(--text-note);color:var(--state-warn-ink)}
