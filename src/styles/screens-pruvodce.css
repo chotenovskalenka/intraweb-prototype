@@ -140,3 +140,4 @@
 .rozh-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
 .rozh-top .zsdil{margin:-12px 0}   /* dotykový cíl zůstává 44 px, řádek se nenafoukne */
 .rozh-chybi{margin-top:4px;font-size:var(--text-note);color:var(--state-warn-ink)}
+.jid-kdo{margin:0 0 var(--space-md);border-top:none;padding-top:0}

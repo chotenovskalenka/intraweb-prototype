@@ -1579,3 +1579,20 @@ nepatří".
 **Otevřené:** legislativní bod o jménech dětí ve veřejné části třídnice se týká třídnice,
 která je zatím odložená.
 
+## P5: alergie – porce v jídelníčku, jména na papír (29. 9. 2026)
+
+**Nález (2 ze 3):** alergie se špatně hledají a jsou na nevhodném místě. Dvě různé příčiny:
+- **Nenašel je** – hledal je v jídelníčku, byly v Dětech; došel tam až po nápovědě.
+- **Jména u jídel nesedí do kontextu.** Kuchyň u přípravy potřebuje vědět, *kolik porcí bez
+  čeho*; jména řeší až u výdeje, kdy se do mobilu nekouká – mají je vyvěšená na papíře.
+  Jméno u jídla navíc čte, jako by to jídlo dostalo jen to dítě.
+
+**Rozhodnutí – ruší dřívější „jména dětí místo čísel alergenů" v jídelníčku průvodce:**
+- u jídla štítek **„bez mléka · 5 porcí"**, žádná jména; náhradu kuchyň píše dál do názvu
+  jídla („Pečivo (1× bez sóji)"), jak to dělá dnes;
+- **„Kdo má jakou alergii ›"** přímo v jídelníčku – vede do Dětí s filtrem Alergici, tedy tam,
+  kde to průvodce hledal;
+- v Dětech → Alergici tlačítko **„Seznam na výdej (PDF)"** – ten papír na zeď.
+
+Souhrn pro kuchyň (kolik porcí dnes, pro přítomné děti) patří do role Kuchyň.
+
