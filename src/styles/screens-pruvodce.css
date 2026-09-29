@@ -111,3 +111,28 @@
    (omluveno / bez omluvy), text je upřesnění, ne další varování. */
 .pa-pozn{flex:0 0 100%;margin-top:2px;font-size:var(--text-note);color:var(--color-text-muted);
   line-height:var(--leading-normal);text-align:left}
+/* P1 – profil dítěte ve dvou zónách: „Vidí rodiče" / „Jen pro tým". Zóna je vlastní plocha
+   s nadpisem a jednou větou, co znamená; interní zóna je podbarvená okrovou, aby se nedala
+   splést, ani když průvodce jen scrolluje. Barvy výhradně z tokenů. */
+.zona{margin:var(--space-lg) 0 var(--space-md)}
+.zona-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 2px var(--space-sm)}
+.zona-t{font-family:var(--font-serif);font-size:var(--text-heading);font-weight:600;color:var(--color-primary-strong)}
+.zona-s{font-size:var(--text-note);color:var(--color-text-muted)}
+.zona-int{background:var(--wash-accent);border:1px dashed var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md)}
+.zona-int .zona-t{color:var(--color-accent-ink)}
+.zona-int .tile:last-child{margin-bottom:0}
+.zrow{display:flex;align-items:center;gap:8px;border-top:1px solid var(--color-border)}
+.zrow:first-of-type{border-top:none}
+.zrow .doc-dl{border-top:none;flex:1;min-width:0}
+.zsdil{flex-shrink:0;min-height:44px;padding:0 4px;background:none;border:none;font-family:var(--font-sans);
+  font-size:var(--text-note);font-weight:600;color:var(--color-primary);cursor:pointer;white-space:nowrap}
+.empty-l{font-size:var(--text-small);color:var(--color-text-muted);padding:4px 0 2px}
+.vis{display:inline-block;margin-left:6px;font-size:var(--text-chip);font-weight:600;border-radius:var(--radius-xs);padding:2px 6px;vertical-align:1px}
+.vis-r{color:var(--state-brand-ink);background:var(--state-brand-bg)}
+.vis-t{color:var(--state-warn-ink);background:var(--state-warn-bg)}
+@media (min-width:900px){
+  #content > .zona{column-span:all}
+  .zona{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 var(--space-lg);align-items:start}
+  .zona>.zona-h{grid-column:1/-1}
+  .zona>.tile{margin-bottom:0}
+}

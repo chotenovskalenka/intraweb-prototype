@@ -1552,3 +1552,25 @@ dlouhodobě nedodržuje. Tohle je **rozhodnutí zadavatelky**, ne závěr z dat 
 testování stojí za to sledovat, jestli rodiče nezačnou volit „Jiné" paušálně.
 Nezavedena zatím druhá část navrženého kompromisu: *upřesnění povinné jen u nemoci*.
 
+## P1: co vidí rodič a co jen tým (29. 9. 2026)
+
+**Nález (3 ze 3, nezávisle):** interní záznamy o dítěti musí být oddělené od toho, co vidí rodič.
+**Stav před změnou:** u průvodce jeden nerozlišený blok záznamů; **rodič přitom viděl i vstupní
+depistáž** a logopedický screening – tedy právě „interní diagnostický formulář, který rodičům
+nepatří".
+
+**Rozhodnutí:** profil dítěte u průvodce má dvě zóny – **„Vidí rodiče"** a **„Jen pro tým"**
+(okrově podbarvená, čárkovaný okraj, věta „Rodič tohle nikdy neuvidí").
+
+- Každý dokument nese `sdileno`; **výchozí je vždy interní**, sdílí se vědomým krokem
+  („Sdílet s rodiči" / „Přestat sdílet"). Důvod: odborné zprávy se před předáním upravují.
+- **Záznam z konzultace má dvě pole** – co se s rodiči domluvilo (uvidí rodiče, povinné)
+  a interní poznámka (jen tým). Obava „jak to rodič přečte" se řeší v okamžiku psaní.
+- **Poznámky týmu** – samostatné, vždy interní; místo pro upřímné poznámky o spolupráci s rodinou.
+- **Rodič** vidí jen sdílené: „Hodnocení od průvodců" (čtvrtletní hodnocení) a domluvy
+  z konzultací. Depistáž ani pozorování už ne.
+
+**Otevřené:** kdo smí sdílet (dnes kdokoli z týmu – nemá to být jen vedoucí?); záznam
+z konzultace bez domluvy nejde uložit; legislativní bod o jménech dětí ve veřejné části
+třídnice se týká třídnice, která je zatím odložená.
+

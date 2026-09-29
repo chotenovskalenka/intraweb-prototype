@@ -50,7 +50,7 @@ function renderDeti(){
   return h+`</div>`;
 }
 function renderDite(i){
-  const c=data[i],recs=recordsFor(c);
+  const c=data[i];
   // hlavička detailu je jeden blok → na desktopu přeskočí masonry sloupce (column-span:all)
   let h=`<div class="dite-head"><button class="back" onclick="closeDite()">← Zpět na seznam</button>`;
   h+=`<div class="pav">${avatar(c,72)}</div><div class="pname">${full(c)}</div><div class="pfull">${c.plan}${c.predskolak?' · předškolák':''}</div></div>`;
@@ -74,17 +74,46 @@ function renderDite(i){
   if(c.note)h+=`<div class="tile"><div class="ch">Aktuální poznámka</div><div class="tval">${c.note}</div></div>`;
   // zůstatek fondu je věc hospodářky – řadový průvodce ho v profilu nevidí
   if(jeHospodar())h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
-  /* Záznamy jsou hotové dokumenty (depistáž, hodnocení) – ke stažení jako PDF, stejně jako
-     dokumenty v Kontaktech. Jak se do IS dostanou, je otevřená otázka (viz decision-log). */
-  h+=`<div class="tile"><div class="ch">Záznamy a hodnocení (${recs.length})</div>`+
-    recs.map((r,k)=>`<button class="doc doc-dl" onclick="stahniZaznam(${i},${k})"><span>${r[0]}<span class="dt2"> · ${r[1]}</span></span><span class="pdf">PDF ↓</span></button>`).join('')+`</div>`;
   const ps=parentsFor(c);
   h+=`<div class="tile"><div class="ch">Rodiče</div>`+ps.map((p,k)=>`<div style="padding:8px 0${k?';border-top:1px solid var(--color-border)':''}"><div style="font-size:14px"><b>${p.role}</b> · ${p.name}</div><div class="contact" style="margin-top:6px"><a class="cbtn" href="tel:${p.phone.replace(/ /g,'')}">${p.phone}</a><a class="cbtn" href="mailto:${p.email}" style="font-size:11.5px">${p.email}</a></div></div>`).join('')+`</div>`;
-  const rz=rozhovoryFor(i);
-  h+=`<div class="tile"><div class="ch">Rozhovory s rodiči (${rz.length})</div>`+rz.map(r=>`<div class="rozh"><div class="rozhd">${r.date}</div>${r.note}</div>`).join('')+`<label class="pl" style="margin-top:10px">Nový záznam</label><textarea class="pta" id="rozh-new" placeholder="zápis z rozhovoru, doporučení na doma…"></textarea><button class="btn-primary btn-block" style="margin-top:var(--space-sm)" onclick="addRozhovor(${i})">Přidat záznam</button></div>`;
+
+  /* P1: dvě zóny místo jednoho bloku. Průvodce musí na první pohled vědět, co z toho
+     čte rodič – nejistota, „jak to rodič přečte", byla jádro nálezu (3 ze 3). */
+  const zz=zaznamyFor(i), rz=rozhovoryFor(i), tp=tymPoznFor(i);
+  const docRow=(r,k)=>`<div class="zrow"><button class="doc doc-dl" onclick="stahniZaznam(${i},${k})"><span>${r.nazev}<span class="dt2"> · ${r.datum}</span></span><span class="pdf">PDF ↓</span></button>`
+    +`<button class="zsdil" onclick="sdilejZaznam(${i},${k},${!r.sdileno})">${r.sdileno?'Přestat sdílet':'Sdílet s rodiči'}</button></div>`;
+
+  h+=`<div class="zona"><div class="zona-h"><span class="zona-t">Vidí rodiče</span><span class="zona-s">Tohle je v rodičovské aplikaci u dítěte.</span></div>`;
+  const sd=zz.map((r,k)=>[r,k]).filter(([r])=>r.sdileno);
+  h+=`<div class="tile"><div class="ch">Hodnocení a dokumenty</div>`+(sd.length?sd.map(([r,k])=>docRow(r,k)).join(''):`<div class="empty-l">Rodičům zatím nic nesdílíte.</div>`)+`</div>`;
+  h+=`<div class="tile"><div class="ch">Domluveno s rodiči</div>`+rz.map(r=>`<div class="rozh"><div class="rozhd">${r.typ} · ${r.date}</div>${esc(r.domluva)}</div>`).join('')+`</div></div>`;
+
+  h+=`<div class="zona zona-int"><div class="zona-h"><span class="zona-t">Jen pro tým</span><span class="zona-s">Rodič tohle nikdy neuvidí.</span></div>`;
+  const int=zz.map((r,k)=>[r,k]).filter(([r])=>!r.sdileno);
+  h+=`<div class="tile"><div class="ch">Pracovní dokumenty</div>`+(int.length?int.map(([r,k])=>docRow(r,k)).join(''):`<div class="empty-l">Všechny dokumenty jsou sdílené.</div>`)+`</div>`;
+  const zRozh=rz.filter(r=>r.interni).map(r=>`<div class="rozh"><div class="rozhd">${r.typ} · ${r.date}</div>${esc(r.interni)}</div>`);
+  const zPozn=tp.map(p=>`<div class="rozh"><div class="rozhd">${p.date} · ${esc(p.kdo)}</div>${esc(p.text)}</div>`);
+  h+=`<div class="tile"><div class="ch">Poznámky týmu</div>`+([...zPozn,...zRozh].join('')||`<div class="empty-l">Zatím žádné poznámky.</div>`)
+    +`<label class="pl" style="margin-top:10px">Nová poznámka</label><textarea class="pta" id="tym-new" placeholder="upřímně – jen pro kolegy"></textarea>`
+    +`<button class="btn-ghost btn-block" style="margin-top:var(--space-sm)" onclick="addTymPozn(${i})">Uložit poznámku</button></div>`;
+  h+=`</div>`;
+
+  // Záznam z konzultace: obě části naráz, každá s jasnou viditelností
+  h+=`<div class="tile"><div class="ch">Nový záznam z konzultace</div>`
+    +`<label class="pl">Co jste s rodiči domluvili <span class="vis vis-r">uvidí rodiče</span></label><textarea class="pta" id="rozh-dom" placeholder="shrnutí a doporučení na doma"></textarea>`
+    +`<label class="pl" style="margin-top:10px">Interní poznámka <span class="vis vis-t">jen tým</span></label><textarea class="pta" id="rozh-int" placeholder="co rodiče číst nemají (nepovinné)"></textarea>`
+    +`<button class="btn-primary btn-block" style="margin-top:var(--space-sm)" onclick="addRozhovor(${i})">Uložit záznam</button></div>`;
   return h;
 }
-window.addRozhovor=i=>{const t=document.getElementById('rozh-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš záznam');return;}rozhovoryFor(i).unshift({date:'27. 6. 2026',note:v});render();showToast('Záznam uložen ✓');};
+window.addRozhovor=i=>{const g=id=>{const t=document.getElementById(id);return t?t.value.trim():'';};
+  const dom=g('rozh-dom'),int=g('rozh-int');
+  if(!dom){showToast('Napiš, co jste s rodiči domluvili');return;}
+  rozhovoryFor(i).unshift({date:'3. 6. 2026',typ:'Konzultace',domluva:dom,interni:int});render();
+  showToast(int?'Uloženo · domluvu uvidí rodiče, poznámku jen tým':'Uloženo · uvidí rodiče');};
+window.addTymPozn=i=>{const t=document.getElementById('tym-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš poznámku');return;}
+  tymPoznFor(i).unshift({date:'3. 6. 2026',kdo:role==='hospodarka'?'Míša':role==='vedouci'?'Táňa':'Darča',text:v});render();showToast('Poznámka uložena · jen pro tým');};
+window.sdilejZaznam=(i,k,ano)=>{const r=zaznamyFor(i)[k];if(!r)return;r.sdileno=ano;render();
+  showToast(ano?`${r.nazev} teď uvidí rodiče v aplikaci`:`${r.nazev} už rodiče nevidí`);};
 window.exportDeti=()=>{
   const list=detiList();
   stahniCSV('deti-vhaaji-2026-06.csv',['Jméno','Režim docházky','Věk','Narozeniny','Předškolák','Alergie'],
@@ -92,10 +121,10 @@ window.exportDeti=()=>{
   showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
 window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
-window.stahniZaznam=(i,k)=>{const c=data[i],r=recordsFor(c)[k];if(!r)return;
-  const nazev=`${r[0]} – ${full(c)} (${r[1]})`;
+window.stahniZaznam=(i,k)=>{const c=data[i],r=zaznamyFor(i)[k];if(!r)return;
+  const nazev=`${r.nazev} – ${full(c)} (${r.datum})`;
   downloadBlob(dlName(nazev)+'.pdf',makePDF(nazev),'application/pdf');
-  showToast('Stahuji '+r[0]+' ✓');};
+  showToast('Stahuji '+r.nazev+' ✓');};
 window.setDitePlan=(i,v)=>{data[i].plan=v;render();};
 window.setDiteF=(i,f,v)=>{data[i][f]=v;};   // bez render() – kurzor v poli musí zůstat
 window.togDitePre=i=>{data[i].predskolak=!data[i].predskolak;render();};
