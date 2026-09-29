@@ -331,4 +331,10 @@ function veSeznamu(c,i,sid){
   const s=SEZNAMY.find(x=>x.id===sid);return !!(s&&s.deti&&s.deti.includes(i));
 }
 const nazevSeznamu=sid=>(SEZNAMY.find(x=>x.id===sid)||{}).nazev||'';
+/* P6 z testování: vzkaz jednomu rodiči („Můžu přiřadit zprávu k tomu dni konkrétnímu rodiči?").
+   Novinka jde všem, tohle je adresné – na jedno dítě a jeden den. Zrcadlo vzkazů od rodičů;
+   appky data nesdílejí, rodičovská strana má týž vzkaz v seedu. */
+let VZKAZY={3:[{den:4,text:'Prosíme zítra přibalit spacák do kočárku – po obědě spíme venku.',kdo:'Táňa',cas:'včera 17:30'}]};
+const vzkazyFor=i=>VZKAZY[i]||(VZKAZY[i]=[]);
+const denLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':`${DOW[wd(d)]} ${d}. 6.`;
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));

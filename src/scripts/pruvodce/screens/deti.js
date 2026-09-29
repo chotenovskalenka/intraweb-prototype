@@ -98,6 +98,10 @@ function renderDite(i){
      často dopisuje až po poradě s kolegy), proto ani jedna část není povinná. */
   const upr=k=>`<button class="zsdil" onclick="upravRozhovor(${k})">Upravit</button>`;
   const rzDom=rz.map((r,k)=>[r,k]).filter(([r])=>r.domluva);
+  // vzkazy rodičům na konkrétní den – taky je čte rodič, patří do téže zóny
+  const vz=vzkazyFor(i);
+  h+=`<div class="tile"><div class="ch">Vzkazy rodičům</div>`+(vz.length?vz.map(v=>`<div class="rozh"><div class="rozhd">na ${denLbl(v.den)} · ${esc(v.kdo)}, ${v.cas}</div>${esc(v.text)}</div>`).join(''):`<div class="empty-l">Zatím žádné vzkazy.</div>`)
+    +`<button class="btn-ghost btn-block" style="margin-top:var(--space-sm)" onclick="openVzkaz(${i})">Napsat vzkaz rodičům</button></div>`;
   h+=`<div class="tile"><div class="ch">Domluveno s rodiči</div>`+(rzDom.length?rzDom.map(([r,k])=>`<div class="rozh"><div class="rozh-top"><span class="rozhd">${r.typ} · ${r.date}</span>${upr(k)}</div>${esc(r.domluva)}</div>`).join(''):`<div class="empty-l">S rodiči zatím nic nesdílíte.</div>`)+`</div></div>`;
 
   h+=`<div class="zona zona-int"><div class="zona-h"><span class="zona-t">Jen pro tým</span><span class="zona-s">Rodič tohle nikdy neuvidí.</span></div>`;

@@ -63,7 +63,8 @@ function renderDrawer(){
 function render(){
   // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
-    : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
+    // Novinka jde všem rodičům; vzkaz jednomu rodiči je vedle, protože ho tu respondentka hledala (P6)
+    : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-ghost" onclick="openVzkaz(-1)">Vzkaz jednomu rodiči</button><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
     : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1>${jeHospodar()?'<button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>':''}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>`

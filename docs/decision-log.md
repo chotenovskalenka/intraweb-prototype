@@ -1612,3 +1612,18 @@ zakládá sám („+ Nový seznam": název + zaškrtnutí dětí).
 **Neřešeno:** mazání a úprava seznamu, seznamy platné jen na jeden den (výjezd) –
 výjezdní dny dál řeší zvláštní režim docházky (`SPECIAL`).
 
+## P6: drobnosti z testování (29. 9. 2026)
+
+- **Zpět:** systémové zpět na telefonu appku zavíralo – přepínání obrazovek nezapisovalo
+  historii. Teď každý přechod (i do detailu dítěte a fondu) zapíše stav, zpět vrací o krok;
+  tlačítka „Zpět" v appce jdou stejnou cestou. Přesné místo, kde respondentka zpět hledala,
+  z přepisu nevyplývá (docházka, při hledání dítěte) – proto obecné řešení, ne jedna šipka.
+- **Rozpis služeb:** den bez služby je „neslouží", nepřítomnost s důvodem slovem v tlumené
+  stavové barvě (dřív tečka a styl alergie). Neplánovaný den se v editoru otevíral jako
+  „Slouží 7:30–16:00" – na to respondentka narazila; teď se otevře jako Neslouží.
+- **Odhlášení a profil průvodce:** pata menu jako u rodiče (jméno → Můj profil, Odhlásit se).
+  Profil má kontakt a **výkaz hodin za červen** z rozpisu služeb (odpracováno / naplánováno).
+- **Vzkaz jednomu rodiči:** z profilu dítěte (zóna „Vidí rodiče") i z Novinek; na konkrétní den.
+  Rodič ho vidí na přehledu jako „Vzkaz od průvodců" – dnes i ty na další dny, ať se
+  o spacáku na zítra dozví včas. Zrcadlo „Informací pro průvodce"; data se dál nesdílejí.
+

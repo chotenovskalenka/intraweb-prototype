@@ -236,4 +236,7 @@ const kc=n=>n.toLocaleString('cs-CZ');
 const zpravyProDen=(c,d)=>(c.zpravy||[]).filter(z=>z.den===d);
 children.forEach(c=>{c.zpravy=c.zpravy||[];c.duvody=c.duvody||{};});   // duvody: důvod absence per den
 // Seed: jedna informace na dnešek, ať je vidět, jak se to průvodcům ukáže.
+/* Vzkaz od průvodců jen pro toto dítě (zrcadlo seedu v průvodcovské appce). */
+children.forEach(c=>{c.vzkazy=c.vzkazy||[];});
+children[0].vzkazy.push({den:4,text:'Prosíme zítra přibalit spacák do kočárku – po obědě spíme venku.',kdo:'Táňa',cas:'včera 17:30'});
 children[0].zpravy.push({id:uid(),den:TODAY,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'dnes 7:12'});
