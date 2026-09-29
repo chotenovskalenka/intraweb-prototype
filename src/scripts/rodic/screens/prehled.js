@@ -46,6 +46,12 @@ function renderDashboard(){
      příchod, lék). Vlastní karta hned pod docházkou: je to týž okamžik dne, ale jiná věc –
      docházku to nemění. Vzkazy se vážou na vybraný den, ne jen na dnešek. */
   const zpr=zpravyProDen(c,dashDay);
+  /* Vzkaz od průvodců jen pro toto dítě (P6). Dnes ukazuje i vzkazy na další dny – vzkaz
+     „na zítra" má rodič vidět už dnes, ne až ráno, kdy je pozdě shánět spacák. */
+  const vzk=(c.vzkazy||[]).filter(v=>today?v.den>=dashDay:v.den===dashDay).sort((a,b)=>a.den-b.den);
+  let blkVzkazy='';
+  if(vzk.length)blkVzkazy=`<div class="tile vzk-tile"><div class="ch">Vzkaz od průvodců</div>`
+    +vzk.map(v=>`<div class="vzk"><div class="vzk-den">${v.den===TODAY?'Dnes':v.den===TODAY+1?'Na zítra':`Na ${DOW[wd(v.den)]} ${v.den}. 6.`}</div>${escTa(v.text)}<div class="vzk-kdo">${v.kdo} · ${v.cas}</div></div>`).join('')+`</div>`;
   let blkZpravy=`<div class="tile"><div class="ch">Informace pro průvodce</div>`;
   if(zpr.length)blkZpravy+=zpr.map(z=>`<div class="zprow"><span class="zp-txt">${zpravaShrnuti(z)}</span><button class="zp-del" onclick="zpSmazat('${z.id}')" aria-label="Stáhnout informaci">✕</button></div>`).join('');
   else blkZpravy+=`<div class="zp-empty">Na ${dashDay===TODAY?'dnešek':`${DOW[wd(dashDay)]} ${dashDay}. 6.`} jste průvodcům nic nevzkázali.</div>`;
@@ -99,7 +105,7 @@ function renderDashboard(){
 
   // Sloupce (mobil stohuje A, pak B, pak C → dá přesně požadované pořadí 1–8 výše).
   h+=`<div class="dash3">`;
-  h+=`<div class="dcol">${blkDochazka}${blkZpravy}${blkDela}${blkJist}</div>`;
+  h+=`<div class="dcol">${blkDochazka}${blkVzkazy}${blkZpravy}${blkDela}${blkJist}</div>`;
   h+=`<div class="dcol">${blkPruvodci}${blkBasnicky}${blkNovinky}</div>`;
   h+=`<div class="dcol">${blkMesicni}${blkNarozeniny}</div>`;
   h+=`</div>`;

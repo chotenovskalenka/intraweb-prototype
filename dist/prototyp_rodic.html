@@ -1056,6 +1056,13 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .abs-hint{font-size:var(--text-note);color:var(--color-text-hint);margin:6px 0 2px}
 /* „Přidat informaci" je druhotná akce – primární zelené tlačítko v téže kartě patří docházce. */
 .omluvbtn.ghost{background:transparent;border:1px solid var(--color-primary);color:var(--color-primary-strong)}
+/* Vzkaz od průvodců (P6) – adresný, jen pro toto dítě, proto zvýrazněný značkovou výplní;
+   odlišný od novinek, které jdou všem. */
+.vzk-tile{background:var(--wash-primary);border-color:var(--edge-primary)}
+.vzk{font-size:var(--text-body);line-height:var(--leading-normal);color:var(--color-text);padding:6px 0}
+.vzk+.vzk{border-top:1px solid var(--edge-primary)}
+.vzk-den{font-size:var(--text-note);font-weight:600;color:var(--color-primary-strong);margin-bottom:2px}
+.vzk-kdo{font-size:var(--text-note);color:var(--color-text-muted);margin-top:4px}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1712,6 +1719,9 @@ const kc=n=>n.toLocaleString('cs-CZ');
 const zpravyProDen=(c,d)=>(c.zpravy||[]).filter(z=>z.den===d);
 children.forEach(c=>{c.zpravy=c.zpravy||[];c.duvody=c.duvody||{};});   // duvody: důvod absence per den
 // Seed: jedna informace na dnešek, ať je vidět, jak se to průvodcům ukáže.
+/* Vzkaz od průvodců jen pro toto dítě (zrcadlo seedu v průvodcovské appce). */
+children.forEach(c=>{c.vzkazy=c.vzkazy||[];});
+children[0].vzkazy.push({den:4,text:'Prosíme zítra přibalit spacák do kočárku – po obědě spíme venku.',kdo:'Táňa',cas:'včera 17:30'});
 children[0].zpravy.push({id:uid(),den:TODAY,typ:'vyzvednuti',kdo:'babička Jana Dvořáková',cas:'',text:'Přijde kolem 14:30.',odeslano:'dnes 7:12'});
 </script>
 <script>
@@ -1763,6 +1773,12 @@ function renderDashboard(){
      příchod, lék). Vlastní karta hned pod docházkou: je to týž okamžik dne, ale jiná věc –
      docházku to nemění. Vzkazy se vážou na vybraný den, ne jen na dnešek. */
   const zpr=zpravyProDen(c,dashDay);
+  /* Vzkaz od průvodců jen pro toto dítě (P6). Dnes ukazuje i vzkazy na další dny – vzkaz
+     „na zítra" má rodič vidět už dnes, ne až ráno, kdy je pozdě shánět spacák. */
+  const vzk=(c.vzkazy||[]).filter(v=>today?v.den>=dashDay:v.den===dashDay).sort((a,b)=>a.den-b.den);
+  let blkVzkazy='';
+  if(vzk.length)blkVzkazy=`<div class="tile vzk-tile"><div class="ch">Vzkaz od průvodců</div>`
+    +vzk.map(v=>`<div class="vzk"><div class="vzk-den">${v.den===TODAY?'Dnes':v.den===TODAY+1?'Na zítra':`Na ${DOW[wd(v.den)]} ${v.den}. 6.`}</div>${escTa(v.text)}<div class="vzk-kdo">${v.kdo} · ${v.cas}</div></div>`).join('')+`</div>`;
   let blkZpravy=`<div class="tile"><div class="ch">Informace pro průvodce</div>`;
   if(zpr.length)blkZpravy+=zpr.map(z=>`<div class="zprow"><span class="zp-txt">${zpravaShrnuti(z)}</span><button class="zp-del" onclick="zpSmazat('${z.id}')" aria-label="Stáhnout informaci">✕</button></div>`).join('');
   else blkZpravy+=`<div class="zp-empty">Na ${dashDay===TODAY?'dnešek':`${DOW[wd(dashDay)]} ${dashDay}. 6.`} jste průvodcům nic nevzkázali.</div>`;
@@ -1816,7 +1832,7 @@ function renderDashboard(){
 
   // Sloupce (mobil stohuje A, pak B, pak C → dá přesně požadované pořadí 1–8 výše).
   h+=`<div class="dash3">`;
-  h+=`<div class="dcol">${blkDochazka}${blkZpravy}${blkDela}${blkJist}</div>`;
+  h+=`<div class="dcol">${blkDochazka}${blkVzkazy}${blkZpravy}${blkDela}${blkJist}</div>`;
   h+=`<div class="dcol">${blkPruvodci}${blkBasnicky}${blkNovinky}</div>`;
   h+=`<div class="dcol">${blkMesicni}${blkNarozeniny}</div>`;
   h+=`</div>`;

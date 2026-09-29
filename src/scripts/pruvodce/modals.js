@@ -11,6 +11,7 @@ function renderModalRoot(){
   if(novM){r.innerHTML=novModalHTML();return;}
   if(novForm){r.innerHTML=novFormHTML();return;}
   if(seznamM){r.innerHTML=seznamModalHTML();return;}
+  if(vzkazM){r.innerHTML=vzkazModalHTML();return;}
   r.innerHTML='';
 }
 function akceDetailHTML(){
@@ -174,4 +175,34 @@ window.ulozSeznam=()=>{const n=(seznamM.nazev||'').trim();
   const id='s'+(SEZNAMY.length+1);   // bez Date.now() – prototyp čas nesimuluje přes hodiny
   SEZNAMY.push({id,nazev:n,deti:[...seznamM.deti]});seznamM=null;renderModalRoot();
   detiFilter=id;render();showToast(`Seznam „${n}“ uložen`);};
+
+/* --- P6: vzkaz jednomu rodiči (na konkrétní den). Z profilu dítěte je dítě dané,
+   z Novinek se vybírá. Datum nativním pickerem, stejně jako u vzkazů od rodičů. --- */
+let vzkazM=null;
+const vzISO=d=>`2026-06-${String(d).padStart(2,'0')}`;
+function vzkazModalHTML(){
+  const m=vzkazM, c=m.i>=0?data[m.i]:null;
+  const vyber=m.pevne?'':`<label class="pl">Komu – rodičům dítěte</label><select class="pin" onchange="vzkazM.i=+this.value;renderModalRoot()">`
+    +`<option value="-1"${m.i<0?' selected':''}>Vyber dítě…</option>`
+    +data.map((x,i)=>({x,i})).sort((a,b)=>a.x.n.localeCompare(b.x.n,'cs')).map(({x,i})=>`<option value="${i}"${m.i===i?' selected':''}>${full(x)}</option>`).join('')+`</select>`;
+  return `<div class="modal-scrim" onclick="if(event.target===this)closeVzkaz()"><div class="modal">
+    <h3>Vzkaz rodičům${c&&m.pevne?` · ${kratke(c)}`:''}</h3><div class="abs-sub">Uvidí ho jen rodiče tohoto dítěte, na přehledu v aplikaci.</div>
+    ${vyber}
+    <label class="pl" style="margin-top:10px">Na který den</label><input class="pin" type="date" value="${vzISO(m.den)}" min="${vzISO(TODAYD)}" max="${vzISO(30)}" onchange="vzkazDen(this.value)">
+    <label class="pl" style="margin-top:10px">Vzkaz</label><textarea class="pta" id="vzk-text" placeholder="např. prosíme přibalit spacák do kočárku" oninput="vzkazM.text=this.value">${esc(m.text)}</textarea>
+    <div class="mbtns"><button class="btn-ghost" onclick="closeVzkaz()">Zrušit</button><button class="btn-primary" onclick="ulozVzkaz()">Odeslat rodičům</button></div>
+  </div></div>`;
+}
+window.openVzkaz=i=>{let d=TODAYD+1;while(isWE(d)&&d<30)d++;vzkazM={i,pevne:i>=0,den:d,text:''};renderModalRoot();};
+window.closeVzkaz=()=>{vzkazM=null;renderModalRoot();};
+window.vzkazDen=v=>{const d=+String(v).slice(-2);
+  if(!d||d<TODAYD||d>30){showToast('Vyber den v červnu, ode dneška dál');renderModalRoot();return;}
+  if(isWE(d)){showToast('O víkendu se do školky nechodí');renderModalRoot();return;}
+  vzkazM.den=d;renderModalRoot();};
+window.ulozVzkaz=()=>{const m=vzkazM,t=(m.text||'').trim();
+  if(m.i<0){showToast('Vyber dítě');return;}
+  if(!t){showToast('Napiš vzkaz');return;}
+  vzkazyFor(m.i).unshift({den:m.den,text:t,kdo:ja().n,cas:'dnes '+TEDCAS});
+  const c=data[m.i];vzkazM=null;renderModalRoot();render();
+  showToast(`Odesláno · rodiče ${kratke(c)} ho uvidí na ${denLbl(m.den)}`);};
 

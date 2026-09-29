@@ -365,3 +365,10 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .abs-hint{font-size:var(--text-note);color:var(--color-text-hint);margin:6px 0 2px}
 /* „Přidat informaci" je druhotná akce – primární zelené tlačítko v téže kartě patří docházce. */
 .omluvbtn.ghost{background:transparent;border:1px solid var(--color-primary);color:var(--color-primary-strong)}
+/* Vzkaz od průvodců (P6) – adresný, jen pro toto dítě, proto zvýrazněný značkovou výplní;
+   odlišný od novinek, které jdou všem. */
+.vzk-tile{background:var(--wash-primary);border-color:var(--edge-primary)}
+.vzk{font-size:var(--text-body);line-height:var(--leading-normal);color:var(--color-text);padding:6px 0}
+.vzk+.vzk{border-top:1px solid var(--edge-primary)}
+.vzk-den{font-size:var(--text-note);font-weight:600;color:var(--color-primary-strong);margin-bottom:2px}
+.vzk-kdo{font-size:var(--text-note);color:var(--color-text-muted);margin-top:4px}
