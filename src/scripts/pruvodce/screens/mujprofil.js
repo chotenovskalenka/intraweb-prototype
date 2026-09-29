@@ -2,8 +2,8 @@
    P6 z testování: „Já tu nemám ani odhlášení… Informace o sobě tu zatím nejsou." a navazující
    přání profilu s výkazem hodin. Není v menu mezi sekcemi – otevírá se z paty menu (jméno),
    stejně jako Nastavení účtu v rodičovské appce. Kdo je „já", určuje role z odkazu. */
-const JA_PODLE_ROLE={pruvodce:'Darča',vedouci:'Táňa',hospodarka:'Míša'};
-const ja=()=>guides.find(g=>g.n===JA_PODLE_ROLE[role])||guides[0];
+const JA_PODLE_ROLE={pruvodce:'Darča',vedouci:'Táňa',hospodarka:'Míša',kuchyn:'Ksenia'};
+const ja=()=>[...guides,...ZAZEMI].find(g=>g.n===JA_PODLE_ROLE[role])||guides[0];
 // délka služby v hodinách ("07:30"–"16:00" → 8,5)
 const hodinySluzby=d=>{if(!serving(d))return 0;const m=t=>(+t.split(':')[0])*60+(+t.split(':')[1]);return (m(d.e)-m(d.s))/60;};
 const fmtH=h=>(Math.round(h*10)/10).toLocaleString('cs-CZ')+' h';
@@ -20,7 +20,8 @@ function renderMujProfil(){
     const budouci=ti>SHIFT_AKT; budouci?plan+=hod:odpr+=hod;
     return `<div class="np"><span>${shiftLabel(t)}${ti===SHIFT_AKT?' <i class="dn-cur">· tento týden</i>':''}${volno.length?` <span class="sh-off sh-duvod">${volno.join(', ')}</span>`:''}</span><b${budouci?' class="vyk-plan"':''}>${fmtH(hod)}</b></div>`;
   }).join('');
-  h+=`<div class="tile"><div class="ch">Výkaz hodin · červen 2026</div>${radky}`
+  // zázemí (kuchyň) v rozpisu služeb není – výkaz z něj pak nemá z čeho vzniknout
+  if(radky)h+=`<div class="tile"><div class="ch">Výkaz hodin · červen 2026</div>${radky}`
     +`<div class="np vyk-suma"><span>Odpracováno do tohoto týdne</span><b>${fmtH(odpr)}</b></div>`
     +`<div class="np"><span>Naplánováno na zbytek června</span><b class="vyk-plan">${fmtH(plan)}</b></div>`
     +`<button class="cardlink" onclick="go('pruvodci')">Rozpis služeb ›</button></div>`;

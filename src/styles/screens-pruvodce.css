@@ -154,3 +154,13 @@
 /* Můj profil – výkaz hodin: plán tlumeně, součet odpracovaného s předělem. */
 .vyk-plan{color:var(--color-text-muted);font-weight:500}
 .vyk-suma{border-top:1px solid var(--color-border);margin-top:4px;padding-top:9px}
+/* Kuchyň – tři jídla dne jako ranní řada (stejný rámec jako u průvodce), velké číslo porcí. */
+.kuch-num{font-family:var(--font-serif);font-size:var(--text-number-lg);font-weight:600;line-height:var(--leading-tight);color:var(--color-primary-strong);margin:2px 0 6px}
+.kuch-num span{font-family:var(--font-sans);font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);margin-left:6px}
+.kuch-sub{font-size:var(--text-note);color:var(--color-text-muted);margin:-4px 0 6px}
+.kuch-jidlo{font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text);padding:4px 0;border-top:1px solid var(--color-border)}
+.kuch-nic{color:var(--color-text-muted)}
+.kuch-alg{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.kuch-alg .jid-alerg{margin-top:0}
+.kuch-al{color:var(--color-danger);font-weight:600}
+.kuch-dole{margin-bottom:var(--space-md)}
