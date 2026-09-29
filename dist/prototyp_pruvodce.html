@@ -2444,8 +2444,8 @@ window.setDiteF=(i,f,v)=>{data[i][f]=v;};   // bez render() – kurzor v poli mu
 window.togDitePre=i=>{data[i].predskolak=!data[i].predskolak;render();};
 window.setDetiF=f=>{detiFilter=f;render();};
 window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
-window.openDite=i=>{detiOpen=i;rozhEdit=null;render();};
-window.closeDite=()=>{detiOpen=-1;rozhEdit=null;render();};
+window.openDite=i=>{detiOpen=i;rozhEdit=null;render();navPush();};
+window.closeDite=()=>{rozhEdit=null;navZpet();};
 window.setDopo=(i,v)=>{dopoMap[i]=v;};
 </script>
 <script>
@@ -2577,8 +2577,8 @@ window.vratitDiteti=(i,k)=>{
 };
 // čerpání jen za tohle dítě – tentýž modal, jen s předvybraným jediným dítětem
 window.pridatDiteti=i=>{fondM={name:'',date:MESIC_TED,amt:'',sel:new Set([i]),group:'vlastni',q:''};renderModalRoot();};
-window.openFondChild=i=>{fondChild=i;render();};
-window.closeFondChild=()=>{fondChild=-1;render();};
+window.openFondChild=i=>{fondChild=i;render();navPush();};
+window.closeFondChild=()=>navZpet();
 window.onOdSearch=v=>{odQuery=v;renderKeepFocus();};
 window.stornoFond=id=>{const k=FONDHIST.findIndex(x=>x.id===id);if(k<0)return;const x=FONDHIST[k];x.idxs.forEach(i=>{data[i].fond+=x.amt;const li=data[i].fondLog.findIndex(l=>l.name===x.name&&l.amt===x.amt);if(li>=0)data[i].fondLog.splice(li,1);});if(x.akceId){const a=AKCE.find(y=>y.id===x.akceId);if(a)a.done=false;}FONDHIST.splice(k,1);render();showToast('Čerpání vráceno ✓');};
 window.startOdecet=id=>{const a=AKCE.find(x=>x.id===id);odecet={akceId:id,group:'vse',sel:new Set(presentIdx(a))};render();};
@@ -2947,13 +2947,27 @@ function render(){
   if(!sekceVidi(section))section='prehled';
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{if(!sekceVidi(s))s='prehled';section=s;drawerOpen=false;detiOpen=-1;fondChild=-1;render();};
+/* P6 z testování: „Jak se dostanu zpět? Tam není zpět." Systémové zpět (Android, gesto na
+   iPhonu) appku rovnou zavíralo – přepínání obrazovek nezapisovalo historii prohlížeče.
+   Každý přechod teď zapíše stav a zpět vrací o jednu obrazovku. URL se nemění, role
+   zadaná odkazem (?role=…) tak zůstává. */
+const navStav=()=>({s:section,dite:detiOpen,fc:fondChild});
+function navPush(){const st=navStav(),h=history.state;
+  if(h&&h.s===st.s&&h.dite===st.dite&&h.fc===st.fc)return;history.pushState(st,'');}
+window.addEventListener('popstate',e=>{const st=e.state||{s:'prehled',dite:-1,fc:-1};
+  section=sekceVidi(st.s)?st.s:'prehled';detiOpen=st.dite>=0?st.dite:-1;fondChild=st.fc>=0?st.fc:-1;
+  drawerOpen=false;render();});
+// z detailu dítěte / fondu jde tlačítko „Zpět" tou samou cestou jako systémové zpět
+window.navZpet=()=>{if(history.state&&(history.state.dite>=0||history.state.fc>=0))history.back();
+  else{detiOpen=-1;fondChild=-1;render();}};
+window.go=s=>{if(!sekceVidi(s))s='prehled';section=s;drawerOpen=false;detiOpen=-1;fondChild=-1;render();navPush();};
 window.togHosp=()=>{if(ROLE_PINNED)return;
   const p=['pruvodce','vedouci','hospodarka'];role=p[(p.indexOf(role)+1)%p.length];
   render();showToast('Role: '+ROLE_LABEL[role]);};
 window.openDrawer=()=>{drawerOpen=true;render();};
 window.closeDrawer=()=>{drawerOpen=false;render();};
 
+history.replaceState(navStav(),'');
 renderModalRoot();render();
 </script>
 </body>
