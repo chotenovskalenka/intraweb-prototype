@@ -18,7 +18,10 @@ TITLES.mujprofil='Můj profil';   // mimo menu – otevírá se z paty menu
 // Sekce viditelné pro aktuální roli. Kulturní fond vede hospodářka – řadový průvodce
 // ani vedoucí ho v menu nemají (a přímý go('fond') je vrátí na přehled).
 const SEKCE_ROLE={fond:()=>jeHospodar()};
-const sekceVidi=k=>!SEKCE_ROLE[k]||SEKCE_ROLE[k]();
+/* Kuchyň (Ksenia, obědy a svačiny) nedělá práci s dětmi – vidí jen svůj přehled porcí,
+   jídelníček, který zadává, a kontakty. Ostatní sekce by jí jen překážely v menu. */
+const KUCHYN_SEKCE=['prehled','jidelnicek','kontakty','mujprofil'];
+const sekceVidi=k=>role==='kuchyn'?KUCHYN_SEKCE.includes(k):(!SEKCE_ROLE[k]||SEKCE_ROLE[k]());
 
 let section='prehled', drawerOpen=false, wquery='';
 /* Role průvodce. Všichni dělají tutéž práci, liší se jedním právem navíc – proto jedna appka
@@ -26,9 +29,10 @@ let section='prehled', drawerOpen=false, wquery='';
      pruvodce    – běžný; minulé dny docházky jsou zamčené
      vedouci     – vedoucí průvodce (Táňa); smí opravit docházku zpětně
      hospodarka  – hospodářka (Míša); kmenová data dětí a čerpání fondu
+     kuchyn      – kuchyň (Ksenia); přehled porcí a jídelníček (P3 z testování)
    Pro testování se role bere z URL (?role=vedouci) – respondent si ji nemá jak přepnout.
    Bez parametru je štítek v topbaru přepínač, aby šly stavy ukázat při moderaci. */
-const ROLE_LABEL={pruvodce:'Průvodce',vedouci:'Průvodce · vedoucí',hospodarka:'Průvodce · hospodářka'};
+const ROLE_LABEL={pruvodce:'Průvodce',vedouci:'Průvodce · vedoucí',hospodarka:'Průvodce · hospodářka',kuchyn:'Kuchyň'};
 const ROLE_URL=(new URLSearchParams(location.search).get('role')||'').toLowerCase();
 const ROLE_PINNED=Object.prototype.hasOwnProperty.call(ROLE_LABEL,ROLE_URL);
 let role=ROLE_PINNED?ROLE_URL:'hospodarka';
@@ -38,9 +42,11 @@ const jeHospodar=()=>role==='hospodarka';
    Nález z testování (srpen 2026): prototyp pouštěl zápis dnešního dne i řadovému průvodci,
    což neodpovídá provozu školky – a sám o to právo nestojí („šlo mi to měnit, ale nedělal
    jsem to, protože nemám proč"). Viz docs/vyzkum-testovani-pruvodci.md, Z1. */
-const smiZapisovat=()=>role!=='pruvodce';
+const smiZapisovat=()=>role==='vedouci'||role==='hospodarka';   // výčtem – nová role nesmí zápis zdědit omylem
 /* Opravit proběhlý den i naplánovat budoucí je administrativní zásah navíc – jen vedoucí. */
 const smiJinyDen=()=>role==='vedouci';
+// jídelníček zadává kuchyň (chystá jídlo) a hospodářka
+const smiJidelnicek=()=>role==='kuchyn'||role==='hospodarka';
 const denEditovatelny=d=>smiZapisovat()&&(d===TODAYD||smiJinyDen());
 let jidTyden=jidIndex(TODAYD,6);   // vybraný týden jídelníčku (výchozí = aktuální)
 let view='den', open=-1, query='', tab='rano';
@@ -49,7 +55,7 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:renderPrehled,dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
+const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -57,7 +63,7 @@ function renderDrawer(){
   document.getElementById('scrim').classList.toggle('on',drawerOpen);
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span><button class="dclose" onclick="closeDrawer()" aria-label="Zavřít menu">✕</button></div>`+SECTIONS.filter(s=>sekceVidi(s[0])).map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')
     // pata menu jako v rodičovské appce: kdo je přihlášený (→ profil s výkazem) a odhlášení (P6)
-    +`<div class="dfoot"><button class="ditem ${section==='mujprofil'?'on':''}" onclick="go('mujprofil')"><span class="dfoot-acc">${ja().n} ${ja().sur}<small>Můj profil · výkaz hodin</small></span></button>`
+    +`<div class="dfoot"><button class="ditem ${section==='mujprofil'?'on':''}" onclick="go('mujprofil')"><span class="dfoot-acc">${ja().n} ${ja().sur}<small>${role==='kuchyn'?'Můj profil':'Můj profil · výkaz hodin'}</small></span></button>`
     +`<button class="ditem" onclick="showToast('Odhlášení – jen náhled, v prototypu nefunguje')"><span class="ic">${icon('odhlasit')||'⏻'}</span>Odhlásit se</button></div>`;
 }
 function render(){
@@ -92,7 +98,7 @@ window.navZpet=()=>{if(history.state&&(history.state.dite>=0||history.state.fc>=
   else{detiOpen=-1;fondChild=-1;render();}};
 window.go=s=>{if(!sekceVidi(s))s='prehled';section=s;drawerOpen=false;detiOpen=-1;fondChild=-1;render();navPush();};
 window.togHosp=()=>{if(ROLE_PINNED)return;
-  const p=['pruvodce','vedouci','hospodarka'];role=p[(p.indexOf(role)+1)%p.length];
+  const p=['pruvodce','vedouci','hospodarka','kuchyn'];role=p[(p.indexOf(role)+1)%p.length];
   render();showToast('Role: '+ROLE_LABEL[role]);};
 window.openDrawer=()=>{drawerOpen=true;render();};
 window.closeDrawer=()=>{drawerOpen=false;render();};

@@ -17,10 +17,11 @@
 
 /* Kolik porcí jednoho jídla musí být bez kterého alergenu. Vrací [[alergen, počet]]. */
 const ALERGEN_BEZ={lepek:'lepku',ryby:'ryb','arašídy':'arašídů','sója':'sóji','mléko':'mléka','skořápkové plody':'skořápkových plodů',celer:'celeru'};
-function porceBez(kody){
+function porceBez(kody,deti){
   if(!kody)return [];
+  const koho=deti||data;   // jídelníček: všechny děti; kuchyň: jen ty, které dnes jedí
   return kody.split(',').map(c=>ALERGENY_NAZVY[Number(c.trim())]).filter(Boolean)
-    .map(n=>[n,data.filter(c=>c.alergie&&c.alergie.toLowerCase().includes(n)).length])
+    .map(n=>[n,koho.filter(c=>c.alergie&&c.alergie.toLowerCase().includes(n)).length])
     .filter(([,k])=>k>0);
 }
 const porcePl=k=>k===1?'porce':(k>=2&&k<=4?'porce':'porcí');
@@ -38,8 +39,8 @@ function renderJidelnicek(){
   // Týden i jeho listování patří k sobě: stepper sedí v řádku s nadpisem vedle akcí,
   // ne nahoře u H1 – jinak byl týden napsaný dvakrát a ovládání na dvou místech.
   let h=`<div class="doch"><div class="vhead-row"><div class="vhead">Týden</div><div class="vhead-act">`+
-    // jídelníček zadává hospodářka (chystá jídlo); ostatní ho jen čtou
-    (!jeHospodar()?''
+    // jídelníček zadává kuchyň a hospodářka; ostatní ho jen čtou
+    (!smiJidelnicek()?''
       :jidEdit
         ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
         : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+
@@ -52,7 +53,7 @@ function renderJidelnicek(){
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
     h+=`<div class="tile"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
     den.forEach((it,k)=>{
-      if(jidEdit&&jeHospodar()){
+      if(jidEdit&&smiJidelnicek()){
         const dr=jidDraft[i][k];
         h+=`<div class="jid-edit"><label class="pl">${it[0]}</label>`+
           `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[i]}">`+

@@ -25,8 +25,8 @@ const data=raw.map(([n,sur,plan,spi],i)=>({n,sur,plan,spi,status:'pritomen',note
 // demo odchylky docházky na konkrétní dny
 data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='OM'; data[1].att[18]='OM'; data[20].att[12]='';
 // dnes nepřítomné děti – 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená
-data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',pozn:'Zvracela v noci, dnes ji necháme doma. Zítra dáme vědět.'};
-data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',pozn:''};
+data[5].status='omluveno'; data[5].parentExcuse={time:'6:40',reason:'nemoc',obed:false,pozn:'Zvracela v noci, dnes ji necháme doma. Zítra dáme vědět.'};
+data[1].status='omluveno'; data[1].parentExcuse={time:'7:15',reason:'rodinné důvody',obed:true,pozn:''};
 /* Simulované „teď" průvodcovské appky. Záměrně JINÉ než v rodičovské (7:40): tady musí být po
    8:30, aby šlo ukázat, jak vedoucí uzavírá absenci, kterou rodič už nahlásit nemohl.
    Appky spolu data nesdílejí, takže se to nepotká. Žádný Date.now(). */
@@ -38,7 +38,7 @@ const DUVODY_P=[['nemoc','Nemoc'],['rodinné důvody','Rodinné důvody'],['dovo
 /* Po 8:30 (začátek programu) už rodič absenci nenahlásí – zapíše ji ručně vedoucí průvodce
    a je to vždy „omluveno bez náhrady". Odlišeno od rodičovské omluvenky: jiný autor, jiný
    důsledek. `neomluveno` zůstává pro dítě, které nepřišlo a zatím to nikdo nezapsal. */
-data[20].status='omluveno'; data[20].guideExcuse={by:'Táňa',time:'9:10',reason:'nemoc',pozn:'Volala maminka, má teplotu.'};
+data[20].status='omluveno'; data[20].guideExcuse={by:'Táňa',time:'9:10',reason:'nemoc',obed:false,pozn:'Volala maminka, má teplotu.'};
 data[15].status='neomluveno';
 // zobrazení propsané omluvenky (jen text; žádná logika ani sdílení dat mezi appkami)
 function parentExcuseLine(c){return c.parentExcuse?'omluveno rodičem':'';}

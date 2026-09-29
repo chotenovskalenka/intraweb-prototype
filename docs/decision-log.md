@@ -1627,3 +1627,29 @@ výjezdní dny dál řeší zvláštní režim docházky (`SPECIAL`).
   Rodič ho vidí na přehledu jako „Vzkaz od průvodců" – dnes i ty na další dny, ať se
   o spacáku na zítra dozví včas. Zrcadlo „Informací pro průvodce"; data se dál nesdílejí.
 
+## Role Kuchyň (29. 9. 2026)
+
+**Podklad:** P3 z testování (2 ze 3) – *„jen se koukne, nic nepočítá, nic nedohledává a ví,
+kolik čeho udělat"*; jídelníček nerozlišoval dopolední a odpolední svačinu (*„a to je rozdíl"*);
+kuchyň potřebuje u přípravy alergen a počet porcí, jména až u výdeje (vyvěšený papír);
+omluvené dítě si může nechat oběd vyzvednout.
+
+**Rozhodnutí:** čtvrtá role průvodcovské appky `?role=kuchyn` (Ksenia). Vidí jen Přehled
+kuchyně, Jídelníček (smí ho upravovat, stejně jako hospodářka) a Kontakty.
+- **Přehled:** tři jídla dne – **dopolední svačina · oběd · odpolední svačina** – velkým číslem
+  porcí, co se vaří a „bez mléka · 4 porce" jen pro děti, které dnes jedí. Pod tím **oběd
+  k vyzvednutí** (jménem), **alergie na výdej** (jménem, s tiskem do PDF) a **počty na zítra**
+  k objednávce obědů.
+- **Počty se odvozují z docházky** (`porceDne(d)`): dopolední svačina a oběd = přítomní,
+  odpolední svačina = přítomní bez dopolední docházky (ta je do 13:00), oběd + vyzvednuté.
+- Chody v jídelníčku se jmenují **Dopolední / Odpolední svačina** místo Svačinka 1/2 (obě appky).
+- Patička docházky „Obědy 21 · svačiny 21" počítala přítomné děti – nahrazeno týmž výpočtem.
+- `smiZapisovat` je teď výčtem rolí (vedoucí, hospodářka) – nová role nesmí zápis docházky
+  zdědit omylem, jak by to dovolilo původní „kdokoli kromě průvodce".
+
+**Opraveno:** vysvětlivka záložky Odpolední tvrdila „přicházejí až po obědě" – ve Vhaaji je
+odpolední docházka do 15:00, děti přicházejí ráno všechny.
+
+**Neřešeno:** objednávka obědů přímo z appky (dodavatel Mamafood), svačiny podle programu
+(výzkum: plánuje se podle měsíčního plánu, ne podle četnosti).
+
