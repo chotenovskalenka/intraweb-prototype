@@ -32,7 +32,10 @@ function renderDeti(){
     .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocty[f[0]]}</span></button>`).join('')+`</div>`;
   const list=detiList();
   h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`+
-    `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button></div>`;
+    `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button>`+
+    /* Seznam na výdej (P5): jména alergiků se řeší u výdeje, kdy se do mobilu nekouká –
+       v kuchyni je mají vyvěšená na papíře. Tohle je ten papír. */
+    (detiFilter==='al'?`<button class="btn-ghost deti-exp" onclick="alergiePDF()">Seznam na výdej (PDF)</button>`:'')+`</div>`;
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div></div>`;
   // Dvojí výpis: na mobilu karty (dobře se na ně klepe), na desktopu tabulka (25 dětí se
   // dá přehlédnout na jednu obrazovku). Přepíná se v CSS – appka nemá listener na resize.
@@ -133,6 +136,9 @@ window.exportDeti=()=>{
     list.map(x=>{const c=x.c;return [full(c),c.plan,c.vek,c.nar,c.predskolak?'ano':'',c.alergie||''];}));
   showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
+window.alergiePDF=()=>{const al=data.filter(c=>c.alergie).sort((a,b)=>a.n.localeCompare(b.n,'cs'));
+  downloadBlob('alergie-na-vydej.pdf',makePDF('Alergie – seznam na výdej',al.map(c=>`${kratke(c)} – ${c.alergie}`)),'application/pdf');
+  showToast('Stahuji seznam alergiků ✓');};
 window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
 window.stahniZaznam=(i,k)=>{const c=data[i],r=zaznamyFor(i)[k];if(!r)return;
   const nazev=`${r.nazev} – ${full(c)} (${r.datum})`;

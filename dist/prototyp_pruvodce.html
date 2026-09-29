@@ -831,6 +831,7 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .rozh-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
 .rozh-top .zsdil{margin:-12px 0}   /* dotykový cíl zůstává 44 px, řádek se nenafoukne */
 .rozh-chybi{margin-top:4px;font-size:var(--text-note);color:var(--state-warn-ink)}
+.jid-kdo{margin:0 0 var(--space-md);border-top:none;padding-top:0}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -2284,7 +2285,10 @@ function renderDeti(){
     .map(f=>`<button class="${detiFilter===f[0]?'on':''}" onclick="setDetiF('${f[0]}')" aria-pressed="${detiFilter===f[0]}">${f[1]} <span class="cnt">${pocty[f[0]]}</span></button>`).join('')+`</div>`;
   const list=detiList();
   h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(detiQuery)}" oninput="onDetiSearch(this.value)">`+
-    `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button></div>`;
+    `<button class="btn-ghost deti-exp" onclick="exportDeti()">Stáhnout jako CSV</button>`+
+    /* Seznam na výdej (P5): jména alergiků se řeší u výdeje, kdy se do mobilu nekouká –
+       v kuchyni je mají vyvěšená na papíře. Tohle je ten papír. */
+    (detiFilter==='al'?`<button class="btn-ghost deti-exp" onclick="alergiePDF()">Seznam na výdej (PDF)</button>`:'')+`</div>`;
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div></div>`;
   // Dvojí výpis: na mobilu karty (dobře se na ně klepe), na desktopu tabulka (25 dětí se
   // dá přehlédnout na jednu obrazovku). Přepíná se v CSS – appka nemá listener na resize.
@@ -2385,6 +2389,9 @@ window.exportDeti=()=>{
     list.map(x=>{const c=x.c;return [full(c),c.plan,c.vek,c.nar,c.predskolak?'ano':'',c.alergie||''];}));
   showToast('Staženo '+pocetDeti(list.length)+' ✓');
 };
+window.alergiePDF=()=>{const al=data.filter(c=>c.alergie).sort((a,b)=>a.n.localeCompare(b.n,'cs'));
+  downloadBlob('alergie-na-vydej.pdf',makePDF('Alergie – seznam na výdej',al.map(c=>`${kratke(c)} – ${c.alergie}`)),'application/pdf');
+  showToast('Stahuji seznam alergiků ✓');};
 window.setDetiSort=k=>{if(detiSort===k)detiDir=-detiDir;else{detiSort=k;detiDir=1;}render();};
 window.stahniZaznam=(i,k)=>{const c=data[i],r=zaznamyFor(i)[k];if(!r)return;
   const nazev=`${r.nazev} – ${full(c)} (${r.datum})`;
@@ -2544,25 +2551,27 @@ window.confirmOdecet=()=>{const a=AKCE.find(x=>x.id===odecet.akceId);if(!odecet.
 
    Dva rozdíly proti rodičovské appce, oba vycházejí z toho, kdo obrazovku používá:
 
-   1) ALERGENY JAKO JMÉNA DĚTÍ. Rodiče zajímá číslo alergenu u vlastního dítěte;
-      svačinářku zajímá, KOHO se to týká. Čísla se proto překládají přes ALERGENY_NAZVY
-      na děti, které tu alergii mají. Když se jídlo nikoho netýká, nezobrazí se nic –
-      obrazovka je tím tišší než rodičovská, ne hlučnější.
+   1) ALERGENY JAKO PORCE, NE JMÉNA (P5 z testování). Dřív tu svítila jména dětí – testování
+      to vyvrátilo: kuchařka u přípravy potřebuje vědět, KOLIK porcí udělat bez čeho
+      („jednu porci bez sóji"), jména řeší až u výdeje, kdy se do mobilu nekouká (mají je
+      vyvěšená na papíře). Jméno u jídla navíc četlo, jako by to jídlo dostalo jen to dítě.
+      Náhradu kuchyň píše přímo do názvu jídla („Pečivo (1× bez sóji)"). Když se jídlo
+      nikoho netýká, nezobrazí se nic.
 
    2) LISTOVÁNÍ DO HISTORIE. Svačinářka plánuje z toho, co bylo, proto jde listovat zpět.
       Počítadlo opakování (↻ N×) tu bylo taky, ale výzkum ho vyvrátil: R6 neplánuje podle
       četnosti, ale podle programu („když je jejich vaření sladké, snažím se, aby druhá
       svačina byla slaná"). Měřilo špatnou věc, tak je pryč. */
 
-/* Děti dotčené alergeny jednoho jídla. Vrací křestní jména – na mobilu se příjmení nevejdou
-   a v rámci třídy jsou křestní jména jednoznačná. */
-function detiSAlergii(kody){
+/* Kolik porcí jednoho jídla musí být bez kterého alergenu. Vrací [[alergen, počet]]. */
+const ALERGEN_BEZ={lepek:'lepku',ryby:'ryb','arašídy':'arašídů','sója':'sóji','mléko':'mléka','skořápkové plody':'skořápkových plodů',celer:'celeru'};
+function porceBez(kody){
   if(!kody)return [];
-  const nazvy=kody.split(',').map(c=>ALERGENY_NAZVY[Number(c.trim())]).filter(Boolean);
-  if(!nazvy.length)return [];
-  return data.filter(c=>c.alergie&&nazvy.some(n=>c.alergie.toLowerCase().includes(n)))
-             .map(c=>c.n);
+  return kody.split(',').map(c=>ALERGENY_NAZVY[Number(c.trim())]).filter(Boolean)
+    .map(n=>[n,data.filter(c=>c.alergie&&c.alergie.toLowerCase().includes(n)).length])
+    .filter(([,k])=>k>0);
 }
+const porcePl=k=>k===1?'porce':(k>=2&&k<=4?'porce':'porcí');
 
 /* Kolikrát se totéž jídlo objeví napříč všemi týdny v datech. Počítá se jen u svačin –
    ty svačinářka plánuje; u obědů skladbu určuje dodavatel. */
@@ -2586,6 +2595,7 @@ function renderJidelnicek(){
     `<span>${jidTydenLabel(t)}</span>`+
     `<button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`+
     `</div></div>`;
+  h+=`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
   t.dny.forEach((den,i)=>{
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
     h+=`<div class="tile"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
@@ -2596,17 +2606,16 @@ function renderJidelnicek(){
           `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[i]}">`+
           `<input class="pin jid-alg" value="${esc(dr[2])}" oninput="setJid(${i},${k},2,this.value)" placeholder="alergeny, např. 1, 7" aria-label="Alergeny – ${it[0]}, ${DOW[i]}"></div>`;
       }else{
-        const deti=detiSAlergii(it[2]);
-        // Jména jdou dovnitř .mv, aby seděla POD názvem jídla. Vedle textu je nelze dát:
-        // u pěti dětí (mléko) si chip ukousl 40 % šířky a název jídla se rozpadl na pět řádků.
+        const bez=porceBez(it[2]);
+        // pod názvem jídla, ne vedle něj – vedle textu si štítek ukousl šířku a název se lámal
         h+=`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}`;
-        if(deti.length)h+=`<span class="jid-alerg">${deti.join(', ')}</span>`;
+        if(bez.length)h+=`<span class="jid-alerg">${bez.map(([n,k])=>`bez ${ALERGEN_BEZ[n]||n} · ${k} ${porcePl(k)}`).join(' · ')}</span>`;
         h+=`</span></div>`;
       }
     });
     h+=`</div>`;
   });
-  h+=`<div class="note2">Obědy dodává Mamafood, svačiny chystá školka. U jídla svítí jména dětí, které na některou jeho surovinu mají alergii – vychází z jejich karet v sekci Děti.</div>`;
+  h+=`<div class="note2">Obědy dodává Mamafood, svačiny chystá školka. U jídla je vidět, kolik porcí musí být bez kterého alergenu – počítá se z karet dětí v sekci Děti. Jména pro výdej jsou v Dětech → Alergici, i jako seznam k vytištění.</div>`;
   return h+`</div>`;
 }
 window.jidEditOn=()=>{jidDraft=JIDELNICEK[jidTyden].dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
@@ -2614,6 +2623,7 @@ window.jidCancel=()=>{jidEdit=false;jidDraft=null;render();};
 window.setJid=(i,k,pole,v)=>{jidDraft[i][k][pole]=v;};   // bez render() – kurzor v poli musí zůstat
 window.jidSave=()=>{JIDELNICEK[jidTyden].dny=jidDraft.map(den=>den.map(it=>[it[0],it[1].trim(),it[2].trim()]));
   jidEdit=false;jidDraft=null;render();showToast('Jídelníček uložen ✓');};
+window.goAlergici=()=>{detiFilter='al';detiOpen=-1;go('deti');};
 window.stepJidTyden=d=>{jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};
 </script>
 <script>
