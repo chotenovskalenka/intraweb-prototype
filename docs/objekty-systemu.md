@@ -8,7 +8,7 @@ Zdroj pravdy pro data: `src/scripts/rodic/data.js` (rodičovská appka). Počty 
 
 ## Simulovaný čas
 
-Prototyp nepoužívá `Date.now()`. „Teď" je pevná konstanta `NOW={d:3,h:10}` v `data.js` = **středa 3. 6. 2026, 10:00**. Prototyp žije v červnu 2026 (červen 2026 začíná pondělím, proto kalendáře nemají posun prvního dne).
+Prototyp nepoužívá `Date.now()`. „Teď" je pevná konstanta `NOW={d:3,h:7,m:40}` v `rodic/data.js` = **středa 3. 6. 2026, 7:40** – před začátkem programu v 8:30, takže rodič ještě smí nahlásit dnešní absenci. Průvodcovská appka má záměrně vlastní čas 10:00 (`TEDCAS`), aby šlo ukázat uzavírání absence vedoucí. Prototyp žije v červnu 2026 (červen 2026 začíná pondělím, proto kalendáře nemají posun prvního dne).
 
 ---
 
@@ -39,7 +39,7 @@ Rodičem odeslaná omluva nepřítomnosti dítěte na jeden nebo více dní.
 
 ### Pravidlo deadlinu
 
-Omluvit lze do **20:00 předchozího dne** (`beforeDeadline(d)` v `data.js`; pravidlo převzato z reálného intrawebu – viz decision-log „revize dle reality"). Vzhledem k `NOW` (St 3. 6. 10:00):
+Omluvit lze do **20:00 předchozího dne** (`beforeDeadline(d)` v `data.js`; pravidlo převzato z reálného intrawebu – viz decision-log „revize dle reality"). Vzhledem k `NOW` (St 3. 6. 7:40):
 
 - omluva na **dnešek (3. 6.)** = po deadlinu (deadline byl včera 20:00) → náhrada nevznikne;
 - omluva na **zítřek (4. 6.)** = včas (deadline dnes 20:00) → náhrada vznikne;

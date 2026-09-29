@@ -1478,7 +1478,9 @@ const NEWSFOTO={
 const ORDER=['D','O','C','OM','NE'];
 
 /* --- Simulovaný čas + omluvenka/náhrada model (fáze 1) --- */
-const NOW={d:3,h:10};                 // „teď" = St 3. 6. 2026, 10:00 (žádné Date.now())
+/* „Teď" = St 3. 6. 2026, 7:40 (žádné Date.now()). Před 8:30, kdy začíná program – do té doby
+   smí rodič nahlásit dnešní absenci sám; potom ji zapisuje vedoucí průvodce (viz decision-log). */
+const NOW={d:3,h:7,m:40};
 const beforeDeadline=d=>d>NOW.d+1||(d===NOW.d+1&&NOW.h<20);  // omluvit lze do 20:00 předchozího dne (dle reálného intrawebu)
 let _uid=1000; const uid=()=>'x'+(++_uid);
 const fmtD=dt=>dt.getDate()+'. '+(dt.getMonth()+1)+'. '+dt.getFullYear();
