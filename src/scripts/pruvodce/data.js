@@ -56,17 +56,34 @@ function parentExcuseDetail(c){
   return `<b>${d}</b>`+(e.pozn?` · ${esc(e.pozn)}`:'')+` <span class="rn-cas">${e.time}</span>`;
 }
 data.forEach((c,i)=>{const dd=((i*7)%27)+1,mm=((i*5)%12)+1,yy=c.predskolak?2020:2021;c.nar=`${dd}. ${mm}. ${yy}`;c.vek=2026-yy;});
-function recordsFor(c){const r=[['Vstupní depistáž','9/2025'],['Čtvrtletní hodnocení','1/2026'],['Pozorování v lese','3/2026']];if(c.predskolak)r.push(['Posouzení školní zralosti','4/2026']);return r;}
+/* P1 z testování (3 ze 3): interní záznamy musí být oddělené od toho, co vidí rodič.
+   Každý dokument nese `sdileno`. Výchozí je VŽDY interní – sdílí se až vědomým krokem,
+   protože odborné zprávy se před předáním rodiči upravují (změkčují) a respondenti se báli,
+   že rodič uvidí něco, co pro něj nebylo psané. Depistáž a pozorování jsou pracovní
+   diagnostika týmu, hodnocení a posouzení školní zralosti jsou určené rodině. */
+let zaznamyMap={};
+function zaznamyFor(i){const c=data[i];if(!zaznamyMap[i]){zaznamyMap[i]=[
+  {nazev:'Vstupní depistáž',datum:'9/2025',sdileno:false},
+  {nazev:'Čtvrtletní hodnocení',datum:'1/2026',sdileno:true},
+  {nazev:'Pozorování v lese',datum:'3/2026',sdileno:false}];
+  if(c.predskolak)zaznamyMap[i].push({nazev:'Posouzení školní zralosti',datum:'4/2026',sdileno:true});}
+  return zaznamyMap[i];}
 function parentsFor(c){const base=c.n.normalize('NFD').replace(/[^a-zA-Z]/g,'').toLowerCase();return [
   {role:'Matka',name:'Jana '+c.sur,phone:'+420 605 '+(100+avHash(c.n)%900),email:base+'.matka@email.cz'},
   {role:'Otec',name:'Petr '+c.sur,phone:'+420 606 '+(100+avHash(c.sur)%900),email:base+'.otec@email.cz'},
 ];}
 /* Konzultace s rodiči probíhají 2× ročně – v listopadu a dubnu. */
 let rozhovoryMap={};
+/* Záznam z konzultace má dvě části: co se s rodiči domluvilo (uvidí rodič) a interní
+   poznámku týmu (nikdy). Respondenti se báli, jak rodič přečte poznámku z konzultace –
+   rozdělení to řeší přímo v okamžiku psaní, ne až při sdílení. */
 function rozhovoryFor(i){if(!rozhovoryMap[i])rozhovoryMap[i]=[
-  {date:'13. 11. 2025',note:'Podzimní konzultace – adaptace v pořádku, dítě se těší. Doma řeší usínání.'},
-  {date:'16. 4. 2026',note:'Jarní konzultace – velký pokrok v jemné motorice, baví ho práce se dřevem. Doporučení: trénovat samostatné oblékání.'},
+  {date:'16. 4. 2026',typ:'Jarní konzultace',domluva:'Velký pokrok v jemné motorice, baví ho práce se dřevem. Na doma: trénovat samostatné oblékání.',interni:''},
+  {date:'13. 11. 2025',typ:'Podzimní konzultace',domluva:'Adaptace v pořádku, dítě se těší. Doma řeší usínání.',interni:'Maminka působila unaveně, tatínek nepřišel. Příště nabídnout odpolední termín.'},
 ];return rozhovoryMap[i];}
+/* Poznámky týmu o spolupráci s rodinou – mimo konzultace, vždy jen pro tým. */
+let tymPozn={};
+const tymPoznFor=i=>tymPozn[i]||(tymPozn[i]=i===3?[{date:'2. 6. 2026',kdo:'Darča',text:'Vyzvedávání se v posledních týdnech opakovaně posouvá po 16:00. Zatím jen sledujeme, rodině jsme nic neříkali.'}]:[]);
 let worksMap={3:2,9:3}, dopoMap={};
 
 /* Tým školky. `n` je krátké jméno, kterým se průvodce dohledá v rozpisu služeb (GUIDESHIFT).

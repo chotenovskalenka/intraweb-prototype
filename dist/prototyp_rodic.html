@@ -2027,7 +2027,7 @@ window.setNote=(d,v)=>{cur().notes[d]=v;};
    Data v PROFIL / CISELNIK / SOUHLASY (data.js). Rodič si Základní údaje a Zdraví a strava
    spravuje sám – tlačítko Upravit → overlay renderProfEdit. Kontakt na rodiče (telefon, e-mail)
    se čte z ACCOUNT (data.js) a edituje se jen v Nastavení účtu (modals.js renderUcet).
-   Doporučení od průvodců, depistáž a rozhovory jsou jen ke čtení (vkládá školka).
+   Doporučení, hodnocení a záznamy z konzultací jsou jen ke čtení a jen to, co průvodci sdíleli (P1).
    Fotky prací a vlastní poznámky rodiče vypuštěny (dřív nefunkční prvky). */
 function renderProfil(){
   const c=cur(), p=PROFIL[c.n], rezim=CODES[c.base][0];
@@ -2055,18 +2055,19 @@ function renderProfil(){
   h+=`<div class="tile"><div class="ch">Dokumenty a souhlasy</div>
     ${SOUHLASY.map((d,i)=>`<button class="doc doc-dl" onclick="downloadDoc(${i})"><span>${d.t}</span><span class="pdf">${d.f} ↓</span></button>`).join('')}</div>`;
 
-  h+=`<div class="tile"><div class="ch">Dokumenty z depistáže</div>
-    <button class="doc doc-dl" onclick="downloadDepistaz('Vstupní depistáž')"><span>Vstupní depistáž <span class="dt2">9/2025</span></span><span class="pdf">PDF ↓</span></button>
-    <button class="doc doc-dl" onclick="downloadDepistaz('Logopedický screening')"><span>Logopedický screening <span class="dt2">11/2025</span></span><span class="pdf">PDF ↓</span></button>
-    <button class="doc doc-dl" onclick="downloadDepistaz('Pololetní hodnocení')"><span>Pololetní hodnocení <span class="dt2">1/2026</span></span><span class="pdf">PDF ↓</span></button></div>`;
+  /* P1: rodič vidí jen to, co mu průvodci vědomě nasdíleli (v průvodcovské appce zóna
+     „Vidí rodiče"). Depistáž a pozorování jsou pracovní diagnostika týmu – dřív tu byly
+     a respondentka z týmu je označila za dokument, který rodičům nepatří. */
+  h+=`<div class="tile"><div class="ch">Hodnocení od průvodců</div>
+    <button class="doc doc-dl" onclick="downloadDepistaz('Čtvrtletní hodnocení')"><span>Čtvrtletní hodnocení <span class="dt2">1/2026</span></span><span class="pdf">PDF ↓</span></button></div>`;
 
   h+=`<div class="tile"><div class="ch">Z rozhovorů s rodiči</div>
     <div class="rozhov"><div class="rd">Doporučení od průvodců – na doma</div>
       ${p.doporuceni.map(d=>`<div class="rec"><span class="recdot"></span>${d}</div>`).join('')}</div>
-    <div class="rozhov"><div class="rd">Úvodní schůzka · 2. 9. 2025</div>Adaptace v pořádku, dítě se těší. Doma řeší usínání.</div>
-    <div class="rozhov"><div class="rd">Konzultace · 20. 1. 2026</div>Velký pokrok v jemné motorice, baví ho práce se dřevem.</div></div>`;
+    <div class="rozhov"><div class="rd">Jarní konzultace · 16. 4. 2026</div>Velký pokrok v jemné motorice, baví ho práce se dřevem. Na doma: trénovat samostatné oblékání.</div>
+    <div class="rozhov"><div class="rd">Podzimní konzultace · 13. 11. 2025</div>Adaptace v pořádku, dítě se těší. Doma řeší usínání.</div></div>`;
 
-  h+=`</div><div class="note2">Základní údaje, kontakty a zdraví si spravujete sami – držte je prosím aktuální. Doporučení, depistáž a rozhovory vkládají průvodci. Demo hodnoty.</div>`;
+  h+=`</div><div class="note2">Základní údaje, kontakty a zdraví si spravujete sami – držte je prosím aktuální. Hodnocení a záznamy z konzultací vkládají průvodci – vidíte to, co s vámi sdílejí. Demo hodnoty.</div>`;
   return h+`</div>`;
 }
 
