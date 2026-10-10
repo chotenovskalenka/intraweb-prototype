@@ -692,6 +692,13 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .rn-bez{display:inline-block;font-size:var(--text-chip);font-weight:600;text-transform:uppercase;
   letter-spacing:.03em;color:var(--state-muted-ink);background:var(--state-muted-bg);
   border-radius:var(--radius-xs);padding:2px 6px;vertical-align:1px}
+/* Prázdný stav v dlaždici a součtový řádek – používá průvodce i admin, proto sdílené. */
+.empty-l{font-size:var(--text-small);color:var(--color-text-muted);padding:4px 0 2px}
+.vyk-suma{border-top:1px solid var(--color-border);margin-top:4px;padding-top:9px}
+/* Široká tabulka roluje vodorovně ve svém obalu – nikdy nesmí roztáhnout stránku
+   (na ~1024 px byla tabulka dětí 742 px v obsahu širokém 702 px). */
+.dtab-wrap{overflow-x:auto;min-width:0;-webkit-overflow-scrolling:touch}
+.weekbox{overflow-x:auto}
 </style>
 <style>
 /* SCREENS: RODIC – rodičovské obrazovky + rodičovské varianty sdílených tříd.
@@ -1068,6 +1075,9 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .vzk+.vzk{border-top:1px solid var(--edge-primary)}
 .vzk-den{font-size:var(--text-note);font-weight:600;color:var(--color-primary-strong);margin-bottom:2px}
 .vzk-kdo{font-size:var(--text-note);color:var(--color-text-muted);margin-top:4px}
+/* hodiny u řádku náhrady */
+.nahrow{display:flex;align-items:center;gap:8px}.nahrow .nahL{flex:1;min-width:0}
+.nah-h{font-size:var(--text-small);color:var(--color-primary-strong);white-space:nowrap}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1516,7 +1526,17 @@ const DUVODLAB=Object.fromEntries(DUVODY);
 const duvodSelect=(val,onchange)=>`<select class="pin" onchange="${onchange}">`
   +`<option value=""${val?'':' selected'}>Vyberte…</option>`
   +DUVODY.map(([k,l])=>`<option value="${k}"${val===k?' selected':''}>${l}</option>`).join('')+`</select>`;
-const dostupne=c=>c.nahrady.filter(n=>n.stav==='dostupna').length;     // počet se všude odvozuje z pole
+/* Náhrady v HODINÁCH (rozhodnutí 10. 10. 2026, shodně s adminem). Pravidlo Vhaaji (příručka):
+   náhrada = 20 % omluvené absence. Každý včas omluvený den tedy připíše 20 % své délky –
+   dopolední 5 h → 1 h, odpolední 7 h → 1,4 h, celodenní úterý 9 h → 1,8 h. Záznam v poli
+   `nahrady` zůstává jeden na omluvený den, jen nese hodiny (`h`). */
+const NAHR_PODIL=.2, HOD_KODU={D:5,O:7,C:9};
+const planKod=(c,d)=>c.base==='C'&&wd(d)!==1?'O':c.base;              // plán dne bez omluvy
+const hodinyNahrady=(c,d)=>Math.round(HOD_KODU[planKod(c,d)]*NAHR_PODIL*10)/10;
+const fmtHod=h=>(Math.round(h*10)/10).toLocaleString('cs-CZ')+' h';
+// zůstatek se všude odvozuje z pole – součet hodin dostupných náhrad
+const dostupne=c=>Math.round(c.nahrady.filter(n=>n.stav==='dostupna').reduce((s,n)=>s+(n.h||0),0)*10)/10;
+const naplanovano=c=>Math.round(c.nahrady.filter(n=>n.stav==='naplanovana').reduce((s,n)=>s+(n.h||0),0)*10)/10;
 function nextExp(c){const a=c.nahrady.filter(n=>n.stav==='dostupna'&&isFinite(n.expT)).sort((x,y)=>x.expT-y.expT);return a[0]?a[0].exp:null;}
 const nplural=n=>n===1?'náhrada':(n>=2&&n<=4?'náhrady':'náhrad');
 const fmtRange=(a,b)=>a===b?`${DOW[wd(a)]} ${a}. 6.`:`${a}. 6. – ${b}. 6.`;
@@ -1548,13 +1568,13 @@ const children=[
     fondlog:[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]],
     faktury:genFaktury('01',10584,['Duben 2026','Květen 2026']),
     nahrady:[
-      nahFrom(new Date(2026,4,12),'dostupna'),
-      nahFrom(new Date(2026,4,20),'dostupna'),
-      nahFrom(juneDate(11),'dostupna',{id:'nE-fut',den:11,omId:'omE-fut'}),
-      nahFrom(new Date(2026,4,26),'naplanovana',{plan:'Náhradní den · 18. 6.'}),
-      nahFrom(new Date(2026,3,8),'vyuzita',{pouzita:'15. 5. 2026'}),
-      nahFrom(new Date(2025,4,20),'expirovana'),   // z minulého šk. roku – propadla 30. 6. 2025
-      nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'–',expT:Infinity}),
+      nahFrom(new Date(2026,4,12),'dostupna',{h:1.4}),
+      nahFrom(new Date(2026,4,20),'dostupna',{h:1.4}),
+      nahFrom(juneDate(11),'dostupna',{id:'nE-fut',den:11,omId:'omE-fut',h:1.4}),
+      nahFrom(new Date(2026,4,26),'naplanovana',{plan:'úterý 16. 6. do 17:00',h:1.4}),
+      nahFrom(new Date(2026,3,8),'vyuzita',{pouzita:'15. 5. 2026',h:1.4}),
+      nahFrom(new Date(2025,4,20),'expirovana',{h:1.4}),   // z minulého šk. roku – propadla 30. 6. 2025
+      nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'–',expT:Infinity,h:0}),
     ],
     omluvenky:[
       {id:'omE-fut',od:11,do:11,duvod:'rodinné důvody',pozn:'rodinná oslava',stav:'vcas',nahradaIds:['nE-fut']},
@@ -1566,7 +1586,7 @@ const children=[
     fond:{rocni:2000},
     fondlog:[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200],['Muzeum a dílna','březen 2026',350],['Jarní výprava','duben 2026',350]],
     faktury:genFaktury('02',10584,[]),   // happy stav – vše uhrazeno
-    nahrady:[ nahFrom(new Date(2026,4,15),'dostupna') ],
+    nahrady:[ nahFrom(new Date(2026,4,15),'dostupna',{h:1.4}) ],
     omluvenky:[]},
 ];
 
@@ -1986,15 +2006,17 @@ function renderDayModal(){
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeDayModal()">Zavřít</button></div>`;
   return h+`</div></div>`;}
 function nahRow(n){
-  // bez stavů a bez expirace – jen původ + kdy náhrada vznikla
-  return `<div class="nahrow"><div class="nahL"><div class="naho">${n.puvod}</div><div class="nahv">vznik ${n.vznik}</div></div></div>`;
+  // původ + kolik hodin z něj vzniklo; expirace je jedna pro všechny (30. 6.), proto u řádku není
+  return `<div class="nahrow"><div class="nahL"><div class="naho">${n.puvod}</div><div class="nahv">připsáno ${n.vznik}</div></div><b class="nah-h">+ ${fmtHod(n.h||0)}</b></div>`;
 }
 function renderNahrady(c){
-  const av=dostupne(c);
-  let h=`<div class="tile"><div class="ch">Dostupné náhrady</div><div class="nahbig">${av}</div>`;
-  h+=`<div class="nahsub2">Náhradu lze vyčerpat i na příměstský tábor. Vzniká za každý včas omluvený den.</div>`;
+  const av=dostupne(c), pl=naplanovano(c);
+  let h=`<div class="tile"><div class="ch">Dostupné náhrady</div><div class="nahbig">${fmtHod(av)}</div>`;
+  if(pl)h+=`<div class="nahsub2" style="margin-top:2px">+ ${fmtHod(pl)} naplánováno (${c.nahrady.filter(n=>n.stav==='naplanovana').map(n=>n.plan).join(', ')})</div>`;
+  // pravidlo z příručky Vhaaji, aby rodič věděl, z čeho čísla jsou
+  h+=`<div class="nahsub2">Náhrada je 20 % omluvené docházky – za každý den omluvený do 20:00 předchozího dne. Čerpá se odpoledne navíc nebo úterní docházkou do 17:00; s plnou docházkou i na příměstský tábor. Propadá 30. 6.</div>`;
   const avail=c.nahrady.filter(n=>n.stav==='dostupna');
-  h+=avail.length?avail.map(nahRow).join(''):'<div class="empty">Zatím žádné náhrady. Vzniknou za každý včas omluvený den.</div>';
+  h+=avail.length?avail.map(nahRow).join(''):'<div class="empty">Zatím žádné náhrady. Připíšou se za každý včas omluvený den.</div>';
   return h+`</div>`;
 }
 function renderOmluvenky(c){
@@ -2425,9 +2447,10 @@ function omGrid(which){
 }
 function omDeadline(){
   const days=omDays(), timely=days.filter(beforeDeadline), late=days.filter(d=>!beforeDeadline(d));
-  let h=`<div class="tile note-info"><div class="tlab" style="color:var(--color-primary);margin-bottom:5px">Než odešleš</div>`;
+  const c=cur(), hod=timely.reduce((s,d)=>s+hodinyNahrady(c,d),0);
+  let h=`<div class="tile note-info"><div class="tlab" style="color:var(--color-primary);margin-bottom:5px">Než odešlete</div>`;
   h+=`<div class="omdrow">Omluvit lze do <b>20:00 předchozího dne</b>.</div>`;
-  if(timely.length)h+=`<div class="omdrow ok">✓ Vznikne <b>${timely.length} ${nplural(timely.length)}</b> (za ${timely.length} včas omluvený ${plural(timely.length)}).</div>`;
+  if(timely.length)h+=`<div class="omdrow ok">✓ Připíše se <b>${fmtHod(hod)} náhrad</b> – 20 % z ${timely.length} včas omluven${timely.length===1?'ého dne':'ých dní'}.</div>`;
   if(late.length)h+=`<div class="omdrow bad">⚠ Omluva na ${late.map(d=>d+'. 6.').join(', ')} je po deadlinu – <b>náhrada nevznikne</b>. Dítě je omluvené.</div>`;
   return h+`</div>`;
 }
@@ -2463,13 +2486,14 @@ window.omSubmit=()=>{
     stav:beforeDeadline(omDraft.od)?'vcas':'po-deadlinu',nahradaIds:[]};
   // po termínu je dítě taky omluvené – liší se jen tím, že nevznikne náhrada
   days.forEach(d=>{c.att[d]='OM';c.duvody[d]=omDraft.duvod;if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
-  timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id});c.nahrady.push(n);om.nahradaIds.push(n.id);});
-  late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'–',expT:Infinity});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id,h:hodinyNahrady(c,d)});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'–',expT:Infinity,h:0});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  const pripsano=timely.reduce((s,d)=>s+hodinyNahrady(c,d),0);
   c.omluvenky.unshift(om);
   // na dashboardu přepneme na první omluvený den, ať je nový stav vidět bez hledání
   if(section==='prehled')dashDay=days[0];
   omModal=false;render();
-  showToast(timely.length?`Omluvenka odeslána · vznikl${timely.length===1?'a':'y'} ${timely.length} ${nplural(timely.length)}`
+  showToast(timely.length?`Omluvenka odeslána · připsáno ${fmtHod(pripsano)} náhrad`
     :'Omluvenka odeslána · náhrada nevznikla (po termínu)');
 };
 window.omCancel=id=>{
@@ -2477,7 +2501,7 @@ window.omCancel=id=>{
   om.stav='zrusena';
   for(let d=om.od;d<=om.do;d++){if(c.att[d]==='OM')delete c.att[d];}
   c.nahrady=c.nahrady.filter(n=>!(om.nahradaIds||[]).includes(n.id));
-  render();showToast('Omluvenka zrušena, náhrady odečteny');
+  render();showToast('Omluvenka zrušena · její hodiny náhrad odečteny');
 };
 
 /* --- Modal: Nahlásit dnešní absenci (po termínu → omluveno, ale bez náhrady) --- */
@@ -2493,7 +2517,7 @@ window.absSubmit=()=>{
   c.att[TODAY]='OM'; c.duvody[TODAY]=absModal.duvod; if(absModal.pozn)c.notes[TODAY]=absModal.pozn;
   c.obed=c.obed||{}; c.obed[TODAY]=absModal.obed===true;
   const om={id:uid(),od:TODAY,do:TODAY,duvod:absModal.duvod,pozn:absModal.pozn,stav:'po-deadlinu',nahradaIds:[]};
-  const n=nahFrom(juneDate(TODAY),'nevznikla',{den:TODAY,omId:om.id,exp:'–',expT:Infinity});
+  const n=nahFrom(juneDate(TODAY),'nevznikla',{den:TODAY,omId:om.id,exp:'–',expT:Infinity,h:0});
   c.nahrady.push(n); om.nahradaIds.push(n.id); c.omluvenky.unshift(om);
   absModal=null; showToast('Absence nahlášena'); render();
 };

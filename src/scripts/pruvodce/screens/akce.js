@@ -25,14 +25,14 @@ function akceCard(a,klik,lbl,plus){
 }
 /* Tabulka akcí (desktop). Poznámka je poslední, protože jako jediná zalamuje na víc řádků. */
 function akceTable(rows,klik,lbl,plus){
-  return `<table class="dtab akce-tab"><thead><tr>`+['Datum','Akce','Čas','Místo','Z fondu','Poznámka'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`+
+  return `<div class="dtab-wrap"><table class="dtab akce-tab"><thead><tr>`+['Datum','Akce','Čas','Místo','Z fondu','Poznámka'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`+
     rows.map((a,i)=>`<tr onclick="${klik(a,i)}"><td class="dt-date">${(lbl||dayLbl)(a)}</td>`+
       `<td class="nm">${a.name}${plus?' <span class="aplus">+</span>':''}</td>`+
       `<td>${a.time||'<span class="dt-no">–</span>'}</td>`+
       `<td>${a.place||'<span class="dt-no">–</span>'}</td>`+
       `<td class="dt-fond">${a.paid?`${a.paid} Kč/dítě`:'<span class="dt-no">–</span>'}</td>`+
       `<td class="dt-note">${a.note||'<span class="dt-no">–</span>'}</td></tr>`).join('')+
-    `</tbody></table>`;
+    `</tbody></table></div>`;
 }
 window.stepAkceM=d=>{akceM=Math.max(0,Math.min(AKCE_MESICE.length-1,akceM+d));render();};
 // Akce z minulého měsíce → nová v běžícím měsíci (id:null ⇒ uložením vznikne nová).

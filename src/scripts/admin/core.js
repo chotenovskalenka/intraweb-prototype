@@ -1,12 +1,14 @@
 /* CORE: ADMIN – stav, sekce, sidebar, render(), go(), úvodní spuštění.
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
+// pořadí podle frekvence použití (draft-admin 4): platby a náhrady jsou měsíční rutina
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
+  ['platby','Platby','₵'],
+  ['nahrady','Náhrady','↻'],
+  ['deti','Děti a matrika','☺'],
   ['aktuality','Novinky','✉'],
   ['porady','Porady a evaluace','▤'],
   ['tridnice','Třídnice','▤'],
-  ['platby','Platby','₵'],
-  ['nahrady','Náhrady','↻'],
 ];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 
@@ -17,7 +19,7 @@ function renderPlaceholder(){
   return `<div class="tile ph-tile"><div class="ph-ic">🌿</div><div class="ph-t">${TITLES[section]}</div>`
     +`<div class="ph-d">Tato sekce se připravuje v další fázi prototypu.</div></div>`;
 }
-const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,tridnice:renderTridniceA,platby:renderPlaceholder,nahrady:renderPlaceholder};
+const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,tridnice:renderTridniceA,platby:renderPlatby,nahrady:renderNahrady,deti:renderMatrika};
 
 function renderSidebar(){
   const el=document.getElementById('sidebar');
@@ -29,6 +31,9 @@ function renderSidebar(){
 const TOPACT={
   aktuality:`<button class="btn-primary" onclick="akNew()">+ Nová novinka</button>`,
   porady:`<button class="btn-primary no-print" onclick="poNewZ()">+ Nový zápis</button>`,
+  nahrady:`<button class="btn-ghost" onclick="exportNahrady()">Stáhnout CSV</button>`,
+  platby:`<button class="btn-ghost" onclick="exportPlatby()">Stáhnout pro účetní</button>`,
+  deti:`<button class="btn-primary" onclick="exportMsmt()">Export pro MŠMT</button>`,
 };
 function render(){
   document.getElementById('ttl').textContent=TITLES[section];
@@ -36,6 +41,6 @@ function render(){
   renderSidebar();
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}if(s!=='tridnice')traDetail=null;render();};
+window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}if(s!=='nahrady')nhOpen=null;if(s!=='deti')mtOpen=null;if(s!=='tridnice')traDetail=null;render();};
 
 render();

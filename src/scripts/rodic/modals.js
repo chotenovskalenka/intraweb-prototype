@@ -70,9 +70,10 @@ function omGrid(which){
 }
 function omDeadline(){
   const days=omDays(), timely=days.filter(beforeDeadline), late=days.filter(d=>!beforeDeadline(d));
-  let h=`<div class="tile note-info"><div class="tlab" style="color:var(--color-primary);margin-bottom:5px">Než odešleš</div>`;
+  const c=cur(), hod=timely.reduce((s,d)=>s+hodinyNahrady(c,d),0);
+  let h=`<div class="tile note-info"><div class="tlab" style="color:var(--color-primary);margin-bottom:5px">Než odešlete</div>`;
   h+=`<div class="omdrow">Omluvit lze do <b>20:00 předchozího dne</b>.</div>`;
-  if(timely.length)h+=`<div class="omdrow ok">✓ Vznikne <b>${timely.length} ${nplural(timely.length)}</b> (za ${timely.length} včas omluvený ${plural(timely.length)}).</div>`;
+  if(timely.length)h+=`<div class="omdrow ok">✓ Připíše se <b>${fmtHod(hod)} náhrad</b> – 20 % z ${timely.length} včas omluven${timely.length===1?'ého dne':'ých dní'}.</div>`;
   if(late.length)h+=`<div class="omdrow bad">⚠ Omluva na ${late.map(d=>d+'. 6.').join(', ')} je po deadlinu – <b>náhrada nevznikne</b>. Dítě je omluvené.</div>`;
   return h+`</div>`;
 }
@@ -108,13 +109,14 @@ window.omSubmit=()=>{
     stav:beforeDeadline(omDraft.od)?'vcas':'po-deadlinu',nahradaIds:[]};
   // po termínu je dítě taky omluvené – liší se jen tím, že nevznikne náhrada
   days.forEach(d=>{c.att[d]='OM';c.duvody[d]=omDraft.duvod;if(omDraft.pozn)c.notes[d]=omDraft.pozn;});
-  timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id});c.nahrady.push(n);om.nahradaIds.push(n.id);});
-  late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'–',expT:Infinity});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  timely.forEach(d=>{const n=nahFrom(juneDate(d),'dostupna',{den:d,omId:om.id,h:hodinyNahrady(c,d)});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  late.forEach(d=>{const n=nahFrom(juneDate(d),'nevznikla',{den:d,omId:om.id,exp:'–',expT:Infinity,h:0});c.nahrady.push(n);om.nahradaIds.push(n.id);});
+  const pripsano=timely.reduce((s,d)=>s+hodinyNahrady(c,d),0);
   c.omluvenky.unshift(om);
   // na dashboardu přepneme na první omluvený den, ať je nový stav vidět bez hledání
   if(section==='prehled')dashDay=days[0];
   omModal=false;render();
-  showToast(timely.length?`Omluvenka odeslána · vznikl${timely.length===1?'a':'y'} ${timely.length} ${nplural(timely.length)}`
+  showToast(timely.length?`Omluvenka odeslána · připsáno ${fmtHod(pripsano)} náhrad`
     :'Omluvenka odeslána · náhrada nevznikla (po termínu)');
 };
 window.omCancel=id=>{
@@ -122,7 +124,7 @@ window.omCancel=id=>{
   om.stav='zrusena';
   for(let d=om.od;d<=om.do;d++){if(c.att[d]==='OM')delete c.att[d];}
   c.nahrady=c.nahrady.filter(n=>!(om.nahradaIds||[]).includes(n.id));
-  render();showToast('Omluvenka zrušena, náhrady odečteny');
+  render();showToast('Omluvenka zrušena · její hodiny náhrad odečteny');
 };
 
 /* --- Modal: Nahlásit dnešní absenci (po termínu → omluveno, ale bez náhrady) --- */
@@ -138,7 +140,7 @@ window.absSubmit=()=>{
   c.att[TODAY]='OM'; c.duvody[TODAY]=absModal.duvod; if(absModal.pozn)c.notes[TODAY]=absModal.pozn;
   c.obed=c.obed||{}; c.obed[TODAY]=absModal.obed===true;
   const om={id:uid(),od:TODAY,do:TODAY,duvod:absModal.duvod,pozn:absModal.pozn,stav:'po-deadlinu',nahradaIds:[]};
-  const n=nahFrom(juneDate(TODAY),'nevznikla',{den:TODAY,omId:om.id,exp:'–',expT:Infinity});
+  const n=nahFrom(juneDate(TODAY),'nevznikla',{den:TODAY,omId:om.id,exp:'–',expT:Infinity,h:0});
   c.nahrady.push(n); om.nahradaIds.push(n.id); c.omluvenky.unshift(om);
   absModal=null; showToast('Absence nahlášena'); render();
 };

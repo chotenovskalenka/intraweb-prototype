@@ -372,3 +372,6 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 .vzk+.vzk{border-top:1px solid var(--edge-primary)}
 .vzk-den{font-size:var(--text-note);font-weight:600;color:var(--color-primary-strong);margin-bottom:2px}
 .vzk-kdo{font-size:var(--text-note);color:var(--color-text-muted);margin-top:4px}
+/* hodiny u řádku náhrady */
+.nahrow{display:flex;align-items:center;gap:8px}.nahrow .nahL{flex:1;min-width:0}
+.nah-h{font-size:var(--text-small);color:var(--color-primary-strong);white-space:nowrap}

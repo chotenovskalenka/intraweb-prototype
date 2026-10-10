@@ -46,7 +46,7 @@ function renderDeti(){
     const b=(c.predskolak?'<span class="bdg pre">předškolák</span>':'')+(c.alergie?` <span class="bdg al">${c.alergie}</span>`:'');
     return `<button class="acard" onclick="openDite(${x.i})">${avatar(c,32)}<span style="flex:1"><span class="aname">${full(c)}</span><div class="ameta">${c.plan}${b?' · ':''}${b}</div></span></button>`;
   }).join('')+`</div>`;
-  h+=`<table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
+  h+=`<div class="dtab-wrap"><table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
     const on=detiSort===k;
     return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):'⇅'}</span></button></th>`;
   }).join('')+`</tr></thead><tbody>`+
@@ -54,7 +54,7 @@ function renderDeti(){
       return `<tr onclick="openDite(${x.i})"><td class="nm">${avatar(c,28)}${full(c)}</td><td>${c.plan}</td><td>${c.vek} let</td><td>${c.nar}</td>`+
         `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
         `<td>${c.alergie?`<span class="bdg al">${c.alergie}</span>`:'<span class="dt-no">–</span>'}</td></tr>`;
-    }).join('')+`</tbody></table>`;
+    }).join('')+`</tbody></table></div>`;
   return h+`</div>`;
 }
 function renderDite(i){

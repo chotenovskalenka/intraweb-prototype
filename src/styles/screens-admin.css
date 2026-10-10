@@ -144,6 +144,75 @@
   body{background:#fff}
 }
 
+/* ===== Náhrady ===== */
+.nh-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-md);margin-bottom:var(--space-md)}
+.nh-sum .tile{margin-bottom:0}
+.nh-l{font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-n{font-family:var(--font-serif);font-size:var(--text-number);font-weight:600;line-height:var(--leading-tight);color:var(--color-primary-strong);margin:4px 0 2px}
+.nh-s{font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-minus{color:var(--state-danger-ink)!important}
+.nh-plus{color:var(--state-ok-ink)}
+.nh-bar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm) var(--space-lg);margin-bottom:var(--space-md)}
+.nh-bar .search{flex:0 1 260px;margin:0}
+.nh-chk{display:flex;align-items:center;gap:6px;min-height:44px;font-size:var(--text-small);color:var(--color-text);cursor:pointer}
+.nh-pr{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:var(--text-small);color:var(--color-text-muted)}
+.nh-pr .pin{width:auto}
+.nh-nahled{background:var(--state-info-bg);color:var(--color-text);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:var(--space-md);font-size:var(--text-small);line-height:var(--leading-normal)}
+.nh-zpet{background:none;border:none;padding:0 0 0 6px;min-height:32px;font:inherit;font-weight:600;color:var(--color-primary);cursor:pointer;text-decoration:underline}
+.nh-tab td{white-space:nowrap}
+.nh-cards .acard b{flex-shrink:0;font-family:var(--font-serif);font-size:var(--text-action)}
+.nh-dh{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-lg);margin:var(--space-sm) 0 var(--space-md)}
+.nh-dz{text-align:right}.nh-dz span{display:block;font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-dz b{font-family:var(--font-serif);font-size:var(--text-number);font-weight:600;color:var(--color-primary-strong)}
+.nh-varov{margin-top:8px;padding:8px 10px;border-radius:var(--radius-sm);background:var(--state-danger-bg);color:var(--state-danger-ink);font-size:var(--text-small)}
+.nh-kdo{display:block;font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-2{display:grid;gap:var(--space-md)}
+@media (min-width:900px){
+  .nh-cards{display:none}
+  .nh-2{grid-template-columns:1fr 1fr;align-items:start}
+  .nh-2 .tile{margin-bottom:0}
+}
+.nh-dh .pname,.nh-dh .pfull{text-align:left}
+.nh-dh .pname{margin:0}
+
+/* ===== Přehled: dnes ve školkách, dvousloupec akcí ===== */
+.ds-row{display:grid;grid-template-columns:120px 130px 1fr auto;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
+.ds-row:first-of-type{border-top:none}
+.ds-nm{font-family:var(--font-serif);font-size:var(--text-action);color:var(--color-primary-strong)}
+.ds-n b{font-size:var(--text-body)}
+.ds-x,.ds-p{color:var(--color-text-muted)}
+.ds-warn{color:var(--state-warn-ink)}
+.dl-big{font-family:var(--font-serif);font-size:var(--text-number);font-weight:600;color:var(--color-primary-strong);line-height:var(--leading-tight);margin:2px 0 8px}
+.dl-big span{font-family:var(--font-sans);font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);margin-left:8px}
+.dash2{display:grid;gap:var(--space-md)}
+.dash2 .tile{margin-bottom:0}
+@media (min-width:900px){.dash2{grid-template-columns:1fr 1fr;align-items:start;margin-bottom:var(--space-md)}}
+@media (max-width:899px){.ds-row{grid-template-columns:1fr auto}.ds-x,.ds-p{grid-column:1/-1;margin-top:-6px}.dash2{margin-bottom:var(--space-md)}}
+
+/* ===== Platby ===== */
+.bdg.ok{color:var(--state-ok-ink);background:var(--state-ok-bg)}
+.bdg.mute{color:var(--state-muted-ink);background:var(--state-muted-bg)}
+.pl-akce .pl-akce-r{display:flex;flex-wrap:wrap;gap:var(--space-sm);align-items:center}
+.pl-hotovo{font-size:var(--text-small);font-weight:600;color:var(--state-ok-ink)}
+.pl-nahled{margin-top:var(--space-md);padding:12px 14px;border-radius:var(--radius-md);background:var(--state-info-bg);font-size:var(--text-small);line-height:var(--leading-normal)}
+.pl-nahled .pl-akce-r{margin-top:10px}
+.pl-pozn{margin-top:6px;color:var(--color-text)}
+.pl-bulk{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm) var(--space-md);padding:10px 14px;margin-bottom:var(--space-sm);border-radius:var(--radius-md);background:var(--wash-primary);font-size:var(--text-small)}
+.pl-tab td{white-space:nowrap}
+.pl-ck{width:1%}
+.pl-ck input,.pl-ck span input{width:18px;height:18px;cursor:pointer}
+.pl-ckm{font-size:var(--text-title);color:var(--color-primary);line-height:1}
+/* velké částky se nesmí lámat („638 207 / Kč") – na mobilu menší číslo */
+.nh-n{white-space:nowrap}
+@media (max-width:899px){.nh-n{font-size:var(--text-title)}}
+
+/* ===== Děti a matrika ===== */
+.mt-tab td{white-space:nowrap}
+.mt-al{color:var(--color-danger);font-weight:600}
+.mt-pozvat{margin-left:auto}
+.mt-link{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:44px;background:none;border:none;border-top:1px solid var(--color-border);padding:0;font:inherit;font-size:var(--text-small);color:var(--color-text);cursor:pointer;text-align:left}
+.mt-link:first-of-type{border-top:none}
+.mt-link b{color:var(--color-primary)}
 /* třídnice – týden × školky a týden jedné školky (dny vedle sebe jako v tabulce Jaaty) */
 .tra-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
 .tra-sum{font-size:var(--text-small);color:var(--color-text-muted)}

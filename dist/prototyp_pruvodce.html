@@ -692,6 +692,13 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .rn-bez{display:inline-block;font-size:var(--text-chip);font-weight:600;text-transform:uppercase;
   letter-spacing:.03em;color:var(--state-muted-ink);background:var(--state-muted-bg);
   border-radius:var(--radius-xs);padding:2px 6px;vertical-align:1px}
+/* Prázdný stav v dlaždici a součtový řádek – používá průvodce i admin, proto sdílené. */
+.empty-l{font-size:var(--text-small);color:var(--color-text-muted);padding:4px 0 2px}
+.vyk-suma{border-top:1px solid var(--color-border);margin-top:4px;padding-top:9px}
+/* Široká tabulka roluje vodorovně ve svém obalu – nikdy nesmí roztáhnout stránku
+   (na ~1024 px byla tabulka dětí 742 px v obsahu širokém 702 px). */
+.dtab-wrap{overflow-x:auto;min-width:0;-webkit-overflow-scrolling:touch}
+.weekbox{overflow-x:auto}
 </style>
 <style>
 .specbar{background:var(--wash-accent);border:1px solid var(--edge-accent);border-radius:var(--radius-lg);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-md)}
@@ -822,7 +829,6 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .zrow .doc-dl{border-top:none;flex:1;min-width:0}
 .zsdil{flex-shrink:0;min-height:44px;padding:0 4px;background:none;border:none;font-family:var(--font-sans);
   font-size:var(--text-note);font-weight:600;color:var(--color-primary);cursor:pointer;white-space:nowrap}
-.empty-l{font-size:var(--text-small);color:var(--color-text-muted);padding:4px 0 2px}
 .vis{display:inline-block;margin-left:6px;font-size:var(--text-chip);font-weight:600;border-radius:var(--radius-xs);padding:2px 6px;vertical-align:1px}
 .vis-r{color:var(--state-brand-ink);background:var(--state-brand-bg)}
 .vis-t{color:var(--state-warn-ink);background:var(--state-warn-bg)}
@@ -849,7 +855,6 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .sh-duvod{font-weight:600;color:var(--state-warn-ink);background:var(--state-warn-bg);border-radius:var(--radius-xs);padding:2px 5px}
 /* Můj profil – výkaz hodin: plán tlumeně, součet odpracovaného s předělem. */
 .vyk-plan{color:var(--color-text-muted);font-weight:500}
-.vyk-suma{border-top:1px solid var(--color-border);margin-top:4px;padding-top:9px}
 /* Kuchyň – tři jídla dne jako ranní řada (stejný rámec jako u průvodce), velké číslo porcí. */
 .kuch-num{font-family:var(--font-serif);font-size:var(--text-number-lg);font-weight:600;line-height:var(--leading-tight);color:var(--color-primary-strong);margin:2px 0 6px}
 .kuch-num span{font-family:var(--font-sans);font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);margin-left:6px}
@@ -2396,14 +2401,14 @@ function akceCard(a,klik,lbl,plus){
 }
 /* Tabulka akcí (desktop). Poznámka je poslední, protože jako jediná zalamuje na víc řádků. */
 function akceTable(rows,klik,lbl,plus){
-  return `<table class="dtab akce-tab"><thead><tr>`+['Datum','Akce','Čas','Místo','Z fondu','Poznámka'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`+
+  return `<div class="dtab-wrap"><table class="dtab akce-tab"><thead><tr>`+['Datum','Akce','Čas','Místo','Z fondu','Poznámka'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`+
     rows.map((a,i)=>`<tr onclick="${klik(a,i)}"><td class="dt-date">${(lbl||dayLbl)(a)}</td>`+
       `<td class="nm">${a.name}${plus?' <span class="aplus">+</span>':''}</td>`+
       `<td>${a.time||'<span class="dt-no">–</span>'}</td>`+
       `<td>${a.place||'<span class="dt-no">–</span>'}</td>`+
       `<td class="dt-fond">${a.paid?`${a.paid} Kč/dítě`:'<span class="dt-no">–</span>'}</td>`+
       `<td class="dt-note">${a.note||'<span class="dt-no">–</span>'}</td></tr>`).join('')+
-    `</tbody></table>`;
+    `</tbody></table></div>`;
 }
 window.stepAkceM=d=>{akceM=Math.max(0,Math.min(AKCE_MESICE.length-1,akceM+d));render();};
 // Akce z minulého měsíce → nová v běžícím měsíci (id:null ⇒ uložením vznikne nová).
@@ -2694,7 +2699,7 @@ function renderDeti(){
     const b=(c.predskolak?'<span class="bdg pre">předškolák</span>':'')+(c.alergie?` <span class="bdg al">${c.alergie}</span>`:'');
     return `<button class="acard" onclick="openDite(${x.i})">${avatar(c,32)}<span style="flex:1"><span class="aname">${full(c)}</span><div class="ameta">${c.plan}${b?' · ':''}${b}</div></span></button>`;
   }).join('')+`</div>`;
-  h+=`<table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
+  h+=`<div class="dtab-wrap"><table class="dtab"><thead><tr>`+DETI_SLOUPCE.map(([k,lab])=>{
     const on=detiSort===k;
     return `<th class="${on?'srt':''}" aria-sort="${on?(detiDir>0?'ascending':'descending'):'none'}"><button onclick="setDetiSort('${k}')">${lab}<span class="arw">${on?(detiDir>0?'▲':'▼'):'⇅'}</span></button></th>`;
   }).join('')+`</tr></thead><tbody>`+
@@ -2702,7 +2707,7 @@ function renderDeti(){
       return `<tr onclick="openDite(${x.i})"><td class="nm">${avatar(c,28)}${full(c)}</td><td>${c.plan}</td><td>${c.vek} let</td><td>${c.nar}</td>`+
         `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
         `<td>${c.alergie?`<span class="bdg al">${c.alergie}</span>`:'<span class="dt-no">–</span>'}</td></tr>`;
-    }).join('')+`</tbody></table>`;
+    }).join('')+`</tbody></table></div>`;
   return h+`</div>`;
 }
 function renderDite(i){
@@ -2873,7 +2878,7 @@ function renderFond(){
   else{
     // stejný vzor jako soupis dětí: na mobilu karty, na desktopu tabulka
     h+=`<div class="deti-cards">`+list.map(({c,i})=>`<div class="row"><div class="rmain" onclick="openFondChild(${i})">${avatar(c,26)}<span class="nm">${full(c)}</span><span class="ind" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč ›</span></div></div>`).join('')+`</div>`;
-    h+=`<table class="dtab"><thead><tr>`+FOND_SLOUPCE.map(([k,lab])=>{
+    h+=`<div class="dtab-wrap"><table class="dtab"><thead><tr>`+FOND_SLOUPCE.map(([k,lab])=>{
       const on=fondSort===k;
       return `<th class="${on?'srt':''}" aria-sort="${on?(fondDir>0?'ascending':'descending'):'none'}"><button onclick="setFondSort('${k}')">${lab}<span class="arw">${on?(fondDir>0?'▲':'▼'):'⇅'}</span></button></th>`;
     }).join('')+`</tr></thead><tbody>`+
@@ -2881,7 +2886,7 @@ function renderFond(){
         `<td class="dt-fond" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč</td>`+
         `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
         `<td>${c.fondLog&&c.fondLog.length?`${c.fondLog.length}× · naposled ${c.fondLog[0].name}`:'<span class="dt-no">zatím nic</span>'}</td></tr>`).join('')+
-      `</tbody></table>`;
+      `</tbody></table></div>`;
   }
   if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
     FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div>${jeHospodar()?`<button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button>`:''}</div>`;});

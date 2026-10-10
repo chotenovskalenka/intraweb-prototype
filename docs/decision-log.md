@@ -1680,6 +1680,97 @@ ostatní školky jsou souhrnná čísla v `KUCH_SKOLKY`, obsazenost sedí s admi
   Svačiny Vhaaji zůstávají v `JIDELNICEK` (čte je i rodičovská appka), Jaata a Maata
   je mají v `SVACINY`. Porce bez alergenu se u nich nezobrazují – v prototypu nemají děti.
 
+## Admin · Náhrady v hodinách, pravidlo podle školky (10. 10. 2026)
+
+**Rozhodnutí (Lenka):** náhrady se v adminu počítají v **hodinách** a **každá školka má své
+pravidlo** – jako to vede Radka a popisují příručky. Pravidlo Vhaaji potvrzené textem příručky:
+*20 % omluvené absence (ze 100 h omluvených → 20 h k čerpání)*; omluvená = zadaná do 20:00
+předchozího dne; čerpá se odpoledne navíc nebo úterní docházkou do 17:00; děti s plnou
+docházkou mohou čerpat i 2 týdny příměstských táborů. Maata: pevný roční balík podle
+docházky (30 / 80 / 100 h). **Jaata a Kouzlo lesa: pravidlo v podkladech není** – převzato
+20 %, v tabulce s odznakem „ověřit".
+
+**Obrazovka:** souhrn (k čerpání · v záporu · čerpáno letos · bez čerpání), filtr školek,
+„jen v záporu", „jen bez čerpání", hledání, řazení (výchozí: zápory nahoře), CSV.
+**Detail dítěte** napíše výpočet slovy (omluveno → připsáno → čerpáno → zbývá) a rozepíše
+vznik po měsících a každé čerpání s datem, typem, kdo ho zadal a obsazeností třídy – to je
+„validace", kterou vedení chtělo, a podklad pro rodiče (Flow 3).
+**Náhled pravidla** přepočítá zůstatky na „20 % všude" / „paušál všude" se sloupcem změny;
+nic se neukládá. Terka tak vidí dopad volby na datech.
+
+**Seed:** 65 smyšlených dětí; rozložení čísel podle Radčiny tabulky (jen čísla, žádná jména):
+v záporu 29 % (tabulka 23 %), medián zůstatku 24 h (16 h), čerpáno medián 20 h (16,5 h).
+Velké zápory dělají tábory – dva týdny spotřebují víc, než dítě za rok získá.
+
+**Nesoulad k dořešení:** rodičovská appka počítá náhrady ve **dnech** (1 včas omluvený den =
+1 náhrada). Po tomhle rozhodnutí by měla přejít na hodiny se stejným pravidlem – zapsáno
+jako navazující krok. **Otevřené:** jak tábor (v červenci) čerpá z hodin, které propadají
+30. 6. – v prototypu se čerpá přihláškou; pravidla Jaaty a Kouzla lesa; Maata „50 %
+v 1. pololetí" zatím nehlídáno.
+
+## Admin · Přehled zostřený na „co vyžaduje akci" (10. 10. 2026)
+
+Podle draft-admin 4.1: **dnes ve školkách** (přítomno z zapsaných, omluveno, nevyřešeno,
+průvodci – Terčin dohled) · **platby k řešení** (jen po splatnosti, částečně uhrazené
+a čekající na spárování, s počtem a sumou) · **náhrady – výkyvy** (děti v záporu, čerpání
+nad dvojnásobek průměru, co propadne 30. 6.; proklik otevře Náhrady s filtrem „jen v záporu")
+· **chybějící data a upozornění** · **kapacity**.
+
+**Vypadly** provozní úkoly (ve výzkumu je nikdo nezmínil) a poslední porady (mají vlastní
+sekci). Starý souhrn náhrad ve dnech (`NAHRADY_SUM`) nahradil výpočet z `NAHRADY_DETI`.
+Odchylka od BRIEF kap. 1, který úkoly i porady na dashboard dává – výzkum má přednost.
+
+## Admin · Platby (10. 10. 2026)
+
+Podle draft-admin 4.2, rozsah podle zafixovaného rozhodnutí fáze 5 (žádný fakturační modul):
+- **Faktury napříč školkami** pro tytéž děti jako Náhrady (65); školné se vystavuje dopředu,
+  stravné zpětně podle snědených jídel. Ceny: Vhaaji 10 584 Kč a Maata 11 813 Kč z příruček,
+  ostatní odhad prototypu (zapsáno v kódu). Stravné 75 Kč oběd + 25 Kč svačina.
+- **Měsíc** (březen–červen), **souhrn** (vystaveno · uhrazeno · k úhradě · po splatnosti),
+  filtr školky, druhu a stavu, hledání, CSV „pro účetní".
+- **Akce simulované:** *Vystavit stravné za květen* s náhledem (kolik faktur, děti
+  s poznámkou „odchod před obědem" – přesně Radčina poznámka) · *Poslat upomínku* vybraným ·
+  *Označit jako uhrazeno* (s poznámkou „spárováno ručně"). Školné na červenec jen náhled.
+- Stavy z BRIEF kap. 4 přes stavovou paletu (uhrazeno, neuhrazeno, po splatnosti, částečně,
+  čeká na spárování, přeplatek, storno).
+- **Jména ze sítě sedí s ostatními appkami:** Eliška Dvořáková má po splatnosti duben a květen
+  (jako v rodičovské appce, 2 × 10 584 Kč), Kuba Svoboda, Tomáš Beran (částečně) a Ela Marešová
+  (čeká na spárování) převzali čtyři smyšlené děti z Náhrad.
+
+**Nedělá se:** editor faktury, číselné řady, účty dodavatelů, párování s bankou (otázka pro Pata).
+Přehled adminu čte „platby k řešení" z týchž faktur (`platbyKResi`).
+
+## Admin · Děti a matrika, pořadí menu (10. 10. 2026)
+
+Podle draft-admin 4.4. **Jeden seznam dětí napříč školkami** – tytéž děti jako v Náhradách
+a Platbách – s kmenovými daty, zákonnými zástupci a dokumenty. **Kompletnost matriky** se
+odvozuje z vyplněných polí (`MATRIKA_POLE`, `matrikaChybi`); **Přehled z ní počítá
+„chybějící data"** po školkách a polích místo dřívějších napevno napsaných vět.
+- Filtry školka · předškoláci · alergici (Terčino „rychle extrahovat") · neúplná matrika.
+- **Export pro MŠMT** (CSV se sloupci výkazu; v ostrém provozu ZIP po školkách k 30. 9.).
+- **Pozvat rodiče k doplnění** – Terčin nápad s dotazníkem: v rodičovské appce by se rodině
+  objevil formulář jen s chybějícími poli; v prototypu se eviduje „pozváno".
+- Detail má **„Jinde v systému"** – zůstatek náhrad a dluh na platbách s proklikem
+  (jedno dítě, jeden záznam; dnes tři místa).
+- Eliška Dvořáková má údaje jako v rodičovské appce (narozena 14. 3. 2021, rodné číslo, adresa).
+
+**Pořadí v menu** podle frekvence použití (draft-admin 4): Přehled · Platby · Náhrady · Děti
+a matrika · Novinky · Porady. **Nastavení (ceny, typy, kapacity) vypuštěno** – jeden hlas,
+nic na něm nestojí (viz roadmapa).
+**Nedělá se:** správa uživatelských účtů (Patova administrace).
+
+## Rodičovská appka: náhrady v hodinách (10. 10. 2026)
+
+Navazuje na rozhodnutí o adminu – rodič a vedení teď vidí tatáž čísla. Každý včas omluvený
+den připíše **20 % své délky** (Vhaaji: odpolední 7 h → 1,4 h). Zůstatek „Dostupné náhrady"
+je v hodinách, pod ním naplánované hodiny a pravidlo z příručky jednou větou. Omluvenka před
+odesláním říká „Připíše se 1,4 h náhrad – 20 % z 1 včas omluveného dne", toast totéž.
+**Eliška je v obou appkách stejná:** 5 včas omluvených dní × 7 h = 35 h → 7 h připsáno,
+1,4 h vyčerpáno → admin „zbývá 5,6 h" = rodič „4,2 h dostupné + 1,4 h naplánováno".
+**Opraveno:** omluvenka v rodičovské appce psala „Než odešleš" – appka vyká, „Než odešlete".
+**Zůstává:** záznam je dál jeden na omluvený den; čerpání po hodinách (odpoledne 2 h, tábor)
+rodič zatím nevidí rozepsané – jen zůstatek a naplánované.
+
 
 ## Třídnice v IS – průvodce píše, vedení čte (10. 10. 2026)
 

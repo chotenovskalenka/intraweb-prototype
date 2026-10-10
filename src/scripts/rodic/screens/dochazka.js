@@ -62,15 +62,17 @@ function renderDayModal(){
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeDayModal()">Zavřít</button></div>`;
   return h+`</div></div>`;}
 function nahRow(n){
-  // bez stavů a bez expirace – jen původ + kdy náhrada vznikla
-  return `<div class="nahrow"><div class="nahL"><div class="naho">${n.puvod}</div><div class="nahv">vznik ${n.vznik}</div></div></div>`;
+  // původ + kolik hodin z něj vzniklo; expirace je jedna pro všechny (30. 6.), proto u řádku není
+  return `<div class="nahrow"><div class="nahL"><div class="naho">${n.puvod}</div><div class="nahv">připsáno ${n.vznik}</div></div><b class="nah-h">+ ${fmtHod(n.h||0)}</b></div>`;
 }
 function renderNahrady(c){
-  const av=dostupne(c);
-  let h=`<div class="tile"><div class="ch">Dostupné náhrady</div><div class="nahbig">${av}</div>`;
-  h+=`<div class="nahsub2">Náhradu lze vyčerpat i na příměstský tábor. Vzniká za každý včas omluvený den.</div>`;
+  const av=dostupne(c), pl=naplanovano(c);
+  let h=`<div class="tile"><div class="ch">Dostupné náhrady</div><div class="nahbig">${fmtHod(av)}</div>`;
+  if(pl)h+=`<div class="nahsub2" style="margin-top:2px">+ ${fmtHod(pl)} naplánováno (${c.nahrady.filter(n=>n.stav==='naplanovana').map(n=>n.plan).join(', ')})</div>`;
+  // pravidlo z příručky Vhaaji, aby rodič věděl, z čeho čísla jsou
+  h+=`<div class="nahsub2">Náhrada je 20 % omluvené docházky – za každý den omluvený do 20:00 předchozího dne. Čerpá se odpoledne navíc nebo úterní docházkou do 17:00; s plnou docházkou i na příměstský tábor. Propadá 30. 6.</div>`;
   const avail=c.nahrady.filter(n=>n.stav==='dostupna');
-  h+=avail.length?avail.map(nahRow).join(''):'<div class="empty">Zatím žádné náhrady. Vzniknou za každý včas omluvený den.</div>';
+  h+=avail.length?avail.map(nahRow).join(''):'<div class="empty">Zatím žádné náhrady. Připíšou se za každý včas omluvený den.</div>';
   return h+`</div>`;
 }
 function renderOmluvenky(c){
