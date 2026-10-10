@@ -58,14 +58,14 @@ function renderNahrady(){
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div>`;
   const col=(k,l)=>{const on=nhSort===k;return `<th class="${on?'srt':''}" aria-sort="${on?(nhDir>0?'ascending':'descending'):'none'}"><button onclick="setNhSort('${k}')">${l}<span class="arw">${on?(nhDir>0?'▲':'▼'):'⇅'}</span></button></th>`;};
   // desktop: tabulka; mobil: karty (admin je desktop-first, ale na telefonu se nesmí rozpadnout)
-  h+=`<table class="dtab nh-tab"><thead><tr>${col('dite','Dítě')}${col('skolka','Školka · třída')}<th><span>Docházka</span></th><th><span>Pravidlo</span></th>`
+  h+=`<div class="dtab-wrap"><table class="dtab nh-tab"><thead><tr>${col('dite','Dítě')}${col('skolka','Školka · třída')}<th><span>Docházka</span></th><th><span>Pravidlo</span></th>`
     +`<th><span>Omluveno</span></th>${col('pripsano','Připsáno')}${col('cerpano','Čerpáno')}${col('zbyva','Zbývá')}${nahled?'<th><span>Změna</span></th>':''}</tr></thead><tbody>`
     +list.map(c=>{const pr=nhPravidlo(c),z=zbyva(c),d=pripsano(c)-pripsanoPlatne(c);
       return `<tr onclick="openNahrada('${c.id}')"><td class="nm">${c.n} ${c.sur}</td><td>${c.skN}${c.trida!==c.skN?` <span class="dt-no">· ${c.trida}</span>`:''}</td><td>${REZIM_LAB[c.rezim]}</td>`
         +`<td>${pravidloKr(pr,c)}${!nahled&&!NAHR_PRAVIDLA[c.skolka].overeno?' <span class="bdg part" title="Pravidlo této školky není v podkladech – převzato z Vhaaji">ověřit</span>':''}</td>`
         +`<td>${fmtHod(c.omluvenoH)} h</td><td>${fmtHod(pripsano(c))} h</td><td>${fmtHod(c.cerpanoH)} h</td>`
         +`<td class="${z<0?'nh-minus':''}"><b>${fmtHod(z)} h</b></td>${nahled?`<td class="${d<0?'nh-minus':d>0?'nh-plus':''}">${d?(d>0?'+':'')+fmtHod(d)+' h':'–'}</td>`:''}</tr>`;}).join('')
-    +`</tbody></table>`;
+    +`</tbody></table></div>`;
   h+=`<div class="nh-cards">`+list.map(c=>{const z=zbyva(c);return `<button class="acard" onclick="openNahrada('${c.id}')"><span style="flex:1"><span class="aname">${c.n} ${c.sur}</span><div class="ameta">${c.skN} · ${REZIM_LAB[c.rezim]} · připsáno ${fmtHod(pripsano(c))} h · čerpáno ${fmtHod(c.cerpanoH)} h</div></span><b class="${z<0?'nh-minus':''}">${fmtHod(z)} h</b></button>`;}).join('')+`</div>`;
   h+=`<div class="note2">Náhrada vzniká jen z absence omluvené do 20:00 předchozího dne. Čerpá se odpoledne navíc nebo úterní docházkou do 17:00; děti s plnou docházkou mohou čerpat i 2 týdny příměstských táborů. Hodiny propadají ${NAHR_EXP}.</div>`;
   return h;

@@ -51,7 +51,7 @@ function renderFond(){
   else{
     // stejný vzor jako soupis dětí: na mobilu karty, na desktopu tabulka
     h+=`<div class="deti-cards">`+list.map(({c,i})=>`<div class="row"><div class="rmain" onclick="openFondChild(${i})">${avatar(c,26)}<span class="nm">${full(c)}</span><span class="ind" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč ›</span></div></div>`).join('')+`</div>`;
-    h+=`<table class="dtab"><thead><tr>`+FOND_SLOUPCE.map(([k,lab])=>{
+    h+=`<div class="dtab-wrap"><table class="dtab"><thead><tr>`+FOND_SLOUPCE.map(([k,lab])=>{
       const on=fondSort===k;
       return `<th class="${on?'srt':''}" aria-sort="${on?(fondDir>0?'ascending':'descending'):'none'}"><button onclick="setFondSort('${k}')">${lab}<span class="arw">${on?(fondDir>0?'▲':'▼'):'⇅'}</span></button></th>`;
     }).join('')+`</tr></thead><tbody>`+
@@ -59,7 +59,7 @@ function renderFond(){
         `<td class="dt-fond" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč</td>`+
         `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
         `<td>${c.fondLog&&c.fondLog.length?`${c.fondLog.length}× · naposled ${c.fondLog[0].name}`:'<span class="dt-no">zatím nic</span>'}</td></tr>`).join('')+
-      `</tbody></table>`;
+      `</tbody></table></div>`;
   }
   if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
     FONDHIST.forEach(x=>{h+=`<div class="frow"><div style="flex:1"><div class="aname">${x.name}</div><div class="ameta">${x.n}× ${x.amt} Kč = ${(x.n*x.amt).toLocaleString('cs-CZ')} Kč</div></div>${jeHospodar()?`<button class="odbtn ghostred" onclick="stornoFond(${x.id})">Vrátit</button>`:''}</div>`;});

@@ -51,14 +51,14 @@ function renderPlatby(){
     +`<button class="nh-zpet" onclick="plSel.clear();render()">Zrušit výběr</button></div>`;
   if(!list.length)return h+`<div class="empty">Nic neodpovídá filtru.</div>`;
   const vse=list.every(f=>plSel.has(f.id));
-  h+=`<table class="dtab pl-tab"><thead><tr><th class="pl-ck"><span><input type="checkbox" ${vse?'checked':''} onchange="plVybratVse(this.checked)" aria-label="Vybrat vše"></span></th>`
+  h+=`<div class="dtab-wrap"><table class="dtab pl-tab"><thead><tr><th class="pl-ck"><span><input type="checkbox" ${vse?'checked':''} onchange="plVybratVse(this.checked)" aria-label="Vybrat vše"></span></th>`
     +['Dítě','Školka','Období','Částka','K úhradě','Splatnost','Stav'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`
     +list.map(f=>{const st=PLATBASTAVY[f.stav];return `<tr onclick="plTog('${f.id}')"><td class="pl-ck"><input type="checkbox" ${plSel.has(f.id)?'checked':''} onclick="event.stopPropagation();plTog('${f.id}')" aria-label="Vybrat ${f.dite}"></td>`
       +`<td class="nm">${f.dite}</td><td>${f.skolka}</td><td>${f.obdobi}</td><td>${kc(f.castka)} Kč</td>`
       +`<td>${kZaplate(f)?`<b>${kc(kZaplate(f))} Kč</b>`:'<span class="dt-no">–</span>'}</td>`
       +`<td>${f.spl}${f.poDnu?` <span class="dt-no">· ${f.poDnu} dní po</span>`:''}</td>`
       +`<td><span class="bdg ${st.cls}">${st.lab}</span>${f.upominka?` <span class="dt-no">· upomínka ${f.upominka}</span>`:''}${f.rucne?' <span class="dt-no">· spárováno ručně</span>':''}</td></tr>`;}).join('')
-    +`</tbody></table>`;
+    +`</tbody></table></div>`;
   h+=`<div class="nh-cards">`+list.map(f=>{const st=PLATBASTAVY[f.stav];return `<button class="acard" onclick="plTog('${f.id}')"><span class="pl-ckm">${plSel.has(f.id)?'☑':'☐'}</span><span style="flex:1"><span class="aname">${f.dite}</span><div class="ameta">${f.skolka} · ${f.obdobi} · ${kc(f.castka)} Kč</div></span><span class="bdg ${st.cls}">${st.lab}</span></button>`;}).join('')+`</div>`;
   h+=`<div class="note2">Párování plateb s bankou zatím neběží – stav „čeká na spárování" znamená, že platba na účtu je, ale nikdo ji nepřiřadil. Fakturační modul (editor, číselné řady, účty) je mimo prototyp.</div>`;
   return h;

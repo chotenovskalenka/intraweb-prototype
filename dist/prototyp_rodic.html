@@ -690,6 +690,10 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 /* Prázdný stav v dlaždici a součtový řádek – používá průvodce i admin, proto sdílené. */
 .empty-l{font-size:var(--text-small);color:var(--color-text-muted);padding:4px 0 2px}
 .vyk-suma{border-top:1px solid var(--color-border);margin-top:4px;padding-top:9px}
+/* Široká tabulka roluje vodorovně ve svém obalu – nikdy nesmí roztáhnout stránku
+   (na ~1024 px byla tabulka dětí 742 px v obsahu širokém 702 px). */
+.dtab-wrap{overflow-x:auto;min-width:0;-webkit-overflow-scrolling:touch}
+.weekbox{overflow-x:auto}
 </style>
 <style>
 /* SCREENS: RODIC – rodičovské obrazovky + rodičovské varianty sdílených tříd.

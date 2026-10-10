@@ -26,12 +26,12 @@ function renderMatrika(){
     +(nekompl.length?`<button class="btn-ghost mt-pozvat" onclick="mtPozvat()">Pozvat rodiče k doplnění (${nekompl.filter(c=>!mtPozvano.has(c.id)).length})</button>`:'')+`</div>`;
   const list=mtList();
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div>`;
-  h+=`<table class="dtab mt-tab"><thead><tr>`+['Dítě','Školka · třída','Narozen','Docházka','Předškolák','Alergie','Matrika'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`
+  h+=`<div class="dtab-wrap"><table class="dtab mt-tab"><thead><tr>`+['Dítě','Školka · třída','Narozen','Docházka','Předškolák','Alergie','Matrika'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`
     +list.map(c=>{const ch=matrikaChybi(c);return `<tr onclick="openMt('${c.id}')"><td class="nm">${c.n} ${c.sur}</td><td>${c.skN}${c.trida!==c.skN?` <span class="dt-no">· ${c.trida}</span>`:''}</td>`
       +`<td>${c.narozen}</td><td>${REZIM_LAB[c.rezim]}</td><td>${c.predskolak?'<span class="bdg ok">ano</span>':'<span class="dt-no">–</span>'}</td>`
       +`<td>${c.alergie?`<span class="mt-al">${c.alergie}</span>`:'<span class="dt-no">–</span>'}</td>`
       +`<td>${ch.length?`<span class="bdg part">chybí: ${ch.join(', ')}</span>${mtPozvano.has(c.id)?' <span class="dt-no">· pozváno</span>':''}`:'<span class="bdg ok">kompletní</span>'}</td></tr>`;}).join('')
-    +`</tbody></table>`;
+    +`</tbody></table></div>`;
   h+=`<div class="nh-cards">`+list.map(c=>{const ch=matrikaChybi(c);return `<button class="acard" onclick="openMt('${c.id}')"><span style="flex:1"><span class="aname">${c.n} ${c.sur}</span><div class="ameta">${c.skN} · ${c.narozen}${c.predskolak?' · předškolák':''}${c.alergie?' · '+c.alergie:''}</div></span>${ch.length?'<span class="bdg part">chybí údaje</span>':''}</button>`;}).join('')+`</div>`;
   h+=`<div class="note2">Export pro MŠMT stáhne výkaz za vybrané školky (v ostrém provozu ZIP po školkách k 30. 9.). Děti s neúplnou matrikou ve výkazu chybět nesmí – proto je jde přímo odsud pozvat k doplnění.</div>`;
   return h;

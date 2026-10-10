@@ -656,6 +656,10 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 /* Prázdný stav v dlaždici a součtový řádek – používá průvodce i admin, proto sdílené. */
 .empty-l{font-size:var(--text-small);color:var(--color-text-muted);padding:4px 0 2px}
 .vyk-suma{border-top:1px solid var(--color-border);margin-top:4px;padding-top:9px}
+/* Široká tabulka roluje vodorovně ve svém obalu – nikdy nesmí roztáhnout stránku
+   (na ~1024 px byla tabulka dětí 742 px v obsahu širokém 702 px). */
+.dtab-wrap{overflow-x:auto;min-width:0;-webkit-overflow-scrolling:touch}
+.weekbox{overflow-x:auto}
 </style>
 <style>
 /* SCREENS: ADMIN – obrazovkové styly (dashboard vedení). Skládá z existujících komponent
@@ -1870,14 +1874,14 @@ function renderNahrady(){
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div>`;
   const col=(k,l)=>{const on=nhSort===k;return `<th class="${on?'srt':''}" aria-sort="${on?(nhDir>0?'ascending':'descending'):'none'}"><button onclick="setNhSort('${k}')">${l}<span class="arw">${on?(nhDir>0?'▲':'▼'):'⇅'}</span></button></th>`;};
   // desktop: tabulka; mobil: karty (admin je desktop-first, ale na telefonu se nesmí rozpadnout)
-  h+=`<table class="dtab nh-tab"><thead><tr>${col('dite','Dítě')}${col('skolka','Školka · třída')}<th><span>Docházka</span></th><th><span>Pravidlo</span></th>`
+  h+=`<div class="dtab-wrap"><table class="dtab nh-tab"><thead><tr>${col('dite','Dítě')}${col('skolka','Školka · třída')}<th><span>Docházka</span></th><th><span>Pravidlo</span></th>`
     +`<th><span>Omluveno</span></th>${col('pripsano','Připsáno')}${col('cerpano','Čerpáno')}${col('zbyva','Zbývá')}${nahled?'<th><span>Změna</span></th>':''}</tr></thead><tbody>`
     +list.map(c=>{const pr=nhPravidlo(c),z=zbyva(c),d=pripsano(c)-pripsanoPlatne(c);
       return `<tr onclick="openNahrada('${c.id}')"><td class="nm">${c.n} ${c.sur}</td><td>${c.skN}${c.trida!==c.skN?` <span class="dt-no">· ${c.trida}</span>`:''}</td><td>${REZIM_LAB[c.rezim]}</td>`
         +`<td>${pravidloKr(pr,c)}${!nahled&&!NAHR_PRAVIDLA[c.skolka].overeno?' <span class="bdg part" title="Pravidlo této školky není v podkladech – převzato z Vhaaji">ověřit</span>':''}</td>`
         +`<td>${fmtHod(c.omluvenoH)} h</td><td>${fmtHod(pripsano(c))} h</td><td>${fmtHod(c.cerpanoH)} h</td>`
         +`<td class="${z<0?'nh-minus':''}"><b>${fmtHod(z)} h</b></td>${nahled?`<td class="${d<0?'nh-minus':d>0?'nh-plus':''}">${d?(d>0?'+':'')+fmtHod(d)+' h':'–'}</td>`:''}</tr>`;}).join('')
-    +`</tbody></table>`;
+    +`</tbody></table></div>`;
   h+=`<div class="nh-cards">`+list.map(c=>{const z=zbyva(c);return `<button class="acard" onclick="openNahrada('${c.id}')"><span style="flex:1"><span class="aname">${c.n} ${c.sur}</span><div class="ameta">${c.skN} · ${REZIM_LAB[c.rezim]} · připsáno ${fmtHod(pripsano(c))} h · čerpáno ${fmtHod(c.cerpanoH)} h</div></span><b class="${z<0?'nh-minus':''}">${fmtHod(z)} h</b></button>`;}).join('')+`</div>`;
   h+=`<div class="note2">Náhrada vzniká jen z absence omluvené do 20:00 předchozího dne. Čerpá se odpoledne navíc nebo úterní docházkou do 17:00; děti s plnou docházkou mohou čerpat i 2 týdny příměstských táborů. Hodiny propadají ${NAHR_EXP}.</div>`;
   return h;
@@ -1971,14 +1975,14 @@ function renderPlatby(){
     +`<button class="nh-zpet" onclick="plSel.clear();render()">Zrušit výběr</button></div>`;
   if(!list.length)return h+`<div class="empty">Nic neodpovídá filtru.</div>`;
   const vse=list.every(f=>plSel.has(f.id));
-  h+=`<table class="dtab pl-tab"><thead><tr><th class="pl-ck"><span><input type="checkbox" ${vse?'checked':''} onchange="plVybratVse(this.checked)" aria-label="Vybrat vše"></span></th>`
+  h+=`<div class="dtab-wrap"><table class="dtab pl-tab"><thead><tr><th class="pl-ck"><span><input type="checkbox" ${vse?'checked':''} onchange="plVybratVse(this.checked)" aria-label="Vybrat vše"></span></th>`
     +['Dítě','Školka','Období','Částka','K úhradě','Splatnost','Stav'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`
     +list.map(f=>{const st=PLATBASTAVY[f.stav];return `<tr onclick="plTog('${f.id}')"><td class="pl-ck"><input type="checkbox" ${plSel.has(f.id)?'checked':''} onclick="event.stopPropagation();plTog('${f.id}')" aria-label="Vybrat ${f.dite}"></td>`
       +`<td class="nm">${f.dite}</td><td>${f.skolka}</td><td>${f.obdobi}</td><td>${kc(f.castka)} Kč</td>`
       +`<td>${kZaplate(f)?`<b>${kc(kZaplate(f))} Kč</b>`:'<span class="dt-no">–</span>'}</td>`
       +`<td>${f.spl}${f.poDnu?` <span class="dt-no">· ${f.poDnu} dní po</span>`:''}</td>`
       +`<td><span class="bdg ${st.cls}">${st.lab}</span>${f.upominka?` <span class="dt-no">· upomínka ${f.upominka}</span>`:''}${f.rucne?' <span class="dt-no">· spárováno ručně</span>':''}</td></tr>`;}).join('')
-    +`</tbody></table>`;
+    +`</tbody></table></div>`;
   h+=`<div class="nh-cards">`+list.map(f=>{const st=PLATBASTAVY[f.stav];return `<button class="acard" onclick="plTog('${f.id}')"><span class="pl-ckm">${plSel.has(f.id)?'☑':'☐'}</span><span style="flex:1"><span class="aname">${f.dite}</span><div class="ameta">${f.skolka} · ${f.obdobi} · ${kc(f.castka)} Kč</div></span><span class="bdg ${st.cls}">${st.lab}</span></button>`;}).join('')+`</div>`;
   h+=`<div class="note2">Párování plateb s bankou zatím neběží – stav „čeká na spárování" znamená, že platba na účtu je, ale nikdo ji nepřiřadil. Fakturační modul (editor, číselné řady, účty) je mimo prototyp.</div>`;
   return h;
@@ -2045,12 +2049,12 @@ function renderMatrika(){
     +(nekompl.length?`<button class="btn-ghost mt-pozvat" onclick="mtPozvat()">Pozvat rodiče k doplnění (${nekompl.filter(c=>!mtPozvano.has(c.id)).length})</button>`:'')+`</div>`;
   const list=mtList();
   if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div>`;
-  h+=`<table class="dtab mt-tab"><thead><tr>`+['Dítě','Školka · třída','Narozen','Docházka','Předškolák','Alergie','Matrika'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`
+  h+=`<div class="dtab-wrap"><table class="dtab mt-tab"><thead><tr>`+['Dítě','Školka · třída','Narozen','Docházka','Předškolák','Alergie','Matrika'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`
     +list.map(c=>{const ch=matrikaChybi(c);return `<tr onclick="openMt('${c.id}')"><td class="nm">${c.n} ${c.sur}</td><td>${c.skN}${c.trida!==c.skN?` <span class="dt-no">· ${c.trida}</span>`:''}</td>`
       +`<td>${c.narozen}</td><td>${REZIM_LAB[c.rezim]}</td><td>${c.predskolak?'<span class="bdg ok">ano</span>':'<span class="dt-no">–</span>'}</td>`
       +`<td>${c.alergie?`<span class="mt-al">${c.alergie}</span>`:'<span class="dt-no">–</span>'}</td>`
       +`<td>${ch.length?`<span class="bdg part">chybí: ${ch.join(', ')}</span>${mtPozvano.has(c.id)?' <span class="dt-no">· pozváno</span>':''}`:'<span class="bdg ok">kompletní</span>'}</td></tr>`;}).join('')
-    +`</tbody></table>`;
+    +`</tbody></table></div>`;
   h+=`<div class="nh-cards">`+list.map(c=>{const ch=matrikaChybi(c);return `<button class="acard" onclick="openMt('${c.id}')"><span style="flex:1"><span class="aname">${c.n} ${c.sur}</span><div class="ameta">${c.skN} · ${c.narozen}${c.predskolak?' · předškolák':''}${c.alergie?' · '+c.alergie:''}</div></span>${ch.length?'<span class="bdg part">chybí údaje</span>':''}</button>`;}).join('')+`</div>`;
   h+=`<div class="note2">Export pro MŠMT stáhne výkaz za vybrané školky (v ostrém provozu ZIP po školkách k 30. 9.). Děti s neúplnou matrikou ve výkazu chybět nesmí – proto je jde přímo odsud pozvat k doplnění.</div>`;
   return h;
