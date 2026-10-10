@@ -1708,3 +1708,15 @@ jako navazující krok. **Otevřené:** jak tábor (v červenci) čerpá z hodin
 30. 6. – v prototypu se čerpá přihláškou; pravidla Jaaty a Kouzla lesa; Maata „50 %
 v 1. pololetí" zatím nehlídáno.
 
+## Admin · Přehled zostřený na „co vyžaduje akci" (10. 10. 2026)
+
+Podle draft-admin 4.1: **dnes ve školkách** (přítomno z zapsaných, omluveno, nevyřešeno,
+průvodci – Terčin dohled) · **platby k řešení** (jen po splatnosti, částečně uhrazené
+a čekající na spárování, s počtem a sumou) · **náhrady – výkyvy** (děti v záporu, čerpání
+nad dvojnásobek průměru, co propadne 30. 6.; proklik otevře Náhrady s filtrem „jen v záporu")
+· **chybějící data a upozornění** · **kapacity**.
+
+**Vypadly** provozní úkoly (ve výzkumu je nikdo nezmínil) a poslední porady (mají vlastní
+sekci). Starý souhrn náhrad ve dnech (`NAHRADY_SUM`) nahradil výpočet z `NAHRADY_DETI`.
+Odchylka od BRIEF kap. 1, který úkoly i porady na dashboard dává – výzkum má přednost.
+

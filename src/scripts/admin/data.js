@@ -50,19 +50,14 @@ const UPOZORNENI=[
   {typ:'system',text:'Záloha dat proběhla v pořádku (3. 6. 04:00)',skolka:''},
 ];
 
-/* Souhrn náhrad napříč školkami (detail přijde v sekci Náhrady).
-   Náhrady expirují koncem školního roku (30. 6.), nepřenášejí se – všechny dostupné
-   tedy propadnou 30. 6. 2026 (proto je to v červnu silný signál pro vedení). */
-const NAHRADY_SUM={dostupne:14,expiruje:14,naplanovane:5};
-
-/* Provozní úkoly – jednoduchý checklist, odškrtávání funguje v paměti (mizí po reloadu). */
-let UKOLY=[
-  {t:'Objednat sezónní ovoce na červen (všechny školky)',done:false},
-  {t:'Revize lékárniček – Vhaaji a Maata',done:false},
-  {t:'Odeslat účetní podklady za květen',done:true},
-  {t:'Připravit rozpis letního provozu',done:false},
-  {t:'Potvrdit termín inspekce ČŠI',done:false},
-];
+/* Dnes ve školkách – Terčin „dohled" (draft-admin 4.1). Vhaaji sedí s průvodcovskou appkou
+   (25 dětí, dnes 21 ve školce, 4 průvodci), ostatní s přehledem kuchyně (KUCH_SKOLKY). */
+const DNES_SKOLKY={
+  vhaaji:{pritomno:21,omluveno:3,nevyreseno:1,pruvodci:4},
+  jaata:{pritomno:10,omluveno:2,nevyreseno:0,pruvodci:2},
+  kouzlo:{pritomno:10,omluveno:1,nevyreseno:1,pruvodci:2},
+  maata:{pritomno:15,omluveno:1,nevyreseno:0,pruvodci:3},
+};
 
 /* Aktuality (Flow 4). Stavy: koncept / naplanovana / odeslana / archivovana.
    `naplanovana` jen v seed datech – plánování odeslání se nedělá (viz decision-log).

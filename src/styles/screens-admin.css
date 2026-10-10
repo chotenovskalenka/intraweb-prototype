@@ -174,3 +174,17 @@
 }
 .nh-dh .pname,.nh-dh .pfull{text-align:left}
 .nh-dh .pname{margin:0}
+
+/* ===== Přehled: dnes ve školkách, dvousloupec akcí ===== */
+.ds-row{display:grid;grid-template-columns:120px 130px 1fr auto;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-small)}
+.ds-row:first-of-type{border-top:none}
+.ds-nm{font-family:var(--font-serif);font-size:var(--text-action);color:var(--color-primary-strong)}
+.ds-n b{font-size:var(--text-body)}
+.ds-x,.ds-p{color:var(--color-text-muted)}
+.ds-warn{color:var(--state-warn-ink)}
+.dl-big{font-family:var(--font-serif);font-size:var(--text-number);font-weight:600;color:var(--color-primary-strong);line-height:var(--leading-tight);margin:2px 0 8px}
+.dl-big span{font-family:var(--font-sans);font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);margin-left:8px}
+.dash2{display:grid;gap:var(--space-md)}
+.dash2 .tile{margin-bottom:0}
+@media (min-width:900px){.dash2{grid-template-columns:1fr 1fr;align-items:start;margin-bottom:var(--space-md)}}
+@media (max-width:899px){.ds-row{grid-template-columns:1fr auto}.ds-x,.ds-p{grid-column:1/-1;margin-top:-6px}.dash2{margin-bottom:var(--space-md)}}
