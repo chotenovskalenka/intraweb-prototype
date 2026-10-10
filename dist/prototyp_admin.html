@@ -848,6 +848,23 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .dash2 .tile{margin-bottom:0}
 @media (min-width:900px){.dash2{grid-template-columns:1fr 1fr;align-items:start;margin-bottom:var(--space-md)}}
 @media (max-width:899px){.ds-row{grid-template-columns:1fr auto}.ds-x,.ds-p{grid-column:1/-1;margin-top:-6px}.dash2{margin-bottom:var(--space-md)}}
+
+/* ===== Platby ===== */
+.bdg.ok{color:var(--state-ok-ink);background:var(--state-ok-bg)}
+.bdg.mute{color:var(--state-muted-ink);background:var(--state-muted-bg)}
+.pl-akce .pl-akce-r{display:flex;flex-wrap:wrap;gap:var(--space-sm);align-items:center}
+.pl-hotovo{font-size:var(--text-small);font-weight:600;color:var(--state-ok-ink)}
+.pl-nahled{margin-top:var(--space-md);padding:12px 14px;border-radius:var(--radius-md);background:var(--state-info-bg);font-size:var(--text-small);line-height:var(--leading-normal)}
+.pl-nahled .pl-akce-r{margin-top:10px}
+.pl-pozn{margin-top:6px;color:var(--color-text)}
+.pl-bulk{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm) var(--space-md);padding:10px 14px;margin-bottom:var(--space-sm);border-radius:var(--radius-md);background:var(--wash-primary);font-size:var(--text-small)}
+.pl-tab td{white-space:nowrap}
+.pl-ck{width:1%}
+.pl-ck input,.pl-ck span input{width:18px;height:18px;cursor:pointer}
+.pl-ckm{font-size:var(--text-title);color:var(--color-primary);line-height:1}
+/* velké částky se nesmí lámat („638 207 / Kč") – na mobilu menší číslo */
+.nh-n{white-space:nowrap}
+@media (max-width:899px){.nh-n{font-size:var(--text-title)}}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1191,18 +1208,27 @@ const obsazeno=s=>s.tridy.reduce((n,t)=>n+t.obs,0);
    „řeší se mimo appku". Částky dle reálných příruček 2024/25: Vhaaji odpolední docházka
    10 584 Kč (Eliška = shoda s rodic/data.js), Maata 3× týdně do 15:00 = 11 813 Kč. */
 const PLATBASTAVY={
-  'po-splatnosti':{lab:'Po splatnosti',cls:'al'},
+  'uhrazeno':{lab:'Uhrazeno',cls:'ok'},
   'neuhrazeno':{lab:'Neuhrazeno',cls:'ne'},
+  'po-splatnosti':{lab:'Po splatnosti',cls:'al'},
   'castecne':{lab:'Částečně uhrazeno',cls:'part'},
   'ceka':{lab:'Čeká na spárování',cls:'wait'},
+  'preplatek':{lab:'Přeplatek',cls:'wait'},
+  'storno':{lab:'Storno',cls:'mute'},
 };
-const PLATBY=[
-  {dite:'Eliška Dvořáková',skolka:'Vhaaji',obdobi:'Školné · Březen 2026',castka:10584,stav:'po-splatnosti',poDnu:80},
-  {dite:'Kuba Svoboda',skolka:'Vhaaji',obdobi:'Školné · Květen 2026',castka:10584,stav:'neuhrazeno',poDnu:19},
-  {dite:'Tomáš Beran',skolka:'Jaata',obdobi:'Školné · Květen 2026',castka:8200,stav:'castecne',uhrazeno:4000,poDnu:19},
-  {dite:'Ela Marešová',skolka:'Maata',obdobi:'Školné · Duben 2026',castka:11813,stav:'ceka',poDnu:0},
+/* Faktury (BRIEF kap. 4, draft-admin 4.2). Školné se vystavuje dopředu na další měsíc, stravné
+   zpětně za uplynulý měsíc podle snědených jídel – proto je „pokaždé jiné". Děti jsou tytéž
+   jako v Náhradách (NAHRADY_DETI). Ceny: Vhaaji 10 584 Kč (příručka, odpolední = celodenní),
+   Maata 11 813 Kč (příručka); dopolední Vhaaji, Jaata a Kouzlo lesa jsou odhad pro prototyp.
+   Stravné: oběd 75 Kč + svačina 25 Kč (dopolední 1 svačina, ostatní 2). */
+const SKOLNE={vhaaji:{D:8400,O:10584,C:10584},jaata:{D:7200,O:8200,C:8200},kouzlo:{D:8100,O:9500,C:9500},maata:{D:9900,O:11813,C:11813}};
+const STRAVNE_DEN={D:100,O:125,C:125};
+const FAKT_MESICE_A=[
+  {key:'2026-03',lab:'Březen 2026',vyst:'9. 3. 2026',spl:'23. 3. 2026',poDnu:72},
+  {key:'2026-04',lab:'Duben 2026',vyst:'9. 4. 2026',spl:'23. 4. 2026',poDnu:41},
+  {key:'2026-05',lab:'Květen 2026',vyst:'9. 5. 2026',spl:'23. 5. 2026',poDnu:11},
+  {key:'2026-06',lab:'Červen 2026',vyst:'27. 5. 2026',spl:'10. 6. 2026',poDnu:0},
 ];
-
 /* Systémová upozornění vč. chybějících / nevyplněných dat. */
 const UPOZORNENI=[
   {typ:'data',text:'U 2 dětí chybí kontakt na zákonného zástupce',skolka:'Vhaaji'},
@@ -1361,8 +1387,46 @@ const NAHRADY_DETI=(()=>{
   const zen=['Bára','Dora','Ema','Gréta','Ida','Kája','Mia','Nela','Pavla','Rozálie','Táňa','Zoe','Anička','Julie','Ela','Viki'];
   const zenske=b=>b.endsWith('ý')?b.slice(0,-1)+'á':b.endsWith('ek')?b.slice(0,-2)+'ková':b.endsWith('ec')?b.slice(0,-2)+'cová':b.endsWith('a')?b.slice(0,-1)+'ová':b+'ová';
   out.forEach(c=>{const base=c.sur.replace(/ová$/,'');c.sur=zen.includes(c.n)?zenske(base):base;});
+  // jména, která znají ostatní appky (rodič: Eliška; faktury dřív v PLATBY) – ať sedí napříč appkami
+  const ren=(sk,i,n,sur,rezim)=>{const c=out.filter(x=>x.skolka===sk)[i];c.n=n;c.sur=sur;if(rezim)c.rezim=rezim;};
+  ren('vhaaji',0,'Eliška','Dvořáková','O');ren('vhaaji',1,'Kuba','Svoboda');ren('jaata',0,'Tomáš','Beran');ren('maata',0,'Ela','Marešová');
   return out;
 })();
+
+/* Faktury – až za NAHRADY_DETI, protože z nich berou děti. */
+let FAKTURY=(()=>{
+  let seed=11; const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const out=[]; let id=0;
+  FAKT_MESICE_A.forEach((m,mi)=>NAHRADY_DETI.forEach(c=>{
+    const dite=c.n+' '+c.sur, sk=SKOLKY.find(s=>s.id===c.skolka).nazev;
+    const zaklad={dite,ditId:c.id,skolka:sk,skolkaId:c.skolka,mesic:m.key,vyst:m.vyst,spl:m.spl,odeslano:true};
+    // školné: červen už vystavený dopředu (27. 5.), splatnost ještě neuplynula
+    let st='uhrazeno'; const r=rnd();
+    if(mi===3)st=r<.72?'uhrazeno':r<.95?'neuhrazeno':'ceka';
+    else if(mi===2)st=r<.9?'uhrazeno':r<.96?'po-splatnosti':'castecne';
+    else st=r<.97?'uhrazeno':'po-splatnosti';
+    const castka=SKOLNE[c.skolka][c.rezim];
+    out.push({...zaklad,id:'f'+(++id),druh:'skolne',obdobi:'Školné · '+m.lab,castka,stav:st,uhrazeno:st==='castecne'?Math.round(castka/2/100)*100:0,poDnu:st==='po-splatnosti'?m.poDnu:0});
+    // stravné za uplynulý měsíc (březen–duben; za květen se teprve vystavuje)
+    if(mi<2){const dny=12+Math.floor(rnd()*9), s2=dny*STRAVNE_DEN[c.rezim], r2=rnd();
+      out.push({...zaklad,id:'f'+(++id),druh:'stravne',obdobi:`Stravné · ${m.lab} (${dny} dní)`,castka:s2,stav:r2<.96?'uhrazeno':r2<.99?'preplatek':'po-splatnosti',uhrazeno:0,poDnu:r2>=.99?m.poDnu:0});}
+  }));
+  // stavy, které znají ostatní appky a dřívější přehled
+  const set=(dite,mesic,druh,ch)=>{const f=out.find(x=>x.dite===dite&&x.mesic===mesic&&x.druh===druh);if(f)Object.assign(f,ch);};
+  // Eliška: v rodičovské appce má neuhrazený duben a květen (2 × 10 584 Kč)
+  set('Eliška Dvořáková','2026-03','skolne',{stav:'uhrazeno',poDnu:0});
+  set('Eliška Dvořáková','2026-04','skolne',{stav:'po-splatnosti',poDnu:41});
+  set('Eliška Dvořáková','2026-05','skolne',{stav:'po-splatnosti',poDnu:11});
+  set('Kuba Svoboda','2026-05','skolne',{stav:'po-splatnosti',poDnu:11});
+  set('Tomáš Beran','2026-05','skolne',{stav:'castecne',uhrazeno:4000,poDnu:11});
+  set('Ela Marešová','2026-06','skolne',{stav:'ceka'});
+  return out;
+})();
+// stravné za květen se vystavuje teprve teď – tlačítko v Platbách (počítá se z docházky)
+let STRAVNE_KVETEN_VYST=false;
+// k řešení = co vyžaduje akci (přehled): po splatnosti, částečně, čeká na spárování
+const platbyKResi=()=>FAKTURY.filter(f=>['po-splatnosti','castecne','ceka'].includes(f.stav));
+
 </script>
 <script>
 /* SCREEN: ADMIN_PREHLED – co vyžaduje akci tento týden (draft-admin 4.1).
@@ -1387,7 +1451,7 @@ function renderPrehled(){
 
   h+=`<div class="dash2">`;
   // (b) platby k řešení – jen po splatnosti a čekající na spárování (ne všechny neuhrazené)
-  const kResi=PLATBY.filter(p=>p.stav==='po-splatnosti'||p.stav==='ceka'||p.stav==='castecne');
+  const kResi=platbyKResi().sort((a,b)=>b.poDnu-a.poDnu);
   const suma=kResi.reduce((s,p)=>s+(p.castka-(p.uhrazeno||0)),0);
   h+=`<button class="tile dash-link" onclick="go('platby')"><div class="ch">Platby k řešení <span class="dl-arr">›</span></div>`
     +`<div class="dl-big">${kResi.length}<span>· ${kc(suma)} Kč</span></div>`;
@@ -1806,6 +1870,105 @@ window.exportNahrady=()=>{
   showToast('Staženo · '+nhList().length+' dětí');};
 </script>
 <script>
+/* SCREEN: ADMIN_PLATBY – faktury napříč školkami (draft-admin 4.2).
+   Výzkum: Radka vede splatnosti v tabulce, neplatičům píše e-maily ručně a další upomínka
+   „jde zase za měsíc", stahuje faktury pro účetní ručně, stravné je pokaždé jiné; rodiče
+   píšou, že nemají zaplaceno, i když mají – párování s bankou neběží.
+   Tady: měsíc, souhrn, filtry, tabulka, a akce jako tlačítka se simulovaným výsledkem.
+   Fakturační modul (editor faktury, číselné řady, účty) ani párování s bankou se NEDĚLÁ –
+   to je Patova infrastruktura; v prototypu je jen stav „čeká na spárování" a ruční označení. */
+let plMesic='2026-06', plSkolka='vse', plDruh='vse', plStav='vse', plQuery='', plSel=new Set(), plNahled=null;
+const plMes=()=>FAKT_MESICE_A.find(m=>m.key===plMesic);
+const kZaplate=f=>f.stav==='uhrazeno'||f.stav==='storno'||f.stav==='preplatek'?0:f.castka-(f.uhrazeno||0);
+function plList(){
+  return FAKTURY.filter(f=>f.mesic===plMesic)
+    .filter(f=>plSkolka==='vse'||f.skolkaId===plSkolka)
+    .filter(f=>plDruh==='vse'||f.druh===plDruh)
+    .filter(f=>plStav==='vse'||(plStav==='k-reseni'?kZaplate(f)>0:f.stav===plStav))
+    .filter(f=>!plQuery||norm(f.dite).includes(norm(plQuery)))
+    .sort((a,b)=>kZaplate(b)-kZaplate(a)||a.dite.localeCompare(b.dite,'cs'));
+}
+function renderPlatby(){
+  const m=plMes(), mesic=FAKTURY.filter(f=>f.mesic===plMesic&&(plSkolka==='vse'||f.skolkaId===plSkolka));
+  const sum=a=>a.reduce((s,f)=>s+f.castka,0);
+  const uhr=mesic.filter(f=>f.stav==='uhrazeno'), kZ=mesic.filter(f=>kZaplate(f)>0), poSpl=mesic.filter(f=>f.stav==='po-splatnosti');
+  const i=FAKT_MESICE_A.findIndex(x=>x.key===plMesic);
+  let h=`<div class="vhead-row"><div class="vhead">Faktury</div><div class="vhead-act"><div class="dnav">`
+    +`<button onclick="stepPlMesic(-1)" ${i<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button><span>${m.lab}</span>`
+    +`<button onclick="stepPlMesic(1)" ${i>=FAKT_MESICE_A.length-1?'disabled':''} aria-label="Další měsíc">›</button></div></div></div>`;
+  h+=`<div class="nh-sum">`
+    +`<div class="tile nh-k"><div class="nh-l">Vystaveno</div><div class="nh-n">${kc(sum(mesic))} Kč</div><div class="nh-s">${mesic.length} faktur · vystaveno ${m.vyst}</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">Uhrazeno</div><div class="nh-n">${kc(sum(uhr))} Kč</div><div class="nh-s">${uhr.length} faktur</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">K úhradě</div><div class="nh-n">${kc(kZ.reduce((s,f)=>s+kZaplate(f),0))} Kč</div><div class="nh-s">${kZ.length} faktur · splatnost ${m.spl}</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">Po splatnosti</div><div class="nh-n ${poSpl.length?'nh-minus':''}">${poSpl.length}</div><div class="nh-s">${poSpl.length?'poslat upomínku':'nic po splatnosti'}</div></div>`
+    +`</div>`;
+  // vystavení – dvě akce jako v dnešním intrawebu, ale s náhledem dřív, než se něco stane
+  h+=`<div class="tile pl-akce"><div class="ch">Vystavit</div><div class="pl-akce-r">`
+    +(STRAVNE_KVETEN_VYST?`<span class="pl-hotovo">✓ Stravné za květen vystaveno</span>`:`<button class="btn-primary" onclick="plNahledStravne()">Vystavit stravné za květen</button>`)
+    +`<button class="btn-ghost" onclick="showToast('Školné na červenec se vystaví 27. 6. – v prototypu jen náhled')">Vystavit školné na červenec</button>`
+    +`</div>`;
+  if(plNahled)h+=plNahled;
+  h+=`</div>`;
+  // filtry
+  h+=`<div class="filters">`+[['vse','Všechny školky'],...SKOLKY.map(s=>[s.id,s.nazev])].map(([k,l])=>
+      `<button class="${plSkolka===k?'on':''}" onclick="setPl('plSkolka','${k}')" aria-pressed="${plSkolka===k}">${l}</button>`).join('')+`</div>`;
+  h+=`<div class="nh-bar"><input class="search" placeholder="Najít dítě…" value="${esc(plQuery)}" oninput="onPlSearch(this.value)">`
+    +`<label class="nh-pr">Druh <select class="pin" onchange="setPl('plDruh',this.value)">${[['vse','Vše'],['skolne','Školné'],['stravne','Stravné']].map(([k,l])=>`<option value="${k}"${plDruh===k?' selected':''}>${l}</option>`).join('')}</select></label>`
+    +`<label class="nh-pr">Stav <select class="pin" onchange="setPl('plStav',this.value)">${[['vse','Vše'],['k-reseni','K úhradě'],...Object.entries(PLATBASTAVY).map(([k,v])=>[k,v.lab])].map(([k,l])=>`<option value="${k}"${plStav===k?' selected':''}>${l}</option>`).join('')}</select></label></div>`;
+  const list=plList();
+  // hromadné akce nad vybranými
+  if(plSel.size)h+=`<div class="pl-bulk"><span>Vybráno <b>${plSel.size}</b></span>`
+    +`<button class="btn-primary" onclick="plUpominka()">Poslat upomínku</button>`
+    +`<button class="btn-ghost" onclick="plUhrazeno()">Označit jako uhrazeno</button>`
+    +`<button class="nh-zpet" onclick="plSel.clear();render()">Zrušit výběr</button></div>`;
+  if(!list.length)return h+`<div class="empty">Nic neodpovídá filtru.</div>`;
+  const vse=list.every(f=>plSel.has(f.id));
+  h+=`<table class="dtab pl-tab"><thead><tr><th class="pl-ck"><span><input type="checkbox" ${vse?'checked':''} onchange="plVybratVse(this.checked)" aria-label="Vybrat vše"></span></th>`
+    +['Dítě','Školka','Období','Částka','K úhradě','Splatnost','Stav'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`
+    +list.map(f=>{const st=PLATBASTAVY[f.stav];return `<tr onclick="plTog('${f.id}')"><td class="pl-ck"><input type="checkbox" ${plSel.has(f.id)?'checked':''} onclick="event.stopPropagation();plTog('${f.id}')" aria-label="Vybrat ${f.dite}"></td>`
+      +`<td class="nm">${f.dite}</td><td>${f.skolka}</td><td>${f.obdobi}</td><td>${kc(f.castka)} Kč</td>`
+      +`<td>${kZaplate(f)?`<b>${kc(kZaplate(f))} Kč</b>`:'<span class="dt-no">–</span>'}</td>`
+      +`<td>${f.spl}${f.poDnu?` <span class="dt-no">· ${f.poDnu} dní po</span>`:''}</td>`
+      +`<td><span class="bdg ${st.cls}">${st.lab}</span>${f.upominka?` <span class="dt-no">· upomínka ${f.upominka}</span>`:''}${f.rucne?' <span class="dt-no">· spárováno ručně</span>':''}</td></tr>`;}).join('')
+    +`</tbody></table>`;
+  h+=`<div class="nh-cards">`+list.map(f=>{const st=PLATBASTAVY[f.stav];return `<button class="acard" onclick="plTog('${f.id}')"><span class="pl-ckm">${plSel.has(f.id)?'☑':'☐'}</span><span style="flex:1"><span class="aname">${f.dite}</span><div class="ameta">${f.skolka} · ${f.obdobi} · ${kc(f.castka)} Kč</div></span><span class="bdg ${st.cls}">${st.lab}</span></button>`;}).join('')+`</div>`;
+  h+=`<div class="note2">Párování plateb s bankou zatím neběží – stav „čeká na spárování" znamená, že platba na účtu je, ale nikdo ji nepřiřadil. Fakturační modul (editor, číselné řady, účty) je mimo prototyp.</div>`;
+  return h;
+}
+const plVybrane=()=>FAKTURY.filter(f=>plSel.has(f.id));
+window.stepPlMesic=d=>{const i=FAKT_MESICE_A.findIndex(x=>x.key===plMesic);plMesic=FAKT_MESICE_A[Math.max(0,Math.min(FAKT_MESICE_A.length-1,i+d))].key;plSel.clear();plNahled=null;render();};
+window.setPl=(k,v)=>{({plSkolka:()=>plSkolka=v,plDruh:()=>plDruh=v,plStav:()=>plStav=v})[k]();plSel.clear();render();};
+window.onPlSearch=v=>{plQuery=v;renderKeepFocus();};
+window.plTog=id=>{plSel.has(id)?plSel.delete(id):plSel.add(id);render();};
+window.plVybratVse=on=>{plList().forEach(f=>on?plSel.add(f.id):plSel.delete(f.id));render();};
+window.plUpominka=()=>{const v=plVybrane().filter(f=>kZaplate(f)>0);
+  if(!v.length){showToast('Vybrané faktury jsou uhrazené – upomínka není potřeba');return;}
+  v.forEach(f=>f.upominka='3. 6.');plSel.clear();render();showToast(`Upomínka odeslána ${v.length} ${v.length===1?'rodině':'rodinám'} · e-mailem podle šablony`);};
+window.plUhrazeno=()=>{const v=plVybrane().filter(f=>kZaplate(f)>0);
+  v.forEach(f=>{f.stav='uhrazeno';f.uhrazeno=0;f.poDnu=0;f.rucne=true;});plSel.clear();render();
+  showToast(`${v.length} ${v.length===1?'faktura označena':'faktury označeny'} jako uhrazené · spárováno ručně`);};
+/* Stravné za květen z docházky – náhled napřed, jak to chtěla Radka: kolik faktur, a děti
+   s poznámkou „odchod před obědem", u kterých se oběd účtovat nemá. */
+window.plNahledStravne=()=>{
+  const deti=NAHRADY_DETI, pred=deti.filter((c,i)=>i%11===4).slice(0,3);
+  plNahled=`<div class="pl-nahled"><b>Vystaví se ${deti.length} faktur stravného za květen</b> podle snědených jídel v docházce`
+    +` (dopolední 100 Kč/den, ostatní 125 Kč/den; omluvené dny se neúčtují).`
+    +`<div class="pl-pozn">${pred.length} děti mají v docházce poznámku <b>„odchod před obědem“</b> – oběd se jim v ty dny neúčtuje: `
+    +pred.map(c=>c.n+' '+c.sur).join(', ')+`.</div>`
+    +`<div class="pl-akce-r"><button class="btn-primary" onclick="plVystavitStravne()">Vystavit ${deti.length} faktur</button><button class="btn-ghost" onclick="plNahled=null;render()">Zrušit</button></div></div>`;
+  render();};
+window.plVystavitStravne=()=>{
+  let id=FAKTURY.length;NAHRADY_DETI.forEach((c,i)=>{const dny=14+(i*7)%8, sk=SKOLKY.find(s=>s.id===c.skolka).nazev;
+    FAKTURY.push({id:'fs'+(++id),dite:c.n+' '+c.sur,ditId:c.id,skolka:sk,skolkaId:c.skolka,mesic:'2026-05',druh:'stravne',obdobi:`Stravné · Květen 2026 (${dny} dní)`,
+      castka:dny*STRAVNE_DEN[c.rezim],stav:'neuhrazeno',uhrazeno:0,poDnu:0,vyst:'3. 6. 2026',spl:'17. 6. 2026',odeslano:true});});
+  STRAVNE_KVETEN_VYST=true;plNahled=null;plMesic='2026-05';plDruh='stravne';render();
+  showToast(`Vystaveno a odesláno ${NAHRADY_DETI.length} faktur stravného za květen`);};
+window.exportPlatby=()=>{const l=plList();
+  stahniCSV(`platby-${plMesic}.csv`,['Dítě','Školka','Druh','Období','Částka (Kč)','K úhradě (Kč)','Splatnost','Stav'],
+    l.map(f=>[f.dite,f.skolka,f.druh==='skolne'?'školné':'stravné',f.obdobi,f.castka,kZaplate(f),f.spl,PLATBASTAVY[f.stav].lab]));
+  showToast('Staženo pro účetní · '+l.length+' faktur');};
+</script>
+<script>
 /* CORE: ADMIN – stav, sekce, sidebar, render(), go(), úvodní spuštění.
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
 const SECTIONS=[
@@ -1824,7 +1987,7 @@ function renderPlaceholder(){
   return `<div class="tile ph-tile"><div class="ph-ic">🌿</div><div class="ph-t">${TITLES[section]}</div>`
     +`<div class="ph-d">Tato sekce se připravuje v další fázi prototypu.</div></div>`;
 }
-const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlaceholder,nahrady:renderNahrady};
+const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlatby,nahrady:renderNahrady};
 
 function renderSidebar(){
   const el=document.getElementById('sidebar');
@@ -1837,6 +2000,7 @@ const TOPACT={
   aktuality:`<button class="btn-primary" onclick="akNew()">+ Nová novinka</button>`,
   porady:`<button class="btn-primary no-print" onclick="poNewZ()">+ Nový zápis</button>`,
   nahrady:`<button class="btn-ghost" onclick="exportNahrady()">Stáhnout CSV</button>`,
+  platby:`<button class="btn-ghost" onclick="exportPlatby()">Stáhnout pro účetní</button>`,
 };
 function render(){
   document.getElementById('ttl').textContent=TITLES[section];

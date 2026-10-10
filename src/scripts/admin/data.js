@@ -30,18 +30,27 @@ const obsazeno=s=>s.tridy.reduce((n,t)=>n+t.obs,0);
    „řeší se mimo appku". Částky dle reálných příruček 2024/25: Vhaaji odpolední docházka
    10 584 Kč (Eliška = shoda s rodic/data.js), Maata 3× týdně do 15:00 = 11 813 Kč. */
 const PLATBASTAVY={
-  'po-splatnosti':{lab:'Po splatnosti',cls:'al'},
+  'uhrazeno':{lab:'Uhrazeno',cls:'ok'},
   'neuhrazeno':{lab:'Neuhrazeno',cls:'ne'},
+  'po-splatnosti':{lab:'Po splatnosti',cls:'al'},
   'castecne':{lab:'Částečně uhrazeno',cls:'part'},
   'ceka':{lab:'Čeká na spárování',cls:'wait'},
+  'preplatek':{lab:'Přeplatek',cls:'wait'},
+  'storno':{lab:'Storno',cls:'mute'},
 };
-const PLATBY=[
-  {dite:'Eliška Dvořáková',skolka:'Vhaaji',obdobi:'Školné · Březen 2026',castka:10584,stav:'po-splatnosti',poDnu:80},
-  {dite:'Kuba Svoboda',skolka:'Vhaaji',obdobi:'Školné · Květen 2026',castka:10584,stav:'neuhrazeno',poDnu:19},
-  {dite:'Tomáš Beran',skolka:'Jaata',obdobi:'Školné · Květen 2026',castka:8200,stav:'castecne',uhrazeno:4000,poDnu:19},
-  {dite:'Ela Marešová',skolka:'Maata',obdobi:'Školné · Duben 2026',castka:11813,stav:'ceka',poDnu:0},
+/* Faktury (BRIEF kap. 4, draft-admin 4.2). Školné se vystavuje dopředu na další měsíc, stravné
+   zpětně za uplynulý měsíc podle snědených jídel – proto je „pokaždé jiné". Děti jsou tytéž
+   jako v Náhradách (NAHRADY_DETI). Ceny: Vhaaji 10 584 Kč (příručka, odpolední = celodenní),
+   Maata 11 813 Kč (příručka); dopolední Vhaaji, Jaata a Kouzlo lesa jsou odhad pro prototyp.
+   Stravné: oběd 75 Kč + svačina 25 Kč (dopolední 1 svačina, ostatní 2). */
+const SKOLNE={vhaaji:{D:8400,O:10584,C:10584},jaata:{D:7200,O:8200,C:8200},kouzlo:{D:8100,O:9500,C:9500},maata:{D:9900,O:11813,C:11813}};
+const STRAVNE_DEN={D:100,O:125,C:125};
+const FAKT_MESICE_A=[
+  {key:'2026-03',lab:'Březen 2026',vyst:'9. 3. 2026',spl:'23. 3. 2026',poDnu:72},
+  {key:'2026-04',lab:'Duben 2026',vyst:'9. 4. 2026',spl:'23. 4. 2026',poDnu:41},
+  {key:'2026-05',lab:'Květen 2026',vyst:'9. 5. 2026',spl:'23. 5. 2026',poDnu:11},
+  {key:'2026-06',lab:'Červen 2026',vyst:'27. 5. 2026',spl:'10. 6. 2026',poDnu:0},
 ];
-
 /* Systémová upozornění vč. chybějících / nevyplněných dat. */
 const UPOZORNENI=[
   {typ:'data',text:'U 2 dětí chybí kontakt na zákonného zástupce',skolka:'Vhaaji'},
@@ -200,5 +209,43 @@ const NAHRADY_DETI=(()=>{
   const zen=['Bára','Dora','Ema','Gréta','Ida','Kája','Mia','Nela','Pavla','Rozálie','Táňa','Zoe','Anička','Julie','Ela','Viki'];
   const zenske=b=>b.endsWith('ý')?b.slice(0,-1)+'á':b.endsWith('ek')?b.slice(0,-2)+'ková':b.endsWith('ec')?b.slice(0,-2)+'cová':b.endsWith('a')?b.slice(0,-1)+'ová':b+'ová';
   out.forEach(c=>{const base=c.sur.replace(/ová$/,'');c.sur=zen.includes(c.n)?zenske(base):base;});
+  // jména, která znají ostatní appky (rodič: Eliška; faktury dřív v PLATBY) – ať sedí napříč appkami
+  const ren=(sk,i,n,sur,rezim)=>{const c=out.filter(x=>x.skolka===sk)[i];c.n=n;c.sur=sur;if(rezim)c.rezim=rezim;};
+  ren('vhaaji',0,'Eliška','Dvořáková','O');ren('vhaaji',1,'Kuba','Svoboda');ren('jaata',0,'Tomáš','Beran');ren('maata',0,'Ela','Marešová');
   return out;
 })();
+
+/* Faktury – až za NAHRADY_DETI, protože z nich berou děti. */
+let FAKTURY=(()=>{
+  let seed=11; const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const out=[]; let id=0;
+  FAKT_MESICE_A.forEach((m,mi)=>NAHRADY_DETI.forEach(c=>{
+    const dite=c.n+' '+c.sur, sk=SKOLKY.find(s=>s.id===c.skolka).nazev;
+    const zaklad={dite,ditId:c.id,skolka:sk,skolkaId:c.skolka,mesic:m.key,vyst:m.vyst,spl:m.spl,odeslano:true};
+    // školné: červen už vystavený dopředu (27. 5.), splatnost ještě neuplynula
+    let st='uhrazeno'; const r=rnd();
+    if(mi===3)st=r<.72?'uhrazeno':r<.95?'neuhrazeno':'ceka';
+    else if(mi===2)st=r<.9?'uhrazeno':r<.96?'po-splatnosti':'castecne';
+    else st=r<.97?'uhrazeno':'po-splatnosti';
+    const castka=SKOLNE[c.skolka][c.rezim];
+    out.push({...zaklad,id:'f'+(++id),druh:'skolne',obdobi:'Školné · '+m.lab,castka,stav:st,uhrazeno:st==='castecne'?Math.round(castka/2/100)*100:0,poDnu:st==='po-splatnosti'?m.poDnu:0});
+    // stravné za uplynulý měsíc (březen–duben; za květen se teprve vystavuje)
+    if(mi<2){const dny=12+Math.floor(rnd()*9), s2=dny*STRAVNE_DEN[c.rezim], r2=rnd();
+      out.push({...zaklad,id:'f'+(++id),druh:'stravne',obdobi:`Stravné · ${m.lab} (${dny} dní)`,castka:s2,stav:r2<.96?'uhrazeno':r2<.99?'preplatek':'po-splatnosti',uhrazeno:0,poDnu:r2>=.99?m.poDnu:0});}
+  }));
+  // stavy, které znají ostatní appky a dřívější přehled
+  const set=(dite,mesic,druh,ch)=>{const f=out.find(x=>x.dite===dite&&x.mesic===mesic&&x.druh===druh);if(f)Object.assign(f,ch);};
+  // Eliška: v rodičovské appce má neuhrazený duben a květen (2 × 10 584 Kč)
+  set('Eliška Dvořáková','2026-03','skolne',{stav:'uhrazeno',poDnu:0});
+  set('Eliška Dvořáková','2026-04','skolne',{stav:'po-splatnosti',poDnu:41});
+  set('Eliška Dvořáková','2026-05','skolne',{stav:'po-splatnosti',poDnu:11});
+  set('Kuba Svoboda','2026-05','skolne',{stav:'po-splatnosti',poDnu:11});
+  set('Tomáš Beran','2026-05','skolne',{stav:'castecne',uhrazeno:4000,poDnu:11});
+  set('Ela Marešová','2026-06','skolne',{stav:'ceka'});
+  return out;
+})();
+// stravné za květen se vystavuje teprve teď – tlačítko v Platbách (počítá se z docházky)
+let STRAVNE_KVETEN_VYST=false;
+// k řešení = co vyžaduje akci (přehled): po splatnosti, částečně, čeká na spárování
+const platbyKResi=()=>FAKTURY.filter(f=>['po-splatnosti','castecne','ceka'].includes(f.stav));
+

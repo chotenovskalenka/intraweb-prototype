@@ -20,7 +20,7 @@ function renderPrehled(){
 
   h+=`<div class="dash2">`;
   // (b) platby k řešení – jen po splatnosti a čekající na spárování (ne všechny neuhrazené)
-  const kResi=PLATBY.filter(p=>p.stav==='po-splatnosti'||p.stav==='ceka'||p.stav==='castecne');
+  const kResi=platbyKResi().sort((a,b)=>b.poDnu-a.poDnu);
   const suma=kResi.reduce((s,p)=>s+(p.castka-(p.uhrazeno||0)),0);
   h+=`<button class="tile dash-link" onclick="go('platby')"><div class="ch">Platby k řešení <span class="dl-arr">›</span></div>`
     +`<div class="dl-big">${kResi.length}<span>· ${kc(suma)} Kč</span></div>`;

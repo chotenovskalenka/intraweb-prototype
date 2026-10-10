@@ -1720,3 +1720,23 @@ nad dvojnásobek průměru, co propadne 30. 6.; proklik otevře Náhrady s filtr
 sekci). Starý souhrn náhrad ve dnech (`NAHRADY_SUM`) nahradil výpočet z `NAHRADY_DETI`.
 Odchylka od BRIEF kap. 1, který úkoly i porady na dashboard dává – výzkum má přednost.
 
+## Admin · Platby (10. 10. 2026)
+
+Podle draft-admin 4.2, rozsah podle zafixovaného rozhodnutí fáze 5 (žádný fakturační modul):
+- **Faktury napříč školkami** pro tytéž děti jako Náhrady (65); školné se vystavuje dopředu,
+  stravné zpětně podle snědených jídel. Ceny: Vhaaji 10 584 Kč a Maata 11 813 Kč z příruček,
+  ostatní odhad prototypu (zapsáno v kódu). Stravné 75 Kč oběd + 25 Kč svačina.
+- **Měsíc** (březen–červen), **souhrn** (vystaveno · uhrazeno · k úhradě · po splatnosti),
+  filtr školky, druhu a stavu, hledání, CSV „pro účetní".
+- **Akce simulované:** *Vystavit stravné za květen* s náhledem (kolik faktur, děti
+  s poznámkou „odchod před obědem" – přesně Radčina poznámka) · *Poslat upomínku* vybraným ·
+  *Označit jako uhrazeno* (s poznámkou „spárováno ručně"). Školné na červenec jen náhled.
+- Stavy z BRIEF kap. 4 přes stavovou paletu (uhrazeno, neuhrazeno, po splatnosti, částečně,
+  čeká na spárování, přeplatek, storno).
+- **Jména ze sítě sedí s ostatními appkami:** Eliška Dvořáková má po splatnosti duben a květen
+  (jako v rodičovské appce, 2 × 10 584 Kč), Kuba Svoboda, Tomáš Beran (částečně) a Ela Marešová
+  (čeká na spárování) převzali čtyři smyšlené děti z Náhrad.
+
+**Nedělá se:** editor faktury, číselné řady, účty dodavatelů, párování s bankou (otázka pro Pata).
+Přehled adminu čte „platby k řešení" z týchž faktur (`platbyKResi`).
+

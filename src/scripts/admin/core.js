@@ -16,7 +16,7 @@ function renderPlaceholder(){
   return `<div class="tile ph-tile"><div class="ph-ic">🌿</div><div class="ph-t">${TITLES[section]}</div>`
     +`<div class="ph-d">Tato sekce se připravuje v další fázi prototypu.</div></div>`;
 }
-const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlaceholder,nahrady:renderNahrady};
+const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlatby,nahrady:renderNahrady};
 
 function renderSidebar(){
   const el=document.getElementById('sidebar');
@@ -29,6 +29,7 @@ const TOPACT={
   aktuality:`<button class="btn-primary" onclick="akNew()">+ Nová novinka</button>`,
   porady:`<button class="btn-primary no-print" onclick="poNewZ()">+ Nový zápis</button>`,
   nahrady:`<button class="btn-ghost" onclick="exportNahrady()">Stáhnout CSV</button>`,
+  platby:`<button class="btn-ghost" onclick="exportPlatby()">Stáhnout pro účetní</button>`,
 };
 function render(){
   document.getElementById('ttl').textContent=TITLES[section];
