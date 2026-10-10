@@ -25,3 +25,6 @@ discovery/validace/
 docs/vyzkum-whatsapp.*
 docs/kanaly-wa.html
 docs/skill-rozhovory-chatgpt.*
+
+# Cizí podklady (jiný projekt, NDA) – nepatří do veřejného repa.
+docs/spec/
