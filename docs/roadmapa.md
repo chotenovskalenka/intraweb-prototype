@@ -131,6 +131,6 @@ Navazuje na tvoje necommitnuté úpravy v `docs/case-study.html`.
 
 ## Vědomě mimo rozsah (nezačínat)
 
-Třídnice · offline a synchronizace · fakturační modul · objednávka obědů z appky · nástěnka
+Offline a synchronizace · fakturační modul · objednávka obědů z appky · nástěnka
 ztrát a nálezů · notifikace „přečteno" · kalendář v adminu · oprávnění a uživatelské účty.
 Všechno je zdůvodněné v decision-logu.

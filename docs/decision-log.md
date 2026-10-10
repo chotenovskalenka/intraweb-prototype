@@ -1680,3 +1680,50 @@ ostatní školky jsou souhrnná čísla v `KUCH_SKOLKY`, obsazenost sedí s admi
   Svačiny Vhaaji zůstávají v `JIDELNICEK` (čte je i rodičovská appka), Jaata a Maata
   je mají v `SVACINY`. Porce bez alergenu se u nich nezobrazují – v prototypu nemají děti.
 
+
+## Třídnice v IS – průvodce píše, vedení čte (10. 10. 2026)
+
+**Mění rozhodnutí z fáze 2** („třídnice se nedělá, ani placeholder") i řádek roadmapy
+„vědomě mimo rozsah". Podnět: Lenka dodala reálnou třídní knihu Jaaty 2024/25 (Google
+tabulka, 43 vyplněných týdnů; leží v `podklady/`, obsahuje jména dětí). Výzkum mluví
+dvojím hlasem: nikdo přesun nežádal a čtyři ji brání jako nejlepší nástroj (sdílenost,
+historie) – zároveň je to „největší rozpor mezi výzkumem a prototypem" a tření je
+doložené: zápis se nestíhá ve stejný den, evaluace se kvůli inspekci přepisují jinam.
+Prototyp proto **nesahá na podstatu nástroje** (sdílený zápis, který píše víc lidí
+a všichni čtou) – jen ho přenáší do IS a řeší doložená tření.
+
+**Co je v Excelu Jaaty (analýza):** úvodní list (úřední hlavička), rozvrh týdne s řádkem
+„kdo zapisuje třídnici", návod k psaní, seznam dětí, listy dětí (vzorce sbírají poznámky
+ke každému dítěti za rok), poučení o pravidlech (32 pravidel ve třech sadách: jurta
+a zahrada / les / město) a 47 týdenních listů (dny ve sloupcích, ~16 řádků + poznámky,
+úkoly a poznámky k dětem). Vyplňování v roce **neslábne** – hlavní řádky drží ~90 %
+dnů. Zmizely jen podřádky „povedlo/nepovedlo" (23 % → 4 %) a „cíle/posuny" (52 % → 36 %).
+Poznámky k dětem: v průměru u 19 z 23 dětí každý týden.
+
+**Rozhodnutí (Lenka zvolila „průvodce píše, admin čte" a „zkrácenou kostru"):**
+- **Kostra dne** = řádky, které Jaata opravdu psala: příchod, ranní kruh, aktivita, jak
+  to šlo (sloučené povedlo/cíle), kam jsme šli + poučení (sada podle místa), odpočinek,
+  předškoláci (nepovinné), počasí, evaluace dne. **Týden:** téma, pohádka týdne,
+  uzavření týdne, „je třeba zařídit + kdo".
+- **Vypadlo „kdo zapaloval"** (92 % v Jaatě) – je to jméno dítěte ve veřejné části.
+  Pokud ho tým postrádá, patří do poznámek k dětem. **Otevřené.**
+- **Žádné Odeslat / Uzavřít.** Každé pole se ukládá při psaní a nese „kdo · kdy doplnil".
+  Psát smí kdokoli z týmu, i zpětně (koordinátorka: formulář, který se odešle a zavře,
+  dopisování po dnech neunese). Kuchyň třídnici nevidí.
+- **Stav dne** odvozený z polí: zapsáno (8 z 8) / rozepsáno n z 8 / chybí; dnešek bez
+  zápisu je „zatím nic", ne chyba. U proběhlých dnů je vidět, *co* chybí.
+- **Poznámky k dětem jsou oddělené a jen pro tým** (P1 + legislativa: ve veřejné části
+  třídnice nesmí být jména dětí). Do tisku ani do adminu nejdou. Pohled ukazuje, u kolika
+  dětí je tento týden poznámka, a děti bez ní – v Jaatě se píše téměř u všech.
+- **Průvodce:** sekce Třídnice (Den · Týden · Děti) + dlaždice na přehledu: včerejšek
+  a co v něm chybí, kdo píše dnes (BRIEF: „rychlý vstup do třídnice"). Kdo který den
+  píše, je pevné po dnech (`TR_ZAPISUJE`, sedí se službami); v Jaatě je to řádek rozvrhu.
+- **Admin:** sekce Třídnice – (1) vyplnění týden × školky, (2) týden jedné školky jako
+  tabulka (dny vedle sebe) s tiskem pro inspekci, (3) evaluace dnů a uzavření týdnů za
+  období na jednom místě – míří na doložené přepisování evaluací kvůli inspekci.
+
+**Neřešeno:** úpravy struktury po školkách (každá má vlastní řádky a názvy), editace
+„kdo píše" v rozvrhu, upozornění na nezapsaný den, vyhledávání v historii, kniha úrazů
+(Jaata píše zranění do volného textu třídnice), přenos historie z Google tabulek.
+Admin má vlastní seed (květen–červen, 4 školky); Vhaaji tento týden sedí textově
+s průvodcovskou appkou.

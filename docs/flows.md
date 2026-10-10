@@ -29,7 +29,7 @@ flowchart TD
   classDef dec fill:#F0E4CE,stroke:#B07D3A,color:#6f4e1e;
 ```
 
-**Odloženo z Flow 1 (vědomě):** offline režim a stavy synchronizace (žádná fronta změn, žádný indikátor „bez signálu“) – potvrzení uložení je jen toast. Třídnice / zápis dne (čtení a doplňování zápisů z předchozího dne na dashboardu) je budoucí objekt, zatím není ani placeholder. Viz decision-log, fáze 2.
+**Odloženo z Flow 1 (vědomě):** offline režim a stavy synchronizace (žádná fronta změn, žádný indikátor „bez signálu“) – potvrzení uložení je jen toast. Třídnice / zápis dne byla odložená, od 10. 10. 2026 je v IS (sekce Třídnice v obou appkách, na dashboardu průvodce včerejšek a co v něm chybí) – viz decision-log „Třídnice v IS".
 
 Ověřovací otázky briefu: průvodce po otevření vidí počty bez jediného kliku · do docházky je jedním klepnutím · je jasné, kdo nepřijde a proč.
 
