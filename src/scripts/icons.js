@@ -17,10 +17,12 @@ const ICON_SVG={
   coins:'<ellipse cx="12" cy="7" rx="6.5" ry="2.5"/><path d="M5.5 7v5c0 1.38 2.9 2.5 6.5 2.5s6.5-1.12 6.5-2.5V7"/><path d="M5.5 12c0 1.38 2.9 2.5 6.5 2.5s6.5-1.12 6.5-2.5"/>',
   clipboard:'<rect x="5.5" y="5" width="13" height="16" rx="2.5"/><path d="M9 5V3.5h6V5"/><path d="M8.5 10.5h.01"/><path d="M11 10.5h4"/><path d="M8.5 14h.01"/><path d="M11 14h4"/><path d="M8.5 17.5h.01"/><path d="M11 17.5h3"/>',
   refresh:'<path d="M20 11.5A8 8 0 0 0 6.3 6L4 8"/><path d="M4 4.5V8h3.5"/><path d="M4 12.5A8 8 0 0 0 17.7 18L20 16"/><path d="M20 19.5V16h-3.5"/>',
-  jidelnicek:'<circle cx="12" cy="12" r="5.25"/><path d="M4.5 4.5v5.25"/><path d="M3 4.5v3.25a1.5 1.5 0 0 0 3 0V4.5"/><path d="M4.5 9.75v9.75"/><path d="M19.5 4.5v15"/><path d="M19.5 4.5c-1.6 1.1-2.5 2.8-2.5 4.75 0 1.35.85 2.25 2.5 2.25"/>'
+  jidelnicek:'<circle cx="12" cy="12" r="5.25"/><path d="M4.5 4.5v5.25"/><path d="M3 4.5v3.25a1.5 1.5 0 0 0 3 0V4.5"/><path d="M4.5 9.75v9.75"/><path d="M19.5 4.5v15"/><path d="M19.5 4.5c-1.6 1.1-2.5 2.8-2.5 4.75 0 1.35.85 2.25 2.5 2.25"/>',
+  // třídnice – otevřená kniha (dokresleno ve stejném stylu)
+  kniha:'<path d="M12 6.5c-1.8-1.4-4.3-2-7.5-2v13c3.2 0 5.7.6 7.5 2 1.8-1.4 4.3-2 7.5-2v-13c-3.2 0-5.7.6-7.5 2Z"/><path d="M12 6.5v13"/>'
 };
 /* klíč sekce (napříč appkami) → ikona */
 const ICON_KEY={prehled:'prehled',aktuality:'news',novinky:'news',dochazka:'dochazka',profil:'profil',
   platby:'platby',kalendar:'kalendar',plan:'plan',akce:'clipboard',priprava:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
-  pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh'};
+  pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh',tridnice:'kniha'};
 function icon(key){const k=ICON_KEY[key];return k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_SVG[k]}</svg>`:'';}

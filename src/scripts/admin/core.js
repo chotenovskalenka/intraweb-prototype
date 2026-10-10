@@ -8,6 +8,7 @@ const SECTIONS=[
   ['deti','Děti a matrika','☺'],
   ['aktuality','Novinky','✉'],
   ['porady','Porady a evaluace','▤'],
+  ['tridnice','Třídnice','▤'],
 ];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 
@@ -18,7 +19,7 @@ function renderPlaceholder(){
   return `<div class="tile ph-tile"><div class="ph-ic">🌿</div><div class="ph-t">${TITLES[section]}</div>`
     +`<div class="ph-d">Tato sekce se připravuje v další fázi prototypu.</div></div>`;
 }
-const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlatby,nahrady:renderNahrady,deti:renderMatrika};
+const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,tridnice:renderTridniceA,platby:renderPlatby,nahrady:renderNahrady,deti:renderMatrika};
 
 function renderSidebar(){
   const el=document.getElementById('sidebar');
@@ -40,6 +41,6 @@ function render(){
   renderSidebar();
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}if(s!=='nahrady')nhOpen=null;if(s!=='deti')mtOpen=null;render();};
+window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}if(s!=='nahrady')nhOpen=null;if(s!=='deti')mtOpen=null;if(s!=='tridnice')traDetail=null;render();};
 
 render();

@@ -175,6 +175,11 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .filters button.on .cnt{color:var(--color-primary)}
 .bdg{font-size:var(--text-chip);font-weight:600;padding:2px 7px;border-radius:var(--radius-xs);white-space:nowrap}
 .bdg.pre{color:var(--state-brand-ink);background:var(--state-brand-bg)}.bdg.al{color:var(--state-danger-ink);background:var(--state-danger-bg)}
+/* obecné stavové badge (třídnice v průvodci i adminu) – rovnou na --state-* paletu */
+.bdg.st-ok{color:var(--state-ok-ink);background:var(--state-ok-bg)}
+.bdg.st-warn{color:var(--state-warn-ink);background:var(--state-warn-bg)}
+.bdg.st-danger{color:var(--state-danger-ink);background:var(--state-danger-bg)}
+.bdg.st-muted{color:var(--state-muted-ink);background:var(--state-muted-bg)}
 .pav{display:flex;justify-content:center;margin:6px 0 10px}
 .pname{font-family:var(--font-serif);font-size:var(--text-display);text-align:center;color:var(--color-primary-strong)}
 .pfull{text-align:center;font-size:var(--text-small);color:var(--color-text-muted);margin-bottom:var(--space-lg)}
