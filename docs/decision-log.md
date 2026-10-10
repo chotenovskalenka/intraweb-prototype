@@ -1680,3 +1680,31 @@ ostatní školky jsou souhrnná čísla v `KUCH_SKOLKY`, obsazenost sedí s admi
   Svačiny Vhaaji zůstávají v `JIDELNICEK` (čte je i rodičovská appka), Jaata a Maata
   je mají v `SVACINY`. Porce bez alergenu se u nich nezobrazují – v prototypu nemají děti.
 
+## Admin · Náhrady v hodinách, pravidlo podle školky (10. 10. 2026)
+
+**Rozhodnutí (Lenka):** náhrady se v adminu počítají v **hodinách** a **každá školka má své
+pravidlo** – jako to vede Radka a popisují příručky. Pravidlo Vhaaji potvrzené textem příručky:
+*20 % omluvené absence (ze 100 h omluvených → 20 h k čerpání)*; omluvená = zadaná do 20:00
+předchozího dne; čerpá se odpoledne navíc nebo úterní docházkou do 17:00; děti s plnou
+docházkou mohou čerpat i 2 týdny příměstských táborů. Maata: pevný roční balík podle
+docházky (30 / 80 / 100 h). **Jaata a Kouzlo lesa: pravidlo v podkladech není** – převzato
+20 %, v tabulce s odznakem „ověřit".
+
+**Obrazovka:** souhrn (k čerpání · v záporu · čerpáno letos · bez čerpání), filtr školek,
+„jen v záporu", „jen bez čerpání", hledání, řazení (výchozí: zápory nahoře), CSV.
+**Detail dítěte** napíše výpočet slovy (omluveno → připsáno → čerpáno → zbývá) a rozepíše
+vznik po měsících a každé čerpání s datem, typem, kdo ho zadal a obsazeností třídy – to je
+„validace", kterou vedení chtělo, a podklad pro rodiče (Flow 3).
+**Náhled pravidla** přepočítá zůstatky na „20 % všude" / „paušál všude" se sloupcem změny;
+nic se neukládá. Terka tak vidí dopad volby na datech.
+
+**Seed:** 65 smyšlených dětí; rozložení čísel podle Radčiny tabulky (jen čísla, žádná jména):
+v záporu 29 % (tabulka 23 %), medián zůstatku 24 h (16 h), čerpáno medián 20 h (16,5 h).
+Velké zápory dělají tábory – dva týdny spotřebují víc, než dítě za rok získá.
+
+**Nesoulad k dořešení:** rodičovská appka počítá náhrady ve **dnech** (1 včas omluvený den =
+1 náhrada). Po tomhle rozhodnutí by měla přejít na hodiny se stejným pravidlem – zapsáno
+jako navazující krok. **Otevřené:** jak tábor (v červenci) čerpá z hodin, které propadají
+30. 6. – v prototypu se čerpá přihláškou; pravidla Jaaty a Kouzla lesa; Maata „50 %
+v 1. pololetí" zatím nehlídáno.
+

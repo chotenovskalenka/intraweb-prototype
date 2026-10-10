@@ -653,6 +653,9 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .rn-bez{display:inline-block;font-size:var(--text-chip);font-weight:600;text-transform:uppercase;
   letter-spacing:.03em;color:var(--state-muted-ink);background:var(--state-muted-bg);
   border-radius:var(--radius-xs);padding:2px 6px;vertical-align:1px}
+/* Prázdný stav v dlaždici a součtový řádek – používá průvodce i admin, proto sdílené. */
+.empty-l{font-size:var(--text-small);color:var(--color-text-muted);padding:4px 0 2px}
+.vyk-suma{border-top:1px solid var(--color-border);margin-top:4px;padding-top:9px}
 </style>
 <style>
 /* SCREENS: ADMIN – obrazovkové styly (dashboard vedení). Skládá z existujících komponent
@@ -800,6 +803,37 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
   .vypis-head{margin-bottom:16px}
   body{background:#fff}
 }
+
+/* ===== Náhrady ===== */
+.nh-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-md);margin-bottom:var(--space-md)}
+.nh-sum .tile{margin-bottom:0}
+.nh-l{font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-n{font-family:var(--font-serif);font-size:var(--text-number);font-weight:600;line-height:var(--leading-tight);color:var(--color-primary-strong);margin:4px 0 2px}
+.nh-s{font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-minus{color:var(--state-danger-ink)!important}
+.nh-plus{color:var(--state-ok-ink)}
+.nh-bar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm) var(--space-lg);margin-bottom:var(--space-md)}
+.nh-bar .search{flex:0 1 260px;margin:0}
+.nh-chk{display:flex;align-items:center;gap:6px;min-height:44px;font-size:var(--text-small);color:var(--color-text);cursor:pointer}
+.nh-pr{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:var(--text-small);color:var(--color-text-muted)}
+.nh-pr .pin{width:auto}
+.nh-nahled{background:var(--state-info-bg);color:var(--color-text);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:var(--space-md);font-size:var(--text-small);line-height:var(--leading-normal)}
+.nh-zpet{background:none;border:none;padding:0 0 0 6px;min-height:32px;font:inherit;font-weight:600;color:var(--color-primary);cursor:pointer;text-decoration:underline}
+.nh-tab td{white-space:nowrap}
+.nh-cards .acard b{flex-shrink:0;font-family:var(--font-serif);font-size:var(--text-action)}
+.nh-dh{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-lg);margin:var(--space-sm) 0 var(--space-md)}
+.nh-dz{text-align:right}.nh-dz span{display:block;font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-dz b{font-family:var(--font-serif);font-size:var(--text-number);font-weight:600;color:var(--color-primary-strong)}
+.nh-varov{margin-top:8px;padding:8px 10px;border-radius:var(--radius-sm);background:var(--state-danger-bg);color:var(--state-danger-ink);font-size:var(--text-small)}
+.nh-kdo{display:block;font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-2{display:grid;gap:var(--space-md)}
+@media (min-width:900px){
+  .nh-cards{display:none}
+  .nh-2{grid-template-columns:1fr 1fr;align-items:start}
+  .nh-2 .tile{margin-bottom:0}
+}
+.nh-dh .pname,.nh-dh .pfull{text-align:left}
+.nh-dh .pname{margin:0}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1261,6 +1295,65 @@ let ZAPISY=[
     {text:'Plán letního provozu a personální pokrytí prázdninových týdnů.',stitky:['personál','provoz']},
   ]},
 ];
+
+/* ===== NÁHRADY (admin) – v hodinách, pravidlo podle školky =====
+   Rozhodnutí 10. 10. 2026: náhrady se v adminu počítají v HODINÁCH, jako je vede Radka
+   a jak to popisují příručky. Vhaaji (příručka, potvrzeno): „Děti mají nárok na 20 %
+   náhrady omluvené absence – ze 100 hodin omluvené absence nabízíme 20 hodin k čerpání
+   v odpoledních hodinách / úterní docházkou do 17 hodin." Omluvená = zadaná do 20:00
+   předchozího dne. Děti s plnou (odpolední) docházkou mohou čerpat i 2 týdny příměstských
+   táborů. Maata (příručka): pevný roční balík hodin podle rozsahu docházky. Jaata a Kouzlo
+   lesa: pravidlo v podkladech není – převzato 20 % s příznakem k ověření.
+   Seed: jména smyšlená; rozložení čísel podle Radčiny tabulky (100 dětí: připsáno medián
+   43 h, čerpáno medián 16,5 h, zbývá −89 až 94 h, 23 % dětí v záporu). */
+const NAHR_PRAVIDLA={
+  vhaaji:{typ:'procento',p:.2,overeno:true},
+  jaata:{typ:'procento',p:.2,overeno:false},
+  kouzlo:{typ:'procento',p:.2,overeno:false},
+  maata:{typ:'pausal',h:{D:30,O:80,C:100},overeno:true},
+};
+const NAHR_PAUSAL={D:30,O:80,C:100};          // Terčin návrh / pravidlo Maaty – pro náhled
+const REZIM_LAB={D:'dopolední',O:'odpolední',C:'celodenní'};
+const REZIM_H={D:5,O:7,C:9};                  // délka dne v hodinách (do 13 / 15 / 17)
+const NAHR_EXP='30. 6. 2026', NAHR_DNU_DO_EXP=27;
+const NAHRADY_DETI=(()=>{
+  const JM=['Adam','Bára','Cyril','Dora','Ema','Filip','Gréta','Hugo','Ida','Jonáš','Kája','Lukáš','Mia','Nela','Ondra','Pavla','Quido','Rozálie','Sam','Táňa','Vojta','Zoe','Matyáš','Anička','Šimon','Julie','Kryštof','Ela','Tadeáš','Viki'];
+  const PR=['Novák','Svoboda','Dvořák','Černý','Procházka','Kučera','Veselý','Horák','Němec','Marek','Pospíšil','Hájek','Jelínek','Král','Růžička','Beneš','Fiala','Sedláček','Doležal','Zeman'];
+  const tridy=[['vhaaji','Vhaaji','Vhaaji',13],['vhaaji','Vhaaji','Vhaaji žlutá',12],['jaata','Jaata','Jaata',12],
+    ['kouzlo','Kouzlo lesa','Kouzlo lesa',12],['maata','Maata','Modrá třída',9],['maata','Maata','Zelená třída',7]];
+  const OML=[40,70,120,150,180,215,240,260,300,340,400,480,510];       // omluvené hodiny za rok
+  const FAKT=[0,0,.15,.3,.45,.6,.8,.95,1.1,1.4,1.9,2.6];                // čerpáno / připsáno
+  let seed=7; const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const pick=a=>a[Math.floor(rnd()*a.length)];
+  const MES=['září','říjen','listopad','prosinec','leden','únor','březen','duben','květen'];
+  const MESD=['30. 9. 2025','31. 10. 2025','30. 11. 2025','31. 12. 2025','31. 1. 2026','28. 2. 2026','31. 3. 2026','30. 4. 2026','31. 5. 2026'];
+  const out=[]; let id=0;
+  tridy.forEach(([sk,skN,tr,n])=>{for(let k=0;k<n;k++){
+    const r=rnd(), rezim=r<.25?'D':r<.85?'O':'C';
+    const omluvenoH=pick(OML);
+    const pr=NAHR_PRAVIDLA[sk], pripsanoPlatne=pr.typ==='procento'?omluvenoH*pr.p:pr.h[rezim];
+    // historie vzniku: omluvené hodiny rozložené do měsíců
+    const vznik=[];let zb=omluvenoH;
+    MES.forEach((m,mi)=>{if(zb<=0)return;const x=mi===MES.length-1?zb:Math.min(zb,Math.round(rnd()*omluvenoH/3/(REZIM_H[rezim]))*REZIM_H[rezim]);
+      if(x>0){vznik.push({datum:MESD[mi],mes:m,omluvenoH:x});zb-=x;}});
+    // čerpání: odpoledne navíc / úterý do 17:00; u plné docházky občas příměstský tábor
+    let cil=Math.round(pripsanoPlatne*pick(FAKT));
+    const cerp=[];
+    // tábor = 2 týdny × 5 dní × 7 h; spotřebuje víc, než dítě za rok získá – odtud velké zápory
+    if(rezim!=='D'&&rnd()<.32){cerp.push({datum:'15. 5. 2026',typ:'tabor',h:70,popis:'příměstské tábory 6.–17. 7. (přihláška)',kdo:'Radka'});cil-=70;}
+    const dny=['12. 9.','3. 10.','14. 11.','9. 12.','20. 1.','17. 2.','10. 3.','14. 4.','12. 5.','26. 5.'];
+    let di=0;while(cil>0&&di<dny.length){const h=Math.min(cil,rezim==='D'?2:2);const ut=rnd()<.4;
+      cerp.push({datum:dny[di]+(di<4?' 2025':' 2026'),typ:ut?'utery':'odpo',h:ut?Math.min(cil,2):h,popis:ut?'úterní docházka do 17:00':'odpoledne navíc (do 15:00)',kdo:rnd()<.5?'Radka':'vedoucí průvodce',obs:`${10+Math.floor(rnd()*4)}/14`});
+      cil-=cerp[cerp.length-1].h;di++;}
+    const cerpanoH=cerp.reduce((s,c)=>s+c.h,0);
+    out.push({id:'n'+(++id),n:pick(JM),sur:pick(PR)+(rnd()<.5?'ová':''),skolka:sk,skN,trida:tr,rezim,omluvenoH,cerpanoH,vznik,cerp:cerp.reverse()});
+  }});
+  // příjmení: ženská jména → -ová, jinak mužské tvary (jen kosmetika smyšlených jmen)
+  const zen=['Bára','Dora','Ema','Gréta','Ida','Kája','Mia','Nela','Pavla','Rozálie','Táňa','Zoe','Anička','Julie','Ela','Viki'];
+  const zenske=b=>b.endsWith('ý')?b.slice(0,-1)+'á':b.endsWith('ek')?b.slice(0,-2)+'ková':b.endsWith('ec')?b.slice(0,-2)+'cová':b.endsWith('a')?b.slice(0,-1)+'ová':b+'ová';
+  out.forEach(c=>{const base=c.sur.replace(/ová$/,'');c.sur=zen.includes(c.n)?zenske(base):base;});
+  return out;
+})();
 </script>
 <script>
 /* SCREEN: ADMIN_PREHLED – dashboard vedení (BRIEF kap. 1):
@@ -1597,6 +1690,114 @@ window.poSave=()=>{nzSync();if(!newZ.nazev.trim()||!newZ.text.trim())return;
   poNew=false;newZ=null;showToast('Zápis uložen');render();};
 </script>
 <script>
+/* SCREEN: ADMIN_NAHRADY – Radčina tabulka náhrad, ale spočítaná appkou (draft-admin 4.3).
+   Nejsilněji doložená bolest výzkumu (5 hlasů): náhrady nikdo nepočítá – kromě Radky ručně;
+   rodič neví, kolik jich má; systém dovolil čerpat i dítěti, které nárok nemělo.
+   Per dítě: připsáno (z omluvených hodin podle pravidla školky) · čerpáno · zbývá, v hodinách.
+   Detail ukazuje, z čeho náhrada vznikla a jak se čerpala – to je ta „validace", kterou
+   vedení chce, a stejná data, jaká potřebuje rodič (Flow 3).
+   Náhled pravidla přepočítá zůstatky jiným pravidlem na stejných datech – Terka chce
+   rozhodnout mezi 20 % a paušálem a vidět dopad dřív, než se něco změní. Nic se neukládá. */
+let nhSkolka='vse', nhJenMinus=false, nhJenBez=false, nhQuery='', nhSort='zbyva', nhDir=1, nhNahled='platne', nhOpen=null;
+// typografické minus (−), ne spojovník – u záporných hodin je to číslo, ne pomlčka
+const fmtHod=h=>(Math.round(h*10)/10).toLocaleString('cs-CZ').replace('-','−');
+// pravidlo, podle kterého se dítě počítá (platné, nebo náhled)
+function nhPravidlo(c){
+  if(nhNahled==='procento')return {typ:'procento',p:.2};
+  if(nhNahled==='pausal')return {typ:'pausal',h:NAHR_PAUSAL};
+  return NAHR_PRAVIDLA[c.skolka];
+}
+const pripsano=(c,pr)=>{pr=pr||nhPravidlo(c);return pr.typ==='procento'?c.omluvenoH*pr.p:pr.h[c.rezim];};
+const pripsanoPlatne=c=>pripsano(c,NAHR_PRAVIDLA[c.skolka]);
+const zbyva=c=>pripsano(c)-c.cerpanoH;
+const pravidloKr=(pr,c)=>pr.typ==='procento'?`${Math.round(pr.p*100)} %`:`paušál ${pr.h[c?c.rezim:'O']} h`;
+const pravidloTxt=(pr,c)=>pr.typ==='procento'?`${Math.round(pr.p*100)} % z omluvených hodin`:`paušál ${pr.h[c?c.rezim:'O']} h za rok`;
+function nhList(){
+  return NAHRADY_DETI
+    .filter(c=>nhSkolka==='vse'||c.skolka===nhSkolka)
+    .filter(c=>!nhJenMinus||zbyva(c)<0)
+    .filter(c=>!nhJenBez||c.cerpanoH===0)
+    .filter(c=>!nhQuery||norm(c.n+' '+c.sur).includes(norm(nhQuery)))
+    .sort((a,b)=>{const v={dite:x=>x.sur+x.n,skolka:x=>x.skN+x.trida,pripsano:x=>pripsano(x),cerpano:x=>x.cerpanoH,zbyva:x=>zbyva(x)}[nhSort];
+      const A=v(a),B=v(b);return (typeof A==='string'?A.localeCompare(B,'cs'):A-B)*nhDir;});
+}
+function renderNahrady(){
+  if(nhOpen)return renderNahradaDite(NAHRADY_DETI.find(c=>c.id===nhOpen));
+  const vse=NAHRADY_DETI.filter(c=>nhSkolka==='vse'||c.skolka===nhSkolka);
+  // „k čerpání" sčítá jen kladné zůstatky – zápor jednoho dítěte nesníží nárok jiného
+  const minus=vse.filter(c=>zbyva(c)<0), kCerpani=vse.reduce((s,c)=>s+Math.max(0,zbyva(c)),0), bez=vse.filter(c=>c.cerpanoH===0);
+  const minusH=minus.reduce((s,c)=>s-zbyva(c),0), cerpano=vse.reduce((s,c)=>s+c.cerpanoH,0);
+  const nahled=nhNahled!=='platne';
+  let h='';
+  if(nahled)h+=`<div class="nh-nahled">Náhled: <b>${nhNahled==='procento'?'20 % z omluvených hodin ve všech školkách':'paušál hodin podle docházky ve všech školkách (30 / 80 / 100 h)'}</b> – nic se neukládá, platná pravidla se nemění. <button class="nh-zpet" onclick="setNhNahled('platne')">Zpět na platná pravidla</button></div>`;
+  // souhrn – čtyři čísla, na která se vedení ptá
+  h+=`<div class="nh-sum">`
+    +`<div class="tile nh-k"><div class="nh-l">K čerpání</div><div class="nh-n">${fmtHod(kCerpani)} h</div><div class="nh-s">co se nevyčerpá, propadne ${NAHR_EXP} (za ${NAHR_DNU_DO_EXP} dní)</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">V záporu</div><div class="nh-n nh-minus">${minus.length} dětí</div><div class="nh-s">vyčerpaly o ${fmtHod(minusH)} h víc, než měly nárok</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">Čerpáno letos</div><div class="nh-n">${fmtHod(cerpano)} h</div><div class="nh-s">${vse.length} dětí</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">Bez čerpání</div><div class="nh-n">${bez.length}</div><div class="nh-s">za celý rok nic nevyčerpaly</div></div>`
+    +`</div>`;
+  // filtry: školka (záložky) + dva přepínače + hledání + náhled pravidla
+  h+=`<div class="filters">`+[['vse','Všechny školky'],...SKOLKY.map(s=>[s.id,s.nazev])].map(([k,l])=>
+      `<button class="${nhSkolka===k?'on':''}" onclick="setNhSkolka('${k}')" aria-pressed="${nhSkolka===k}">${l} <span class="cnt">${NAHRADY_DETI.filter(c=>k==='vse'||c.skolka===k).length}</span></button>`).join('')+`</div>`;
+  h+=`<div class="nh-bar"><input class="search" placeholder="Najít dítě…" value="${esc(nhQuery)}" oninput="onNhSearch(this.value)">`
+    +`<label class="nh-chk"><input type="checkbox" ${nhJenMinus?'checked':''} onchange="nhJenMinus=this.checked;render()"> Jen v záporu</label>`
+    +`<label class="nh-chk"><input type="checkbox" ${nhJenBez?'checked':''} onchange="nhJenBez=this.checked;render()"> Jen bez čerpání</label>`
+    +`<label class="nh-pr">Náhled pravidla <select class="pin" onchange="setNhNahled(this.value)">`
+      +[['platne','Platná (podle školek)'],['procento','20 % všude'],['pausal','Paušál všude']].map(([k,l])=>`<option value="${k}"${nhNahled===k?' selected':''}>${l}</option>`).join('')
+    +`</select></label></div>`;
+  const list=nhList();
+  if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div>`;
+  const col=(k,l)=>{const on=nhSort===k;return `<th class="${on?'srt':''}" aria-sort="${on?(nhDir>0?'ascending':'descending'):'none'}"><button onclick="setNhSort('${k}')">${l}<span class="arw">${on?(nhDir>0?'▲':'▼'):'⇅'}</span></button></th>`;};
+  // desktop: tabulka; mobil: karty (admin je desktop-first, ale na telefonu se nesmí rozpadnout)
+  h+=`<table class="dtab nh-tab"><thead><tr>${col('dite','Dítě')}${col('skolka','Školka · třída')}<th><span>Docházka</span></th><th><span>Pravidlo</span></th>`
+    +`<th><span>Omluveno</span></th>${col('pripsano','Připsáno')}${col('cerpano','Čerpáno')}${col('zbyva','Zbývá')}${nahled?'<th><span>Změna</span></th>':''}</tr></thead><tbody>`
+    +list.map(c=>{const pr=nhPravidlo(c),z=zbyva(c),d=pripsano(c)-pripsanoPlatne(c);
+      return `<tr onclick="openNahrada('${c.id}')"><td class="nm">${c.n} ${c.sur}</td><td>${c.skN}${c.trida!==c.skN?` <span class="dt-no">· ${c.trida}</span>`:''}</td><td>${REZIM_LAB[c.rezim]}</td>`
+        +`<td>${pravidloKr(pr,c)}${!nahled&&!NAHR_PRAVIDLA[c.skolka].overeno?' <span class="bdg part" title="Pravidlo této školky není v podkladech – převzato z Vhaaji">ověřit</span>':''}</td>`
+        +`<td>${fmtHod(c.omluvenoH)} h</td><td>${fmtHod(pripsano(c))} h</td><td>${fmtHod(c.cerpanoH)} h</td>`
+        +`<td class="${z<0?'nh-minus':''}"><b>${fmtHod(z)} h</b></td>${nahled?`<td class="${d<0?'nh-minus':d>0?'nh-plus':''}">${d?(d>0?'+':'')+fmtHod(d)+' h':'–'}</td>`:''}</tr>`;}).join('')
+    +`</tbody></table>`;
+  h+=`<div class="nh-cards">`+list.map(c=>{const z=zbyva(c);return `<button class="acard" onclick="openNahrada('${c.id}')"><span style="flex:1"><span class="aname">${c.n} ${c.sur}</span><div class="ameta">${c.skN} · ${REZIM_LAB[c.rezim]} · připsáno ${fmtHod(pripsano(c))} h · čerpáno ${fmtHod(c.cerpanoH)} h</div></span><b class="${z<0?'nh-minus':''}">${fmtHod(z)} h</b></button>`;}).join('')+`</div>`;
+  h+=`<div class="note2">Náhrada vzniká jen z absence omluvené do 20:00 předchozího dne. Čerpá se odpoledne navíc nebo úterní docházkou do 17:00; děti s plnou docházkou mohou čerpat i 2 týdny příměstských táborů. Hodiny propadají ${NAHR_EXP}.</div>`;
+  return h;
+}
+function renderNahradaDite(c){
+  const pr=NAHR_PRAVIDLA[c.skolka], z=pripsanoPlatne(c)-c.cerpanoH;
+  let h=`<button class="back" onclick="closeNahrada()">← Zpět na náhrady</button>`;
+  h+=`<div class="nh-dh"><div><div class="pname">${c.n} ${c.sur}</div><div class="pfull">${c.skN}${c.trida!==c.skN?' · '+c.trida:''} · ${REZIM_LAB[c.rezim]} docházka (${REZIM_H[c.rezim]} h denně)</div></div>`
+    +`<div class="nh-dz"><span>Zbývá</span><b class="${z<0?'nh-minus':''}">${fmtHod(z)} h</b></div></div>`;
+  // výpočet napsaný slovy – ať se dá zkontrolovat proti Radčině tabulce
+  h+=`<div class="tile"><div class="ch">Jak se to spočítalo</div>`
+    +`<div class="np"><span>Pravidlo ${c.skN}</span><b>${pravidloTxt(pr,c)}${pr.overeno?'':' <span class="bdg part">ověřit</span>'}</b></div>`
+    +`<div class="np"><span>Omluveno do 20:00 předchozího dne</span><b>${fmtHod(c.omluvenoH)} h</b></div>`
+    +`<div class="np"><span>Připsáno</span><b>${fmtHod(pripsanoPlatne(c))} h</b></div>`
+    +`<div class="np"><span>Čerpáno</span><b>− ${fmtHod(c.cerpanoH)} h</b></div>`
+    +`<div class="np vyk-suma"><span>Zbývá · propadne ${NAHR_EXP}</span><b class="${z<0?'nh-minus':''}">${fmtHod(z)} h</b></div>`
+    +(z<0?`<div class="nh-varov">Dítě vyčerpalo o ${fmtHod(-z)} h víc, než mělo nárok.${c.cerp.some(x=>x.typ==='tabor')?' Většinu spotřeboval příměstský tábor.':''}</div>`:'')
+    +`</div>`;
+  h+=`<div class="nh-2">`;
+  h+=`<div class="tile"><div class="ch">Vznik · z omluvených absencí</div>`
+    +c.vznik.map(v=>`<div class="np"><span>${v.mes} <span class="dt-no">· omluveno ${fmtHod(v.omluvenoH)} h</span></span><b>${pr.typ==='procento'?'+ '+fmtHod(v.omluvenoH*pr.p)+' h':'<span class="dt-no">–</span>'}</b></div>`).join('')
+    +(pr.typ==='pausal'?`<div class="note2" style="margin-top:6px">Maata má pevný roční balík ${pr.h[c.rezim]} h – omluvy ho nezvyšují, jen se evidují.</div>`:'')+`</div>`;
+  h+=`<div class="tile"><div class="ch">Čerpání</div>`
+    +(c.cerp.length?c.cerp.map(x=>`<div class="np"><span>${x.datum} · ${x.popis}<span class="nh-kdo">zadal(a) ${x.kdo}${x.obs?` · obsazenost třídy ${x.obs}`:''}</span></span><b>− ${fmtHod(x.h)} h</b></div>`).join('')
+      :`<div class="empty-l">Za celý rok nic nevyčerpáno.</div>`)+`</div>`;
+  h+=`</div>`;
+  return h;
+}
+window.setNhSkolka=k=>{nhSkolka=k;render();};
+window.setNhNahled=v=>{nhNahled=v;render();};
+window.setNhSort=k=>{if(nhSort===k)nhDir=-nhDir;else{nhSort=k;nhDir=k==='zbyva'?1:-1;}render();};
+window.onNhSearch=v=>{nhQuery=v;renderKeepFocus();};
+window.openNahrada=id=>{nhOpen=id;render();window.scrollTo(0,0);};
+window.closeNahrada=()=>{nhOpen=null;render();};
+window.exportNahrady=()=>{
+  stahniCSV('nahrady-2025-26.csv',['Jméno','Školka','Třída','Docházka','Pravidlo','Omluveno (h)','Připsáno (h)','Čerpáno (h)','Zbývá (h)'],
+    nhList().map(c=>[c.n+' '+c.sur,c.skN,c.trida,REZIM_LAB[c.rezim],pravidloTxt(nhPravidlo(c),c),fmtHod(c.omluvenoH),fmtHod(pripsano(c)),fmtHod(c.cerpanoH),fmtHod(zbyva(c))]));
+  showToast('Staženo · '+nhList().length+' dětí');};
+</script>
+<script>
 /* CORE: ADMIN – stav, sekce, sidebar, render(), go(), úvodní spuštění.
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
 const SECTIONS=[
@@ -1615,7 +1816,7 @@ function renderPlaceholder(){
   return `<div class="tile ph-tile"><div class="ph-ic">🌿</div><div class="ph-t">${TITLES[section]}</div>`
     +`<div class="ph-d">Tato sekce se připravuje v další fázi prototypu.</div></div>`;
 }
-const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlaceholder,nahrady:renderPlaceholder};
+const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlaceholder,nahrady:renderNahrady};
 
 function renderSidebar(){
   const el=document.getElementById('sidebar');
@@ -1627,6 +1828,7 @@ function renderSidebar(){
 const TOPACT={
   aktuality:`<button class="btn-primary" onclick="akNew()">+ Nová novinka</button>`,
   porady:`<button class="btn-primary no-print" onclick="poNewZ()">+ Nový zápis</button>`,
+  nahrady:`<button class="btn-ghost" onclick="exportNahrady()">Stáhnout CSV</button>`,
 };
 function render(){
   document.getElementById('ttl').textContent=TITLES[section];
@@ -1634,7 +1836,7 @@ function render(){
   renderSidebar();
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}render();};
+window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}if(s!=='nahrady')nhOpen=null;render();};
 
 render();
 </script>

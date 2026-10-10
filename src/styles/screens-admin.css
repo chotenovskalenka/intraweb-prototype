@@ -143,3 +143,34 @@
   .vypis-head{margin-bottom:16px}
   body{background:#fff}
 }
+
+/* ===== Náhrady ===== */
+.nh-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-md);margin-bottom:var(--space-md)}
+.nh-sum .tile{margin-bottom:0}
+.nh-l{font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-n{font-family:var(--font-serif);font-size:var(--text-number);font-weight:600;line-height:var(--leading-tight);color:var(--color-primary-strong);margin:4px 0 2px}
+.nh-s{font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-minus{color:var(--state-danger-ink)!important}
+.nh-plus{color:var(--state-ok-ink)}
+.nh-bar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm) var(--space-lg);margin-bottom:var(--space-md)}
+.nh-bar .search{flex:0 1 260px;margin:0}
+.nh-chk{display:flex;align-items:center;gap:6px;min-height:44px;font-size:var(--text-small);color:var(--color-text);cursor:pointer}
+.nh-pr{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:var(--text-small);color:var(--color-text-muted)}
+.nh-pr .pin{width:auto}
+.nh-nahled{background:var(--state-info-bg);color:var(--color-text);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:var(--space-md);font-size:var(--text-small);line-height:var(--leading-normal)}
+.nh-zpet{background:none;border:none;padding:0 0 0 6px;min-height:32px;font:inherit;font-weight:600;color:var(--color-primary);cursor:pointer;text-decoration:underline}
+.nh-tab td{white-space:nowrap}
+.nh-cards .acard b{flex-shrink:0;font-family:var(--font-serif);font-size:var(--text-action)}
+.nh-dh{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-lg);margin:var(--space-sm) 0 var(--space-md)}
+.nh-dz{text-align:right}.nh-dz span{display:block;font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-dz b{font-family:var(--font-serif);font-size:var(--text-number);font-weight:600;color:var(--color-primary-strong)}
+.nh-varov{margin-top:8px;padding:8px 10px;border-radius:var(--radius-sm);background:var(--state-danger-bg);color:var(--state-danger-ink);font-size:var(--text-small)}
+.nh-kdo{display:block;font-size:var(--text-note);color:var(--color-text-muted)}
+.nh-2{display:grid;gap:var(--space-md)}
+@media (min-width:900px){
+  .nh-cards{display:none}
+  .nh-2{grid-template-columns:1fr 1fr;align-items:start}
+  .nh-2 .tile{margin-bottom:0}
+}
+.nh-dh .pname,.nh-dh .pfull{text-align:left}
+.nh-dh .pname{margin:0}

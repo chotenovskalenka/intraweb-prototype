@@ -148,3 +148,62 @@ let ZAPISY=[
     {text:'Plán letního provozu a personální pokrytí prázdninových týdnů.',stitky:['personál','provoz']},
   ]},
 ];
+
+/* ===== NÁHRADY (admin) – v hodinách, pravidlo podle školky =====
+   Rozhodnutí 10. 10. 2026: náhrady se v adminu počítají v HODINÁCH, jako je vede Radka
+   a jak to popisují příručky. Vhaaji (příručka, potvrzeno): „Děti mají nárok na 20 %
+   náhrady omluvené absence – ze 100 hodin omluvené absence nabízíme 20 hodin k čerpání
+   v odpoledních hodinách / úterní docházkou do 17 hodin." Omluvená = zadaná do 20:00
+   předchozího dne. Děti s plnou (odpolední) docházkou mohou čerpat i 2 týdny příměstských
+   táborů. Maata (příručka): pevný roční balík hodin podle rozsahu docházky. Jaata a Kouzlo
+   lesa: pravidlo v podkladech není – převzato 20 % s příznakem k ověření.
+   Seed: jména smyšlená; rozložení čísel podle Radčiny tabulky (100 dětí: připsáno medián
+   43 h, čerpáno medián 16,5 h, zbývá −89 až 94 h, 23 % dětí v záporu). */
+const NAHR_PRAVIDLA={
+  vhaaji:{typ:'procento',p:.2,overeno:true},
+  jaata:{typ:'procento',p:.2,overeno:false},
+  kouzlo:{typ:'procento',p:.2,overeno:false},
+  maata:{typ:'pausal',h:{D:30,O:80,C:100},overeno:true},
+};
+const NAHR_PAUSAL={D:30,O:80,C:100};          // Terčin návrh / pravidlo Maaty – pro náhled
+const REZIM_LAB={D:'dopolední',O:'odpolední',C:'celodenní'};
+const REZIM_H={D:5,O:7,C:9};                  // délka dne v hodinách (do 13 / 15 / 17)
+const NAHR_EXP='30. 6. 2026', NAHR_DNU_DO_EXP=27;
+const NAHRADY_DETI=(()=>{
+  const JM=['Adam','Bára','Cyril','Dora','Ema','Filip','Gréta','Hugo','Ida','Jonáš','Kája','Lukáš','Mia','Nela','Ondra','Pavla','Quido','Rozálie','Sam','Táňa','Vojta','Zoe','Matyáš','Anička','Šimon','Julie','Kryštof','Ela','Tadeáš','Viki'];
+  const PR=['Novák','Svoboda','Dvořák','Černý','Procházka','Kučera','Veselý','Horák','Němec','Marek','Pospíšil','Hájek','Jelínek','Král','Růžička','Beneš','Fiala','Sedláček','Doležal','Zeman'];
+  const tridy=[['vhaaji','Vhaaji','Vhaaji',13],['vhaaji','Vhaaji','Vhaaji žlutá',12],['jaata','Jaata','Jaata',12],
+    ['kouzlo','Kouzlo lesa','Kouzlo lesa',12],['maata','Maata','Modrá třída',9],['maata','Maata','Zelená třída',7]];
+  const OML=[40,70,120,150,180,215,240,260,300,340,400,480,510];       // omluvené hodiny za rok
+  const FAKT=[0,0,.15,.3,.45,.6,.8,.95,1.1,1.4,1.9,2.6];                // čerpáno / připsáno
+  let seed=7; const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const pick=a=>a[Math.floor(rnd()*a.length)];
+  const MES=['září','říjen','listopad','prosinec','leden','únor','březen','duben','květen'];
+  const MESD=['30. 9. 2025','31. 10. 2025','30. 11. 2025','31. 12. 2025','31. 1. 2026','28. 2. 2026','31. 3. 2026','30. 4. 2026','31. 5. 2026'];
+  const out=[]; let id=0;
+  tridy.forEach(([sk,skN,tr,n])=>{for(let k=0;k<n;k++){
+    const r=rnd(), rezim=r<.25?'D':r<.85?'O':'C';
+    const omluvenoH=pick(OML);
+    const pr=NAHR_PRAVIDLA[sk], pripsanoPlatne=pr.typ==='procento'?omluvenoH*pr.p:pr.h[rezim];
+    // historie vzniku: omluvené hodiny rozložené do měsíců
+    const vznik=[];let zb=omluvenoH;
+    MES.forEach((m,mi)=>{if(zb<=0)return;const x=mi===MES.length-1?zb:Math.min(zb,Math.round(rnd()*omluvenoH/3/(REZIM_H[rezim]))*REZIM_H[rezim]);
+      if(x>0){vznik.push({datum:MESD[mi],mes:m,omluvenoH:x});zb-=x;}});
+    // čerpání: odpoledne navíc / úterý do 17:00; u plné docházky občas příměstský tábor
+    let cil=Math.round(pripsanoPlatne*pick(FAKT));
+    const cerp=[];
+    // tábor = 2 týdny × 5 dní × 7 h; spotřebuje víc, než dítě za rok získá – odtud velké zápory
+    if(rezim!=='D'&&rnd()<.32){cerp.push({datum:'15. 5. 2026',typ:'tabor',h:70,popis:'příměstské tábory 6.–17. 7. (přihláška)',kdo:'Radka'});cil-=70;}
+    const dny=['12. 9.','3. 10.','14. 11.','9. 12.','20. 1.','17. 2.','10. 3.','14. 4.','12. 5.','26. 5.'];
+    let di=0;while(cil>0&&di<dny.length){const h=Math.min(cil,rezim==='D'?2:2);const ut=rnd()<.4;
+      cerp.push({datum:dny[di]+(di<4?' 2025':' 2026'),typ:ut?'utery':'odpo',h:ut?Math.min(cil,2):h,popis:ut?'úterní docházka do 17:00':'odpoledne navíc (do 15:00)',kdo:rnd()<.5?'Radka':'vedoucí průvodce',obs:`${10+Math.floor(rnd()*4)}/14`});
+      cil-=cerp[cerp.length-1].h;di++;}
+    const cerpanoH=cerp.reduce((s,c)=>s+c.h,0);
+    out.push({id:'n'+(++id),n:pick(JM),sur:pick(PR)+(rnd()<.5?'ová':''),skolka:sk,skN,trida:tr,rezim,omluvenoH,cerpanoH,vznik,cerp:cerp.reverse()});
+  }});
+  // příjmení: ženská jména → -ová, jinak mužské tvary (jen kosmetika smyšlených jmen)
+  const zen=['Bára','Dora','Ema','Gréta','Ida','Kája','Mia','Nela','Pavla','Rozálie','Táňa','Zoe','Anička','Julie','Ela','Viki'];
+  const zenske=b=>b.endsWith('ý')?b.slice(0,-1)+'á':b.endsWith('ek')?b.slice(0,-2)+'ková':b.endsWith('ec')?b.slice(0,-2)+'cová':b.endsWith('a')?b.slice(0,-1)+'ová':b+'ová';
+  out.forEach(c=>{const base=c.sur.replace(/ová$/,'');c.sur=zen.includes(c.n)?zenske(base):base;});
+  return out;
+})();
