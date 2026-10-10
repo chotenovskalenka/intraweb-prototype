@@ -36,7 +36,9 @@ function renderDashboard(){
       :'<b>Včas</b> – s náhradou'}</div>`;}
   if(c.notes[dashDay])blkDochazka+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;
   if(c.obed&&c.obed[dashDay]!==undefined&&absent)blkDochazka+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
-  if(today&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
+  if(today&&!absent)blkDochazka+=poZacatkuProgramu()
+    ?`<div class="abs-po830">Program už začal (8:30) – dnešní absenci zapíše vedoucí průvodce. Zavolejte prosím do školky, nebo pošlete průvodcům informaci níže.</div>`
+    :`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button><div class="doch-note">Dnešní absenci lze nahlásit do 8:30, kdy začíná program.</div>`;
   else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
   else if(!today&&!editable(dashDay))blkDochazka+=`<div class="edlock">Proběhlý den – jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;

@@ -1073,6 +1073,7 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 /* hodiny u řádku náhrady */
 .nahrow{display:flex;align-items:center;gap:8px}.nahrow .nahL{flex:1;min-width:0}
 .nah-h{font-size:var(--text-small);color:var(--color-primary-strong);white-space:nowrap}
+.abs-po830{font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text);background:var(--state-warn-bg);border-radius:var(--radius-md);padding:10px 12px;margin-bottom:11px}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1498,6 +1499,9 @@ const ORDER=['D','O','C','OM','NE'];
 /* „Teď" = St 3. 6. 2026, 7:40 (žádné Date.now()). Před 8:30, kdy začíná program – do té doby
    smí rodič nahlásit dnešní absenci sám; potom ji zapisuje vedoucí průvodce (viz decision-log). */
 const NOW={d:3,h:7,m:40};
+/* Po 8:30 (začátek programu) už rodič dnešní absenci nenahlásí – zapíše ji vedoucí průvodce,
+   vždy jako omluveno bez náhrady (decision-log 10. 9. 2026). */
+const poZacatkuProgramu=()=>NOW.h*60+(NOW.m||0)>=8*60+30;
 const beforeDeadline=d=>d>NOW.d+1||(d===NOW.d+1&&NOW.h<20);  // omluvit lze do 20:00 předchozího dne (dle reálného intrawebu)
 let _uid=1000; const uid=()=>'x'+(++_uid);
 const fmtD=dt=>dt.getDate()+'. '+(dt.getMonth()+1)+'. '+dt.getFullYear();
@@ -1783,7 +1787,9 @@ function renderDashboard(){
       :'<b>Včas</b> – s náhradou'}</div>`;}
   if(c.notes[dashDay])blkDochazka+=`<div class="doch-pozn">Poznámka: ${escTa(c.notes[dashDay])}</div>`;
   if(c.obed&&c.obed[dashDay]!==undefined&&absent)blkDochazka+=`<div class="doch-sleep">Oběd: ${c.obed[dashDay]?'vyzvednete si':'propadá'}</div>`;
-  if(today&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button>`;
+  if(today&&!absent)blkDochazka+=poZacatkuProgramu()
+    ?`<div class="abs-po830">Program už začal (8:30) – dnešní absenci zapíše vedoucí průvodce. Zavolejte prosím do školky, nebo pošlete průvodcům informaci níže.</div>`
+    :`<button class="omluvbtn" onclick="openAbsDnes()">Nahlásit dnešní absenci</button><div class="doch-note">Dnešní absenci lze nahlásit do 8:30, kdy začíná program.</div>`;
   else if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<button class="omluvbtn" onclick="openOmluvenka(${dashDay})">Omluvit na ${DOW[wd(dashDay)]} ${dashDay}. 6.</button>`;
   else if(!today&&!editable(dashDay))blkDochazka+=`<div class="edlock">Proběhlý den – jen ke čtení</div>`;
   if(!today&&editable(dashDay)&&!absent)blkDochazka+=`<div class="doch-note">V omluvence můžete vybrat i více dní.</div>`;

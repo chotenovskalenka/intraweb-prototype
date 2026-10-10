@@ -375,3 +375,4 @@ button.alerttile{display:block;width:100%;text-align:left;cursor:pointer;font-fa
 /* hodiny u řádku náhrady */
 .nahrow{display:flex;align-items:center;gap:8px}.nahrow .nahL{flex:1;min-width:0}
 .nah-h{font-size:var(--text-small);color:var(--color-primary-strong);white-space:nowrap}
+.abs-po830{font-size:var(--text-small);line-height:var(--leading-normal);color:var(--color-text);background:var(--state-warn-bg);border-radius:var(--radius-md);padding:10px 12px;margin-bottom:11px}

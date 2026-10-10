@@ -1526,7 +1526,13 @@ V průvodcovské appce jsou všechny tři vidět na přehledu i v soupisu dochá
 (`guideExcuse={by,time,reason,pozn}` vedle `parentExcuse`). „bez náhrady" je u ní odznáček,
 protože je to důsledek, ne stav.
 
-**Otevřené – nutné rozhodnout před dalším testováním:** v rodičovské appce je simulovaný čas
+**Dořešeno 10. 10. 2026:** simulovaný čas rodičovské appky je 7:40 (rodič smí nahlásit dnešní
+absenci). Po 8:30 (`poZacatkuProgramu`) se tlačítko nahrazuje větou „Program už začal – dnešní
+absenci zapíše vedoucí průvodce. Zavolejte prosím do školky, nebo pošlete průvodcům informaci
+níže." – míří na kartu Informace pro průvodce, ne do WhatsAppu. Před 8:30 je pod tlačítkem
+připomínka „lze nahlásit do 8:30".
+
+**(Původní poznámka)** v rodičovské appce je simulovaný čas
 `NOW={d:3,h:10}`, tedy **10:00 – po 8:30**. Podle nového pravidla by tlačítko „Nahlásit dnešní
 absenci" nemělo jít použít a celý ten tok by z prototypu zmizel. Buď posunout `NOW` před 8:30,
 nebo rodiči ukázat zavřený stav („Po 8:30 už absenci nenahlásíte, ozvěte se průvodcům").

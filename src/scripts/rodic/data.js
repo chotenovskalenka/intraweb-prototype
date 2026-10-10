@@ -5,6 +5,9 @@ const ORDER=['D','O','C','OM','NE'];
 /* „Teď" = St 3. 6. 2026, 7:40 (žádné Date.now()). Před 8:30, kdy začíná program – do té doby
    smí rodič nahlásit dnešní absenci sám; potom ji zapisuje vedoucí průvodce (viz decision-log). */
 const NOW={d:3,h:7,m:40};
+/* Po 8:30 (začátek programu) už rodič dnešní absenci nenahlásí – zapíše ji vedoucí průvodce,
+   vždy jako omluveno bez náhrady (decision-log 10. 9. 2026). */
+const poZacatkuProgramu=()=>NOW.h*60+(NOW.m||0)>=8*60+30;
 const beforeDeadline=d=>d>NOW.d+1||(d===NOW.d+1&&NOW.h<20);  // omluvit lze do 20:00 předchozího dne (dle reálného intrawebu)
 let _uid=1000; const uid=()=>'x'+(++_uid);
 const fmtD=dt=>dt.getDate()+'. '+(dt.getMonth()+1)+'. '+dt.getFullYear();
