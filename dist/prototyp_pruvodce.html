@@ -373,6 +373,11 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 .filters button.on .cnt{color:var(--color-primary)}
 .bdg{font-size:var(--text-chip);font-weight:600;padding:2px 7px;border-radius:var(--radius-xs);white-space:nowrap}
 .bdg.pre{color:var(--state-brand-ink);background:var(--state-brand-bg)}.bdg.al{color:var(--state-danger-ink);background:var(--state-danger-bg)}
+/* obecné stavové badge (třídnice v průvodci i adminu) – rovnou na --state-* paletu */
+.bdg.st-ok{color:var(--state-ok-ink);background:var(--state-ok-bg)}
+.bdg.st-warn{color:var(--state-warn-ink);background:var(--state-warn-bg)}
+.bdg.st-danger{color:var(--state-danger-ink);background:var(--state-danger-bg)}
+.bdg.st-muted{color:var(--state-muted-ink);background:var(--state-muted-bg)}
 .pav{display:flex;justify-content:center;margin:6px 0 10px}
 .pname{font-family:var(--font-serif);font-size:var(--text-display);text-align:center;color:var(--color-primary-strong)}
 .pfull{text-align:center;font-size:var(--text-small);color:var(--color-text-muted);margin-bottom:var(--space-lg)}
@@ -870,6 +875,54 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
   .kuch-tab{display:table;width:100%}
   #content > .kuch{column-span:all}   /* celý přehled kuchyně mimo masonry sloupce */
 }
+
+/* Třídnice – denní zápis. Pole jsou dlaždice s popiskem a podpisem „kdo a kdy doplnil";
+   na desktopu dvě pole vedle sebe, ať se den dá přehlédnout bez dlouhého scrollu. */
+.tr-meta-r{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.tr-meta-r .tlab{margin:0}
+.tr-inl{background:none;border:none;padding:0;font:inherit;color:var(--color-primary);font-weight:600;text-decoration:underline;cursor:pointer}
+.tr-fh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:7px}
+.tr-fh .tlab,.tr-fh .ch{margin:0}
+.tr-kdo{font-size:var(--text-note);color:var(--color-text-hint)}
+.tr-vol{text-transform:none;letter-spacing:0;color:var(--color-text-hint)}
+.tr-f .pchips{margin-top:2px}
+.tr-den{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
+.tr-den:first-of-type{border-top:none}
+.tr-den:disabled{cursor:default}
+.tr-den-d{min-width:72px;font-size:var(--text-body);font-weight:500;color:var(--color-text)}
+.tr-den-m{flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.tr-chybi{font-size:var(--text-note);color:var(--color-text-muted)}
+.tr-arr{color:var(--color-primary);font-weight:600}
+.tr-ukol{display:flex;align-items:center;gap:11px;padding:8px 0;border-top:1px solid var(--color-border)}
+.tr-ukol:first-of-type{border-top:none}
+.tr-ukol-t{flex:1;font-size:var(--text-body);color:var(--color-text);line-height:var(--leading-snug)}
+.tr-ukol.done .tr-ukol-t{color:var(--color-text-hint);text-decoration:line-through}
+.tr-ukol-k{font-size:var(--text-note);color:var(--color-text-muted)}
+.tr-add{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tr-add #tru-t{flex:1 1 200px}
+.tr-add #tru-k{flex:0 0 auto;width:auto}
+.tr-add .btn-ghost{padding:9px 16px;font-size:var(--text-small)}
+.tr-dlist{padding-top:var(--space-xs);padding-bottom:var(--space-xs)}
+.tr-dite{border-top:1px solid var(--color-border)}
+.tr-dite:first-child{border-top:none}
+.tr-dite-h{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;background:none;border:none;padding:6px 0;text-align:left;cursor:pointer;font-family:var(--font-sans)}
+.tr-dite-n{flex:1;font-size:var(--text-body);font-weight:500;color:var(--color-text)}
+.tr-dite-s{font-size:var(--text-note);color:var(--color-text-muted)}
+.tr-dite-b{padding:0 0 14px 38px}
+.tr-dite-add{margin-top:9px;padding:11px 18px}
+/* přehled: včerejšek a dnešek jako dva proklikové řádky */
+.tr-dash{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
+.tr-dash:first-of-type{border-top:none}
+.tr-dash-d{flex:1;font-size:var(--text-body);color:var(--color-text)}
+.tr-dash-c{flex:0 0 100%;font-size:var(--text-note);color:var(--color-text-muted);line-height:var(--leading-normal)}
+@media (max-width:899px){.tr-dite-b{padding-left:0}}
+@media (min-width:900px){
+  #content > .tr{column-span:all}   /* třídnice mimo masonry sloupce, jako docházka */
+  .tr-pole{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 var(--space-md);align-items:start}
+  .tr-f-wide{grid-column:1/-1}   /* evaluace dne uzavírá den – přes celou šířku */
+  .tr-tyden{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-md);align-items:start}
+  .tr-deti{display:block}
+}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1175,12 +1228,14 @@ const ICON_SVG={
   coins:'<ellipse cx="12" cy="7" rx="6.5" ry="2.5"/><path d="M5.5 7v5c0 1.38 2.9 2.5 6.5 2.5s6.5-1.12 6.5-2.5V7"/><path d="M5.5 12c0 1.38 2.9 2.5 6.5 2.5s6.5-1.12 6.5-2.5"/>',
   clipboard:'<rect x="5.5" y="5" width="13" height="16" rx="2.5"/><path d="M9 5V3.5h6V5"/><path d="M8.5 10.5h.01"/><path d="M11 10.5h4"/><path d="M8.5 14h.01"/><path d="M11 14h4"/><path d="M8.5 17.5h.01"/><path d="M11 17.5h3"/>',
   refresh:'<path d="M20 11.5A8 8 0 0 0 6.3 6L4 8"/><path d="M4 4.5V8h3.5"/><path d="M4 12.5A8 8 0 0 0 17.7 18L20 16"/><path d="M20 19.5V16h-3.5"/>',
-  jidelnicek:'<circle cx="12" cy="12" r="5.25"/><path d="M4.5 4.5v5.25"/><path d="M3 4.5v3.25a1.5 1.5 0 0 0 3 0V4.5"/><path d="M4.5 9.75v9.75"/><path d="M19.5 4.5v15"/><path d="M19.5 4.5c-1.6 1.1-2.5 2.8-2.5 4.75 0 1.35.85 2.25 2.5 2.25"/>'
+  jidelnicek:'<circle cx="12" cy="12" r="5.25"/><path d="M4.5 4.5v5.25"/><path d="M3 4.5v3.25a1.5 1.5 0 0 0 3 0V4.5"/><path d="M4.5 9.75v9.75"/><path d="M19.5 4.5v15"/><path d="M19.5 4.5c-1.6 1.1-2.5 2.8-2.5 4.75 0 1.35.85 2.25 2.5 2.25"/>',
+  // třídnice – otevřená kniha (dokresleno ve stejném stylu)
+  kniha:'<path d="M12 6.5c-1.8-1.4-4.3-2-7.5-2v13c3.2 0 5.7.6 7.5 2 1.8-1.4 4.3-2 7.5-2v-13c-3.2 0-5.7.6-7.5 2Z"/><path d="M12 6.5v13"/>'
 };
 /* klíč sekce (napříč appkami) → ikona */
 const ICON_KEY={prehled:'prehled',aktuality:'news',novinky:'news',dochazka:'dochazka',profil:'profil',
   platby:'platby',kalendar:'kalendar',plan:'plan',akce:'clipboard',priprava:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
-  pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh'};
+  pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh',tridnice:'kniha'};
 function icon(key){const k=ICON_KEY[key];return k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_SVG[k]}</svg>`:'';}
 </script>
 <script>
@@ -1639,6 +1694,96 @@ const KUCH_SKOLKY=[
     zitra:{dop:14,obed:14,odp:9}},
 ];
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));
+
+/* ===== TŘÍDNICE – denní zápis (rozhodnutí 10. 10. 2026, viz decision-log) =====
+   Předloha: reálná třídní kniha Jaaty 2024/25 (Google tabulka, 43 vyplněných týdnů).
+   Kostra je zkrácená na řádky, které Jaata opravdu psala (kolem 90 % dnů); vypadly podřádky
+   „povedlo/nepovedlo" a „cíle/posuny" (4–36 %) – slily se do jednoho „Jak to šlo".
+   Výzkum: třídnice „žije ze čtení všech, ale padá na zápisu" – píše se zpětně, po kouskách
+   a víc lidmi. Proto žádné odeslání ani uzavření: každé pole se ukládá samo a pamatuje si,
+   kdo ho naposledy doplnil. Jména dětí do veřejné části nepatří (legislativa, P1) – k dětem
+   je samostatná interní část TR_DETI. */
+const TR_POLE=[
+  {k:'prichod',lab:'Příchod',ph:'Jak proběhlo předání dětí – v pořádku, nebo co se dělo.'},
+  {k:'kruh',lab:'Ranní kruh',ph:'Průběh, básničky, písničky, hry.'},
+  {k:'aktivita',lab:'Aktivita dne',ph:'Co jsme dělali.'},
+  {k:'jakslo',lab:'Jak to šlo',ph:'Co se povedlo, co příště jinak, posun dětí.'},
+  {k:'kde',lab:'Kam jsme šli',ph:'Zahrada, les, město – a co se tam dělo.'},
+  {k:'odpocinek',lab:'Odpočinek',ph:'Co jsme četli, jak proběhl klid.'},
+  {k:'predskolaci',lab:'Předškoláci',ph:'Jen když měli vlastní program.',volitelne:true},
+  {k:'pocasi',lab:'Počasí',ph:'např. slunečno, 22 °C',kratke:true},
+  {k:'evaluace',lab:'Evaluace dne',ph:'Jak den plynul jako celek.',siroke:true},
+];
+const TR_POVINNE=TR_POLE.filter(p=>!p.volitelne).length;
+// Sady pravidel bezpečnosti – Jaata je má ve třídnici jako číslované seznamy podle místa.
+const TR_POUCENI=[['skolka','Školka a zahrada'],['les','Les'],['mesto','Město a MHD']];
+/* Kdo který den třídnici píše – v Jaatě je to sloupec rozvrhu týdne. Odpovídá službám
+   v SHIFT_ROTA (zapisuje někdo, kdo ten den slouží). Psát smí kdokoli z týmu. */
+const TR_ZAPISUJE=['Darča','Gabča','Honza','Gabča','Honza'];
+const trPole=(t,kdo,cas)=>({t,kdo,cas});
+// klíč dne = den v červnu; víkendy se nezapisují
+let TRIDNICE={
+  1:{pouceni:['skolka','les'],pole:{
+    prichod:trPole('Klidné ráno, předání u branky bez slz. Dvě děti přišly až po deváté (hlášeno).','Darča','15:20'),
+    kruh:trPole('Přivítání, kalendář, nová básnička „Uvijeme věneček". Na rytmiku bubínky a dřívka.','Darča','15:20'),
+    aktivita:trPole('Rytmika s Niki – tanečky v kruhu, střídání rychle/pomalu.','Darča','15:22'),
+    jakslo:trPole('Tanečky bavily i nejmenší. Střídání tempa zvládne asi polovina, zítra zopakovat.','Darča','15:24'),
+    kde:trPole('Zahrada a pak les nad maringotkou – stavba domečků z klacků, lano mezi stromy.','Táňa','15:40'),
+    odpocinek:trPole('S Táňou „Kubula a Kuba Kubikula", dočteno do str. 34. Klid, usnuli skoro všichni.','Táňa','15:41'),
+    pocasi:trPole('slunečno, 24 °C','Darča','15:20'),
+    evaluace:trPole('Pohodový začátek týdne, děti dobře naladěné. V lese potřeba víc hlídat hranici u potoka.','Darča','15:30'),
+  }},
+  2:{pouceni:['les'],pole:{
+    prichod:trPole('Vše v pořádku, jedno delší loučení s maminkou – pomohlo krmení slepic.','Gabča','16:05'),
+    kruh:trPole('Básnička týdne, pohybová hra „Na medvěda".','Gabča','16:05'),
+    aktivita:trPole('Putování k Ďáblické hvězdárně, cestou sbírání šišek na výrobu ježků.','Gabča','16:08'),
+    jakslo:trPole('Cesta tam v pohodě, zpátky únava – příště kratší okruh nebo delší svačinová pauza.','Gabča','16:10'),
+    kde:trPole('Les, hvězdárna a zpět. Svačina na louce.','Gabča','16:06'),
+    predskolaci:trPole('Počítali šišky do desíti a třídili podle velikosti.','Táňa','16:30'),
+    pocasi:trPole('polojasno, odpoledne přeháňka','Gabča','16:06'),
+  }},
+  3:{pouceni:['skolka'],pole:{
+    prichod:trPole('Klidné, jen jedno dítě přišlo s rodičem až v 9:30 (hlášeno ráno).','Honza','9:40'),
+    kruh:trPole('Narozeninový kruh – svíčka, přání, písnička „Šel zahradník".','Honza','9:42'),
+  }},
+};
+// seed se psal v den, ke kterému patří (podpis „dnes / včera / 1. 6." se odvozuje od něj)
+Object.entries(TRIDNICE).forEach(([d,z])=>Object.values(z.pole).forEach(p=>{p.den=+d;}));
+/* Týdenní část: téma, pohádka týdne (Jaata ji píše jednou týdně), uzavření týdne a úkoly
+   „je třeba zařídit + kdo". Klíč = pondělí týdne (den v červnu). */
+let TR_TYDNY={
+  1:{tema:'Kytičky a věneček',pohadka:'O Budulínkovi (divadýlko s loutkami)',uzavreni:null,ukoly:[
+    {t:'Dokoupit čtvrtky A3 na kreslení',kdo:'Míša',done:true},
+    {t:'Opravit povolené lano mezi stromy v lese',kdo:'Honza',done:false},
+    {t:'Na poradu: kdo hlídá hranici u potoka',kdo:'Táňa',done:false},
+  ]},
+};
+/* Poznámky k dětem – vždy jen pro tým, do tisku třídnice nejdou. Jaata je píše týden co
+   týden u téměř všech dětí (19 z 23 v průměru), proto po dnech a dohromady za týden.
+   Klíč = pondělí týdne → index dítěte → [{d,t,kdo}]. */
+let TR_DETI={1:{
+  0:[{d:1,t:'Celé dopoledne s Toničkou u tanečků, odpoledne unavená.',kdo:'Darča'}],
+  4:[{d:1,t:'Postavil s Vojtou největší domeček, ostatní ho obdivovali.',kdo:'Táňa'},{d:2,t:'Cestou zpět bolely nohy, chvíli nesen.',kdo:'Gabča'}],
+  7:[{d:2,t:'Šišky třídil s velkým zaujetím, vydržel u toho nejdéle ze všech.',kdo:'Gabča'}],
+  12:[{d:2,t:'Ráno dlouhé loučení s maminkou, pak v pohodě. Sledovat (maminka psala do vzkazů).',kdo:'Gabča'}],
+  14:[{d:1,t:'Při rytmice se drží stranou, zkusit jí dát roli (bubínek).',kdo:'Darča'}],
+  21:[{d:1,t:'Odřené koleno u potoka – ošetřeno, rodičům řečeno při vyzvednutí.',kdo:'Táňa'}],
+}};
+const trTydenOd=d=>d-wd(d);                          // pondělí týdne daného dne
+const trDnyTydne=po=>[0,1,2,3,4].map(i=>po+i).filter(d=>d<=30);
+function trDen(d){return TRIDNICE[d]||(TRIDNICE[d]={pouceni:[],pole:{}});}
+function trTyden(po){return TR_TYDNY[po]||(TR_TYDNY[po]={tema:'',pohadka:'',uzavreni:null,ukoly:[]});}
+function trDetiTyden(po){return TR_DETI[po]||(TR_DETI[po]={});}
+const trVyplneno=d=>TR_POLE.filter(p=>!p.volitelne&&((TRIDNICE[d]||{pole:{}}).pole[p.k]||{}).t).length;
+/* Stav dne: budoucí se nepíše; jinak chybí / rozepsáno n z 8 / zapsáno. Dnešek bez zápisu
+   není chyba – den ještě běží. */
+function trStav(d){
+  if(d>TODAYD)return {k:'budouci',lab:'ještě neproběhl',cls:'muted'};
+  const n=trVyplneno(d);
+  if(n>=TR_POVINNE)return {k:'hotovo',lab:'zapsáno',cls:'ok'};
+  if(!n)return d===TODAYD?{k:'prazdne',lab:'zatím nic',cls:'muted'}:{k:'chybi',lab:'chybí zápis',cls:'danger'};
+  return {k:'rozepsano',lab:`rozepsáno ${n} z ${TR_POVINNE}`,cls:'warn'};
+}
 </script>
 <script>
 /* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce (stejný přístup jako rodič):
@@ -1732,6 +1877,19 @@ function renderPrehled(){
     +(ryt&&ryt.krouzek?`<div class="tval" style="font-size:13.5px">Kroužek: <b>${ryt.krouzek}</b></div>`:'')
     +`<button class="cardlink" onclick="go('priprava')">Tématický plán ›</button></div>`;
 
+  /* Třídnice: BRIEF chce „rychlý vstup do třídnice". Výzkum: zápis se nestíhá ve stejný
+     den – proto nahoře včerejšek a co v něm chybí, pod tím kdo píše dnes. */
+  const vcera=TODAYD-(wd(TODAYD)===0?3:1);
+  let blkTridnice=`<div class="tile"><div class="ch">Třídnice</div>`;
+  if(vcera>=1){
+    const s=trStav(vcera), chybi=TR_POLE.filter(p=>!p.volitelne&&!((TRIDNICE[vcera]||{pole:{}}).pole[p.k]||{}).t).map(p=>p.lab.toLowerCase());
+    blkTridnice+=`<button class="tr-dash" onclick="trOtevrit(${vcera})"><span class="tr-dash-d">Včera · ${trDenLbl(vcera)}</span><span class="bdg st-${s.cls}">${s.lab}</span>`
+      +(s.k!=='hotovo'&&chybi.length?`<span class="tr-dash-c">Chybí: ${chybi.join(', ')}</span>`:'')+`</button>`;
+  }
+  {const s=trStav(TODAYD);
+   blkTridnice+=`<button class="tr-dash" onclick="trOtevrit(${TODAYD})"><span class="tr-dash-d">Dnes píše ${TR_ZAPISUJE[wd(TODAYD)]}</span><span class="bdg st-${s.cls}">${s.lab}</span></button>`;}
+  blkTridnice+=`<button class="cardlink" onclick="trOtevrit(${TODAYD})">Otevřít třídnici ›</button></div>`;
+
   // básnička a písnička aktuálního týdne (3. 6. = 1. týden)
   const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
   let blkBasnicka=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>`;
@@ -1768,7 +1926,7 @@ function renderPrehled(){
      sedí průvodci ve službě (tým k týmu), vpravo kontext dne. */
   h+=`<div class="dash3 dash-swap">`;
   h+=`<div class="dcol">${blkProgram}${blkAkce}</div>`;
-  h+=`<div class="dcol">${blkBasnicka}</div>`;
+  h+=`<div class="dcol">${blkBasnicka}${blkTridnice}</div>`;
   h+=`<div class="dcol">${blkPruvodci}</div>`;
   h+=`</div>`;
   return h;
@@ -1996,6 +2154,156 @@ window.openMonthDay=d=>{if(isWE(d))return;denDay=d;view='den';render();};
 window.closeMonthDay=()=>{monthDay=-1;render();};
 window.stepDen=dir=>{let d=denDay+dir;while(d>=1&&d<=30&&isWE(d))d+=dir;if(d>=1&&d<=30)denDay=d;render();};
 window.stepWeek=dir=>{let w=weekStart+dir*7;if(w<1)w=1;if(w>29)w=29;weekStart=w;render();};
+</script>
+<script>
+/* SCREEN: PRUVODCE_TRIDNICE – denní zápis (třídní kniha). Tři pohledy:
+     Den   – zápis jednoho dne; každé pole se ukládá samo a nese „kdo a kdy doplnil"
+     Týden – téma a pohádka týdne, stav dnů, uzavření týdne, úkoly „je třeba zařídit"
+     Děti  – poznámky k dětem, jen pro tým (P1 + legislativa: jména dětí do veřejné části nepatří)
+   Žádné „Odeslat": třídnice se píše zpětně a víc lidmi (výzkum), formulář, který se odešle
+   a zavře, to neunese. Psaní nevolá render() – kurzor v poli musí zůstat; přepisuje se jen
+   podpis pole a stav dne přímo v DOM. Data a stavy jsou v data.js (TR_*). */
+let trView='den', trDay=TODAYD, trWeek=trTydenOd(TODAYD), trOpenDite=-1, trNoteDay=TODAYD;
+const TR_DOW=['pondělí','úterý','středa','čtvrtek','pátek'];
+// pracovní dny června, které už začaly (budoucí se nepíšou ani neprocházejí)
+const trDny=()=>Array.from({length:TODAYD},(_,i)=>i+1).filter(d=>!isWE(d));
+const trTydny=()=>[...new Set(trDny().map(trTydenOd))];
+const trKdyLbl=z=>!z?'':`${z.kdo} · ${z.den===TODAYD?'dnes':z.den===TODAYD-1?'včera':z.den+'. 6.'} ${z.cas}`;
+const trBdg=s=>`<span class="bdg st-${s.cls}">${s.lab}</span>`;
+const trDenLbl=d=>`${DOW[wd(d)]} ${d}. 6.`;
+const trTydenLbl=po=>{const dny=trDnyTydne(po);return `${dny[0]}.–${dny[dny.length-1]}. 6.`;};
+// kdo ten den slouží – z rozpisu služeb (stejný zdroj jako dashboard)
+const trSluzba=d=>shiftProDen(d).filter(g=>serving(g.days[wd(d)])).map(g=>g.n);
+
+function renderTridnice(){
+  const nav=trView==='den'
+    ? trNav(trDenLbl(trDay)+(trDay===TODAYD?'<i class="dn-cur"> · dnes</i>':''),'trStepDay',trDny().indexOf(trDay),trDny().length)
+    : trNav(trTydenLbl(trWeek)+(trWeek===trTydenOd(TODAYD)?'<i class="dn-cur"> · tento týden</i>':''),'trStepWeek',trTydny().indexOf(trWeek),trTydny().length);
+  let h=`<div class="tr"><div class="dfield"><div class="switch dsw">`
+    +[['den','Den'],['tyden','Týden'],['deti','Děti']].map(v=>`<button class="${trView===v[0]?'on':''}" onclick="trSetView('${v[0]}')">${v[1]}</button>`).join('')
+    +`</div>${nav}</div>`;
+  h+=trView==='den'?trRenderDen():trView==='tyden'?trRenderTyden():trRenderDeti();
+  return h+`</div>`;
+}
+function trNav(lbl,fn,i,n){
+  return `<div class="dnav"><button onclick="${fn}(-1)" ${i<=0?'disabled':''} aria-label="Předchozí">‹</button><span>${lbl}</span><button onclick="${fn}(1)" ${i>=n-1?'disabled':''} aria-label="Další">›</button></div>`;
+}
+
+/* ---- Den ---- */
+function trRenderDen(){
+  const d=trDay, z=trDen(d), sl=trSluzba(d);
+  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><span class="tlab">${TR_DOW[wd(d)].replace(/^./,m=>m.toUpperCase())} ${d}. června</span><span id="tr-stav">${trBdg(trStav(d))}</span></div>`
+    +`<div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b> · píše <b>${TR_ZAPISUJE[wd(d)]}</b></div>`
+    +`<div class="note2">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do záložky <button class="tr-inl" onclick="trSetView('deti')">Děti</button>, kterou vidí jen tým.</div></div>`;
+  h+=`<div class="tr-pole">`;
+  TR_POLE.forEach(p=>{
+    const v=z.pole[p.k];
+    h+=`<div class="tile tr-f${p.siroke?' tr-f-wide':''}"><div class="tr-fh"><label class="tlab" for="trf-${p.k}">${p.lab}${p.volitelne?' <span class="tr-vol">nepovinné</span>':''}</label>`
+      +`<span class="tr-kdo" id="trk-${p.k}">${trKdyLbl(v)}</span></div>`
+      +(p.kratke
+        ? `<input class="pin" id="trf-${p.k}" value="${esc(v?v.t:'')}" placeholder="${p.ph}" oninput="trSet('${p.k}',this.value)">`
+        : `<textarea class="pta" id="trf-${p.k}" placeholder="${p.ph}" oninput="trSet('${p.k}',this.value)">${escTa(v?v.t:'')}</textarea>`);
+    // poučení o pravidlech patří k místu, kam se šlo – sada podle místa, jako v Jaatě
+    if(p.k==='kde')h+=`<div class="pl">Poučení o pravidlech</div><div class="pchips">`
+      +TR_POUCENI.map(([k,l])=>`<button class="${z.pouceni.includes(k)?'on':''}" aria-pressed="${z.pouceni.includes(k)}" onclick="trPouceni('${k}')">${l}</button>`).join('')+`</div>`;
+    h+=`</div>`;
+  });
+  return h+`</div>`;
+}
+window.trSet=(k,v)=>{
+  const z=trDen(trDay);
+  if(v.trim())z.pole[k]={t:v,kdo:ja().n,cas:TEDCAS,den:TODAYD};else delete z.pole[k];
+  const kdo=document.getElementById('trk-'+k);if(kdo)kdo.textContent=trKdyLbl(z.pole[k]);
+  const st=document.getElementById('tr-stav');if(st)st.innerHTML=trBdg(trStav(trDay));
+};
+window.trPouceni=k=>{const z=trDen(trDay),i=z.pouceni.indexOf(k);i>=0?z.pouceni.splice(i,1):z.pouceni.push(k);render();};
+
+/* ---- Týden ---- */
+function trRenderTyden(){
+  const po=trWeek, t=trTyden(po), dny=trDnyTydne(po), konec=dny[dny.length-1]<=TODAYD;
+  let h=`<div class="tr-tyden"><div class="tr-col">`;
+  h+=`<div class="tile"><div class="ch">Týden</div>`
+    +`<label class="pl" for="trt-tema">Téma týdne</label><input class="pin" id="trt-tema" value="${esc(t.tema)}" placeholder="např. Kytičky a věneček" oninput="trSetT('tema',this.value)">`
+    +`<label class="pl" for="trt-poh">Pohádka týdne</label><input class="pin" id="trt-poh" value="${esc(t.pohadka)}" placeholder="název, případně jak jsme ji hráli" oninput="trSetT('pohadka',this.value)">`
+    +`</div>`;
+  h+=`<div class="tile"><div class="ch">Dny</div>`;
+  dny.forEach(d=>{
+    // co chybí, jen u proběhlých dnů – dnešek ještě běží
+    const s=trStav(d), chybi=d<TODAYD?TR_POLE.filter(p=>!p.volitelne&&!(trDen(d).pole[p.k]||{}).t).map(p=>p.lab.toLowerCase()):[];
+    h+=`<button class="tr-den" onclick="trGoDay(${d})" ${d>TODAYD?'disabled':''}><span class="tr-den-d">${trDenLbl(d)}</span>`
+      +`<span class="tr-den-m">${trBdg(s)}${chybi.length&&s.k==='rozepsano'?`<span class="tr-chybi">chybí: ${chybi.join(', ')}</span>`:''}</span>`
+      +(d<=TODAYD?`<span class="tr-arr" aria-hidden="true">›</span>`:'')+`</button>`;
+  });
+  h+=`</div></div><div class="tr-col">`;
+  // uzavření týdne – Jaata ho má vyplněné ve 100 % týdnů; píše se po posledním dni
+  const u=t.uzavreni;
+  h+=`<div class="tile"><div class="tr-fh"><label class="ch" for="trt-uz">Uzavření týdne</label><span class="tr-kdo" id="trk-uz">${trKdyLbl(u)}</span></div>`
+    +(konec||u
+      ? `<textarea class="pta" id="trt-uz" placeholder="Co se za týden povedlo, co příště jinak, na co se připravit dřív." oninput="trSetUz(this.value)">${escTa(u?u.t:'')}</textarea>`
+      : `<div class="empty" style="padding:6px 0 0;text-align:left">Píše se po posledním dni týdne.</div>`)
+    +`</div>`;
+  // úkoly – v Jaatě sloupec „Je třeba zařídit + kdo to udělá"
+  const lidi=[...guides,...ZAZEMI].map(g=>g.n);
+  h+=`<div class="tile"><div class="ch">Je třeba zařídit</div>`;
+  if(!t.ukoly.length)h+=`<div class="empty" style="padding:4px 0 8px;text-align:left">Zatím nic.</div>`;
+  t.ukoly.forEach((u,i)=>{
+    h+=`<div class="tr-ukol${u.done?' done':''}"><button class="chk${u.done?' on':''}" onclick="trUkol(${i})" aria-pressed="${u.done}" aria-label="${u.done?'Označit jako nehotové':'Označit jako hotové'}">${u.done?'✓':''}</button>`
+      +`<span class="tr-ukol-t">${esc(u.t)}</span><span class="tr-ukol-k">${esc(u.kdo)}</span></div>`;
+  });
+  h+=`<div class="tr-add"><input class="pin" id="tru-t" placeholder="Co je potřeba zařídit…" aria-label="Nový úkol">`
+    +`<select class="pin" id="tru-k" aria-label="Kdo to udělá">${lidi.map(n=>`<option${n===ja().n?' selected':''}>${n}</option>`).join('')}</select>`
+    +`<button class="btn-ghost" onclick="trUkolAdd()">Přidat</button></div>`;
+  h+=`</div></div></div>`;
+  return h;
+}
+window.trSetT=(k,v)=>{trTyden(trWeek)[k]=v;};
+window.trSetUz=v=>{const t=trTyden(trWeek);t.uzavreni=v.trim()?{t:v,kdo:ja().n,cas:TEDCAS,den:TODAYD}:null;
+  const k=document.getElementById('trk-uz');if(k)k.textContent=trKdyLbl(t.uzavreni);};
+window.trUkol=i=>{const u=trTyden(trWeek).ukoly[i];u.done=!u.done;render();};
+window.trUkolAdd=()=>{const t=document.getElementById('tru-t'),k=document.getElementById('tru-k');
+  if(!t.value.trim()){t.focus();return;}
+  trTyden(trWeek).ukoly.push({t:t.value.trim(),kdo:k.value,done:false});render();showToast('Úkol přidán ✓');};
+window.trGoDay=d=>{trDay=d;trView='den';render();};
+
+/* ---- Děti (jen pro tým) ---- */
+function trRenderDeti(){
+  const po=trWeek, poz=trDetiTyden(po), dny=trDnyTydne(po).filter(d=>d<=TODAYD);
+  if(!dny.includes(trNoteDay))trNoteDay=dny[dny.length-1];
+  const sPoz=data.filter((c,i)=>(poz[i]||[]).length).length;
+  let h=`<div class="zona zona-int tr-deti"><div class="zona-h"><span class="zona-t">Poznámky k dětem</span>`
+    +`<span class="zona-s">Jen pro tým – rodiče je nevidí a do tisku třídnice nejdou.</span></div>`;
+  h+=`<div class="tile"><div class="tval">Tento týden poznámka u <b>${sPoz} z ${data.length}</b> dětí.</div>`
+    +`<div class="note2">Dítě bez poznámky je vidět hned – ať za týden nikdo nezapadne.</div></div>`;
+  h+=`<div class="tile tr-dlist">`;
+  data.map((c,i)=>({c,i})).sort(byAlpha).forEach(({c,i})=>{
+    const n=poz[i]||[], open=trOpenDite===i;
+    h+=`<div class="tr-dite${open?' open':''}"><button class="tr-dite-h" onclick="trDite(${i})" aria-expanded="${open}">${avatar(c,28)}<span class="tr-dite-n">${full(c)}</span>`
+      +`<span class="tr-dite-s">${n.length?`${n.length} ${n.length===1?'poznámka':n.length<5?'poznámky':'poznámek'}`:'<i>zatím bez poznámky</i>'}</span></button>`;
+    if(open){
+      h+=`<div class="tr-dite-b">`;
+      n.forEach(x=>{h+=`<div class="rozh"><div class="rozhd">${trDenLbl(x.d)} · ${esc(x.kdo)}</div>${esc(x.t)}</div>`;});
+      h+=`<div class="pl">Nová poznámka k</div><div class="pchips">`
+        +dny.map(d=>`<button class="${trNoteDay===d?'on':''}" onclick="trNoteDen(${d})">${trDenLbl(d)}</button>`).join('')+`</div>`
+        +`<textarea class="pta" id="trdn" style="margin-top:8px" placeholder="Nálada, vztahy, co se povedlo, zdraví…" aria-label="Poznámka k dítěti ${full(c)}"></textarea>`
+        +`<button class="btn-primary tr-dite-add" onclick="trNoteAdd(${i})">Uložit poznámku</button></div>`;
+    }
+    h+=`</div>`;
+  });
+  return h+`</div></div>`;
+}
+window.trDite=i=>{trOpenDite=trOpenDite===i?-1:i;render();};
+// výběr dne nesmí smazat rozepsaný text – přenese ho do nového renderu
+window.trNoteDen=d=>{const t=document.getElementById('trdn'),v=t?t.value:'';trNoteDay=d;render();const n=document.getElementById('trdn');if(n)n.value=v;};
+window.trNoteAdd=i=>{const t=document.getElementById('trdn');if(!t||!t.value.trim()){if(t)t.focus();return;}
+  const poz=trDetiTyden(trWeek);(poz[i]||(poz[i]=[])).push({d:trNoteDay,t:t.value.trim(),kdo:ja().n});
+  poz[i].sort((a,b)=>a.d-b.d);render();showToast('Poznámka uložena ✓');};
+
+/* ---- přepínání ---- */
+window.trSetView=v=>{if(v!=='den')trWeek=trTydenOd(trDay);trView=v;trOpenDite=-1;render();};
+window.trStepDay=dir=>{const ds=trDny(),i=ds.indexOf(trDay)+dir;if(i>=0&&i<ds.length){trDay=ds[i];trWeek=trTydenOd(trDay);render();}};
+window.trStepWeek=dir=>{const ws=trTydny(),i=ws.indexOf(trWeek)+dir;if(i>=0&&i<ws.length){trWeek=ws[i];trOpenDite=-1;render();}};
+// vstup z přehledu: rovnou na daný den
+window.trOtevrit=d=>{trDay=d;trWeek=trTydenOd(d);trView='den';go('tridnice');};
 </script>
 <script>
 /* SCREEN: PRUVODCE_NOVINKY – novinky pro rodiče: seznam s autorem a časem,
@@ -3130,6 +3438,7 @@ window.ulozVzkaz=()=>{const m=vzkazM,t=(m.text||'').trim();
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
   ['dochazka','Docházka','✓'],
+  ['tridnice','Třídnice','▤'],
   ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
   ['akce','Akce','✎'],
@@ -3183,7 +3492,7 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
+const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');

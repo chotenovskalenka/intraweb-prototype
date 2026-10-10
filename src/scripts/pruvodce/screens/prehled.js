@@ -89,6 +89,19 @@ function renderPrehled(){
     +(ryt&&ryt.krouzek?`<div class="tval" style="font-size:13.5px">Kroužek: <b>${ryt.krouzek}</b></div>`:'')
     +`<button class="cardlink" onclick="go('priprava')">Tématický plán ›</button></div>`;
 
+  /* Třídnice: BRIEF chce „rychlý vstup do třídnice". Výzkum: zápis se nestíhá ve stejný
+     den – proto nahoře včerejšek a co v něm chybí, pod tím kdo píše dnes. */
+  const vcera=TODAYD-(wd(TODAYD)===0?3:1);
+  let blkTridnice=`<div class="tile"><div class="ch">Třídnice</div>`;
+  if(vcera>=1){
+    const s=trStav(vcera), chybi=TR_POLE.filter(p=>!p.volitelne&&!((TRIDNICE[vcera]||{pole:{}}).pole[p.k]||{}).t).map(p=>p.lab.toLowerCase());
+    blkTridnice+=`<button class="tr-dash" onclick="trOtevrit(${vcera})"><span class="tr-dash-d">Včera · ${trDenLbl(vcera)}</span><span class="bdg st-${s.cls}">${s.lab}</span>`
+      +(s.k!=='hotovo'&&chybi.length?`<span class="tr-dash-c">Chybí: ${chybi.join(', ')}</span>`:'')+`</button>`;
+  }
+  {const s=trStav(TODAYD);
+   blkTridnice+=`<button class="tr-dash" onclick="trOtevrit(${TODAYD})"><span class="tr-dash-d">Dnes píše ${TR_ZAPISUJE[wd(TODAYD)]}</span><span class="bdg st-${s.cls}">${s.lab}</span></button>`;}
+  blkTridnice+=`<button class="cardlink" onclick="trOtevrit(${TODAYD})">Otevřít třídnici ›</button></div>`;
+
   // básnička a písnička aktuálního týdne (3. 6. = 1. týden)
   const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
   let blkBasnicka=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>`;
@@ -125,7 +138,7 @@ function renderPrehled(){
      sedí průvodci ve službě (tým k týmu), vpravo kontext dne. */
   h+=`<div class="dash3 dash-swap">`;
   h+=`<div class="dcol">${blkProgram}${blkAkce}</div>`;
-  h+=`<div class="dcol">${blkBasnicka}</div>`;
+  h+=`<div class="dcol">${blkBasnicka}${blkTridnice}</div>`;
   h+=`<div class="dcol">${blkPruvodci}</div>`;
   h+=`</div>`;
   return h;

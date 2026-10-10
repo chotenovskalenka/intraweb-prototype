@@ -2,6 +2,7 @@
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
   ['dochazka','Docházka','✓'],
+  ['tridnice','Třídnice','▤'],
   ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
   ['akce','Akce','✎'],
@@ -55,7 +56,7 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
+const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');

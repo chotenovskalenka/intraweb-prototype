@@ -349,3 +349,93 @@ const KUCH_SKOLKY=[
     zitra:{dop:14,obed:14,odp:9}},
 ];
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));
+
+/* ===== TŘÍDNICE – denní zápis (rozhodnutí 10. 10. 2026, viz decision-log) =====
+   Předloha: reálná třídní kniha Jaaty 2024/25 (Google tabulka, 43 vyplněných týdnů).
+   Kostra je zkrácená na řádky, které Jaata opravdu psala (kolem 90 % dnů); vypadly podřádky
+   „povedlo/nepovedlo" a „cíle/posuny" (4–36 %) – slily se do jednoho „Jak to šlo".
+   Výzkum: třídnice „žije ze čtení všech, ale padá na zápisu" – píše se zpětně, po kouskách
+   a víc lidmi. Proto žádné odeslání ani uzavření: každé pole se ukládá samo a pamatuje si,
+   kdo ho naposledy doplnil. Jména dětí do veřejné části nepatří (legislativa, P1) – k dětem
+   je samostatná interní část TR_DETI. */
+const TR_POLE=[
+  {k:'prichod',lab:'Příchod',ph:'Jak proběhlo předání dětí – v pořádku, nebo co se dělo.'},
+  {k:'kruh',lab:'Ranní kruh',ph:'Průběh, básničky, písničky, hry.'},
+  {k:'aktivita',lab:'Aktivita dne',ph:'Co jsme dělali.'},
+  {k:'jakslo',lab:'Jak to šlo',ph:'Co se povedlo, co příště jinak, posun dětí.'},
+  {k:'kde',lab:'Kam jsme šli',ph:'Zahrada, les, město – a co se tam dělo.'},
+  {k:'odpocinek',lab:'Odpočinek',ph:'Co jsme četli, jak proběhl klid.'},
+  {k:'predskolaci',lab:'Předškoláci',ph:'Jen když měli vlastní program.',volitelne:true},
+  {k:'pocasi',lab:'Počasí',ph:'např. slunečno, 22 °C',kratke:true},
+  {k:'evaluace',lab:'Evaluace dne',ph:'Jak den plynul jako celek.',siroke:true},
+];
+const TR_POVINNE=TR_POLE.filter(p=>!p.volitelne).length;
+// Sady pravidel bezpečnosti – Jaata je má ve třídnici jako číslované seznamy podle místa.
+const TR_POUCENI=[['skolka','Školka a zahrada'],['les','Les'],['mesto','Město a MHD']];
+/* Kdo který den třídnici píše – v Jaatě je to sloupec rozvrhu týdne. Odpovídá službám
+   v SHIFT_ROTA (zapisuje někdo, kdo ten den slouží). Psát smí kdokoli z týmu. */
+const TR_ZAPISUJE=['Darča','Gabča','Honza','Gabča','Honza'];
+const trPole=(t,kdo,cas)=>({t,kdo,cas});
+// klíč dne = den v červnu; víkendy se nezapisují
+let TRIDNICE={
+  1:{pouceni:['skolka','les'],pole:{
+    prichod:trPole('Klidné ráno, předání u branky bez slz. Dvě děti přišly až po deváté (hlášeno).','Darča','15:20'),
+    kruh:trPole('Přivítání, kalendář, nová básnička „Uvijeme věneček". Na rytmiku bubínky a dřívka.','Darča','15:20'),
+    aktivita:trPole('Rytmika s Niki – tanečky v kruhu, střídání rychle/pomalu.','Darča','15:22'),
+    jakslo:trPole('Tanečky bavily i nejmenší. Střídání tempa zvládne asi polovina, zítra zopakovat.','Darča','15:24'),
+    kde:trPole('Zahrada a pak les nad maringotkou – stavba domečků z klacků, lano mezi stromy.','Táňa','15:40'),
+    odpocinek:trPole('S Táňou „Kubula a Kuba Kubikula", dočteno do str. 34. Klid, usnuli skoro všichni.','Táňa','15:41'),
+    pocasi:trPole('slunečno, 24 °C','Darča','15:20'),
+    evaluace:trPole('Pohodový začátek týdne, děti dobře naladěné. V lese potřeba víc hlídat hranici u potoka.','Darča','15:30'),
+  }},
+  2:{pouceni:['les'],pole:{
+    prichod:trPole('Vše v pořádku, jedno delší loučení s maminkou – pomohlo krmení slepic.','Gabča','16:05'),
+    kruh:trPole('Básnička týdne, pohybová hra „Na medvěda".','Gabča','16:05'),
+    aktivita:trPole('Putování k Ďáblické hvězdárně, cestou sbírání šišek na výrobu ježků.','Gabča','16:08'),
+    jakslo:trPole('Cesta tam v pohodě, zpátky únava – příště kratší okruh nebo delší svačinová pauza.','Gabča','16:10'),
+    kde:trPole('Les, hvězdárna a zpět. Svačina na louce.','Gabča','16:06'),
+    predskolaci:trPole('Počítali šišky do desíti a třídili podle velikosti.','Táňa','16:30'),
+    pocasi:trPole('polojasno, odpoledne přeháňka','Gabča','16:06'),
+  }},
+  3:{pouceni:['skolka'],pole:{
+    prichod:trPole('Klidné, jen jedno dítě přišlo s rodičem až v 9:30 (hlášeno ráno).','Honza','9:40'),
+    kruh:trPole('Narozeninový kruh – svíčka, přání, písnička „Šel zahradník".','Honza','9:42'),
+  }},
+};
+// seed se psal v den, ke kterému patří (podpis „dnes / včera / 1. 6." se odvozuje od něj)
+Object.entries(TRIDNICE).forEach(([d,z])=>Object.values(z.pole).forEach(p=>{p.den=+d;}));
+/* Týdenní část: téma, pohádka týdne (Jaata ji píše jednou týdně), uzavření týdne a úkoly
+   „je třeba zařídit + kdo". Klíč = pondělí týdne (den v červnu). */
+let TR_TYDNY={
+  1:{tema:'Kytičky a věneček',pohadka:'O Budulínkovi (divadýlko s loutkami)',uzavreni:null,ukoly:[
+    {t:'Dokoupit čtvrtky A3 na kreslení',kdo:'Míša',done:true},
+    {t:'Opravit povolené lano mezi stromy v lese',kdo:'Honza',done:false},
+    {t:'Na poradu: kdo hlídá hranici u potoka',kdo:'Táňa',done:false},
+  ]},
+};
+/* Poznámky k dětem – vždy jen pro tým, do tisku třídnice nejdou. Jaata je píše týden co
+   týden u téměř všech dětí (19 z 23 v průměru), proto po dnech a dohromady za týden.
+   Klíč = pondělí týdne → index dítěte → [{d,t,kdo}]. */
+let TR_DETI={1:{
+  0:[{d:1,t:'Celé dopoledne s Toničkou u tanečků, odpoledne unavená.',kdo:'Darča'}],
+  4:[{d:1,t:'Postavil s Vojtou největší domeček, ostatní ho obdivovali.',kdo:'Táňa'},{d:2,t:'Cestou zpět bolely nohy, chvíli nesen.',kdo:'Gabča'}],
+  7:[{d:2,t:'Šišky třídil s velkým zaujetím, vydržel u toho nejdéle ze všech.',kdo:'Gabča'}],
+  12:[{d:2,t:'Ráno dlouhé loučení s maminkou, pak v pohodě. Sledovat (maminka psala do vzkazů).',kdo:'Gabča'}],
+  14:[{d:1,t:'Při rytmice se drží stranou, zkusit jí dát roli (bubínek).',kdo:'Darča'}],
+  21:[{d:1,t:'Odřené koleno u potoka – ošetřeno, rodičům řečeno při vyzvednutí.',kdo:'Táňa'}],
+}};
+const trTydenOd=d=>d-wd(d);                          // pondělí týdne daného dne
+const trDnyTydne=po=>[0,1,2,3,4].map(i=>po+i).filter(d=>d<=30);
+function trDen(d){return TRIDNICE[d]||(TRIDNICE[d]={pouceni:[],pole:{}});}
+function trTyden(po){return TR_TYDNY[po]||(TR_TYDNY[po]={tema:'',pohadka:'',uzavreni:null,ukoly:[]});}
+function trDetiTyden(po){return TR_DETI[po]||(TR_DETI[po]={});}
+const trVyplneno=d=>TR_POLE.filter(p=>!p.volitelne&&((TRIDNICE[d]||{pole:{}}).pole[p.k]||{}).t).length;
+/* Stav dne: budoucí se nepíše; jinak chybí / rozepsáno n z 8 / zapsáno. Dnešek bez zápisu
+   není chyba – den ještě běží. */
+function trStav(d){
+  if(d>TODAYD)return {k:'budouci',lab:'ještě neproběhl',cls:'muted'};
+  const n=trVyplneno(d);
+  if(n>=TR_POVINNE)return {k:'hotovo',lab:'zapsáno',cls:'ok'};
+  if(!n)return d===TODAYD?{k:'prazdne',lab:'zatím nic',cls:'muted'}:{k:'chybi',lab:'chybí zápis',cls:'danger'};
+  return {k:'rozepsano',lab:`rozepsáno ${n} z ${TR_POVINNE}`,cls:'warn'};
+}
