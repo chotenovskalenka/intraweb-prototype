@@ -21,7 +21,7 @@ function planCode(p){return p==='celodenní'?'C':p==='dopolední'?'D':'O';}
 function weekFor(i,plan){const b=planCode(plan),a=b==='C'?['O','C','O','O','O']:[b,b,b,b,b];
   if(i%3===0)a[1]='C';if(i%5===0)a[0]='D';if(i%4===0)a[3]='';if(i%7===0)a[4]='';return a;}
 const LEZ=[0,2,3,6,8,11,14,18,21,24];
-const data=raw.map(([n,sur,plan,spi],i)=>({n,sur,plan,spi,status:'pritomen',note:'',att:{},predskolak:meta[i][0],lez:LEZ.includes(i),alergie:meta[i][1]}));
+const data=raw.map(([n,sur,plan,spi],i)=>({n,sur,plan,spi,status:'pritomen',att:{},predskolak:meta[i][0],lez:LEZ.includes(i),alergie:meta[i][1]}));
 // demo odchylky docházky na konkrétní dny
 data[5].att[4]='OM'; data[12].att[4]=''; data[3].att[5]='OM'; data[8].att[19]='OM'; data[1].att[18]='OM'; data[20].att[12]='';
 // dnes nepřítomné děti – 2 s rodičovskou omluvenkou (čas + důvod), 1 neomluvená

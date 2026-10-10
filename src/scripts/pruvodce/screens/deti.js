@@ -79,7 +79,6 @@ function renderDite(i){
        `<div class="np"><span>Alergie</span><b>${c.alergie||'žádné'}</b></div>`;
   }
   h+=`</div>`;
-  if(c.note)h+=`<div class="tile"><div class="ch">Aktuální poznámka</div><div class="tval">${c.note}</div></div>`;
   // zůstatek fondu je věc hospodářky – řadový průvodce ho v profilu nevidí
   if(jeHospodar())h+=`<div class="tile"><div class="ch">Kulturní fond</div><div class="np"><span>Zůstatek</span><b style="color:${c.fond<300?'var(--color-danger)':'var(--color-primary)'}">${c.fond.toLocaleString('cs-CZ')} Kč</b></div>`+c.fondLog.slice(0,4).map(l=>`<div class="np" style="font-size:13px"><span style="color:var(--color-text-muted)">${l.name} · ${l.date}</span><b style="font-weight:500;color:var(--color-text-muted)">−${l.amt} Kč</b></div>`).join('')+`</div>`;
   const ps=parentsFor(c);

@@ -63,20 +63,19 @@ function editPanel(c,i){
   {const zpr=(c.zpravy||[]).filter(z=>z.den===TODAYD);
    if(zpr.length)h+=`<div class="field"><div class="l">Vzkazy od rodičů dnes</div>`
      +zpr.map(z=>`<div class="pnote">${zpravaShrnuti(z)}<div class="pn-pozn">odesláno ${z.odeslano}</div></div>`).join('')+`</div>`;}
-  if(c.note)h+=`<div class="field"><div class="l">Poznámka od rodiče</div><div class="pnote">${c.note}</div></div>`;
   if(staysPM(c))h+=`<div class="field"><div class="l">Odpoledne</div><div class="mini">${seg([[true,'Spí'],[false,'Nespí']],c.spi,'setSpi')}</div></div>`;
   return h;
 }
 function rosterHTML(){
   let out='',shown=0;
-  // nahoru děti, u kterých je dnes co číst (vzkaz, poznámka z omluvenky, trvalá poznámka)
-  const maPozn=c=>(c.note||(c.parentExcuse&&c.parentExcuse.pozn)||(c.zpravy||[]).some(z=>z.den===TODAYD))?0:1;
+  // nahoru děti, u kterých je dnes co číst (vzkaz, poznámka z omluvenky, omluva od vedoucí)
+  const maPozn=c=>((c.parentExcuse&&c.parentExcuse.pozn)||c.guideExcuse||(c.zpravy||[]).some(z=>z.den===TODAYD))?0:1;
   const lst=data.map((c,i)=>({c,i})).sort((a,b)=>{const an=maPozn(a.c),bn=maPozn(b.c);if(an!==bn)return an-bn;return byAlpha(a,b);});
   lst.forEach(({c,i})=>{
     const match=(query?norm(full(c)).includes(norm(query)):inTab(c,tab))&&(dochSeznam==='all'||veSeznamu(c,i,dochSeznam));
     if(!match)return;shown++;
     /* Všechno, co dnes přišlo od rodiče, na jednom místě u dítěte: vzkazy z rodičovské appky
-       (kdo vyzvedne, pozdější příchod, lék), volný text z omluvenky a trvalá poznámka.
+       (kdo vyzvedne, pozdější příchod, lék), volný text z omluvenky a omluva zapsaná vedoucí.
        Vzkazy jsou provozní (neutrální), poznámka a omluvenka nesou zdravotní/absenční
        kontext – proto zůstávají v danger tónu .rnote. */
     // dlouhý vzkaz se krátí stejně jako na přehledu – jinak jeden odstavec odtlačí
@@ -91,7 +90,6 @@ function rosterHTML(){
     if(c.parentExcuse&&c.parentExcuse.pozn){const d=c.parentExcuse.reason||'omluvenka';
       noteLine+=`<div class="rnote"><b>${d.charAt(0).toUpperCase()+d.slice(1)}</b> · ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
     if(c.guideExcuse)noteLine+=`<div class="rnote">${guideExcuseDetail(c)}</div>`;
-    if(c.note)noteLine+=`<div class="rnote">${c.note}</div>`;
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();
     /* Zapisující role má vpravo zaškrtávátko, stav tedy sedí hned za jménem. Role, která
