@@ -205,3 +205,11 @@
 /* velké částky se nesmí lámat („638 207 / Kč") – na mobilu menší číslo */
 .nh-n{white-space:nowrap}
 @media (max-width:899px){.nh-n{font-size:var(--text-title)}}
+
+/* ===== Děti a matrika ===== */
+.mt-tab td{white-space:nowrap}
+.mt-al{color:var(--color-danger);font-weight:600}
+.mt-pozvat{margin-left:auto}
+.mt-link{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:44px;background:none;border:none;border-top:1px solid var(--color-border);padding:0;font:inherit;font-size:var(--text-small);color:var(--color-text);cursor:pointer;text-align:left}
+.mt-link:first-of-type{border-top:none}
+.mt-link b{color:var(--color-primary)}

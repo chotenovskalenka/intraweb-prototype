@@ -44,12 +44,15 @@ function renderPrehled(){
   h+=`</div>`;
 
   // (d) chybějící data a upozornění
-  h+=`<div class="tile"><div class="ch">Chybějící data a upozornění</div>`;
-  UPOZORNENI.forEach(u=>{
+  // chybějící data se odvozují z matriky (počty po školkách a polích); ostatní upozornění ze seedu
+  const chyb=[];SKOLKY.forEach(s=>MATRIKA_POLE.forEach(([k,l])=>{const n=NAHRADY_DETI.filter(c=>c.skolka===s.id&&matrikaChybi(c).includes(l)).length;
+    if(n)chyb.push({typ:'data',text:`U ${n} ${n===1?'dítěte':'dětí'} chybí ${l}`,skolka:s.nazev});}));
+  h+=`<button class="tile dash-link" onclick="mtNekompl=true;go('deti')"><div class="ch">Chybějící data a upozornění <span class="dl-arr">›</span></div>`;
+  [...chyb,...UPOZORNENI.filter(u=>u.typ!=='data')].forEach(u=>{
     const ic=u.typ==='data'?'⚠':u.typ==='provoz'?'●':'✓';
     h+=`<div class="al-row al-${u.typ}"><span class="al-ic">${ic}</span><span class="al-tx">${u.text}${u.skolka?` <span class="al-sk">· ${u.skolka}</span>`:''}</span></div>`;
   });
-  h+=`</div>`;
+  h+=`</button>`;
 
   // (e) kapacity – ponechané, fungují
   h+=`<div class="tile"><div class="ch">Kapacity školek</div><div class="caps">`;

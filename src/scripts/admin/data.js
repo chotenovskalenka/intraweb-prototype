@@ -51,10 +51,8 @@ const FAKT_MESICE_A=[
   {key:'2026-05',lab:'Květen 2026',vyst:'9. 5. 2026',spl:'23. 5. 2026',poDnu:11},
   {key:'2026-06',lab:'Červen 2026',vyst:'27. 5. 2026',spl:'10. 6. 2026',poDnu:0},
 ];
-/* Systémová upozornění vč. chybějících / nevyplněných dat. */
+/* Provozní a systémová upozornění. Chybějící data se počítají z matriky (MATRIKA_POLE). */
 const UPOZORNENI=[
-  {typ:'data',text:'U 2 dětí chybí kontakt na zákonného zástupce',skolka:'Vhaaji'},
-  {typ:'data',text:'U 1 dítěte chybí podepsaný GDPR souhlas',skolka:'Maata'},
   {typ:'provoz',text:'Jaata je plně obsazená – 3 rodiny v pořadníku',skolka:'Jaata'},
   {typ:'system',text:'Záloha dat proběhla v pořádku (3. 6. 04:00)',skolka:''},
 ];
@@ -249,3 +247,37 @@ let STRAVNE_KVETEN_VYST=false;
 // k řešení = co vyžaduje akci (přehled): po splatnosti, částečně, čeká na spárování
 const platbyKResi=()=>FAKTURY.filter(f=>['po-splatnosti','castecne','ceka'].includes(f.stav));
 
+
+/* ===== Děti a matrika (draft-admin 4.4) =====
+   Tytéž děti jako Náhrady a Platby. Terka: údaje o dítěti leží na třech místech, výkaz pro
+   MŠMT 4× ročně „mě štvou", „potřebuju rychle extrahovat předškoláky nebo alergiky".
+   Kompletnost matriky se odvozuje z vyplněných polí – Přehled z ní počítá „chybějící data".
+   Rodná čísla, adresy a kontakty jsou smyšlené. */
+const MATRIKA_POLE=[['rc','rodné číslo'],['adresa','bydliště'],['pojistovna','pojišťovna'],['zz','kontakt na zákonného zástupce'],['gdpr','GDPR souhlas'],['lekar','potvrzení od lékaře']];
+(()=>{
+  let seed=23; const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const ALG=['mléko','lepek','arašídy','mléko, vejce','celer'], POJ=['VZP','ZPMV','OZP','ČPZP','VoZP'];
+  const ULICE=['Ďáblická','Kostelecká','Bohnická','Čimická','Na Pecích','Pod Hájem','Lesní','K Vršíčku'];
+  NAHRADY_DETI.forEach((c,i)=>{
+    const pre=rnd()<.3, rok=pre?2020:2021+(rnd()<.5?1:0), mes=1+Math.floor(rnd()*12), den=1+Math.floor(rnd()*28);
+    c.narozen=`${den}. ${mes}. ${rok}`; c.predskolak=pre||(rok===2020);
+    c.alergie=rnd()<.13?ALG[Math.floor(rnd()*ALG.length)]:'';
+    c.rc=`${String(rok%100).padStart(2,'0')}${String(mes+(c.n.match(/a$|e$|ie$/)?50:0)).padStart(2,'0')}${String(den).padStart(2,'0')}/${1000+Math.floor(rnd()*8999)}`;
+    c.adresa=`${ULICE[Math.floor(rnd()*ULICE.length)]} ${10+Math.floor(rnd()*200)}, Praha 8`;
+    c.pojistovna=POJ[Math.floor(rnd()*POJ.length)];
+    const base=(c.n+'.'+c.sur).normalize('NFD').replace(/[^a-zA-Z.]/g,'').toLowerCase();
+    const zen=b=>b.endsWith('á')?b:b.endsWith('ý')?b.slice(0,-1)+'á':b.endsWith('ek')?b.slice(0,-2)+'ková':b.endsWith('ec')?b.slice(0,-2)+'cová':b.endsWith('a')?b.slice(0,-1)+'ová':b+'ová';
+    c.zz=[{role:'Matka',jm:'Jana '+zen(c.sur),tel:`+420 6${String(10+i).padStart(2,'0')} ${100+(i*37)%900} ${100+(i*53)%900}`,mail:base+'.matka@email.cz'}];
+    c.gdpr=true; c.lekar=true;
+  });
+  // chybějící údaje – rozložení jako v dřívějších upozorněních (Vhaaji 2× kontakt, Maata 1× GDPR) + dvě další
+  const v=k=>NAHRADY_DETI.filter(x=>x.skolka===k);
+  v('vhaaji')[5].zz=[]; v('vhaaji')[17].zz=[];
+  v('maata')[3].gdpr=false;
+  v('jaata')[4].pojistovna='';
+  v('kouzlo')[2].lekar=false;
+  // Eliška sedí s rodičovskou appkou (narozena 14. 3. 2021, rodné číslo, bydliště, bez alergie)
+  const el=NAHRADY_DETI.find(c=>c.n==='Eliška'&&c.sur==='Dvořáková');
+  Object.assign(el,{narozen:'14. 3. 2021',predskolak:false,alergie:'',rc:'215314/1001',adresa:'Nad Rokoskou 1230/8, Praha 8 – Libeň'});
+})();
+const matrikaChybi=c=>MATRIKA_POLE.filter(([k])=>Array.isArray(c[k])?!c[k].length:!c[k]).map(([,l])=>l);

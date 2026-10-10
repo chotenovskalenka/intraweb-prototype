@@ -1740,3 +1740,22 @@ Podle draft-admin 4.2, rozsah podle zafixovaného rozhodnutí fáze 5 (žádný 
 **Nedělá se:** editor faktury, číselné řady, účty dodavatelů, párování s bankou (otázka pro Pata).
 Přehled adminu čte „platby k řešení" z týchž faktur (`platbyKResi`).
 
+## Admin · Děti a matrika, pořadí menu (10. 10. 2026)
+
+Podle draft-admin 4.4. **Jeden seznam dětí napříč školkami** – tytéž děti jako v Náhradách
+a Platbách – s kmenovými daty, zákonnými zástupci a dokumenty. **Kompletnost matriky** se
+odvozuje z vyplněných polí (`MATRIKA_POLE`, `matrikaChybi`); **Přehled z ní počítá
+„chybějící data"** po školkách a polích místo dřívějších napevno napsaných vět.
+- Filtry školka · předškoláci · alergici (Terčino „rychle extrahovat") · neúplná matrika.
+- **Export pro MŠMT** (CSV se sloupci výkazu; v ostrém provozu ZIP po školkách k 30. 9.).
+- **Pozvat rodiče k doplnění** – Terčin nápad s dotazníkem: v rodičovské appce by se rodině
+  objevil formulář jen s chybějícími poli; v prototypu se eviduje „pozváno".
+- Detail má **„Jinde v systému"** – zůstatek náhrad a dluh na platbách s proklikem
+  (jedno dítě, jeden záznam; dnes tři místa).
+- Eliška Dvořáková má údaje jako v rodičovské appce (narozena 14. 3. 2021, rodné číslo, adresa).
+
+**Pořadí v menu** podle frekvence použití (draft-admin 4): Přehled · Platby · Náhrady · Děti
+a matrika · Novinky · Porady. **Nastavení (ceny, typy, kapacity) vypuštěno** – jeden hlas,
+nic na něm nestojí (viz roadmapa).
+**Nedělá se:** správa uživatelských účtů (Patova administrace).
+

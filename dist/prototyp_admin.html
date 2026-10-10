@@ -865,6 +865,14 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 /* velké částky se nesmí lámat („638 207 / Kč") – na mobilu menší číslo */
 .nh-n{white-space:nowrap}
 @media (max-width:899px){.nh-n{font-size:var(--text-title)}}
+
+/* ===== Děti a matrika ===== */
+.mt-tab td{white-space:nowrap}
+.mt-al{color:var(--color-danger);font-weight:600}
+.mt-pozvat{margin-left:auto}
+.mt-link{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:44px;background:none;border:none;border-top:1px solid var(--color-border);padding:0;font:inherit;font-size:var(--text-small);color:var(--color-text);cursor:pointer;text-align:left}
+.mt-link:first-of-type{border-top:none}
+.mt-link b{color:var(--color-primary)}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -1229,10 +1237,8 @@ const FAKT_MESICE_A=[
   {key:'2026-05',lab:'Květen 2026',vyst:'9. 5. 2026',spl:'23. 5. 2026',poDnu:11},
   {key:'2026-06',lab:'Červen 2026',vyst:'27. 5. 2026',spl:'10. 6. 2026',poDnu:0},
 ];
-/* Systémová upozornění vč. chybějících / nevyplněných dat. */
+/* Provozní a systémová upozornění. Chybějící data se počítají z matriky (MATRIKA_POLE). */
 const UPOZORNENI=[
-  {typ:'data',text:'U 2 dětí chybí kontakt na zákonného zástupce',skolka:'Vhaaji'},
-  {typ:'data',text:'U 1 dítěte chybí podepsaný GDPR souhlas',skolka:'Maata'},
   {typ:'provoz',text:'Jaata je plně obsazená – 3 rodiny v pořadníku',skolka:'Jaata'},
   {typ:'system',text:'Záloha dat proběhla v pořádku (3. 6. 04:00)',skolka:''},
 ];
@@ -1427,6 +1433,40 @@ let STRAVNE_KVETEN_VYST=false;
 // k řešení = co vyžaduje akci (přehled): po splatnosti, částečně, čeká na spárování
 const platbyKResi=()=>FAKTURY.filter(f=>['po-splatnosti','castecne','ceka'].includes(f.stav));
 
+
+/* ===== Děti a matrika (draft-admin 4.4) =====
+   Tytéž děti jako Náhrady a Platby. Terka: údaje o dítěti leží na třech místech, výkaz pro
+   MŠMT 4× ročně „mě štvou", „potřebuju rychle extrahovat předškoláky nebo alergiky".
+   Kompletnost matriky se odvozuje z vyplněných polí – Přehled z ní počítá „chybějící data".
+   Rodná čísla, adresy a kontakty jsou smyšlené. */
+const MATRIKA_POLE=[['rc','rodné číslo'],['adresa','bydliště'],['pojistovna','pojišťovna'],['zz','kontakt na zákonného zástupce'],['gdpr','GDPR souhlas'],['lekar','potvrzení od lékaře']];
+(()=>{
+  let seed=23; const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const ALG=['mléko','lepek','arašídy','mléko, vejce','celer'], POJ=['VZP','ZPMV','OZP','ČPZP','VoZP'];
+  const ULICE=['Ďáblická','Kostelecká','Bohnická','Čimická','Na Pecích','Pod Hájem','Lesní','K Vršíčku'];
+  NAHRADY_DETI.forEach((c,i)=>{
+    const pre=rnd()<.3, rok=pre?2020:2021+(rnd()<.5?1:0), mes=1+Math.floor(rnd()*12), den=1+Math.floor(rnd()*28);
+    c.narozen=`${den}. ${mes}. ${rok}`; c.predskolak=pre||(rok===2020);
+    c.alergie=rnd()<.13?ALG[Math.floor(rnd()*ALG.length)]:'';
+    c.rc=`${String(rok%100).padStart(2,'0')}${String(mes+(c.n.match(/a$|e$|ie$/)?50:0)).padStart(2,'0')}${String(den).padStart(2,'0')}/${1000+Math.floor(rnd()*8999)}`;
+    c.adresa=`${ULICE[Math.floor(rnd()*ULICE.length)]} ${10+Math.floor(rnd()*200)}, Praha 8`;
+    c.pojistovna=POJ[Math.floor(rnd()*POJ.length)];
+    const base=(c.n+'.'+c.sur).normalize('NFD').replace(/[^a-zA-Z.]/g,'').toLowerCase();
+    const zen=b=>b.endsWith('á')?b:b.endsWith('ý')?b.slice(0,-1)+'á':b.endsWith('ek')?b.slice(0,-2)+'ková':b.endsWith('ec')?b.slice(0,-2)+'cová':b.endsWith('a')?b.slice(0,-1)+'ová':b+'ová';
+    c.zz=[{role:'Matka',jm:'Jana '+zen(c.sur),tel:`+420 6${String(10+i).padStart(2,'0')} ${100+(i*37)%900} ${100+(i*53)%900}`,mail:base+'.matka@email.cz'}];
+    c.gdpr=true; c.lekar=true;
+  });
+  // chybějící údaje – rozložení jako v dřívějších upozorněních (Vhaaji 2× kontakt, Maata 1× GDPR) + dvě další
+  const v=k=>NAHRADY_DETI.filter(x=>x.skolka===k);
+  v('vhaaji')[5].zz=[]; v('vhaaji')[17].zz=[];
+  v('maata')[3].gdpr=false;
+  v('jaata')[4].pojistovna='';
+  v('kouzlo')[2].lekar=false;
+  // Eliška sedí s rodičovskou appkou (narozena 14. 3. 2021, rodné číslo, bydliště, bez alergie)
+  const el=NAHRADY_DETI.find(c=>c.n==='Eliška'&&c.sur==='Dvořáková');
+  Object.assign(el,{narozen:'14. 3. 2021',predskolak:false,alergie:'',rc:'215314/1001',adresa:'Nad Rokoskou 1230/8, Praha 8 – Libeň'});
+})();
+const matrikaChybi=c=>MATRIKA_POLE.filter(([k])=>Array.isArray(c[k])?!c[k].length:!c[k]).map(([,l])=>l);
 </script>
 <script>
 /* SCREEN: ADMIN_PREHLED – co vyžaduje akci tento týden (draft-admin 4.1).
@@ -1475,12 +1515,15 @@ function renderPrehled(){
   h+=`</div>`;
 
   // (d) chybějící data a upozornění
-  h+=`<div class="tile"><div class="ch">Chybějící data a upozornění</div>`;
-  UPOZORNENI.forEach(u=>{
+  // chybějící data se odvozují z matriky (počty po školkách a polích); ostatní upozornění ze seedu
+  const chyb=[];SKOLKY.forEach(s=>MATRIKA_POLE.forEach(([k,l])=>{const n=NAHRADY_DETI.filter(c=>c.skolka===s.id&&matrikaChybi(c).includes(l)).length;
+    if(n)chyb.push({typ:'data',text:`U ${n} ${n===1?'dítěte':'dětí'} chybí ${l}`,skolka:s.nazev});}));
+  h+=`<button class="tile dash-link" onclick="mtNekompl=true;go('deti')"><div class="ch">Chybějící data a upozornění <span class="dl-arr">›</span></div>`;
+  [...chyb,...UPOZORNENI.filter(u=>u.typ!=='data')].forEach(u=>{
     const ic=u.typ==='data'?'⚠':u.typ==='provoz'?'●':'✓';
     h+=`<div class="al-row al-${u.typ}"><span class="al-ic">${ic}</span><span class="al-tx">${u.text}${u.skolka?` <span class="al-sk">· ${u.skolka}</span>`:''}</span></div>`;
   });
-  h+=`</div>`;
+  h+=`</button>`;
 
   // (e) kapacity – ponechané, fungují
   h+=`<div class="tile"><div class="ch">Kapacity školek</div><div class="caps">`;
@@ -1969,14 +2012,89 @@ window.exportPlatby=()=>{const l=plList();
   showToast('Staženo pro účetní · '+l.length+' faktur');};
 </script>
 <script>
+/* SCREEN: ADMIN_MATRIKA – děti napříč školkami, kompletnost matriky, export pro MŠMT.
+   Terka: výkazy pro MŠMT 4× ročně „mě štvou"; údaje o dítěti na třech místech; přihláška
+   je papírová a přepisuje se; nápad „rodiče vyplní dotazník a rovnou se to přepíše".
+   Správa uživatelských účtů (525 řádků, hesla, blokace) sem nepatří – to je Patova administrace. */
+let mtSkolka='vse', mtPre=false, mtAl=false, mtNekompl=false, mtQuery='', mtOpen=null, mtPozvano=new Set();
+function mtList(){
+  return NAHRADY_DETI.filter(c=>mtSkolka==='vse'||c.skolka===mtSkolka)
+    .filter(c=>!mtPre||c.predskolak).filter(c=>!mtAl||c.alergie).filter(c=>!mtNekompl||matrikaChybi(c).length)
+    .filter(c=>!mtQuery||norm(c.n+' '+c.sur).includes(norm(mtQuery)))
+    .sort((a,b)=>(a.sur+a.n).localeCompare(b.sur+b.n,'cs'));
+}
+function renderMatrika(){
+  if(mtOpen)return renderMatrikaDite(NAHRADY_DETI.find(c=>c.id===mtOpen));
+  const vse=NAHRADY_DETI.filter(c=>mtSkolka==='vse'||c.skolka===mtSkolka), nekompl=vse.filter(c=>matrikaChybi(c).length);
+  let h=`<div class="nh-sum">`
+    +`<div class="tile nh-k"><div class="nh-l">Dětí</div><div class="nh-n">${vse.length}</div><div class="nh-s">${mtSkolka==='vse'?'ve 4 školkách':SKOLKY.find(s=>s.id===mtSkolka).nazev}</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">Předškoláci</div><div class="nh-n">${vse.filter(c=>c.predskolak).length}</div><div class="nh-s">nástup do ZŠ 2026</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">Alergici</div><div class="nh-n">${vse.filter(c=>c.alergie).length}</div><div class="nh-s">pro kuchyň a výlety</div></div>`
+    +`<div class="tile nh-k"><div class="nh-l">Neúplná matrika</div><div class="nh-n ${nekompl.length?'nh-minus':''}">${nekompl.length}</div><div class="nh-s">${nekompl.length?'chybí údaje pro výkaz':'vše vyplněno'}</div></div>`
+    +`</div>`;
+  h+=`<div class="filters">`+[['vse','Všechny školky'],...SKOLKY.map(s=>[s.id,s.nazev])].map(([k,l])=>
+      `<button class="${mtSkolka===k?'on':''}" onclick="mtSkolka='${k}';render()" aria-pressed="${mtSkolka===k}">${l} <span class="cnt">${NAHRADY_DETI.filter(c=>k==='vse'||c.skolka===k).length}</span></button>`).join('')+`</div>`;
+  h+=`<div class="nh-bar"><input class="search" placeholder="Najít dítě…" value="${esc(mtQuery)}" oninput="onMtSearch(this.value)">`
+    +[['mtPre','Předškoláci',mtPre],['mtAl','Alergici',mtAl],['mtNekompl','Neúplná matrika',mtNekompl]].map(([k,l,on])=>
+      `<label class="nh-chk"><input type="checkbox" ${on?'checked':''} onchange="setMt('${k}',this.checked)"> ${l}</label>`).join('')
+    +(nekompl.length?`<button class="btn-ghost mt-pozvat" onclick="mtPozvat()">Pozvat rodiče k doplnění (${nekompl.filter(c=>!mtPozvano.has(c.id)).length})</button>`:'')+`</div>`;
+  const list=mtList();
+  if(!list.length)return h+`<div class="empty">Nikdo neodpovídá filtru.</div>`;
+  h+=`<table class="dtab mt-tab"><thead><tr>`+['Dítě','Školka · třída','Narozen','Docházka','Předškolák','Alergie','Matrika'].map(x=>`<th><span>${x}</span></th>`).join('')+`</tr></thead><tbody>`
+    +list.map(c=>{const ch=matrikaChybi(c);return `<tr onclick="openMt('${c.id}')"><td class="nm">${c.n} ${c.sur}</td><td>${c.skN}${c.trida!==c.skN?` <span class="dt-no">· ${c.trida}</span>`:''}</td>`
+      +`<td>${c.narozen}</td><td>${REZIM_LAB[c.rezim]}</td><td>${c.predskolak?'<span class="bdg ok">ano</span>':'<span class="dt-no">–</span>'}</td>`
+      +`<td>${c.alergie?`<span class="mt-al">${c.alergie}</span>`:'<span class="dt-no">–</span>'}</td>`
+      +`<td>${ch.length?`<span class="bdg part">chybí: ${ch.join(', ')}</span>${mtPozvano.has(c.id)?' <span class="dt-no">· pozváno</span>':''}`:'<span class="bdg ok">kompletní</span>'}</td></tr>`;}).join('')
+    +`</tbody></table>`;
+  h+=`<div class="nh-cards">`+list.map(c=>{const ch=matrikaChybi(c);return `<button class="acard" onclick="openMt('${c.id}')"><span style="flex:1"><span class="aname">${c.n} ${c.sur}</span><div class="ameta">${c.skN} · ${c.narozen}${c.predskolak?' · předškolák':''}${c.alergie?' · '+c.alergie:''}</div></span>${ch.length?'<span class="bdg part">chybí údaje</span>':''}</button>`;}).join('')+`</div>`;
+  h+=`<div class="note2">Export pro MŠMT stáhne výkaz za vybrané školky (v ostrém provozu ZIP po školkách k 30. 9.). Děti s neúplnou matrikou ve výkazu chybět nesmí – proto je jde přímo odsud pozvat k doplnění.</div>`;
+  return h;
+}
+function renderMatrikaDite(c){
+  const ch=matrikaChybi(c), z=pripsanoPlatne(c)-c.cerpanoH, dluh=FAKTURY.filter(f=>f.ditId===c.id).reduce((s,f)=>s+kZaplate(f),0);
+  const row=(k,v)=>`<div class="np"><span>${k}</span><b>${v||'<span class="nh-minus">chybí</span>'}</b></div>`;
+  let h=`<button class="back" onclick="mtOpen=null;render()">← Zpět na děti</button>`;
+  h+=`<div class="nh-dh"><div><div class="pname">${c.n} ${c.sur}</div><div class="pfull">${c.skN}${c.trida!==c.skN?' · '+c.trida:''} · ${REZIM_LAB[c.rezim]} docházka${c.predskolak?' · předškolák':''}</div></div>`
+    +`<div>${ch.length?`<span class="bdg part">chybí ${ch.length} ${ch.length===1?'údaj':'údaje'}</span>`:'<span class="bdg ok">matrika kompletní</span>'}</div></div>`;
+  h+=`<div class="nh-2">`;
+  h+=`<div class="tile"><div class="ch">Kmenová data</div>${row('Narozen',c.narozen)}${row('Rodné číslo',c.rc)}${row('Bydliště',c.adresa)}${row('Pojišťovna',c.pojistovna)}${row('Alergie',c.alergie||'žádné')}</div>`;
+  h+=`<div class="tile"><div class="ch">Zákonní zástupci</div>`+(c.zz.length?c.zz.map(p=>`${row(p.role,p.jm)}${row('Telefon',p.tel)}${row('E-mail',p.mail)}`).join(''):`<div class="nh-varov">Chybí kontakt na zákonného zástupce – bez něj nejde dítě ve výkazu ani v krizi nikam hlásit.</div>`)+`</div>`;
+  h+=`<div class="tile"><div class="ch">Dokumenty</div>${row('GDPR souhlas',c.gdpr?'podepsáno':'')}${row('Potvrzení od lékaře',c.lekar?'doloženo':'')}</div>`;
+  // propojení s ostatními sekcemi – jedno dítě, jeden záznam (dnes tři místa)
+  h+=`<div class="tile"><div class="ch">Jinde v systému</div>`
+    +`<button class="mt-link" onclick="nhOpen='${c.id}';go('nahrady')"><span>Náhrady</span><b class="${z<0?'nh-minus':''}">zbývá ${fmtHod(z)} h ›</b></button>`
+    +`<button class="mt-link" onclick="goPlatbyDite('${c.id}')"><span>Platby</span><b class="${dluh?'nh-minus':''}">${dluh?'k úhradě '+kc(dluh)+' Kč':'vše uhrazeno'} ›</b></button></div>`;
+  h+=`</div>`;
+  if(ch.length)h+=`<button class="btn-primary" onclick="mtPozvat('${c.id}')">${mtPozvano.has(c.id)?'Pozvat znovu':'Pozvat rodiče k doplnění'}</button>`;
+  return h;
+}
+window.setMt=(k,v)=>{({mtPre:()=>mtPre=v,mtAl:()=>mtAl=v,mtNekompl:()=>mtNekompl=v})[k]();render();};
+window.onMtSearch=v=>{mtQuery=v;renderKeepFocus();};
+window.openMt=id=>{mtOpen=id;render();window.scrollTo(0,0);};
+/* Terčin nápad: rodiče vyplní dotazník a údaje se rovnou přepíšou. V rodičovské appce by se
+   rodině objevil formulář jen s chybějícími poli; tady se jen eviduje, že pozvánka odešla. */
+window.mtPozvat=id=>{const cil=id?[NAHRADY_DETI.find(c=>c.id===id)]:NAHRADY_DETI.filter(c=>(mtSkolka==='vse'||c.skolka===mtSkolka)&&matrikaChybi(c).length);
+  cil.forEach(c=>mtPozvano.add(c.id));render();
+  showToast(`Pozvánka odeslána ${cil.length} ${cil.length===1?'rodině':'rodinám'} · v aplikaci jim přijde formulář jen s chybějícími údaji`);};
+window.exportMsmt=()=>{const l=mtList();
+  stahniCSV('vykaz-msmt-2025-26.csv',['Příjmení','Jméno','Datum narození','Rodné číslo','Bydliště','Školka','Třída','Druh docházky','Předškolák','Zdravotní pojišťovna'],
+    l.map(c=>[c.sur,c.n,c.narozen,c.rc,c.adresa,c.skN,c.trida,REZIM_LAB[c.rezim],c.predskolak?'ano':'ne',c.pojistovna]));
+  const nk=l.filter(c=>matrikaChybi(c).length).length;
+  showToast(`Výkaz stažen · ${l.length} dětí${nk?` · ${nk} s neúplnými údaji`:''}`);};
+window.goPlatbyDite=id=>{const c=NAHRADY_DETI.find(x=>x.id===id),dl=FAKTURY.filter(f=>f.ditId===id&&kZaplate(f)>0);
+  plQuery=c.n+' '+c.sur;plSkolka='vse';plDruh='vse';plStav=dl.length?'k-reseni':'vse';if(dl.length)plMesic=dl[dl.length-1].mesic;go('platby');};
+</script>
+<script>
 /* CORE: ADMIN – stav, sekce, sidebar, render(), go(), úvodní spuštění.
    Desktopový shell: stálý levý sidebar místo mobilního draweru. */
+// pořadí podle frekvence použití (draft-admin 4): platby a náhrady jsou měsíční rutina
 const SECTIONS=[
   ['prehled','Přehled','⌂'],
-  ['aktuality','Novinky','✉'],
-  ['porady','Porady a evaluace','▤'],
   ['platby','Platby','₵'],
   ['nahrady','Náhrady','↻'],
+  ['deti','Děti a matrika','☺'],
+  ['aktuality','Novinky','✉'],
+  ['porady','Porady a evaluace','▤'],
 ];
 const TITLES=Object.fromEntries(SECTIONS.map(s=>[s[0],s[1]]));
 
@@ -1987,7 +2105,7 @@ function renderPlaceholder(){
   return `<div class="tile ph-tile"><div class="ph-ic">🌿</div><div class="ph-t">${TITLES[section]}</div>`
     +`<div class="ph-d">Tato sekce se připravuje v další fázi prototypu.</div></div>`;
 }
-const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlatby,nahrady:renderNahrady};
+const RENDER={prehled:renderPrehled,aktuality:renderAktuality,porady:renderPorady,platby:renderPlatby,nahrady:renderNahrady,deti:renderMatrika};
 
 function renderSidebar(){
   const el=document.getElementById('sidebar');
@@ -2001,6 +2119,7 @@ const TOPACT={
   porady:`<button class="btn-primary no-print" onclick="poNewZ()">+ Nový zápis</button>`,
   nahrady:`<button class="btn-ghost" onclick="exportNahrady()">Stáhnout CSV</button>`,
   platby:`<button class="btn-ghost" onclick="exportPlatby()">Stáhnout pro účetní</button>`,
+  deti:`<button class="btn-primary" onclick="exportMsmt()">Export pro MŠMT</button>`,
 };
 function render(){
   document.getElementById('ttl').textContent=TITLES[section];
@@ -2008,7 +2127,7 @@ function render(){
   renderSidebar();
   document.getElementById('content').innerHTML=RENDER[section]();
 }
-window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}if(s!=='nahrady')nhOpen=null;render();};
+window.go=s=>{section=s;if(s!=='aktuality')akView='list';if(s!=='porady'){poOpen=null;poNew=false;}if(s!=='nahrady')nhOpen=null;if(s!=='deti')mtOpen=null;render();};
 
 render();
 </script>
