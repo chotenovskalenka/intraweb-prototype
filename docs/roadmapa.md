@@ -11,6 +11,24 @@ o hotový výzkum a první kolo testování, ne o další ověřování.
 vznikly nálezy P1–P6 + role Kuchyň, tedy cca 6–8 commitů denně). Odhady jsou střední;
 rozptyl ±30 % u stavby, ±50 % tam, kde chybí vstup od někoho dalšího.
 
+## Stav k 10. 10. 2026 večer – hotovo až po Figmu
+
+**Hotovo:** 0 (cizí soubory pryč z repa i historie) · kuchyň (napříč školkami Vhaaji / Jaata /
+Maata, svačinové jídelníčky po školkách) · **admin kompletně** – Náhrady (hodiny, pravidlo
+podle školky, náhled pravidla), Přehled (co vyžaduje akci), Platby (faktury, vystavení
+s náhledem, upomínky, ruční „uhrazeno"), Děti a matrika (kompletnost, export MŠMT, pozvánka
+k doplnění) · **rodičovské náhrady v hodinách** (stejná čísla jako admin) · stabilizace
+(široké tabulky, slovník editoru buňky, mrtvý kód poznámek, pravidlo 8:30 u rodiče).
+Ověřeno: všechny sekce, 4 role průvodce + rodič + admin, 375 / 1024 / 1440 px, konzole čistá.
+
+**Pozastaveno na pokyn Lenky** („po Figmu, dál to nedělej, budeme appku ještě hodně ladit"):
+3 Figma · 4 skiny · 5 předávka. Navazují, až bude ladění hotové.
+
+**Otevřené otázky z této etapy** (všechny v decision-logu): pravidla náhrad Jaaty a Kouzla
+lesa · jak se tábor v červenci počítá z hodin, které propadají 30. 6. · Maata „50 %
+v 1. pololetí" · zda se má čerpání po hodinách ukazovat i rodiči · ceny dopolední docházky
+a Jaaty / Kouzla lesa (odhad prototypu).
+
 ---
 
 ## Kde to stojí
