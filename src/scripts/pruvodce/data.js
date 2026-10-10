@@ -337,4 +337,17 @@ const nazevSeznamu=sid=>(SEZNAMY.find(x=>x.id===sid)||{}).nazev||'';
 let VZKAZY={3:[{den:4,text:'Prosíme zítra přibalit spacák do kočárku – po obědě spíme venku.',kdo:'Táňa',cas:'včera 17:30'}]};
 const vzkazyFor=i=>VZKAZY[i]||(VZKAZY[i]=[]);
 const denLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':`${DOW[wd(d)]} ${d}. 6.`;
+/* Kuchyň napříč školkami (rozhodnutí 10. 10. 2026): porce počítá jeden člověk pro všechny
+   školky podle jejich docházky. Průvodcovská appka má jména jen pro Vhaaji – ta se počítá
+   živě z `data`; ostatní školky jsou v prototypu souhrnná čísla (obsazenost sedí s adminem).
+   objednano = obědy objednané včera podle přihlášek po deadlinu 20:00; dnes ráno pak někdo
+   nedorazí a jeho porce je navíc. */
+const KUCH_SKOLKY=[
+  {nazev:'Jaata',zapsano:12,objednano:11,jedi:10,dopol:3,vyzv:0,alergie:[['lepek',1]],
+    zitra:{dop:12,obed:12,odp:9}},
+  {nazev:'Kouzlo lesa',zapsano:12,objednano:12,jedi:10,dopol:2,vyzv:1,alergie:[['mléko',2],['arašídy',1]],
+    zitra:{dop:11,obed:11,odp:9}},
+  {nazev:'Maata',zapsano:16,objednano:15,jedi:15,dopol:5,vyzv:0,alergie:[['mléko',1]],
+    zitra:{dop:14,obed:14,odp:9}},
+];
 const zpravyDnes=()=>data.map((c,i)=>({c,i})).filter(x=>(x.c.zpravy||[]).some(z=>z.den===TODAYD));

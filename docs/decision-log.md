@@ -1653,3 +1653,27 @@ odpolední docházka do 15:00, děti přicházejí ráno všechny.
 **Neřešeno:** objednávka obědů přímo z appky (dodavatel Mamafood), svačiny podle programu
 (výzkum: plánuje se podle měsíčního plánu, ne podle četnosti).
 
+## Kuchyň napříč školkami (10. 10. 2026)
+
+**Upřesnění zadání (Lenka):** jídelníček zapisuje a počty jídel podle dětí zjišťuje kuchyň –
+**může to dělat jeden člověk pro všechny školky** podle stavu docházky. Svačiny si každá
+školka chystá sama; svačiny i obědy se odvíjejí od docházky, a kdo ráno nedorazí, jeho
+oběd je navíc. Kuchyň dál zajímají alergie.
+
+**Rozhodnutí:** přehled kuchyně je napříč školkami (Vhaaji, Jaata, Kouzlo lesa, Maata):
+- nahoře **součty** dopolední svačina · oběd · odpolední svačina;
+- **podle školek** (desktop tabulka, mobil karty) včetně alergií dětí, které dnes jedí;
+- u oběda **objednáno · jí · navíc** – oběd se objednává den předem podle přihlášek po
+  deadlinu 20:00, ranní omluvy už ne; u svačin „navíc" nevzniká, chystají se podle
+  aktuálního čísla;
+- **na objednávku zítra** po školkách + celkem;
+- pod tím **detail Vhaaji** (co se vaří, porce bez alergenu, oběd k vyzvednutí, alergie
+  na výdej s tiskem).
+
+V prototypu se živě z docházky počítá jen Vhaaji (jen ta má v průvodcovské appce děti);
+ostatní školky jsou souhrnná čísla v `KUCH_SKOLKY`, obsazenost sedí s adminem.
+
+**Otevřené:** patří do kuchyně i Kouzlo lesa (cizí provozovatel)? Jídelníček zůstává
+zatím jeden (Vhaaji) – jestli má mít každá školka vlastní svačinový jídelníček, je otázka
+pro další krok.
+

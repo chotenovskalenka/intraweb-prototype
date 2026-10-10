@@ -164,3 +164,18 @@
 .kuch-alg .jid-alerg{margin-top:0}
 .kuch-al{color:var(--color-danger);font-weight:600}
 .kuch-dole{margin-bottom:var(--space-md)}
+/* Kuchyň napříč školkami */
+.kuch-sekce{font-family:var(--font-serif);font-size:var(--text-heading);font-weight:600;color:var(--color-primary-strong);margin:var(--space-lg) 2px var(--space-sm)}
+.kuch-sekce:first-child{margin-top:0}
+.kuch-navic{color:var(--state-warn-ink);font-weight:600}
+.kuch-tabwrap{overflow-x:auto;min-width:0}
+.kuch-tab{display:none}
+.kuch-celkem td{font-weight:600;border-top:2px solid var(--color-border-strong)}
+.kuch-karta{padding:8px 0;border-top:1px solid var(--color-border)}
+.kuch-karta:first-child{border-top:none}
+.kk-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+@media (min-width:900px){
+  .kuch-karty{display:none}
+  .kuch-tab{display:table;width:100%}
+  #content > .kuch{column-span:all}   /* celý přehled kuchyně mimo masonry sloupce */
+}
