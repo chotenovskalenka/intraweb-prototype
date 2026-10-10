@@ -143,3 +143,26 @@
   .vypis-head{margin-bottom:16px}
   body{background:#fff}
 }
+
+/* třídnice – týden × školky a týden jedné školky (dny vedle sebe jako v tabulce Jaaty) */
+.tra-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.tra-sum{font-size:var(--text-small);color:var(--color-text-muted)}
+.tra-sum b{color:var(--color-text)}
+.tra-wrap{overflow-x:auto;padding:var(--space-sm) var(--space-md)}
+.tra-tab{width:100%;border-collapse:collapse;font-size:var(--text-small)}
+.tra-tab th,.tra-tab td{text-align:left;vertical-align:top;padding:10px 8px;border-top:1px solid var(--color-border)}
+.tra-tab thead th{border-top:none;font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;white-space:nowrap}
+.tra-tab tbody th{font-weight:600;color:var(--color-text);white-space:nowrap}
+.tra-row{cursor:pointer}
+.tra-row:hover td,.tra-row:hover th{background:var(--soft-primary)}
+.tra-sk{background:none;border:none;padding:0;min-height:32px;font:inherit;font-weight:600;color:var(--color-primary);cursor:pointer}
+.tra-arr{color:var(--color-primary);font-weight:600;text-align:right}
+.tra-det td{min-width:150px;line-height:var(--leading-normal);color:var(--color-text)}
+.tra-det thead th .bdg{display:block;width:fit-content;margin-top:5px;text-transform:none;letter-spacing:0}
+.tra-det tbody th{font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);font-weight:600;min-width:120px}
+.tra-gap{color:var(--color-text-hint);font-style:italic}
+.tra-ev{margin-top:10px;border-top:1px solid var(--color-border)}
+.tra-ev-r{display:flex;gap:12px;padding:8px 0;border-top:1px solid var(--color-border)}
+.tra-ev-r:first-child{border-top:none}
+.tra-ev-d{flex:0 0 74px;font-size:var(--text-meta);color:var(--color-text-muted)}
+@media print{.tra-wrap{overflow:visible}.tra-det td{min-width:0}.tra-tab{font-size:9pt}}
