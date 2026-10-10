@@ -34,8 +34,31 @@ const porcePl=k=>k===1?'porce':(k>=2&&k<=4?'porce':'porcí');
    a nevolá render() (jinak by z pole utekl kurzor). */
 let jidEdit=false, jidDraft=null;
 
+/* Svačiny má každá školka vlastní (rozhodnutí 10. 10. 2026): chystá si je sama, kdežto obědy
+   dodává Mamafood všem stejně. Vhaaji drží svačiny přímo v JIDELNICEK (čte je i rodičovská
+   appka); Jaata a Maata mají svačiny zvlášť v SVACINY a obědy berou společné.
+   Demo svačiny ostatních školek se poprvé poskládají z receptů Vhaaji, jen jinak rozložené. */
+const JID_SKOLKY=[['vhaaji','Vhaaji'],['jaata','Jaata'],['maata','Maata']];
+let jidSkolka='vhaaji';
+const SVACINY={jaata:{},maata:{}};
+const jeSvacina=it=>/svačina/i.test(it[0]);
+function svacinyFor(sk,ti){
+  if(!SVACINY[sk][ti]){
+    const pool=k=>JIDELNICEK.flatMap(t=>t.dny.map(d=>d.find(it=>it[0]===k))).filter(it=>it&&it[1]);
+    const dop=pool('Dopolední svačina'), odp=pool('Odpolední svačina'), off=sk==='jaata'?3:7;
+    SVACINY[sk][ti]=JIDELNICEK[ti].dny.map((_,i)=>[[...dop[(off+ti*5+i)%dop.length]],[...odp[(off+2+ti*5+i)%odp.length]]]);
+  }
+  return SVACINY[sk][ti];
+}
+// týden jídelníčku tak, jak ho vidí vybraná školka: obědy společné, svačiny její
+function tydenSkolky(ti){
+  const t=JIDELNICEK[ti]; if(jidSkolka==='vhaaji')return t;
+  const sv=svacinyFor(jidSkolka,ti);
+  return {...t,dny:t.dny.map((den,i)=>den.map(it=>it[0]==='Dopolední svačina'?sv[i][0]:it[0]==='Odpolední svačina'?sv[i][1]:it))};
+}
+
 function renderJidelnicek(){
-  const t=JIDELNICEK[jidTyden];
+  const t=tydenSkolky(jidTyden), jinaSkolka=jidSkolka!=='vhaaji';
   // Týden i jeho listování patří k sobě: stepper sedí v řádku s nadpisem vedle akcí,
   // ne nahoře u H1 – jinak byl týden napsaný dvakrát a ovládání na dvou místech.
   let h=`<div class="doch"><div class="vhead-row"><div class="vhead">Týden</div><div class="vhead-act">`+
@@ -48,18 +71,21 @@ function renderJidelnicek(){
     `<span>${jidTydenLabel(t)}</span>`+
     `<button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`+
     `</div></div>`;
-  h+=`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
+  if(role==='kuchyn')h+=`<div class="filters jid-sk">`+JID_SKOLKY.map(([k,l])=>`<button class="${jidSkolka===k?'on':''}" onclick="setJidSkolka('${k}')" aria-pressed="${jidSkolka===k}">${l}</button>`).join('')+`</div>`;
+  // kuchyň Děti nevidí – alergie na výdej má na svém přehledu
+  h+=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
+    :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
   t.dny.forEach((den,i)=>{
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
     h+=`<div class="tile"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
     den.forEach((it,k)=>{
       if(jidEdit&&smiJidelnicek()){
         const dr=jidDraft[i][k];
-        h+=`<div class="jid-edit"><label class="pl">${it[0]}</label>`+
+        h+=`<div class="jid-edit"><label class="pl">${it[0]}${!jeSvacina(it)&&role==='kuchyn'?' <span class="vis vis-t">všechny školky</span>':''}</label>`+
           `<input class="pin" value="${esc(dr[1])}" oninput="setJid(${i},${k},1,this.value)" placeholder="název jídla" aria-label="${it[0]} – ${DOW[i]}">`+
           `<input class="pin jid-alg" value="${esc(dr[2])}" oninput="setJid(${i},${k},2,this.value)" placeholder="alergeny, např. 1, 7" aria-label="Alergeny – ${it[0]}, ${DOW[i]}"></div>`;
       }else{
-        const bez=porceBez(it[2]);
+        const bez=jinaSkolka?[]:porceBez(it[2]);
         // pod názvem jídla, ne vedle něj – vedle textu si štítek ukousl šířku a název se lámal
         h+=`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}`;
         if(bez.length)h+=`<span class="jid-alerg">${bez.map(([n,k])=>`bez ${ALERGEN_BEZ[n]||n} · ${k} ${porcePl(k)}`).join(' · ')}</span>`;
@@ -68,13 +94,18 @@ function renderJidelnicek(){
     });
     h+=`</div>`;
   });
-  h+=`<div class="note2">Obědy dodává Mamafood, svačiny chystá školka. U jídla je vidět, kolik porcí musí být bez kterého alergenu – počítá se z karet dětí v sekci Děti. Jména pro výdej jsou v Dětech → Alergici, i jako seznam k vytištění.</div>`;
+  h+=`<div class="note2">Obědy dodává Mamafood – jsou společné pro všechny školky. Svačiny chystá každá školka sama, proto má každá vlastní.${jinaSkolka?' V prototypu má děti (a tedy porce bez alergenu) jen Vhaaji.':' U jídla je vidět, kolik porcí musí být bez kterého alergenu – počítá se z karet dětí.'}</div>`;
   return h+`</div>`;
 }
-window.jidEditOn=()=>{jidDraft=JIDELNICEK[jidTyden].dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
+window.jidEditOn=()=>{jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
 window.jidCancel=()=>{jidEdit=false;jidDraft=null;render();};
 window.setJid=(i,k,pole,v)=>{jidDraft[i][k][pole]=v;};   // bez render() – kurzor v poli musí zůstat
-window.jidSave=()=>{JIDELNICEK[jidTyden].dny=jidDraft.map(den=>den.map(it=>[it[0],it[1].trim(),it[2].trim()]));
-  jidEdit=false;jidDraft=null;render();showToast('Jídelníček uložen ✓');};
+window.jidSave=()=>{const ciste=jidDraft.map(den=>den.map(it=>[it[0],it[1].trim(),it[2].trim()]));
+  if(jidSkolka==='vhaaji')JIDELNICEK[jidTyden].dny=ciste;
+  else{// obědy do společného jídelníčku, svačiny do jídelníčku školky
+    JIDELNICEK[jidTyden].dny.forEach((den,i)=>den.forEach((it,k)=>{if(!jeSvacina(it))den[k]=ciste[i][k];}));
+    SVACINY[jidSkolka][jidTyden]=ciste.map(den=>[den.find(it=>it[0]==='Dopolední svačina'),den.find(it=>it[0]==='Odpolední svačina')]);}
+  jidEdit=false;jidDraft=null;render();showToast(jidSkolka==='vhaaji'?'Jídelníček uložen ✓':`Uloženo · svačiny ${JID_SKOLKY.find(x=>x[0]===jidSkolka)[1]}, obědy pro všechny ✓`);};
+window.setJidSkolka=k=>{if(jidEdit){showToast('Nejdřív ulož, nebo zruš úpravy');return;}jidSkolka=k;render();};
 window.goAlergici=()=>{detiFilter='al';detiOpen=-1;go('deti');};
 window.stepJidTyden=d=>{jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};
