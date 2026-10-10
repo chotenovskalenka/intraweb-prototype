@@ -1759,3 +1759,15 @@ a matrika · Novinky · Porady. **Nastavení (ceny, typy, kapacity) vypuštěno*
 nic na něm nestojí (viz roadmapa).
 **Nedělá se:** správa uživatelských účtů (Patova administrace).
 
+## Rodičovská appka: náhrady v hodinách (10. 10. 2026)
+
+Navazuje na rozhodnutí o adminu – rodič a vedení teď vidí tatáž čísla. Každý včas omluvený
+den připíše **20 % své délky** (Vhaaji: odpolední 7 h → 1,4 h). Zůstatek „Dostupné náhrady"
+je v hodinách, pod ním naplánované hodiny a pravidlo z příručky jednou větou. Omluvenka před
+odesláním říká „Připíše se 1,4 h náhrad – 20 % z 1 včas omluveného dne", toast totéž.
+**Eliška je v obou appkách stejná:** 5 včas omluvených dní × 7 h = 35 h → 7 h připsáno,
+1,4 h vyčerpáno → admin „zbývá 5,6 h" = rodič „4,2 h dostupné + 1,4 h naplánováno".
+**Opraveno:** omluvenka v rodičovské appce psala „Než odešleš" – appka vyká, „Než odešlete".
+**Zůstává:** záznam je dál jeden na omluvený den; čerpání po hodinách (odpoledne 2 h, tábor)
+rodič zatím nevidí rozepsané – jen zůstatek a naplánované.
+

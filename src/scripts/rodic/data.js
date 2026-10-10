@@ -26,7 +26,17 @@ const DUVODLAB=Object.fromEntries(DUVODY);
 const duvodSelect=(val,onchange)=>`<select class="pin" onchange="${onchange}">`
   +`<option value=""${val?'':' selected'}>Vyberte…</option>`
   +DUVODY.map(([k,l])=>`<option value="${k}"${val===k?' selected':''}>${l}</option>`).join('')+`</select>`;
-const dostupne=c=>c.nahrady.filter(n=>n.stav==='dostupna').length;     // počet se všude odvozuje z pole
+/* Náhrady v HODINÁCH (rozhodnutí 10. 10. 2026, shodně s adminem). Pravidlo Vhaaji (příručka):
+   náhrada = 20 % omluvené absence. Každý včas omluvený den tedy připíše 20 % své délky –
+   dopolední 5 h → 1 h, odpolední 7 h → 1,4 h, celodenní úterý 9 h → 1,8 h. Záznam v poli
+   `nahrady` zůstává jeden na omluvený den, jen nese hodiny (`h`). */
+const NAHR_PODIL=.2, HOD_KODU={D:5,O:7,C:9};
+const planKod=(c,d)=>c.base==='C'&&wd(d)!==1?'O':c.base;              // plán dne bez omluvy
+const hodinyNahrady=(c,d)=>Math.round(HOD_KODU[planKod(c,d)]*NAHR_PODIL*10)/10;
+const fmtHod=h=>(Math.round(h*10)/10).toLocaleString('cs-CZ')+' h';
+// zůstatek se všude odvozuje z pole – součet hodin dostupných náhrad
+const dostupne=c=>Math.round(c.nahrady.filter(n=>n.stav==='dostupna').reduce((s,n)=>s+(n.h||0),0)*10)/10;
+const naplanovano=c=>Math.round(c.nahrady.filter(n=>n.stav==='naplanovana').reduce((s,n)=>s+(n.h||0),0)*10)/10;
 function nextExp(c){const a=c.nahrady.filter(n=>n.stav==='dostupna'&&isFinite(n.expT)).sort((x,y)=>x.expT-y.expT);return a[0]?a[0].exp:null;}
 const nplural=n=>n===1?'náhrada':(n>=2&&n<=4?'náhrady':'náhrad');
 const fmtRange=(a,b)=>a===b?`${DOW[wd(a)]} ${a}. 6.`:`${a}. 6. – ${b}. 6.`;
@@ -58,13 +68,13 @@ const children=[
     fondlog:[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200]],
     faktury:genFaktury('01',10584,['Duben 2026','Květen 2026']),
     nahrady:[
-      nahFrom(new Date(2026,4,12),'dostupna'),
-      nahFrom(new Date(2026,4,20),'dostupna'),
-      nahFrom(juneDate(11),'dostupna',{id:'nE-fut',den:11,omId:'omE-fut'}),
-      nahFrom(new Date(2026,4,26),'naplanovana',{plan:'Náhradní den · 18. 6.'}),
-      nahFrom(new Date(2026,3,8),'vyuzita',{pouzita:'15. 5. 2026'}),
-      nahFrom(new Date(2025,4,20),'expirovana'),   // z minulého šk. roku – propadla 30. 6. 2025
-      nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'–',expT:Infinity}),
+      nahFrom(new Date(2026,4,12),'dostupna',{h:1.4}),
+      nahFrom(new Date(2026,4,20),'dostupna',{h:1.4}),
+      nahFrom(juneDate(11),'dostupna',{id:'nE-fut',den:11,omId:'omE-fut',h:1.4}),
+      nahFrom(new Date(2026,4,26),'naplanovana',{plan:'úterý 16. 6. do 17:00',h:1.4}),
+      nahFrom(new Date(2026,3,8),'vyuzita',{pouzita:'15. 5. 2026',h:1.4}),
+      nahFrom(new Date(2025,4,20),'expirovana',{h:1.4}),   // z minulého šk. roku – propadla 30. 6. 2025
+      nahFrom(juneDate(2),'nevznikla',{id:'nE-nev',den:2,omId:'omE-2',exp:'–',expT:Infinity,h:0}),
     ],
     omluvenky:[
       {id:'omE-fut',od:11,do:11,duvod:'rodinné důvody',pozn:'rodinná oslava',stav:'vcas',nahradaIds:['nE-fut']},
@@ -76,7 +86,7 @@ const children=[
     fond:{rocni:2000},
     fondlog:[['Divadelní představení','říjen 2025',250],['Výlet do ZOO','listopad 2025',350],['Výtvarný materiál','leden 2026',200],['Muzeum a dílna','březen 2026',350],['Jarní výprava','duben 2026',350]],
     faktury:genFaktury('02',10584,[]),   // happy stav – vše uhrazeno
-    nahrady:[ nahFrom(new Date(2026,4,15),'dostupna') ],
+    nahrady:[ nahFrom(new Date(2026,4,15),'dostupna',{h:1.4}) ],
     omluvenky:[]},
 ];
 

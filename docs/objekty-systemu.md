@@ -84,7 +84,7 @@ Náhradní den vzniklý včasnou omluvou; lze jej vyčerpat i na příměstský 
 
 ### Pravidlo vzniku
 
-**1 včasná omluvenka na 1 den = 1 náhrada.** Vícedenní omluvenka vytvoří náhradu za každý včas omluvený den. Za den omluvený po deadlinu vznikne záznam se stavem `nevznikla` (aby byl v seznamu vidět, proč náhrada nepřibyla).
+**Náhrady se počítají v hodinách** (od 10. 10. 2026, shodně s adminem). Pravidlo Vhaaji z příručky: **náhrada = 20 % omluvené absence**. Každý včas omluvený den připíše 20 % své délky – dopolední 5 h → 1 h, odpolední 7 h → 1,4 h, celodenní úterý 9 h → 1,8 h (`hodinyNahrady`). Záznam zůstává jeden na omluvený den, nese hodiny (`h`); zůstatek je součet hodin dostupných záznamů (`dostupne`). Vícedenní omluvenka vytvoří záznam za každý včas omluvený den. Čerpá se odpoledne navíc nebo úterní docházkou do 17:00; s plnou docházkou i na příměstský tábor. Jiné školky mají jiná pravidla – viz admin Náhrady (`NAHR_PRAVIDLA`). Za den omluvený po deadlinu vznikne záznam se stavem `nevznikla` (aby byl v seznamu vidět, proč náhrada nepřibyla).
 
 ### Expirace
 

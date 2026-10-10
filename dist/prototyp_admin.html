@@ -1465,6 +1465,11 @@ const MATRIKA_POLE=[['rc','rodné číslo'],['adresa','bydliště'],['pojistovna
   // Eliška sedí s rodičovskou appkou (narozena 14. 3. 2021, rodné číslo, bydliště, bez alergie)
   const el=NAHRADY_DETI.find(c=>c.n==='Eliška'&&c.sur==='Dvořáková');
   Object.assign(el,{narozen:'14. 3. 2021',predskolak:false,alergie:'',rc:'215314/1001',adresa:'Nad Rokoskou 1230/8, Praha 8 – Libeň'});
+  // náhrady stejné jako v rodičovské appce: 5 včas omluvených dní × 7 h = 35 h → 20 % = 7 h,
+  // vyčerpáno 1,4 h (úterý 15. 5.) → zbývá 5,6 h (rodič: 4,2 h dostupné + 1,4 h naplánováno)
+  Object.assign(el,{omluvenoH:35,cerpanoH:1.4,
+    vznik:[{datum:'30. 4. 2026',mes:'duben',omluvenoH:7},{datum:'31. 5. 2026',mes:'květen',omluvenoH:21},{datum:'3. 6. 2026',mes:'červen',omluvenoH:7}],
+    cerp:[{datum:'15. 5. 2026',typ:'utery',h:1.4,popis:'úterní docházka do 17:00',kdo:'vedoucí průvodce',obs:'12/14'}]});
 })();
 const matrikaChybi=c=>MATRIKA_POLE.filter(([k])=>Array.isArray(c[k])?!c[k].length:!c[k]).map(([,l])=>l);
 </script>
