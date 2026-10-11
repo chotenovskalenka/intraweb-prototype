@@ -904,6 +904,16 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .tra-ev-r:first-child{border-top:none}
 .tra-ev-d{flex:0 0 74px;font-size:var(--text-meta);color:var(--color-text-muted)}
 @media print{.tra-wrap{overflow:visible}.tra-det td{min-width:0}.tra-tab{font-size:9pt}}
+/* třídnice – interní blok poznámek k dětem (stejný jazyk jako zóna „Jen pro tým" u průvodce) */
+.tra-int{background:var(--wash-accent);border:1px dashed var(--edge-accent)}
+.tra-int-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:6px}
+.tra-int-h .ch{margin:0;color:var(--color-accent-ink)}
+.tra-int-s{font-size:var(--text-note);color:var(--color-text-muted)}
+.tra-kd{padding:10px 0;border-top:1px solid var(--color-border)}
+.tra-kd-n{font-size:var(--text-body);font-weight:600;color:var(--color-text);margin-bottom:2px}
+.tra-kd-t{font-weight:400;color:var(--color-text-muted);font-size:var(--text-note)}
+.tra-kd .tra-ev-r{border-top:none;padding:3px 0}
+.tra-pokr{color:var(--color-text-muted);white-space:nowrap}
 </style>
 <style>
 /* Akvarel z vhaaji.cz (hero-hlavicka03) – dvě dekorativní použití, izolovaně v tomto souboru:
@@ -2129,7 +2139,9 @@ window.goPlatbyDite=id=>{const c=NAHRADY_DETI.find(x=>x.id===id),dl=FAKTURY.filt
      Detail   – týden jedné školky jako v tabulce (dny vedle sebe), tisk pro inspekci
      Evaluace – evaluace dnů a uzavření týdnů za období na jednom místě. Výzkum: „evaluace
                 se kvůli inspekci přepisují do dalšího dokumentu" – tady je to jeden výpis.
-   Poznámky k dětem sem nejdou: jsou jen pro tým školky a do třídnice pro inspekci nepatří.
+   Poznámky k dětem vedení čte (rozhodnutí 11. 10. 2026), ale jen v interním bloku detailu
+   týdne – do tisku pro inspekci ani do výpisu evaluací nejdou (ve veřejné části třídnice
+   nesmí být jména dětí). Děti jsou z matriky adminu (NAHRADY_DETI).
    Data jsou v tomhle souboru (ne v data.js), appky spolu nic nesdílejí; Vhaaji tento týden
    sedí textově se seedem průvodcovské appky (simulovaná konzistence). */
 
@@ -2177,6 +2189,40 @@ const TRA_UZAVRENI=['Týden se povedl, téma děti chytlo. Příště připravit
 const TRA_TEMATA=['Zvířátka mají mláďátka','Májový deštíček','Studánko, hlubánko','Kytičky a věneček'];
 const TRA_POHADKY=['O Budulínkovi','Kuřátko a obilí','O veliké řepě','Paní Zima'];
 const TRA_PISE=['Táňa','Gabča','Honza','Darča','Míša'];
+/* Poznámky k dětem – formulované bez rodu, ať sednou ke kterémukoli dítěti ze seedu. */
+const TRA_POZN=['Ráno delší loučení, po svačině pohoda.','Dopoledne ve dvojici u stavění – hezká spolupráce.',
+  'Odpoledne únava, spánek hned při čtení.','Poprvé zapalování svíčky v kruhu – velká radost.',
+  'Spor o lopatku na pískovišti, vyřešeno rozhovorem.','Odřené koleno v lese – ošetřeno, rodičům řečeno při vyzvednutí.',
+  'Stříhání zatím s pomocí, úchop nůžek trénovat.','Hodně času se staršími dětmi, nápodoba ve všem.',
+  'Celý den tišeji než obvykle – sledovat, zmínit rodičům.','U tkaní vydrží dlouho, velký posun v soustředění.'];
+// Eliška (jediné dítě společné s průvodcovskou appkou) – stejná poznámka jako tam
+const TRA_POZN_VHAAJI_TED=[{n:'Eliška',sur:'Dvořáková',d:2,t:'Odpoledne vyzvedla babička, loučení v pohodě. Celý den hodně povídala o hvězdárně.',kdo:'Gabča'}];
+/* Poznámky k dětem jedné školky za týden: vybere se zhruba polovina dětí a k dnům se
+   zápisem jedna až dvě poznámky. Deterministicky – každý render ukazuje totéž. */
+function traPoznamky(r,si,wi){
+  const deti=NAHRADY_DETI.filter(c=>c.skolka===r.sk.id), dny=r.dny.filter(d=>d.n);
+  if(!dny.length)return [];
+  /* Vhaaji tento týden: průvodcovská appka má poznámky u 7 dětí – tady stejný počet;
+     jména se s adminem kryjí jen u Elišky, ta má i stejný text. */
+  if(r.sk.id==='vhaaji'&&r.w.aktualni){
+    const pevne=TRA_POZN_VHAAJI_TED.map(p=>({c:deti.find(c=>c.n===p.n&&c.sur===p.sur)||{n:p.n,sur:p.sur,trida:''},
+      pozn:[{den:r.dny.find(d=>d.d===p.d),t:p.t,kdo:p.kdo}]}));
+    const ostatni=traPoznamkyGen(deti.filter(c=>!pevne.some(p=>p.c===c)),dny,si,wi).slice(0,7-pevne.length);
+    return [...pevne,...ostatni].sort((a,b)=>(a.c.sur||'').localeCompare(b.c.sur||'','cs'));
+  }
+  return traPoznamkyGen(deti,dny,si,wi);
+}
+function traPoznamkyGen(deti,dny,si,wi){
+  const out=[];
+  deti.forEach((c,k)=>{
+    if((k+si+wi)%2)return;
+    const pocet=1+((k+wi)%3===0?1:0), pozn=[];
+    for(let j=0;j<pocet;j++){const den=dny[(k+j*2+wi)%dny.length];
+      if(!pozn.some(x=>x.den===den))pozn.push({den,t:TRA_POZN[(k*3+si+wi+j)%TRA_POZN.length],kdo:den.pise});}
+    pozn.sort((a,b)=>a.den.di-b.den.di);out.push({c,pozn});
+  });
+  return out;
+}
 // Vhaaji tento týden – stejné texty jako v průvodcovské appce
 const TRA_VHAAJI_TED={
   1:{prichod:'Klidné ráno, předání u branky bez slz. Dvě děti přišly až po deváté (hlášeno).',kruh:'Přivítání, kalendář, nová básnička „Uvijeme věneček". Na rytmiku bubínky a dřívka.',aktivita:'Rytmika s Niki – tanečky v kruhu, střídání rychle/pomalu.',jakslo:'Tanečky bavily i nejmenší. Střídání tempa zvládne asi polovina, zítra zopakovat.',kde:'Zahrada a pak les nad maringotkou – stavba domečků z klacků, lano mezi stromy.',odpocinek:'S Táňou „Kubula a Kuba Kubikula", dočteno do str. 34. Klid, usnuli skoro všichni.',pocasi:'slunečno, 24 °C',evaluace:'Pohodový začátek týdne, děti dobře naladěné. V lese potřeba víc hlídat hranici u potoka.',pouceni:['skolka','les']},
@@ -2235,11 +2281,14 @@ function traRenderVyplneni(){
     +`<button onclick="traStep(1)" ${wi>=TRA_TYDNY.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     +`<div class="tra-sum">${chybi||rozp?`Proběhlé dny: <b>${chybi}</b> ${chybi===1?'chybí':'chybí'} · <b>${rozp}</b> ${rozp===1?'rozepsaný':'rozepsané'}`:'Všechny proběhlé dny jsou zapsané.'}</div></div>`;
   h+=`<div class="tile tra-wrap"><table class="tra-tab"><thead><tr><th scope="col">Školka</th>`
-    +rows[0].dny.map(d=>`<th scope="col">${traDenLbl(d)}</th>`).join('')+`<th scope="col">Uzavření týdne</th><th aria-hidden="true"></th></tr></thead><tbody>`;
-  rows.forEach(r=>{
+    +rows[0].dny.map(d=>`<th scope="col">${traDenLbl(d)}</th>`).join('')+`<th scope="col">Uzavření týdne</th><th scope="col">K dětem</th><th aria-hidden="true"></th></tr></thead><tbody>`;
+  rows.forEach((r,si)=>{
+    const sPoz=traPoznamky(r,si,wi).length;
     h+=`<tr class="tra-row" onclick="traOpen('${r.sk.id}')"><th scope="row"><button class="tra-sk" onclick="event.stopPropagation();traOpen('${r.sk.id}')">${r.sk.nazev}</button></th>`
       +r.dny.map(d=>{const s=traStav(d);return `<td><span class="bdg st-${s.cls}">${s.lab}</span></td>`;}).join('')
       +`<td>${r.uzavreni?'<span class="bdg st-ok">napsáno</span>':r.uzavreniChybi?'<span class="bdg st-danger">chybí</span>':'<span class="bdg st-muted">po pátku</span>'}</td>`
+      // kolik dětí má tento týden poznámku – obsah je v detailu, tady jen pokrytí
+      +`<td class="tra-pokr">${sPoz} z ${obsazeno(r.sk)}</td>`
       +`<td class="tra-arr" aria-hidden="true">›</td></tr>`;
   });
   h+=`</tbody></table></div>`;
@@ -2265,7 +2314,15 @@ function traRenderDetail(){
   h+=`<div class="tile"><div class="ch">Uzavření týdne</div>`
     +(r.uzavreni?`<div class="tval">${esc(r.uzavreni)}</div>`
       :`<div class="empty" style="text-align:left;padding:4px 0">${r.uzavreniChybi?'Uzavření týdne chybí.':'Píše se po posledním dni týdne.'}</div>`)+`</div>`;
-  h+=`<div class="note2">Poznámky k jednotlivým dětem vede tým v aplikaci průvodců. Do třídnice ani do tisku nepatří – ve veřejné části třídnice nesmí být jména dětí.</div>`;
+  // poznámky k dětem – interní blok, v tisku pro inspekci chybí celý (no-print)
+  const si=SKOLKY.findIndex(s=>s.id===traDetail), poz=traPoznamky(r,si,traWeek);
+  h+=`<div class="tile tra-int no-print"><div class="tra-int-h"><span class="ch">Poznámky k dětem</span>`
+    +`<span class="tra-int-s">Jen interně – do tisku pro inspekci nejdou. Píšou je průvodci v zápisu dne.</span></div>`;
+  h+=poz.length?`<div class="tra-sum" style="margin-bottom:6px">Poznámka u <b>${poz.length} z ${obsazeno(r.sk)}</b> dětí</div>`
+    +poz.map(({c,pozn})=>`<div class="tra-kd"><div class="tra-kd-n">${esc(c.n+' '+c.sur)}${r.sk.tridy.length>1&&c.trida?` <span class="tra-kd-t">· ${esc(c.trida)}</span>`:''}</div>`
+      +pozn.map(p=>`<div class="tra-ev-r"><span class="tra-ev-d">${traDenLbl(p.den)}</span><span class="odst-tx">${esc(p.t)} <span class="tra-kd-t">· ${esc(p.kdo)}</span></span></div>`).join('')+`</div>`).join('')
+    :`<div class="empty" style="text-align:left;padding:4px 0">K dětem tento týden nic.</div>`;
+  h+=`</div>`;
   return h;
 }
 

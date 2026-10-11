@@ -235,3 +235,13 @@
 .tra-ev-r:first-child{border-top:none}
 .tra-ev-d{flex:0 0 74px;font-size:var(--text-meta);color:var(--color-text-muted)}
 @media print{.tra-wrap{overflow:visible}.tra-det td{min-width:0}.tra-tab{font-size:9pt}}
+/* třídnice – interní blok poznámek k dětem (stejný jazyk jako zóna „Jen pro tým" u průvodce) */
+.tra-int{background:var(--wash-accent);border:1px dashed var(--edge-accent)}
+.tra-int-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:6px}
+.tra-int-h .ch{margin:0;color:var(--color-accent-ink)}
+.tra-int-s{font-size:var(--text-note);color:var(--color-text-muted)}
+.tra-kd{padding:10px 0;border-top:1px solid var(--color-border)}
+.tra-kd-n{font-size:var(--text-body);font-weight:600;color:var(--color-text);margin-bottom:2px}
+.tra-kd-t{font-weight:400;color:var(--color-text-muted);font-size:var(--text-note)}
+.tra-kd .tra-ev-r{border-top:none;padding:3px 0}
+.tra-pokr{color:var(--color-text-muted);white-space:nowrap}
