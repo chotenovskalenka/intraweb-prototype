@@ -222,7 +222,13 @@
 .tr-kd-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:2px;font-size:var(--text-body);color:var(--color-text)}
 .tr-kd-form{margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border)}
 .tr-kd-act{display:flex;gap:9px;justify-content:flex-end;margin-top:10px}
-.tr-kd-act>button{padding:11px 18px;font-size:var(--text-small)}
+.tr-kd-act>button{min-height:44px;padding:11px 18px;font-size:var(--text-small)}
+/* úprava a mazání poznámky – tichá tlačítka pod textem (44 px cíl drží .zsdil), potvrzení smazání v řádku */
+.tr-kd-ops{display:flex;gap:14px;margin:-4px 0 -10px}
+.tr-kd-on{background:var(--color-surface-2);border-radius:var(--radius-md);padding:9px 10px;margin:0 -10px}
+.tr-kd-maz{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:8px;font-size:var(--text-small);color:var(--color-danger)}
+.tr-kd-maz .tr-kd-act{margin:0 0 0 auto}
+.tr-btn-danger{background:var(--color-danger)}
 /* přehled: včerejšek a dnešek jako dva proklikové řádky */
 .tr-dash{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
 .tr-dash:first-of-type{border-top:none}

@@ -12,6 +12,8 @@
 let trView='den', trDay=TODAYD, trWeek=trTydenOd(TODAYD), trOpenDite=-1;
 // formulář poznámky k dítěti v zápisu dne; rozepsaný text přežije render() (třeba klik na poučení)
 let trNoteForm=false, trNoteChild=-1, trNoteDraft='';
+// úprava / mazání jedné poznámky: {i: dítě, j: pozice v jeho poli}
+let trUprava=null, trUpravaDraft='', trMazani=null;
 const TR_DOW=['pondělí','úterý','středa','čtvrtek','pátek'];
 // pracovní dny června, které už začaly (budoucí se nepíšou ani neprocházejí)
 const trDny=()=>Array.from({length:TODAYD},(_,i)=>i+1).filter(d=>!isWE(d));
@@ -66,7 +68,7 @@ function trRenderKDetem(d){
   const maDnes=new Set(poz.map(x=>x.i));
   let h=`<div class="zona zona-int tr-kdetem" id="tr-kdetem"><div class="zona-h"><span class="zona-t">K dětem</span>`
     +`<span class="zona-s">Jen pro tým – rodiče to nevidí a do tisku třídnice to nejde.</span></div><div class="tile">`;
-  h+=poz.length?poz.map(x=>`<div class="tr-kd">${avatar(data[x.i],28)}<div class="tr-kd-b"><div class="tr-kd-h"><b>${full(data[x.i])}</b><span class="tr-kdo">${esc(x.kdo)}</span></div><div class="tval">${esc(x.t)}</div></div></div>`).join('')
+  h+=poz.length?poz.map(trRenderPozn).join('')
     :`<div class="empty" style="padding:4px 0 8px;text-align:left">K tomuhle dni zatím žádná poznámka.</div>`;
   if(trNoteForm){
     const deti=data.map((c,i)=>({c,i})).sort(byAlpha);
@@ -80,6 +82,41 @@ function trRenderKDetem(d){
   }
   return h+`</div></div>`;
 }
+/* Jedna poznámka: čtení, nebo úprava v místě, nebo potvrzení smazání. Upravit a smazat smí
+   kdokoli z týmu – stejně jako psát; po úpravě je u poznámky vidět, kdo ji změnil.
+   Smazání se potvrzuje přímo v řádku, protože nejde vrátit. */
+function trRenderPozn(x){
+  const c=data[x.i], ja_=trUprava&&trUprava.i===x.i&&trUprava.j===x.j, maz=trMazani&&trMazani.i===x.i&&trMazani.j===x.j;
+  let h=`<div class="tr-kd${ja_||maz?' tr-kd-on':''}">${avatar(c,28)}<div class="tr-kd-b"><div class="tr-kd-h"><b>${full(c)}</b>`
+    +`<span class="tr-kdo">${esc(x.kdo)}${x.upr&&x.upr!==x.kdo?` · upraveno (${esc(x.upr)})`:''}</span></div>`;
+  if(ja_){
+    h+=`<textarea class="pta" id="tre-text" aria-label="Upravit poznámku k ${full(c)}" oninput="trUpravaDraft=this.value">${escTa(trUpravaDraft)}</textarea>`
+      +`<div class="tr-kd-act"><button class="btn-ghost" onclick="trUpravZrus()">Zrušit</button><button class="btn-primary" onclick="trUpravUloz()">Uložit změnu</button></div>`;
+  }else{
+    h+=`<div class="tval">${esc(x.t)}</div>`;
+    h+=maz
+      ? `<div class="tr-kd-maz" role="alert">Smazat poznámku k ${kratke(c)}? Nejde to vrátit.`
+        +`<span class="tr-kd-act"><button class="btn-ghost" onclick="trSmazZrus()">Nechat</button><button class="btn-primary tr-btn-danger" onclick="trSmazAno()">Smazat</button></span></div>`
+      : `<div class="tr-kd-ops"><button class="zsdil" onclick="trUprav(${x.i},${x.j})" aria-label="Upravit poznámku k ${full(c)}">Upravit</button>`
+        +`<button class="zsdil" onclick="trSmaz(${x.i},${x.j})" aria-label="Smazat poznámku k ${full(c)}">Smazat</button></div>`;
+  }
+  return h+`</div></div>`;
+}
+// poznámka se hledá v týdnu zobrazeného dne podle dítěte a pozice
+const trPozn=(i,j)=>(trDetiTyden(trTydenOd(trDay))[i]||[])[j];
+window.trUprav=(i,j)=>{trUprava={i,j};trUpravaDraft=trPozn(i,j).t;trMazani=null;render();
+  const t=document.getElementById('tre-text');if(t){t.focus();t.setSelectionRange(t.value.length,t.value.length);}};
+window.trUpravZrus=()=>{trUprava=null;trUpravaDraft='';render();};
+window.trUpravUloz=()=>{
+  if(!trUpravaDraft.trim()){showToast('Prázdnou poznámku smaž tlačítkem Smazat');document.getElementById('tre-text').focus();return;}
+  const p=trPozn(trUprava.i,trUprava.j);p.t=trUpravaDraft.trim();p.upr=ja().n;
+  trUprava=null;trUpravaDraft='';render();showToast('Poznámka upravena ✓');};
+window.trSmaz=(i,j)=>{trMazani={i,j};trUprava=null;render();};
+window.trSmazZrus=()=>{trMazani=null;render();};
+window.trSmazAno=()=>{
+  const poz=trDetiTyden(trTydenOd(trDay)),{i,j}=trMazani;
+  poz[i].splice(j,1);if(!poz[i].length)delete poz[i];
+  trMazani=null;render();showToast('Poznámka smazána');};
 window.trNoteOtevri=i=>{trNoteForm=true;trNoteChild=i;trNoteDraft='';render();
   const el=document.getElementById(i>=0?'trn-text':'trn-dite');if(el){el.focus();el.scrollIntoView({block:'center'});}};
 window.trNoteZavri=()=>{trNoteForm=false;trNoteChild=-1;trNoteDraft='';render();};
@@ -181,7 +218,7 @@ window.trRok=i=>{go('deti');openDite(i);
 
 /* ---- přepínání ---- */
 // rozepsaná poznámka patří ke dni – při odchodu z něj se formulář zavře
-const trNoteReset=()=>{trNoteForm=false;trNoteChild=-1;trNoteDraft='';};
+const trNoteReset=()=>{trNoteForm=false;trNoteChild=-1;trNoteDraft='';trUprava=null;trUpravaDraft='';trMazani=null;};
 window.trSetView=v=>{if(v!=='den')trWeek=trTydenOd(trDay);trView=v;trOpenDite=-1;trNoteReset();render();};
 window.trStepDay=dir=>{const ds=trDny(),i=ds.indexOf(trDay)+dir;if(i>=0&&i<ds.length){trDay=ds[i];trWeek=trTydenOd(trDay);trNoteReset();render();}};
 window.trStepWeek=dir=>{const ws=trTydny(),i=ws.indexOf(trWeek)+dir;if(i>=0&&i<ws.length){trWeek=ws[i];trOpenDite=-1;render();}};

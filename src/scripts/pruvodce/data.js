@@ -433,9 +433,10 @@ const trDnyTydne=po=>[0,1,2,3,4].map(i=>po+i).filter(d=>d<=30);
 function trDen(d){return TRIDNICE[d]||(TRIDNICE[d]={pouceni:[],pole:{}});}
 function trTyden(po){return TR_TYDNY[po]||(TR_TYDNY[po]={tema:'',pohadka:'',uzavreni:null,ukoly:[]});}
 function trDetiTyden(po){return TR_DETI[po]||(TR_DETI[po]={});}
-// poznámky k dítěti v jednom dni (ze všech týdnů se bere ten, kam den patří)
+// poznámky k dítěti v jednom dni (ze všech týdnů se bere ten, kam den patří);
+// j = pozice v poli dítěte – podle ní se poznámka upravuje a maže
 const trDetiDen=d=>{const poz=TR_DETI[trTydenOd(d)]||{};
-  return Object.keys(poz).flatMap(i=>poz[i].filter(x=>x.d===d).map(x=>({...x,i:+i})));};
+  return Object.keys(poz).flatMap(i=>poz[i].map((x,j)=>({...x,i:+i,j})).filter(x=>x.d===d));};
 /* Poznámky ze školního roku před červnem – v Jaatě je sbírá list „Listy dětí" (vzorce
    z týdenních listů) a čtou se před pohovory s rodiči. Datum je text, srt slouží k řazení. */
 const TR_DETI_ROK={

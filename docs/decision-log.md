@@ -1846,7 +1846,9 @@ rok u dítěte a mají je vidět i vedení. Psát je průvodce má ze zápisu dn
   evaluací nejde. V přehledu vyplnění sloupec „K dětem" = u kolika dětí je poznámka.
   Legislativní pravidlo (žádná jména ve veřejné části) drží tisk, ne skrývání před vedením.
 
-**Neřešeno:** úprava a smazání poznámky (překlep zatím nejde opravit), kdo smí poznámky
+**Doplněno 11. 10. 2026:** poznámku jde v zápisu dne upravit (v místě; podpis „upraveno (kdo)") a smazat (potvrzení přímo v řádku, nejde vrátit). Smí kdokoli z týmu, stejně jako psát.
+
+**Neřešeno:** kdo smí poznámky
 v adminu číst (zatím každý, kdo má admin). Děti v adminu jsou z jeho matriky – jména se
 s průvodcovskou appkou kryjí jen u Elišky (má i stejnou poznámku), počet dětí s poznámkou
 u Vhaaji tento týden sedí (7 z 25).
