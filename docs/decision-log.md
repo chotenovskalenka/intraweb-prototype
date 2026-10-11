@@ -1824,3 +1824,29 @@ Poznámky k dětem: v průměru u 19 z 23 dětí každý týden.
 (Jaata píše zranění do volného textu třídnice), přenos historie z Google tabulek.
 Admin má vlastní seed (květen–červen, 4 školky); Vhaaji tento týden sedí textově
 s průvodcovskou appkou.
+
+## Třídnice: informace k dětem – kde se píšou a kdo je čte (11. 10. 2026)
+
+**Zadání (Lenka):** u třídnice mají být i informace k dětem – přímo v zápisu dne, za celý
+rok u dítěte a mají je vidět i vedení. Psát je průvodce má ze zápisu dne.
+
+**Rozhodnutí:**
+- **Píše se jen v zápisu dne** – blok „K dětem" pod poli dne (interní zóna). Vyber dítě →
+  text → „Uložit a další" (formulář zůstane otevřený; v Jaatě vzniká u dne poznámek víc
+  naráz). Důvod: zápis se píše po odchodu dětí, „telefon před dětmi je tabu" – poznámky
+  tedy vznikají v tomtéž sezení jako zápis, ne rychlým zápisem v terénu. V nabídce dětí
+  je vidět, kdo už k tomu dni poznámku má.
+- **Záložka Děti je jen ke čtení**: týdenní pokrytí a kdo je bez poznámky; u dítěte
+  „Napsat k dnešku" (otevře zápis dne s předvybraným dítětem) a „Celý rok v profilu".
+- **Celý rok u dítěte** – v profilu dítěte, zóna „Jen pro tým", karta „Z třídnice ·
+  školní rok" (jako „Listy dětí" v sešitu Jaaty; podklad k pohovorům). Odlišeno od
+  Poznámek týmu: ty jsou o spolupráci s rodinou, tyhle jsou denní pozorování dítěte.
+- **Vedení je čte** – mění rozhodnutí z 10. 10. („do adminu nejdou"). V detailu týdne
+  je interní blok (podbarvený jako zóna „Jen pro tým"), který se **netiskne**; do výpisu
+  evaluací nejde. V přehledu vyplnění sloupec „K dětem" = u kolika dětí je poznámka.
+  Legislativní pravidlo (žádná jména ve veřejné části) drží tisk, ne skrývání před vedením.
+
+**Neřešeno:** úprava a smazání poznámky (překlep zatím nejde opravit), kdo smí poznámky
+v adminu číst (zatím každý, kdo má admin). Děti v adminu jsou z jeho matriky – jména se
+s průvodcovskou appkou kryjí jen u Elišky (má i stejnou poznámku), počet dětí s poznámkou
+u Vhaaji tento týden sedí (7 z 25).
