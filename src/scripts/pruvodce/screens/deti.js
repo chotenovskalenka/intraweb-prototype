@@ -112,6 +112,14 @@ function renderDite(i){
   h+=`<div class="tile"><div class="ch">Poznámky týmu</div>`+([...zPozn,...zRozh].join('')||`<div class="empty-l">Zatím žádné poznámky.</div>`)
     +`<label class="pl" style="margin-top:10px">Nová poznámka</label><textarea class="pta" id="tym-new" placeholder="upřímně – jen pro kolegy"></textarea>`
     +`<button class="btn-ghost btn-block" style="margin-top:var(--space-sm)" onclick="addTymPozn(${i})">Uložit poznámku</button></div>`;
+  /* Poznámky z třídnice za celý školní rok – jako „Listy dětí" v sešitu Jaaty, podklad
+     k pohovorům. Na rozdíl od Poznámek týmu (spolupráce s rodinou) jsou to denní pozorování
+     dítěte; píšou se v zápisu dne, tady se jen čtou. */
+  const rok=trDetiRok(i);
+  h+=`<div class="tile" id="tr-rok"><div class="ch">Z třídnice · školní rok 2025/26</div>`
+    +(rok.length?rok.map(x=>`<div class="rozh"><div class="rozhd">${x.datum} · ${esc(x.kdo)}</div>${esc(x.t)}</div>`).join('')
+      :`<div class="empty-l">V třídnici zatím k dítěti nic není.</div>`)
+    +`<button class="cardlink" onclick="trNapsat(${i},TODAYD)">Napsat do dnešní třídnice ›</button></div>`;
   h+=`</div>`;
 
   // Záznam z konzultace: obě části naráz, každá s jasnou viditelností

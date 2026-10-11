@@ -211,7 +211,18 @@
 .tr-dite-n{flex:1;font-size:var(--text-body);font-weight:500;color:var(--color-text)}
 .tr-dite-s{font-size:var(--text-note);color:var(--color-text-muted)}
 .tr-dite-b{padding:0 0 14px 38px}
-.tr-dite-add{margin-top:9px;padding:11px 18px}
+.tr-dite-act{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
+.tr-dite-act .btn-ghost{padding:10px 16px;font-size:var(--text-small)}
+.tr-dite-act .tr-rok-link{width:auto;border-top:none;margin:0;padding:0}
+/* K dětem v zápisu dne – poznámka = avatar, jméno, kdo psal, text */
+.tr-kdetem{margin-top:var(--space-lg)}
+.tr-kd{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--color-border)}
+.tr-kd:first-child{border-top:none}
+.tr-kd-b{flex:1;min-width:0}
+.tr-kd-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:2px;font-size:var(--text-body);color:var(--color-text)}
+.tr-kd-form{margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border)}
+.tr-kd-act{display:flex;gap:9px;justify-content:flex-end;margin-top:10px}
+.tr-kd-act>button{padding:11px 18px;font-size:var(--text-small)}
 /* přehled: včerejšek a dnešek jako dva proklikové řádky */
 .tr-dash{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
 .tr-dash:first-of-type{border-top:none}
@@ -223,5 +234,5 @@
   .tr-pole{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 var(--space-md);align-items:start}
   .tr-f-wide{grid-column:1/-1}   /* evaluace dne uzavírá den – přes celou šířku */
   .tr-tyden{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-md);align-items:start}
-  .tr-deti{display:block}
+  .tr-deti,.tr-kdetem{display:block}
 }

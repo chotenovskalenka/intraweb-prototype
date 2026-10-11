@@ -914,7 +914,18 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .tr-dite-n{flex:1;font-size:var(--text-body);font-weight:500;color:var(--color-text)}
 .tr-dite-s{font-size:var(--text-note);color:var(--color-text-muted)}
 .tr-dite-b{padding:0 0 14px 38px}
-.tr-dite-add{margin-top:9px;padding:11px 18px}
+.tr-dite-act{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
+.tr-dite-act .btn-ghost{padding:10px 16px;font-size:var(--text-small)}
+.tr-dite-act .tr-rok-link{width:auto;border-top:none;margin:0;padding:0}
+/* K dětem v zápisu dne – poznámka = avatar, jméno, kdo psal, text */
+.tr-kdetem{margin-top:var(--space-lg)}
+.tr-kd{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--color-border)}
+.tr-kd:first-child{border-top:none}
+.tr-kd-b{flex:1;min-width:0}
+.tr-kd-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:2px;font-size:var(--text-body);color:var(--color-text)}
+.tr-kd-form{margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border)}
+.tr-kd-act{display:flex;gap:9px;justify-content:flex-end;margin-top:10px}
+.tr-kd-act>button{padding:11px 18px;font-size:var(--text-small)}
 /* přehled: včerejšek a dnešek jako dva proklikové řádky */
 .tr-dash{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
 .tr-dash:first-of-type{border-top:none}
@@ -926,7 +937,7 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
   .tr-pole{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 var(--space-md);align-items:start}
   .tr-f-wide{grid-column:1/-1}   /* evaluace dne uzavírá den – přes celou šířku */
   .tr-tyden{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-md);align-items:start}
-  .tr-deti{display:block}
+  .tr-deti,.tr-kdetem{display:block}
 }
 </style>
 <style>
@@ -1765,8 +1776,12 @@ let TR_TYDNY={
 };
 /* Poznámky k dětem – vždy jen pro tým, do tisku třídnice nejdou. Jaata je píše týden co
    týden u téměř všech dětí (19 z 23 v průměru), proto po dnech a dohromady za týden.
-   Klíč = pondělí týdne → index dítěte → [{d,t,kdo}]. */
+   Klíč = pondělí týdne → index dítěte → [{d,t,kdo}]. Píšou se v zápisu dne (blok „K dětem"),
+   čtou se po dnech, za týden (záložka Děti) i za celý rok v profilu dítěte. */
 let TR_DETI={1:{
+  // Eliška je jediné dítě společné s adminem – tam vedení čte tutéž poznámku
+  3:[{d:2,t:'Odpoledne vyzvedla babička, loučení v pohodě. Celý den hodně povídala o hvězdárně.',kdo:'Gabča'}],
+  18:[{d:3,t:'Narozeninový kruh – sama zapálila svíčku, celé dopoledne zářila.',kdo:'Honza'}],
   0:[{d:1,t:'Celé dopoledne s Toničkou u tanečků, odpoledne unavená.',kdo:'Darča'}],
   4:[{d:1,t:'Postavil s Vojtou největší domeček, ostatní ho obdivovali.',kdo:'Táňa'},{d:2,t:'Cestou zpět bolely nohy, chvíli nesen.',kdo:'Gabča'}],
   7:[{d:2,t:'Šišky třídil s velkým zaujetím, vydržel u toho nejdéle ze všech.',kdo:'Gabča'}],
@@ -1779,6 +1794,26 @@ const trDnyTydne=po=>[0,1,2,3,4].map(i=>po+i).filter(d=>d<=30);
 function trDen(d){return TRIDNICE[d]||(TRIDNICE[d]={pouceni:[],pole:{}});}
 function trTyden(po){return TR_TYDNY[po]||(TR_TYDNY[po]={tema:'',pohadka:'',uzavreni:null,ukoly:[]});}
 function trDetiTyden(po){return TR_DETI[po]||(TR_DETI[po]={});}
+// poznámky k dítěti v jednom dni (ze všech týdnů se bere ten, kam den patří)
+const trDetiDen=d=>{const poz=TR_DETI[trTydenOd(d)]||{};
+  return Object.keys(poz).flatMap(i=>poz[i].filter(x=>x.d===d).map(x=>({...x,i:+i})));};
+/* Poznámky ze školního roku před červnem – v Jaatě je sbírá list „Listy dětí" (vzorce
+   z týdenních listů) a čtou se před pohovory s rodiči. Datum je text, srt slouží k řazení. */
+const TR_DETI_ROK={
+  4:[{srt:20250912,datum:'12. 9. 2025',t:'Adaptace bez slz, hned v klučičí partě u klacků.',kdo:'Táňa'},
+     {srt:20251106,datum:'6. 11. 2025',t:'Martinská slavnost – nesl lampion celou cestu sám, hrdý.',kdo:'Darča'},
+     {srt:20260212,datum:'12. 2. 2026',t:'Při stříhání ještě potřebuje pomoc, úchop nůžek trénovat.',kdo:'Gabča'},
+     {srt:20260423,datum:'23. 4. 2026',t:'Velký posun ve stříhání, vločku zvládl skoro sám.',kdo:'Gabča'}],
+  14:[{srt:20251015,datum:'15. 10. 2025',t:'Drží se hlavně dospělých, s dětmi zatím málo.',kdo:'Darča'},
+      {srt:20260310,datum:'10. 3. 2026',t:'Začíná si hrát ve dvojici s Bárou, hezky se doplňují.',kdo:'Táňa'}],
+  12:[{srt:20251120,datum:'20. 11. 2025',t:'Ranní loučení delší, pomáhá krmení slepic.',kdo:'Gabča'}],
+  0:[{srt:20260128,datum:'28. 1. 2026',t:'Sauna poprvé – po první vodě slzy, napotřetí smích.',kdo:'Honza'}],
+};
+// celý rok jednoho dítěte, nejnovější nahoře: archiv + červnové týdny
+function trDetiRok(i){
+  const cerven=Object.keys(TR_DETI).flatMap(po=>(TR_DETI[po][i]||[]).map(x=>({srt:20260600+x.d,datum:`${x.d}. 6. 2026`,t:x.t,kdo:x.kdo})));
+  return [...(TR_DETI_ROK[i]||[]),...cerven].sort((a,b)=>b.srt-a.srt);
+}
 const trVyplneno=d=>TR_POLE.filter(p=>!p.volitelne&&((TRIDNICE[d]||{pole:{}}).pole[p.k]||{}).t).length;
 /* Stav dne: budoucí se nepíše; jinak chybí / rozepsáno n z 8 / zapsáno. Dnešek bez zápisu
    není chyba – den ještě běží. */
@@ -2160,13 +2195,19 @@ window.stepWeek=dir=>{let w=weekStart+dir*7;if(w<1)w=1;if(w>29)w=29;weekStart=w;
 </script>
 <script>
 /* SCREEN: PRUVODCE_TRIDNICE – denní zápis (třídní kniha). Tři pohledy:
-     Den   – zápis jednoho dne; každé pole se ukládá samo a nese „kdo a kdy doplnil"
+     Den   – zápis jednoho dne; každé pole se ukládá samo a nese „kdo a kdy doplnil".
+             Pod ním blok „K dětem" (jen pro tým) – jediné místo, kde se poznámky k dětem
+             píšou: zápis dne se píše po odchodu dětí, takže i poznámky vznikají v tomtéž
+             sezení, ne v telefonu u dětí.
      Týden – téma a pohádka týdne, stav dnů, uzavření týdne, úkoly „je třeba zařídit"
-     Děti  – poznámky k dětem, jen pro tým (P1 + legislativa: jména dětí do veřejné části nepatří)
+     Děti  – týdenní přehled poznámek k dětem a kdo je zatím bez ní (jen čtení; psaní vede
+             do zápisu dne). P1 + legislativa: jména dětí do veřejné části nepatří.
    Žádné „Odeslat": třídnice se píše zpětně a víc lidmi (výzkum), formulář, který se odešle
    a zavře, to neunese. Psaní nevolá render() – kurzor v poli musí zůstat; přepisuje se jen
    podpis pole a stav dne přímo v DOM. Data a stavy jsou v data.js (TR_*). */
-let trView='den', trDay=TODAYD, trWeek=trTydenOd(TODAYD), trOpenDite=-1, trNoteDay=TODAYD;
+let trView='den', trDay=TODAYD, trWeek=trTydenOd(TODAYD), trOpenDite=-1;
+// formulář poznámky k dítěti v zápisu dne; rozepsaný text přežije render() (třeba klik na poučení)
+let trNoteForm=false, trNoteChild=-1, trNoteDraft='';
 const TR_DOW=['pondělí','úterý','středa','čtvrtek','pátek'];
 // pracovní dny června, které už začaly (budoucí se nepíšou ani neprocházejí)
 const trDny=()=>Array.from({length:TODAYD},(_,i)=>i+1).filter(d=>!isWE(d));
@@ -2197,7 +2238,7 @@ function trRenderDen(){
   const d=trDay, z=trDen(d), sl=trSluzba(d);
   let h=`<div class="tile tr-meta"><div class="tr-meta-r"><span class="tlab">${TR_DOW[wd(d)].replace(/^./,m=>m.toUpperCase())} ${d}. června</span><span id="tr-stav">${trBdg(trStav(d))}</span></div>`
     +`<div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b> · píše <b>${TR_ZAPISUJE[wd(d)]}</b></div>`
-    +`<div class="note2">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do záložky <button class="tr-inl" onclick="trSetView('deti')">Děti</button>, kterou vidí jen tým.</div></div>`;
+    +`<div class="note2">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do části <a class="tr-inl" href="#tr-kdetem">K dětem</a> pod zápisem, kterou vidí jen tým.</div></div>`;
   h+=`<div class="tr-pole">`;
   TR_POLE.forEach(p=>{
     const v=z.pole[p.k];
@@ -2211,8 +2252,43 @@ function trRenderDen(){
       +TR_POUCENI.map(([k,l])=>`<button class="${z.pouceni.includes(k)?'on':''}" aria-pressed="${z.pouceni.includes(k)}" onclick="trPouceni('${k}')">${l}</button>`).join('')+`</div>`;
     h+=`</div>`;
   });
-  return h+`</div>`;
+  return h+`</div>`+trRenderKDetem(d);
 }
+/* K dětem – poznámky toho dne. Jaata je píše na týž list jako den, jen do vlastní části;
+   tady stejně: pod zápisem, ale v interní zóně, která se nikdy netiskne. Po uložení zůstane
+   formulář otevřený pro další dítě – v Jaatě vzniká u dne poznámek několik naráz. */
+function trRenderKDetem(d){
+  const poz=trDetiDen(d).sort((a,b)=>byAlpha({c:data[a.i]},{c:data[b.i]}));
+  const maDnes=new Set(poz.map(x=>x.i));
+  let h=`<div class="zona zona-int tr-kdetem" id="tr-kdetem"><div class="zona-h"><span class="zona-t">K dětem</span>`
+    +`<span class="zona-s">Jen pro tým – rodiče to nevidí a do tisku třídnice to nejde.</span></div><div class="tile">`;
+  h+=poz.length?poz.map(x=>`<div class="tr-kd">${avatar(data[x.i],28)}<div class="tr-kd-b"><div class="tr-kd-h"><b>${full(data[x.i])}</b><span class="tr-kdo">${esc(x.kdo)}</span></div><div class="tval">${esc(x.t)}</div></div></div>`).join('')
+    :`<div class="empty" style="padding:4px 0 8px;text-align:left">K tomuhle dni zatím žádná poznámka.</div>`;
+  if(trNoteForm){
+    const deti=data.map((c,i)=>({c,i})).sort(byAlpha);
+    h+=`<div class="tr-kd-form"><label class="pl" for="trn-dite">Dítě</label>`
+      +`<select class="pin" id="trn-dite" onchange="trNoteChild=+this.value"><option value="-1">Vyber dítě…</option>`
+      +deti.map(({c,i})=>`<option value="${i}"${trNoteChild===i?' selected':''}>${full(c)}${maDnes.has(i)?' · už má poznámku':''}</option>`).join('')+`</select>`
+      +`<label class="pl" for="trn-text">Poznámka</label><textarea class="pta" id="trn-text" placeholder="Nálada, vztahy, co se povedlo, zdraví…" oninput="trNoteDraft=this.value">${escTa(trNoteDraft)}</textarea>`
+      +`<div class="tr-kd-act"><button class="btn-ghost" onclick="trNoteZavri()">Hotovo</button><button class="btn-primary" onclick="trNoteUloz()">Uložit a další</button></div></div>`;
+  }else{
+    h+=`<button class="addbtn" onclick="trNoteOtevri(-1)">+ Poznámka k dítěti</button>`;
+  }
+  return h+`</div></div>`;
+}
+window.trNoteOtevri=i=>{trNoteForm=true;trNoteChild=i;trNoteDraft='';render();
+  const el=document.getElementById(i>=0?'trn-text':'trn-dite');if(el){el.focus();el.scrollIntoView({block:'center'});}};
+window.trNoteZavri=()=>{trNoteForm=false;trNoteChild=-1;trNoteDraft='';render();};
+window.trNoteUloz=()=>{
+  if(trNoteChild<0){showToast('Vyber dítě');document.getElementById('trn-dite').focus();return;}
+  if(!trNoteDraft.trim()){document.getElementById('trn-text').focus();return;}
+  const poz=trDetiTyden(trTydenOd(trDay));
+  (poz[trNoteChild]||(poz[trNoteChild]=[])).push({d:trDay,t:trNoteDraft.trim(),kdo:ja().n});
+  poz[trNoteChild].sort((a,b)=>a.d-b.d);
+  const jm=kratke(data[trNoteChild]);
+  trNoteChild=-1;trNoteDraft='';render();showToast('Poznámka k '+jm+' uložena ✓');
+  const s=document.getElementById('trn-dite');if(s)s.focus();
+};
 window.trSet=(k,v)=>{
   const z=trDen(trDay);
   if(v.trim())z.pole[k]={t:v,kdo:ja().n,cas:TEDCAS,den:TODAYD};else delete z.pole[k];
@@ -2271,7 +2347,7 @@ window.trGoDay=d=>{trDay=d;trView='den';render();};
 /* ---- Děti (jen pro tým) ---- */
 function trRenderDeti(){
   const po=trWeek, poz=trDetiTyden(po), dny=trDnyTydne(po).filter(d=>d<=TODAYD);
-  if(!dny.includes(trNoteDay))trNoteDay=dny[dny.length-1];
+  const kDni=dny[dny.length-1];   // psát se dá k poslednímu proběhlému dni týdne (dnes, nebo pátek)
   const sPoz=data.filter((c,i)=>(poz[i]||[]).length).length;
   let h=`<div class="zona zona-int tr-deti"><div class="zona-h"><span class="zona-t">Poznámky k dětem</span>`
     +`<span class="zona-s">Jen pro tým – rodiče je nevidí a do tisku třídnice nejdou.</span></div>`;
@@ -2285,28 +2361,28 @@ function trRenderDeti(){
     if(open){
       h+=`<div class="tr-dite-b">`;
       n.forEach(x=>{h+=`<div class="rozh"><div class="rozhd">${trDenLbl(x.d)} · ${esc(x.kdo)}</div>${esc(x.t)}</div>`;});
-      h+=`<div class="pl">Nová poznámka k</div><div class="pchips">`
-        +dny.map(d=>`<button class="${trNoteDay===d?'on':''}" onclick="trNoteDen(${d})">${trDenLbl(d)}</button>`).join('')+`</div>`
-        +`<textarea class="pta" id="trdn" style="margin-top:8px" placeholder="Nálada, vztahy, co se povedlo, zdraví…" aria-label="Poznámka k dítěti ${full(c)}"></textarea>`
-        +`<button class="btn-primary tr-dite-add" onclick="trNoteAdd(${i})">Uložit poznámku</button></div>`;
+      // psaní vede do zápisu dne – jedno místo, kde poznámky vznikají
+      h+=`<div class="tr-dite-act"><button class="btn-ghost" onclick="trNapsat(${i},${kDni})">Napsat k ${kDni===TODAYD?'dnešku':trDenLbl(kDni)}</button>`
+        +`<button class="cardlink tr-rok-link" onclick="trRok(${i})">Celý rok v profilu dítěte ›</button></div></div>`;
     }
     h+=`</div>`;
   });
   return h+`</div></div>`;
 }
 window.trDite=i=>{trOpenDite=trOpenDite===i?-1:i;render();};
-// výběr dne nesmí smazat rozepsaný text – přenese ho do nového renderu
-window.trNoteDen=d=>{const t=document.getElementById('trdn'),v=t?t.value:'';trNoteDay=d;render();const n=document.getElementById('trdn');if(n)n.value=v;};
-window.trNoteAdd=i=>{const t=document.getElementById('trdn');if(!t||!t.value.trim()){if(t)t.focus();return;}
-  const poz=trDetiTyden(trWeek);(poz[i]||(poz[i]=[])).push({d:trNoteDay,t:t.value.trim(),kdo:ja().n});
-  poz[i].sort((a,b)=>a.d-b.d);render();showToast('Poznámka uložena ✓');};
+// z týdenního přehledu do zápisu dne s předvybraným dítětem
+window.trNapsat=(i,d)=>{trDay=d;trWeek=trTydenOd(d);trView='den';if(section!=='tridnice')go('tridnice');trNoteOtevri(i);};
+window.trRok=i=>{go('deti');openDite(i);
+  const el=document.getElementById('tr-rok');if(el)el.scrollIntoView({block:'start'});};
 
 /* ---- přepínání ---- */
-window.trSetView=v=>{if(v!=='den')trWeek=trTydenOd(trDay);trView=v;trOpenDite=-1;render();};
-window.trStepDay=dir=>{const ds=trDny(),i=ds.indexOf(trDay)+dir;if(i>=0&&i<ds.length){trDay=ds[i];trWeek=trTydenOd(trDay);render();}};
+// rozepsaná poznámka patří ke dni – při odchodu z něj se formulář zavře
+const trNoteReset=()=>{trNoteForm=false;trNoteChild=-1;trNoteDraft='';};
+window.trSetView=v=>{if(v!=='den')trWeek=trTydenOd(trDay);trView=v;trOpenDite=-1;trNoteReset();render();};
+window.trStepDay=dir=>{const ds=trDny(),i=ds.indexOf(trDay)+dir;if(i>=0&&i<ds.length){trDay=ds[i];trWeek=trTydenOd(trDay);trNoteReset();render();}};
 window.trStepWeek=dir=>{const ws=trTydny(),i=ws.indexOf(trWeek)+dir;if(i>=0&&i<ws.length){trWeek=ws[i];trOpenDite=-1;render();}};
 // vstup z přehledu: rovnou na daný den
-window.trOtevrit=d=>{trDay=d;trWeek=trTydenOd(d);trView='den';go('tridnice');};
+window.trOtevrit=d=>{trDay=d;trWeek=trTydenOd(d);trView='den';trNoteReset();go('tridnice');};
 </script>
 <script>
 /* SCREEN: PRUVODCE_NOVINKY – novinky pro rodiče: seznam s autorem a časem,
@@ -2763,6 +2839,14 @@ function renderDite(i){
   h+=`<div class="tile"><div class="ch">Poznámky týmu</div>`+([...zPozn,...zRozh].join('')||`<div class="empty-l">Zatím žádné poznámky.</div>`)
     +`<label class="pl" style="margin-top:10px">Nová poznámka</label><textarea class="pta" id="tym-new" placeholder="upřímně – jen pro kolegy"></textarea>`
     +`<button class="btn-ghost btn-block" style="margin-top:var(--space-sm)" onclick="addTymPozn(${i})">Uložit poznámku</button></div>`;
+  /* Poznámky z třídnice za celý školní rok – jako „Listy dětí" v sešitu Jaaty, podklad
+     k pohovorům. Na rozdíl od Poznámek týmu (spolupráce s rodinou) jsou to denní pozorování
+     dítěte; píšou se v zápisu dne, tady se jen čtou. */
+  const rok=trDetiRok(i);
+  h+=`<div class="tile" id="tr-rok"><div class="ch">Z třídnice · školní rok 2025/26</div>`
+    +(rok.length?rok.map(x=>`<div class="rozh"><div class="rozhd">${x.datum} · ${esc(x.kdo)}</div>${esc(x.t)}</div>`).join('')
+      :`<div class="empty-l">V třídnici zatím k dítěti nic není.</div>`)
+    +`<button class="cardlink" onclick="trNapsat(${i},TODAYD)">Napsat do dnešní třídnice ›</button></div>`;
   h+=`</div>`;
 
   // Záznam z konzultace: obě části naráz, každá s jasnou viditelností

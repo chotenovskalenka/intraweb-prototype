@@ -415,8 +415,12 @@ let TR_TYDNY={
 };
 /* Poznámky k dětem – vždy jen pro tým, do tisku třídnice nejdou. Jaata je píše týden co
    týden u téměř všech dětí (19 z 23 v průměru), proto po dnech a dohromady za týden.
-   Klíč = pondělí týdne → index dítěte → [{d,t,kdo}]. */
+   Klíč = pondělí týdne → index dítěte → [{d,t,kdo}]. Píšou se v zápisu dne (blok „K dětem"),
+   čtou se po dnech, za týden (záložka Děti) i za celý rok v profilu dítěte. */
 let TR_DETI={1:{
+  // Eliška je jediné dítě společné s adminem – tam vedení čte tutéž poznámku
+  3:[{d:2,t:'Odpoledne vyzvedla babička, loučení v pohodě. Celý den hodně povídala o hvězdárně.',kdo:'Gabča'}],
+  18:[{d:3,t:'Narozeninový kruh – sama zapálila svíčku, celé dopoledne zářila.',kdo:'Honza'}],
   0:[{d:1,t:'Celé dopoledne s Toničkou u tanečků, odpoledne unavená.',kdo:'Darča'}],
   4:[{d:1,t:'Postavil s Vojtou největší domeček, ostatní ho obdivovali.',kdo:'Táňa'},{d:2,t:'Cestou zpět bolely nohy, chvíli nesen.',kdo:'Gabča'}],
   7:[{d:2,t:'Šišky třídil s velkým zaujetím, vydržel u toho nejdéle ze všech.',kdo:'Gabča'}],
@@ -429,6 +433,26 @@ const trDnyTydne=po=>[0,1,2,3,4].map(i=>po+i).filter(d=>d<=30);
 function trDen(d){return TRIDNICE[d]||(TRIDNICE[d]={pouceni:[],pole:{}});}
 function trTyden(po){return TR_TYDNY[po]||(TR_TYDNY[po]={tema:'',pohadka:'',uzavreni:null,ukoly:[]});}
 function trDetiTyden(po){return TR_DETI[po]||(TR_DETI[po]={});}
+// poznámky k dítěti v jednom dni (ze všech týdnů se bere ten, kam den patří)
+const trDetiDen=d=>{const poz=TR_DETI[trTydenOd(d)]||{};
+  return Object.keys(poz).flatMap(i=>poz[i].filter(x=>x.d===d).map(x=>({...x,i:+i})));};
+/* Poznámky ze školního roku před červnem – v Jaatě je sbírá list „Listy dětí" (vzorce
+   z týdenních listů) a čtou se před pohovory s rodiči. Datum je text, srt slouží k řazení. */
+const TR_DETI_ROK={
+  4:[{srt:20250912,datum:'12. 9. 2025',t:'Adaptace bez slz, hned v klučičí partě u klacků.',kdo:'Táňa'},
+     {srt:20251106,datum:'6. 11. 2025',t:'Martinská slavnost – nesl lampion celou cestu sám, hrdý.',kdo:'Darča'},
+     {srt:20260212,datum:'12. 2. 2026',t:'Při stříhání ještě potřebuje pomoc, úchop nůžek trénovat.',kdo:'Gabča'},
+     {srt:20260423,datum:'23. 4. 2026',t:'Velký posun ve stříhání, vločku zvládl skoro sám.',kdo:'Gabča'}],
+  14:[{srt:20251015,datum:'15. 10. 2025',t:'Drží se hlavně dospělých, s dětmi zatím málo.',kdo:'Darča'},
+      {srt:20260310,datum:'10. 3. 2026',t:'Začíná si hrát ve dvojici s Bárou, hezky se doplňují.',kdo:'Táňa'}],
+  12:[{srt:20251120,datum:'20. 11. 2025',t:'Ranní loučení delší, pomáhá krmení slepic.',kdo:'Gabča'}],
+  0:[{srt:20260128,datum:'28. 1. 2026',t:'Sauna poprvé – po první vodě slzy, napotřetí smích.',kdo:'Honza'}],
+};
+// celý rok jednoho dítěte, nejnovější nahoře: archiv + červnové týdny
+function trDetiRok(i){
+  const cerven=Object.keys(TR_DETI).flatMap(po=>(TR_DETI[po][i]||[]).map(x=>({srt:20260600+x.d,datum:`${x.d}. 6. 2026`,t:x.t,kdo:x.kdo})));
+  return [...(TR_DETI_ROK[i]||[]),...cerven].sort((a,b)=>b.srt-a.srt);
+}
 const trVyplneno=d=>TR_POLE.filter(p=>!p.volitelne&&((TRIDNICE[d]||{pole:{}}).pole[p.k]||{}).t).length;
 /* Stav dne: budoucí se nepíše; jinak chybí / rozepsáno n z 8 / zapsáno. Dnešek bez zápisu
    není chyba – den ještě běží. */
