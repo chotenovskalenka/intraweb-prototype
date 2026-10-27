@@ -194,6 +194,31 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
   blockquote.big p{font-size:21px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+/* ---------- status + todo ---------- */
+.status{display:inline-flex; align-items:center; gap:9px; margin-top:28px; padding:7px 14px; border-radius:999px; background:var(--wash); border:1px solid var(--line); font-size:13.5px; color:var(--muted)}
+.status i{width:8px; height:8px; border-radius:50%; background:var(--primary); display:block}
+.todo{
+  margin:24px 0; padding:16px 20px; border-radius:12px;
+  border:1.5px dashed var(--accent-ink); background:rgba(200,188,133,.14);
+  font-size:14.5px; color:var(--text); max-width:660px;
+}
+.todo b{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-ink); margin-bottom:5px}
+
+/* ---------- before → after ---------- */
+.swaps{display:grid; gap:2px; margin-top:28px; border-radius:12px; overflow:hidden; max-width:660px}
+.sw{display:grid; grid-template-columns:1fr 24px 1fr; gap:10px; padding:13px 18px; background:var(--surface); align-items:baseline; font-size:15px}
+.sw s{color:var(--hint)}
+.sw .ar{color:var(--accent-ink); font-weight:600; text-align:center}
+.sw b{font-weight:600}
+.sw small{grid-column:1 / -1; color:var(--muted); font-size:13.5px}
+
+/* ---------- groups ---------- */
+.groups{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:32px}
+.grp{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px}
+.grp .n{font-family:var(--display); font-size:30px; font-weight:800; color:var(--primary-strong); line-height:1}
+.grp h4{font-size:16.5px; margin:10px 0 6px}
+.grp p{font-size:14px; color:var(--muted)}
 </style>
 
 <div class="wrap">
@@ -202,19 +227,28 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
   <div class="eyebrow">UX výzkum a design · 2026</div>
   <h1>Náhrady se počítaly tužkou</h1>
   <p class="lede">Redesign intrawebu pro síť čtyř soukromých školek. <strong>Majitelka o redesign nestála, tým byl spokojený</strong> — a přesto hospodářka každý měsíc přepočítávala nároky dětí ručně na papíře, protože systému nevěřila.</p>
+  <div class="status"><i></i>Projekt běží · stav k září 2026: prototypy po prvním kole testování</div>
   <dl class="meta">
     <div><dt>Moje role</dt><dd>Výzkum, UX, design systém, prototypy</dd></div>
     <div><dt>Tým</dt><dd>2 výzkumnice, 1 vývojář</dd></div>
-    <div><dt>Metoda</dt><dd>9 hloubkových rozhovorů, 12 nahrávek</dd></div>
+    <div><dt>Výzkum</dt><dd>9 rozhovorů · 1 080 zpráv z WhatsAppu · 3 testy</dd></div>
     <div><dt>Výstup</dt><dd>3 proklikávací prototypy, design systém</dd></div>
   </dl>
+  <div class="todo"><b>K rozhodnutí · ownership</b>Co dělala druhá výzkumnice a co ty? Napiš jednou větou, kde končí její práce a začíná tvoje. A jestli zmínit, že prototypy vznikají v kódu s pomocí AI.</div>
 </header>
 
 <section>
   <div class="col">
-    <h2>Zadání, které si nikdo neobjednal</h2>
+    <h2>Proč zrovna já</h2>
+  </div>
+  <div class="todo"><b>K rozhodnutí · osobní vstup</b>Dva až tři odstavce o tom, proč tenhle projekt děláš ty. Pokud jsi ve školce zároveň rodič, je to nejsilnější motivace, jakou můžeš mít — a zároveň zkreslení, které stojí za to přiznat (respondenti mluvili s někým, koho znají). Jestli to chceš mít veřejně, je jen na tobě.</div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Zlom 1: Nikdo redesign nechtěl</h2>
     <p class="sub">Síť čtyř školek — dvě kamenné, dvě lesní. Interní systém, který vznikl před jedenácti lety pro jednu z nich a postupně se rozšířil na všechny.</p>
-    <p>Intraweb dnes umí tři věci: docházku, matriku a fakturaci. Všechno ostatní žije v deseti Google tabulkách a v šesti typech WhatsAppových skupin. Průvodkyně drží kolem sedmnácti skupin, vedení kolem třiceti.</p>
+    <p>Intraweb umí tři věci: docházku, matriku a fakturaci. Všechno ostatní žije v deseti Google tabulkách a v šesti typech WhatsAppových skupin. Průvodkyně drží kolem sedmnácti skupin, vedení kolem třiceti.</p>
     <p>Zadání znělo jednoduše — sjednotit to. Jenže hned první rozhovory ukázaly, že problém není tam, kde ho zadání hledalo. Zeptala jsem se majitelky, proč je podle ní redesign potřeba:</p>
   </div>
 
@@ -225,14 +259,14 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
 
   <div class="col">
     <p>Za úspěch projektu označila stav, kdy tým nezareaguje vůbec: <em>„zhoršit funkce asi nezhoršíte, takže ta odezva bude buďto žádná, nebo dobrá. Takže když bude žádná, tak už to je úspěch.“</em></p>
-    <p>To je pro designéra nepříjemný, ale zásadní nález. Znamená totiž, že projekt nemá mandát na přestavbu — má mandát na opravu. A že cokoli, co rozbije zaběhnuté návyky týmu, bude odmítnuto bez ohledu na to, jak dobře je to navržené.</p>
+    <p>Nepříjemný, ale zásadní nález. Projekt nemá mandát na přestavbu — má mandát na opravu. Cokoli, co rozbije zaběhnuté návyky týmu, bude odmítnuto bez ohledu na to, jak dobře je to navržené. <strong>Od té chvíle jsem se u každého návrhu ptala, co nechat být, ne co přidat.</strong></p>
   </div>
 </section>
 
 <section>
   <div class="col">
     <h2>Co ukázal výzkum</h2>
-    <p class="sub">Devět respondentů napříč všemi rolemi: majitelka, vedení a hospodářka, vývojář, tři průvodkyně, dva rodiče. U každého zjištění jsem sledovala, kolik lidí ho doložilo vlastní zkušeností — ne kolik z nich s ním souhlasilo.</p>
+    <p class="sub">Devět respondentů napříč všemi rolemi: majitelka, vedení a hospodářka, vývojář, tři průvodkyně, dva rodiče. U každého zjištění jsem počítala, kolik lidí ho doložilo vlastní zkušeností — ne kolik z nich s ním souhlasilo.</p>
   </div>
 
   <div class="findings">
@@ -243,7 +277,7 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
       </div>
       <div>
         <h4>Náhradám nerozumí ani lidé, kteří o nich rozhodují</h4>
-        <p>Za včas omluvený den vzniká dítěti náhrada. Pravidlo zní jednoduše — a přesto ho neuměl vysvětlit nikdo kromě hospodářky. Majitelka se počítání vzdala a náhradu raději daruje. Koordinátorka týmu ho nazvala šedou zónou a rodiče posílá dál. Rodiče nevědí, kolik náhrad mají, ani kde to zjistit. <strong>Systém výpočet nabízí, ale nikdo mu nevěří.</strong></p>
+        <p>Za včas omluvený den vzniká dítěti náhrada. Pravidlo zní jednoduše — a přesto ho neuměl vysvětlit nikdo kromě hospodářky. Majitelka se počítání vzdala a náhradu raději daruje. Rodiče nevědí, kolik náhrad mají, ani kde to zjistit. <strong>Systém výpočet nabízí, ale nikdo mu nevěří.</strong></p>
       </div>
     </div>
 
@@ -254,7 +288,7 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
       </div>
       <div>
         <h4>Odpověď se musí přečíst, ne poskládat</h4>
-        <p>Průvodkyně potřebuje ráno jediné číslo: kolik dětí přijde a kolik z nich bude spát. Systém jí dal počet odpoledních a zbytek si musela dopočítat po jednotlivých dětech. <strong>Skutečným zdrojem pravdy bylo fyzické přepočítání dětí na ranním kruhu</strong> — systém sloužil jako odhad, který se ověřoval realitou.</p>
+        <p>Průvodkyně potřebuje ráno jediné číslo: kolik dětí přijde a kolik z nich bude spát. Systém jí dal počet odpoledních a zbytek si musela dopočítat po jednotlivých dětech. <strong>Skutečným zdrojem pravdy bylo přepočítání dětí na ranním kruhu</strong> — systém sloužil jako odhad, který se ověřoval realitou.</p>
       </div>
     </div>
 
@@ -265,7 +299,7 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
       </div>
       <div>
         <h4>Funkce existují. Nikdo o nich neví</h4>
-        <p>Poznámka u docházky je učebnicový případ: skrytá pro rodiče, neviditelná pro průvodce a na mobilu na ni nejde kliknout. Jeden rodič ji používá a tvrdí, že funguje — <strong>ale informaci pro jistotu ještě zopakuje ústně.</strong> Funkce technicky funguje. Jen jí nikdo nevěří.</p>
+        <p>Poznámka u docházky je učebnicový případ: skrytá pro rodiče, neviditelná pro průvodce a na mobilu na ni nejde kliknout. Jeden rodič ji používá a tvrdí, že funguje — <strong>ale informaci pro jistotu ještě zopakuje ústně.</strong></p>
       </div>
     </div>
 
@@ -276,7 +310,7 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
       </div>
       <div>
         <h4>WhatsApp není konkurent. Je to nervový systém</h4>
-        <p>Sedm respondentů mluvilo o WhatsAppu pochvalně i odmítavě v jedné odpovědi. Umí dvě věci, které systém neuměl: <strong>potvrzení, že informaci někdo přijal, a doručení celému týmu naráz</strong> — včetně těch, kdo zrovna nemají službu. Nahradit ho nechtěl nikdo. Ani vývojář.</p>
+        <p>Sedm respondentů mluvilo o WhatsAppu pochvalně i odmítavě v jedné odpovědi. Umí dvě věci, které systém neuměl: <strong>potvrzení, že informaci někdo přijal, a doručení celému týmu naráz.</strong> Nahradit ho nechtěl nikdo. Ani vývojář.</p>
       </div>
     </div>
 
@@ -287,21 +321,16 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
       </div>
       <div>
         <h4>Statické informace ano, živý zápis ne</h4>
-        <p>Majitelka a koordinátorka týmu nezávisle nakreslily stejnou čáru. Přesunout do systému lze to, co je stabilní — kontakty, jídelníček, akce. <strong>Ne to, co se dopisuje zpětně</strong>, protože formulář, který se odešle a uzavře, to neumožní. Dva hlasy z devíti, ale právě ti dva rozhodují o nasazení.</p>
+        <p>Majitelka a koordinátorka týmu nezávisle nakreslily stejnou čáru. Přesunout do systému lze to, co je stabilní — kontakty, jídelníček, akce. <strong>Ne to, co se dopisuje zpětně.</strong> Dva hlasy z devíti, ale právě ti dva rozhodují o nasazení.</p>
       </div>
     </div>
   </div>
-
-  <blockquote>
-    <p>„Já prostě ti tu náhradu radši dám, než aby to počítala.“</p>
-    <cite>Majitelka o tom, proč se náhrady neřeší</cite>
-  </blockquote>
 </section>
 
 <section>
   <div class="col">
     <h2>Jak se to promítlo do návrhu</h2>
-    <p class="sub">Tři aplikace, jedna pro každou roli. Průvodcovská a rodičovská mobilní, administrativa desktopová — protože vedení pracuje odpoledne u počítače, zatímco průvodkyně mají v ruce jen telefon.</p>
+    <p class="sub">Tři aplikace, jedna pro každou roli. Průvodcovská a rodičovská mobilní, administrativa desktopová — vedení pracuje odpoledne u počítače, průvodci mají v ruce jen telefon.</p>
   </div>
 
   <div class="exhibits">
@@ -309,22 +338,20 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
       <div class="screen">
         <div class="bar"><span class="burger"></span><span class="pill">Průvodce</span></div>
         <div class="stitle">Středa 3. června</div>
-        <div class="ssub">Dnes ve školce · tři průvodkyně</div>
+        <div class="ssub">Dnes ve školce · čtyři průvodci</div>
         <div class="card">
           <div class="ch">Docházka dnes</div>
-          <div class="nums">
-            <div class="num"><b>22</b><span>Přítomno</span></div>
-            <div class="num"><b>22</b><span>Obědy</span></div>
-            <div class="num"><b>13</b><span>Spí</span></div>
+          <div class="nums two" style="margin-top:0">
+            <div class="num"><b>22</b><span>Přítomni</span></div>
+            <div class="num"><b>2</b><span>Dopolední</span></div>
+            <div class="num"><b>3</b><span>Odpolední</span></div>
+            <div class="num"><b>3</b><span>Absence</span></div>
           </div>
-          <div class="nums two">
-            <div class="num"><b>2</b><span>Po obědě</span></div>
-            <div class="num"><b>3</b><span>Nepřítomní</span></div>
-          </div>
+          <p class="hintline">Spí v maringotce: 13</p>
           <div class="cta">Otevřít dnešní docházku →</div>
         </div>
       </div>
-      <figcaption><b>Pět čísel místo listování</b>Přesně ta čísla, která si průvodkyně dopočítávaly v hlavě — včetně rozdělení na spáče a nespáče, o které nezávisle požádaly všechny čtyři.</figcaption>
+      <figcaption><b>Čtyři čísla místo listování</b>Přesně ta, která si průvodci dopočítávali v hlavě. Pojmenování prošlo testováním — viz zlom 3.</figcaption>
     </figure>
 
     <figure class="ex">
@@ -338,11 +365,11 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
           <p class="hintline">Náhradu lze vyčerpat i na příměstský tábor. Vzniká za každý včas omluvený den.</p>
         </div>
         <div class="card">
-          <div class="row"><span class="nm">omluva 12. 5.</span><span class="st" style="color:var(--muted)">vznik 12. 5.</span></div>
-          <div class="row"><span class="nm">omluva 20. 5.</span><span class="st" style="color:var(--muted)">vznik 20. 5.</span></div>
+          <div class="row"><span class="nm">omluveno 12. 5.</span><span class="st" style="color:var(--muted)">včas · s náhradou</span></div>
+          <div class="row"><span class="nm">omluveno 20. 5.</span><span class="st" style="color:var(--muted)">po termínu · bez náhrady</span></div>
         </div>
       </div>
-      <figcaption><b>Zůstatek jako velké číslo</b>Nejsilnější zjištění výzkumu dostalo nejviditelnější místo — plus jedna věta, která vysvětluje pravidlo tam, kde na něj člověk kouká.</figcaption>
+      <figcaption><b>Zůstatek jako velké číslo</b>Nejsilnější zjištění výzkumu dostalo nejviditelnější místo — a u každé omluvy je vidět důsledek, ne jen stav.</figcaption>
     </figure>
 
     <figure class="ex">
@@ -365,72 +392,109 @@ footer{padding:56px 0 0; color:var(--hint); font-size:14px; border-top:1px solid
           <div class="row"><span class="av"></span><span class="nm">Školné · květen</span><span class="st"><span class="tag warn">Čeká na spárování</span></span></div>
         </div>
       </div>
-      <figcaption><b>Čtyři školky na jedné obrazovce</b>Vedení jako jediné potřebuje vidět napříč sítí. Stav platby je tvar a barva, ne jen číslo — protože „uhrazeno / neuhrazeno“ bylo léta zdrojem dotazů od rodičů.</figcaption>
+      <figcaption><b>Čtyři školky na jedné obrazovce</b>Vedení jako jediné potřebuje vidět napříč sítí. Stav platby je tvar a barva, ne jen číslo — „uhrazeno / neuhrazeno“ bylo léta zdrojem dotazů od rodičů.</figcaption>
     </figure>
+  </div>
+  <div class="todo"><b>K rozhodnutí · jména školek</b>Ukázky i text používají skutečná jména školek a citace majitelky. Ověř, že souhlas s publikací platí i na ně — jinak je nahradím zástupnými.</div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Zlom 2: WhatsApp nahradit nejde, tak jsem změnila otázku</h2>
+    <p class="sub">Rozhovory řekly, co si lidé o WhatsAppu myslí. Chtěla jsem vidět, co v něm skutečně dělají.</p>
+    <p>Zakódovala jsem 1 080 zpráv z rodičovské skupiny za dva školní roky. Výsledek obrátil pořadí problémů, které jsem si nesla z rozhovorů: <strong>každá čtvrtá zpráva od rodiče je o ztracené holínce, rukavici nebo termosce.</strong> Školka za dva roky nejméně desetkrát vyzývala k podepisování věcí, se stoupající naléhavostí — „VŠECHNO PODEPSAT“, „Last call“.</p>
+    <p>A druhá věc: skupina na rady a tipy existuje minimálně od srpna 2025, a ztráty a nálezy stejně zůstaly ve velké skupině. Skupiny byly dělené podle témat. Jenže když člověk píše, nemyslí na kategorii — myslí na to, komu píše.</p>
+  </div>
+
+  <div class="groups">
+    <div class="grp"><div class="n">1</div><h4>Všichni</h4><p>Jen školka, neodpovídá se. Záměrně chudá — jedna až dvě zprávy týdně. Když tam půjde i jídelníček, lidé ji ztlumí a kritická zpráva zapadne s ní.</p></div>
+    <div class="grp"><div class="n">2</div><h4>Rodiče bez průvodců</h4><p>Hlídání při zpoždění, ztráty a nálezy, akce po školce, rady a tipy.</p></div>
+    <div class="grp"><div class="n">3</div><h4>Rodina + průvodci</h4><p>Důvěrná komunikace o konkrétním dítěti.</p></div>
+  </div>
+
+  <div class="col" style="margin-top:32px">
+    <p>Navrhla jsem tři skupiny podle toho, <strong>kdo v nich je</strong>, místo šesti podle témat. S jedním tvrdým pravidlem: domluva o vyzvednutí dítěte smí vzniknout ve dvojce, ale výsledek „dnes ho vyzvedne X“ musí skončit ve trojce. Jinak si dítě odvede někdo, koho průvodce nečeká. Je to jediné místo celé struktury, kde chyba neznamená nepohodlí, ale bezpečnost.</p>
+    <p>Stejně důležité bylo, co <strong>nedělat</strong>. Nezakládat čtvrtou skupinu vedle stávajících — zadáním byla roztříštěnost, ne její prohloubení. A dodržet pořadí: nejdřív nástěnka ztrát a nálezů v intrawebu, teprve potom přesun zbytku. Dokud rodič nemá kde zjistit, jestli je holínka u školky, bude psát tam, kde má větší šanci na odpověď.</p>
+    <p>Co tahle analýza nevidí: rodinné skupiny. Tam je pravděpodobně skutečná zátěž průvodců — a tu tímhle neměřím.</p>
   </div>
 </section>
 
 <section>
   <div class="col">
-    <h2>Co prototyp trefil a co ne</h2>
-    <p class="sub">Prototyp vznikal souběžně s analýzou dat, takže část návrhu předběhla důkazy. Po dokončení analýzy jsem ho proti zjištěním prošla položku po položce.</p>
+    <h2>Zlom 3: Testování mi rozbilo slovník</h2>
+    <p class="sub">Srpen 2026 · tři lidé z lesní školky, moderované procházení prototypu na mobilu, 30–50 minut. Chválu jsem nepočítala — respondenti mluvili s autorkou prototypu, kterou znají.</p>
+    <p>Jediné skutečné zaseknutí celého testování přišlo u věci, kterou jsem považovala za hotovou. Respondentka odškrtla u dítěte políčko „spí“ a nevěděla, co tím způsobila, ani jak to vrátit.</p>
   </div>
 
-  <div class="verdicts">
-    <div class="v ok"><span class="mk">✓</span><div><b>Rozdělení spáčů a nespáčů</b><p>Nezávisle si o něj řekly všechny průvodkyně ve vzorku. V prototypu byl dřív, než jsem to věděla.</p></div></div>
-    <div class="v ok"><span class="mk">✓</span><div><b>Zůstatek náhrad jako velké číslo u rodiče</b><p>Přímá odpověď na nejsilnější zjištění výzkumu.</p></div></div>
-    <div class="v ok"><span class="mk">✓</span><div><b>Fotky mimo Facebook</b><p>Oba dotázaní rodiče měli k platformě výhradu, kterou tým nikdy neslyšel.</p></div></div>
-    <div class="v no"><span class="mk">✕</span><div><b>Počítadlo opakování u svačin</b><p>Měřilo špatnou věc. Svačinářka neplánuje podle četnosti, ale podle programu — když třída peče něco sladkého, druhá svačina má být slaná. Užitečnější je u dne ukázat výlet nebo pečení. <strong>Funkce šla ven.</strong></p></div></div>
-    <div class="v gap"><span class="mk">△</span><div><b>Třídnice</b><p>Ve výzkumu nejoceňovanější nástroj vůbec — a prototyp ji vědomě odložil. Největší rozpor mezi výzkumem a návrhem. Zároveň o její přesun nikdo z devíti sám nepožádal a čtyři ji aktivně brání.</p></div></div>
-    <div class="v gap"><span class="mk">△</span><div><b>Rozlišení důležitosti zpráv</b><p>Jádro whatsappové bolesti. Prototyp neřeší — a upřímně, není jasné, jestli to jde vyřešit uvnitř systému, když komunikace zůstává jinde.</p></div></div>
+  <blockquote>
+    <p>„Když to odškrtnu a je tam spí, tak to přesně evokuje to, že nespí.“</p>
+    <cite>Průvodkyně při testování</cite>
+  </blockquote>
+
+  <div class="col">
+    <p>Příčina nebyla v políčku, ale v pojmenování. Na dvou obrazovkách se tatáž věc jmenovala jinak a štítky popisovaly důsledek místo stavu. Výsledkem je jeden slovník napříč celou aplikací — variantu s časy odchodu respondentka odmítla jako horší.</p>
+  </div>
+
+  <div class="swaps">
+    <div class="sw"><s>Ráno</s><span class="ar">→</span><b>Přítomni</b><small>Číslo platí celý den, ne jen ráno.</small></div>
+    <div class="sw"><s>Po obědě</s><span class="ar">→</span><b>Dopolední</b><small>Popisovalo důsledek, ne režim docházky.</small></div>
+    <div class="sw"><s>—</s><span class="ar">→</span><b>Odpolední</b><small>Ve slovníku bylo, na přehledu chybělo.</small></div>
+    <div class="sw"><s>Nepřítomní</s><span class="ar">→</span><b>Absence</b><small>Sjednoceno s tím, jak mluví tým.</small></div>
+    <div class="sw"><s>Spí (dlaždice)</s><span class="ar">→</span><b>řádek pod čísly</b><small>Kolik lehátek v maringotce je jiná osa než docházka. Přejmenovat to by lhalo o tom, co číslo počítá.</small></div>
+  </div>
+
+  <div class="col" style="margin-top:40px">
+    <h3>Na nejsilnější nález přišli všichni tři sami</h3>
+    <p>Bez nápovědy a každý z jiné strany: obava, jak rodič přečte poznámku z konzultace. Diagnostický formulář, který rodičům nepatří. Potřeba psát si upřímně o spolupráci s rodinou. Odborné zprávy se dnes ručně „změkčují“, než je rodič dostane. <strong>Oddělit interní záznamy od toho, co vidí rodič, tedy není administrativní detail — je to podmínka toho, aby průvodci vůbec psali pravdu.</strong></p>
+    <p>A jeden nález šel proti intuici: řadový průvodce právo zapisovat docházku nechtěl. „Šlo mi to měnit, ale nedělal jsem to, protože nemám proč.“ Zápis teď patří jen vedoucí roli. Lepší návrh tu znamenal méně práv, ne víc.</p>
+    <h3>Co data neřeší</h3>
+    <p>Povinný důvod absence: dva průvodci pro, jeden proti, rodiče z dřívějšího testu proti. Věcný argument je zákonná povinnost hlásit infekční nemoci, kterou rodiče dlouhodobě nedodržují. Navrhla jsem kompromis a označila ho jako to, čím je — <strong>rozhodnutí zadavatelky, ne závěr z dat.</strong> V dalším kole sleduji, jestli rodiče nezačnou paušálně volit „jiné“.</p>
   </div>
 </section>
 
 <section>
   <div class="col">
     <h2>Kde jsem se spletla</h2>
-    <p class="sub">Byl to můj první větší výzkum. Po roce jsem se k datům vrátila a nechala je projít nezávisle — analýzu po respondentech, verifikaci rozporů a teprve pak syntézu, bez nahlédnutí do původních závěrů. Až úplně nakonec jsem obě verze porovnala.</p>
-    <p>Osm z deseti původních zjištění obstálo. Ve dvou případech byla původní analýza <em>lepší</em> než nový průchod — formulace „nejde o večerní zprávy, ale o to, aby šlo rozhodnutí o zítřku udělat dřív“ spojuje do jedné příčiny to, co jsem podruhé rozepsala na čtyři samostatné bolesti.</p>
-    <p>Tři věci ale neobstály.</p>
+    <p class="sub">Po dokončení analýzy jsem nechala data projít znovu a nezávisle — po respondentech, verifikace rozporů, syntéza — bez nahlédnutí do původních závěrů. Osm z deseti původních zjištění obstálo. Tři věci ne.</p>
   </div>
+  <div class="todo"><b>K ověření</b>Původní text říkal „po roce jsem se k datům vrátila“, ale projekt běží letos. Kdy ta revize proběhla? Větu o „prvním větším výzkumu“ jsem vyškrtla — pokud ji chceš zpět, vrať ji.</div>
 
   <div class="callout">
     <h4>Nosná teze stála na citacích, které nejdou dohledat</h4>
-    <p>Celý projekt jsem postavila na zjištění „telefon před dětmi je tabu“ — a označila ho za klíčovou hodnotu, ze které plyne skoro všechno. V přepisech pro něj ale doslovná opora není: tři citace, na kterých teze stojí, se v nich nevyskytují. Buď jsou přepisy neúplné, nebo jsem si při syntéze poznámky přeformulovala do uvozovek.</p>
-    <p>Navíc k tezi existuje protipříklad, který jsem přehlédla: jedna z průvodkyň na telefonu běžně pracuje v terénu i cestou do práce a situace u dětí si fotí, aby je zapsala později. <strong>Formulace, kterou data unesou, zní jinak: pozornost lidí v přímé péči je vzácná a měří se ve vteřinách.</strong> Pro návrh to znamená totéž. Rozdíl je v tom, že tohle můžu doložit.</p>
-  </div>
-
-  <div class="callout">
-    <h4>Premisa ze zadání se mi proměnila ve zjištění</h4>
-    <p>„Průvodci pracují ze 70 % na mobilu“ jsem používala jako výsledek výzkumu. Ve skutečnosti to bylo v zadání, které jsem si napsala na začátku. Žádný respondent to číslo nikdy neřekl. Závěr o mobilu platí — doložilo ho sedm z devíti lidí popisem vlastního dne. Jen to číslo k němu nepatří.</p>
+    <p>Projekt jsem postavila na zjištění „telefon před dětmi je tabu“. V přepisech pro něj ale doslovná opora není a existuje k němu protipříklad: průvodkyně, která si situace u dětí fotí, aby je zapsala později. <strong>Formulace, kterou data unesou: pozornost lidí v přímé péči je vzácná a měří se ve vteřinách.</strong> Pro návrh to znamená totéž. Rozdíl je v tom, že tohle můžu doložit.</p>
   </div>
 
   <div class="callout">
     <h4>Vzorek nebyl dosycený a nepřiznala jsem to</h4>
-    <p>Plánovala jsem dva až tři rodiče a dva až tři průvodce za každou školku. Skončila jsem u dvou rodičů celkem — a oba shodou okolností pracují profesně s digitálními nástroji, jeden z nich má dokonce vlastní zkušenost průvodce. To jsou ti nejméně typičtí rodiče, jaké jsem mohla vybrat.</p>
-    <p>Z kamenné školky nemám ani jednoho běžného průvodce ani rodiče, jen vedení. <strong>Všechna zjištění jsou fakticky o lesních školkách</strong> — a to je věta, která měla být v původní syntéze, ne až v její revizi.</p>
+    <p>Místo plánovaných deseti rodičů dva — oba profesně pracují s digitálními nástroji. Z kamenné školky nemám žádného běžného průvodce ani rodiče. <strong>Všechna zjištění jsou fakticky o lesních školkách</strong> — věta, která měla být v původní syntéze, ne až v revizi.</p>
+  </div>
+
+  <div class="callout">
+    <h4>V prototypu bylo falešné číslo</h4>
+    <p>Dlaždice „Obědy“ na přehledu průvodce ve skutečnosti ukazovala počet přítomných dětí — proto tam byla dvakrát stejná dvaadvacítka. Obědy se v běžném režimu vůbec nepočítají. Dlaždice šla ven a kuchyně dostane vlastní pohled. <strong>Falešné číslo v prototypu, který jde na testování, je horší než chybějící.</strong></p>
   </div>
 
   <div class="col">
     <h3>Co si z toho beru</h3>
-    <p>Přímá otázka „co vám na tom vadí“ v tomhle vzorku nefungovala. Vyvolala odpověď „nic zásadního“ — a týž člověk pak při popisu konkrétního dne vyjmenoval sedmnáct věcí, které ho denně brzdí. <strong>Ptát se na poslední konkrétní výskyt, ne na obecné hodnocení.</strong></p>
-    <p>A druhá věc, kterou beru dál do každého projektu: v malé komunitě se silnými vztahy se mlčení nedá číst jako souhlas. Tým si byl jistý, že rodičům sdílení fotek přes Facebook nevadí, protože si nikdo nestěžoval. Oba dotázaní rodiče měli výhradu. Hospodářka půl roku ručně opravovala chybu ve slevě, než se o ní vývojář vůbec dozvěděl.</p>
+    <p>Přímá otázka „co vám na tom vadí“ nefungovala — vyvolala „nic zásadního“, a týž člověk pak při popisu konkrétního dne vyjmenoval sedmnáct věcí, které ho brzdí. <strong>Ptát se na poslední konkrétní výskyt, ne na hodnocení.</strong></p>
+    <p>Při testování jsem několikrát vysvětlila funkci dřív, než na ni respondent narazil — ty pasáže srozumitelnost nedokládají. <strong>Zadat úkol a mlčet.</strong></p>
+    <p>A v malé komunitě se silnými vztahy se mlčení nedá číst jako souhlas. Hospodářka půl roku ručně opravovala chybu ve slevě, než se o ní vývojář vůbec dozvěděl.</p>
   </div>
 
   <div class="strip">
     <div><b>8/10</b><span>původních zjištění obstálo v nezávislé revizi</span></div>
-    <div><b>3</b><span>citace k nosné tezi, které nejdou dohledat</span></div>
-    <div><b>2</b><span>rodiče místo plánovaných deseti</span></div>
-    <div><b>1</b><span>funkce, kterou data vyvrátila a šla ven</span></div>
+    <div><b>1 z 4</b><span>zpráv od rodičů je o ztracené věci</span></div>
+    <div><b>3 ze 3</b><span>testujících sami přišli na oddělení interních záznamů</span></div>
+    <div><b>1</b><span>skutečné zaseknutí — a přepsaný slovník celé aplikace</span></div>
   </div>
 </section>
 
 <section>
   <div class="col">
     <h2>Kde to stojí teď</h2>
-    <p>Tři proklikávací prototypy, design systém postavený na identitě školky a rozhodovací log, ve kterém je u každé volby napsané proč. Priority pro vývoj jsou seřazené podle síly opory v datech, ne podle toho, co zní nejlíp: náhrady, mobilní čitelnost docházky, viditelnost existujících funkcí, zaučení nových rodičů.</p>
-    <p>Čeho se v téhle fázi nedotýkáme: WhatsApp, třídnice a sloučení databází. U prvních dvou proto, že je nikdo nechce měnit. U třetí proto, že před tím varuje sám vývojář.</p>
-    <p>A než se začne stavět: doplnit vzorek o rodiče bez digitální profese a o kamennou školku. To je jediná věc, kterou tenhle výzkum sám o sobě nevyřeší.</p>
+    <p>Tři proklikávací prototypy po prvním kole testování, design systém postavený na identitě školky a rozhodovací log, ve kterém je u každé volby napsané proč. Priority pro vývoj jsou seřazené podle síly opory v datech, ne podle toho, co zní nejlíp.</p>
+    <p>Čeho se vědomě nedotýkáme: třídnice a sloučení databází. Třídnici nikdo nechce měnit, před sloučením databází varuje sám vývojář.</p>
+    <p>Co zbývá ověřit: rodiče bez digitální profese a kamenná školka. To je jediná věc, kterou tenhle výzkum sám o sobě nevyřeší.</p>
   </div>
 </section>
 
