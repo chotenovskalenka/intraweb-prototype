@@ -408,3 +408,48 @@ třídě bývají dvě Toničky; celé jméno se v úzkém sloupci láme na dva 
 (`full()`) zůstává tam, kde se jméno čte jako údaj: soupis dětí, docházkové tabulky, detail
 dítěte, kulturní fond a CSV exporty.
 
+
+## Skin Vhaaji – „Deník z háje" (27. 10. 2026)
+
+Vizuální směr C, vybraný designérkou z konceptu tří variant a doladěný ručně ve Figmě
+(„Vhaaji – design systém" → stránka „Draft · přehled průvodce", rámce „C · původní rozložení"
+a „C · desktop"). V kódu je to **skin**: [src/styles/skin-vhaaji.css](../src/styles/skin-vhaaji.css)
+se načítá poslední a mění jen vzhled. Rozložení, obsah a komponenty zůstávají společné.
+Zatím ho nosí **průvodcovská appka**; rodič a admin přijdou v dalším kroku. Ostatní školky
+skin nenačítají a drží univerzální Bricolage + Inter (oddíl „Univerzální typografie").
+
+**Typografie (jen Vhaaji)**
+| Role | Písmo | Token |
+|---|---|---|
+| Nadpisy, datum, čísla | Alegreya (Medium 19 nadpis karty, Bold 26/36 datum, Bold 34 čísla) | `--font-serif` |
+| Text, popisky, tlačítka | Lexend | `--font-sans` |
+| Ruční akcent (básnička, písnička) | Itim – je i na vhaaji.cz | `--font-hand` |
+
+Nejmenší text **11,5 px** (štítky, popisky skupin), popisky a časy **12,5 px** – kvůli čtení
+venku. Kontrast AA prošel všude (nejnižší šedá na pastelu 4,8 : 1). Datum akce a jiné číslice
+v textu píšeme Lexendem: Alegreya má minuskové číslice, v datu se hůř čtou.
+
+**Plochy a tvary**
+- **Karta:** bez linky, `rgba(249,247,241,.92)`, zaoblení 22 px, měkký stín `--shadow-card`.
+  Na desktopu je ranní řada jedna plocha dělená svislými linkami.
+- **Skvrna (počty docházky):** nepravidelné zaoblení `--blob-r`, tinta podle stavu (zelená přítomni,
+  růžová absence, modrá dopolední, okrová odpolední, světlá okrová celodenní), šipka › = klikací.
+  Nula absencí je neutrální. **Spí** není stav docházky (P2): bez výplně, čárkovaně, ☾ u čísla.
+- **Tlačítka:** primární tmavě zelená pilulka (jediná výrazná akce na obrazovce); sekundární
+  = `.cardlink` jako světle zelená pilulka s linkou a šipkou →.
+- **Akvarel** z vhaaji.cz nahoře přes celou šířku, rozplývá se do pozadí; podle ročního období
+  se nemění (změna by vyžadovala nové malby a přeměření kontrastu).
+
+**Kresby** – linoryty designérky ([src/scripts/kresby.js](../src/scripts/kresby.js), `kresba(k)`),
+barvu berou z inkoustu (`currentColor`), jsou dekorace (`aria-hidden`):
+- **ptáček v hlavičce** ve čtyřech ročních obdobích (`kresbaPtacek(měsíc)`): jaro 3–5, léto 6–8,
+  podzim 9–11, zima 12–2. Všechny varianty mají stejný formát, kompozice se nehýbe; text hlavičky
+  má vyhrazený sloupec a pod kresbu nezajíždí;
+- **kresby v kartách** vpravo nahoře, přesahují do rohu (třídnice, básnička, akce); obsah karty
+  začíná pod nimi;
+- **lísteček** jako odrážka řádků v hlavičce.
+
+**Mikrocopy** – bez teček „·" (oddíl „Přístupnost a mikrocopy"); typ vzkazu tučně s dvojtečkou.
+
+**Co skin nemění:** stavovou paletu, mezery, dotykové cíle ≥ 44 px, slovník docházky.
+Figma knihovna je zrcadlo kódu – po změně tokenů skinu je potřeba ji dohnat.

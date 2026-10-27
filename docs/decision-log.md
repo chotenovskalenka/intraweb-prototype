@@ -1971,3 +1971,17 @@ promítnout do kódu při převodu:
      `min-height`, ne `height`, a test při 200% písmu.
   3. **Třídnice bez štítků „rozepsáno N z 8"** – nejasné „8 čeho" a duplicitní s „Chybí: …".
   4. **„Kdo dnes nepřijde" řadí nevyřešené (neomluveno) nahoru**, omluvené pod ně.
+
+## Skin Vhaaji v průvodcovské appce (27. 10. 2026)
+
+**Rozhodnutí designérky:** nový vzhled C jde **nejdřív do průvodcovské appky** (rodič a admin
+v dalším kroku), písma a kresby jsou **jen skin Vhaaji** (ostatní školky drží Bricolage + Inter),
+zdrojem pravdy zůstává kód a Figma knihovna se přepíše na C.
+
+**Jak:** samostatný soubor `skin-vhaaji.css` načtený poslední (přebíjí tokeny a vzhled sdílených
+komponent), kresby jako inline SVG v `kresby.js`. Díky tomu se nový vzhled propsal do všech
+obrazovek průvodce naráz (karty, tlačítka, písma) – obsahově přepsaný je jen přehled. Ostatní
+obrazovky si zatím drží svůj obsah včetně teček „·" (mění se při přepracování obrazovky).
+
+**Vědomě nesedí:** tabulky a seznamy (docházka, týden, služby) mají dál tenké linky a menší
+zaoblení – jsou to pracovní plochy, ne karty; v Figmě pro ně předloha není.
