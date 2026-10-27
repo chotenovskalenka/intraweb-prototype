@@ -1995,7 +1995,9 @@ const inTab=(c,t)=>{
   if(t==='obed')return here(c);
   if(t==='spi')return staysPM(c)&&c.spi&&!onTrip(c);
   if(t==='poobede')return here(c)&&c.plan==='dopolední';
-  if(t==='odpoledni')return here(c)&&c.plan==='odpolední';
+  /* Podle kódu dne, ne podle plánu: celodenní plán je mimo úterý odpolední docházka (baseCode → 'O').
+     Dřív se počítal jen plán „odpolední" a ve středu tu stálo 3 místo 20. */
+  if(t==='odpoledni')return here(c)&&baseCode(c,TODAYD)==='O';
   if(t==='neprit')return !here(c);
 };
 /* Pojmenování stavů drží jeden slovník napříč appkou: přítomni · dopolední · odpolední · absence.
