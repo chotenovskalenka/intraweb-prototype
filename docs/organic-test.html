@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test Organic</title>
+<!-- Pracovní náhled mimo build. Načte živý src/pruvodce.html a do kopie vloží tokeny
+     stylu „Organic / Biomorphic" z designmd.app/library/organic-design.
+     Appka se nemění. Funguje jen přes server (python3 -m http.server), ne přes file://. -->
+<style>
+  :root{--bg:#F3F3F1;--ink:#1F2A2E;--muted:#5C6560}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+  header{max-width:1240px;margin:0 auto;padding:28px 16px 8px}
+  h1{font-size:24px;margin:0 0 6px}
+  header p{margin:0;color:var(--muted);font-size:14px;max-width:72ch;line-height:1.5}
+  .row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;padding:24px 16px 48px}
+  figure{margin:0;display:flex;flex-direction:column;gap:10px;width:390px;max-width:calc(100vw - 32px)}
+  figcaption b{display:block;font-size:16px}
+  figcaption span{font-size:13px;color:var(--muted);line-height:1.45}
+  iframe{width:100%;height:844px;border:1px solid rgba(0,0,0,.15);border-radius:28px;background:#fff}
+</style>
+</head>
+<body>
+<header>
+  <h1>Organic / Biomorphic na přehledu</h1>
+  <p>Vpravo jsou na stejný přehled nasazené tokeny ze stylu Organic z designmd.app: paleta, Fraunces + Quicksand,
+     velká zaoblení, asymetrické „blob" karty, stíny místo linek. Kompozice a data zůstávají.</p>
+</header>
+<div class="row">
+  <figure><iframe data-v="dnes" title="Dnes"></iframe>
+    <figcaption><b>Dnes</b><span>Schválená V2.</span></figcaption></figure>
+  <figure><iframe data-v="organic" title="Organic / Biomorphic"></iframe>
+    <figcaption><b>Organic / Biomorphic</b><span>Tokeny 1:1 z odkazu. Primární zelená #6f8f4e s bílým textem kontrastem AA neprojde (cca 3,7 : 1), proto má tlačítko tmavší odstín.</span></figcaption></figure>
+</div>
+<script>
+/* Varianty se do obrazovek vkládají přes contentDocument. Při otevření souboru napřímo (file://)
+   to prohlížeč zakáže a všechny telefony pak ukazují dnešní stav – proto výrazné upozornění. */
+function varovani() {
+  if (document.getElementById("varovani")) return;
+  const u = "http://localhost:8123/docs/" + location.pathname.split("/").pop();
+  document.querySelector("header").insertAdjacentHTML("beforeend",
+    `<p id="varovani" style="margin-top:12px;padding:12px 14px;background:#B0492F;color:#fff;font-weight:600;border-radius:8px;max-width:none">`
+    + `Otevřeno jako soubor, varianty se proto neprojeví a všechny obrazovky vypadají stejně. Otevři: `
+    + `<a href="${u}" style="color:#fff">${u}</a></p>`);
+}
+if (location.protocol === "file:") varovani();
+/* Jiné prostředí, které přístup do obrazovek zakáže (např. náhled souboru): po načtení ověřit. */
+setTimeout(() => document.querySelectorAll("iframe").forEach(f => {
+  try { if (!f.contentDocument) varovani(); } catch (e) { varovani(); }
+}), 3000);
+const FONTS = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Quicksand:wght@400;500;600;700&display=swap';
+const CSS = {
+  dnes: '',
+  organic: `
+    :root{--color-bg:#f6f1e7;--color-surface:#ffffff;--color-surface-2:#eee6d6;
+      --color-border:transparent;--color-border-strong:#dccdb0;
+      --color-text:#2f3b2a;--color-text-muted:#5c6b53;
+      --color-primary:#4f6b35;--color-primary-strong:#3f5a2a;
+      --color-accent:#d98b5f;--color-accent-soft:#e7c9a9;
+      --font-serif:"Fraunces",Georgia,serif;--font-sans:"Quicksand","Nunito",system-ui,sans-serif;
+      --radius-xs:12px;--radius-sm:16px;--radius-md:28px;--radius-lg:44px}
+    #content .tile{border-radius:60% 40% 55% 45% / 8% 10% 9% 7%;box-shadow:0 8px 24px rgba(47,59,42,.12);
+      padding:var(--space-lg) var(--space-xl)}
+    #content .tab,#content .acard{background:var(--color-surface-2)}
+    #content .addbig{border-radius:999px}
+    .role{border-radius:999px}`
+};
+document.querySelectorAll('iframe').forEach(f => {
+  const v = f.dataset.v;
+  f.addEventListener('load', () => {
+    const doc = f.contentDocument;
+    if (v !== 'dnes') {
+      const l = doc.createElement('link');
+      l.rel = 'stylesheet'; l.href = FONTS;
+      doc.head.appendChild(l);
+    }
+    const s = doc.createElement('style');
+    s.textContent = CSS[v];
+    doc.head.appendChild(s);
+  });
+  f.src = '../src/pruvodce.html?t=' + Date.now();  // obejde cache prohlížeče
+});
+</script>
+</body>
+</html>

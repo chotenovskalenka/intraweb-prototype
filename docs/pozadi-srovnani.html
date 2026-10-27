@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Srovnání pozadí</title>
+<!-- Pracovní náhled mimo build (jako paleta-nahled.html). Načte živý src/pruvodce.html
+     třikrát a do každé kopie vloží jiné hodnoty povrchových tokenů. Appka se nemění.
+     Funguje jen přes server (python3 -m http.server), ne přes file://. -->
+<style>
+  :root{--bg:#F3F3F1;--ink:#1F2A2E;--muted:#5C6560}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+  header{max-width:1240px;margin:0 auto;padding:28px 16px 8px}
+  h1{font-size:24px;margin:0 0 6px}
+  header p{margin:0;color:var(--muted);font-size:14px;max-width:70ch;line-height:1.5}
+  .row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;padding:24px 16px 48px}
+  figure{margin:0;display:flex;flex-direction:column;gap:10px}
+  figcaption b{display:block;font-size:16px}
+  figcaption span{font-size:13px;color:var(--muted)}
+  iframe{width:390px;height:844px;border:1px solid rgba(0,0,0,.15);border-radius:28px;background:#fff;max-width:calc(100vw - 32px)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Je to béžovou?</h1>
+  <p>Stejný průvodcovský přehled, mění se jen pozadí stránky a karet. Značkové barvy, tinty a stavy zůstávají.
+     Obrazovky jsou živé, dá se v nich klikat i scrollovat.</p>
+</header>
+<div class="row">
+  <figure><iframe data-v="dnes" title="Varianta A: béžová jako dnes"></iframe>
+    <figcaption><b>A · Béžová (dnes)</b><span>pozadí #EFEEE9, karty #F9F7F1</span></figcaption></figure>
+  <figure><iframe data-v="bila" title="Varianta B: bílá"></iframe>
+    <figcaption><b>B · Bílá</b><span>pozadí #FFFFFF, karty bílé s výraznější linkou</span></figcaption></figure>
+  <figure><iframe data-v="inkoust" title="Varianta C: tmavá inkoustová"></iframe>
+    <figcaption><b>C · Inkoustová</b><span>pozadí #1F2A2E (inkoust z webu), karty bílé</span></figcaption></figure>
+</div>
+<script>
+/* Varianty se do obrazovek vkládají přes contentDocument. Při otevření souboru napřímo (file://)
+   to prohlížeč zakáže a všechny telefony pak ukazují dnešní stav – proto výrazné upozornění. */
+function varovani() {
+  if (document.getElementById("varovani")) return;
+  const u = "http://localhost:8123/docs/" + location.pathname.split("/").pop();
+  document.querySelector("header").insertAdjacentHTML("beforeend",
+    `<p id="varovani" style="margin-top:12px;padding:12px 14px;background:#B0492F;color:#fff;font-weight:600;border-radius:8px;max-width:none">`
+    + `Otevřeno jako soubor, varianty se proto neprojeví a všechny obrazovky vypadají stejně. Otevři: `
+    + `<a href="${u}" style="color:#fff">${u}</a></p>`);
+}
+if (location.protocol === "file:") varovani();
+/* Jiné prostředí, které přístup do obrazovek zakáže (např. náhled souboru): po načtení ověřit. */
+setTimeout(() => document.querySelectorAll("iframe").forEach(f => {
+  try { if (!f.contentDocument) varovani(); } catch (e) { varovani(); }
+}), 3000);
+const CSS = {
+  dnes: '',
+  bila: `:root{--color-bg:#FFFFFF;--color-surface:#FFFFFF;--color-surface-2:#F1F2F0;
+         --color-border:rgba(31,42,46,.13);--color-border-strong:rgba(31,42,46,.20)}`,
+  inkoust: `:root{--color-bg:#1F2A2E;--color-surface:#FFFFFF;--color-surface-2:#F1F2F0}
+    /* co leží přímo na pozadí, musí mít světlý text */
+    .dh-t{color:#F4EEDF}
+    .dh-sub{color:#B9C2BE}
+    .burger-lb{color:#F4EEDF}.burger-ic i{background:#F4EEDF}
+    .role{color:#F4EEDF;background:rgba(244,238,223,.10);border-color:rgba(244,238,223,.28)}
+    .scroll>#content>.vhead,.scroll>#content>.vhead-row .vhead{color:#F4EEDF}
+    .appfoot{color:#B9C2BE;border-top-color:rgba(244,238,223,.18)}
+    .appfoot .sos-link{color:#9FD3BF}
+    .screen::after{opacity:.25}`
+};
+document.querySelectorAll('iframe').forEach(f => {
+  f.addEventListener('load', () => {
+    const s = f.contentDocument.createElement('style');
+    s.textContent = CSS[f.dataset.v];
+    f.contentDocument.head.appendChild(s);
+  });
+  f.src = '../src/pruvodce.html?t=' + Date.now();  // obejde cache prohlížeče
+});
+</script>
+</body>
+</html>

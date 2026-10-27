@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test základů</title>
+<!-- Pracovní náhled mimo build (jako kompozice-srovnani.html). Načte živý src/pruvodce.html
+     a do kopií vloží jiné základy: písmo, rohy, linky. Kompozice a data zůstávají.
+     Appka se nemění. Funguje jen přes server (python3 -m http.server), ne přes file://. -->
+<style>
+  :root{--bg:#F3F3F1;--ink:#1F2A2E;--muted:#5C6560}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+  header{max-width:1240px;margin:0 auto;padding:28px 16px 8px}
+  h1{font-size:24px;margin:0 0 6px}
+  header p{margin:0;color:var(--muted);font-size:14px;max-width:72ch;line-height:1.5}
+  .row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;padding:24px 16px 48px}
+  figure{margin:0;display:flex;flex-direction:column;gap:10px;width:390px;max-width:calc(100vw - 32px)}
+  figcaption b{display:block;font-size:16px}
+  figcaption span{font-size:13px;color:var(--muted);line-height:1.45}
+  iframe{width:100%;height:844px;border:1px solid rgba(0,0,0,.15);border-radius:28px;background:#fff}
+</style>
+</head>
+<body>
+<header>
+  <h1>Je to v základech?</h1>
+  <p>Stejný přehled, stejná kompozice i barvy značky. Mění se jen základní stavební kameny:
+     písmo, rohy a linky. Není to návrh, jen test, jestli generičnost sedí v téhle vrstvě.</p>
+</header>
+<div class="row">
+  <figure><iframe data-v="dnes" title="Dnes"></iframe>
+    <figcaption><b>Dnes</b><span>Bricolage Grotesque + Inter, zaoblení 12–14 px, vlasové linky.</span></figcaption></figure>
+  <figure><iframe data-v="plex" title="Test 1: písmo z webu, ostré rohy, bez linek"></iframe>
+    <figcaption><b>1 · Písmo z webu, ostré rohy, bez linek</b><span>IBM Plex Serif (nadpisy, je na vhaaji.cz) + IBM Plex Sans (text). Rohy 0, žádné linky. Karty od pozadí odděluje jen barva plochy.</span></figcaption></figure>
+  <figure><iframe data-v="tisk" title="Test 2: tisk"></iframe>
+    <figcaption><b>2 · Tisk</b><span>Stejné písmo, rohy 0, ale místo vlasových linek silná inkoustová čára jako u linorytu. Plochy splývají s pozadím, strukturu nese kresba.</span></figcaption></figure>
+</div>
+<script>
+/* Varianty se do obrazovek vkládají přes contentDocument. Při otevření souboru napřímo (file://)
+   to prohlížeč zakáže a všechny telefony pak ukazují dnešní stav – proto výrazné upozornění. */
+function varovani() {
+  if (document.getElementById("varovani")) return;
+  const u = "http://localhost:8123/docs/" + location.pathname.split("/").pop();
+  document.querySelector("header").insertAdjacentHTML("beforeend",
+    `<p id="varovani" style="margin-top:12px;padding:12px 14px;background:#B0492F;color:#fff;font-weight:600;border-radius:8px;max-width:none">`
+    + `Otevřeno jako soubor, varianty se proto neprojeví a všechny obrazovky vypadají stejně. Otevři: `
+    + `<a href="${u}" style="color:#fff">${u}</a></p>`);
+}
+if (location.protocol === "file:") varovani();
+/* Jiné prostředí, které přístup do obrazovek zakáže (např. náhled souboru): po načtení ověřit. */
+setTimeout(() => document.querySelectorAll("iframe").forEach(f => {
+  try { if (!f.contentDocument) varovani(); } catch (e) { varovani(); }
+}), 3000);
+const FONTS = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap';
+const BASE = `:root{--font-serif:"IBM Plex Serif",Georgia,serif;--font-sans:"IBM Plex Sans",system-ui,sans-serif;
+  --radius-xs:0;--radius-sm:0;--radius-md:0;--radius-lg:0;--radius-full:0}`;
+
+const CSS = {
+  dnes: '',
+
+  plex: BASE + `
+    :root{--color-bg:#E6E3D8;--color-surface:#FFFFFF;--color-surface-2:#F1EFE8;
+      --color-border:transparent}
+    #content .tab{background:var(--color-surface-2)}
+    #content .acard{background:var(--color-surface-2)}`,
+
+  tisk: BASE + `
+    :root{--color-bg:#F9F7F1;--color-surface:#F9F7F1;--color-surface-2:#F9F7F1;
+      --color-border:#1F2A2E;--color-border-strong:#1F2A2E}
+    #content .tile{border-width:2px}
+    #content .tab,#content .acard{border-width:1.5px}
+    #content .addbig{background:var(--color-text)}
+    #content .ch,#content .dh-t{color:var(--color-text)}`
+};
+
+document.querySelectorAll('iframe').forEach(f => {
+  const v = f.dataset.v;
+  f.addEventListener('load', () => {
+    const doc = f.contentDocument;
+    if (v !== 'dnes') {
+      const l = doc.createElement('link');
+      l.rel = 'stylesheet'; l.href = FONTS;
+      doc.head.appendChild(l);
+    }
+    const s = doc.createElement('style');
+    s.textContent = CSS[v];
+    doc.head.appendChild(s);
+  });
+  f.src = '../src/pruvodce.html?t=' + Date.now();  // obejde cache prohlížeče
+});
+</script>
+</body>
+</html>

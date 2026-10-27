@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tabule a zpravodaj</title>
+<!-- Pracovní náhled mimo build (jako kompozice-srovnani.html). Načte živý src/pruvodce.html dvakrát
+     a do druhé kopie vloží kombinaci metafor „Kolíčková tabule" (struktura) + „Linorytový zpravodaj"
+     (materiál), viz podklady/nastenka/metafory.html. Appka se nemění.
+     Funguje jen přes server (python3 -m http.server), ne přes file://. -->
+<style>
+  :root{--bg:#F3F3F1;--ink:#1F2A2E;--muted:#5C6560}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+  header{max-width:1240px;margin:0 auto;padding:28px 16px 8px}
+  h1{font-size:24px;margin:0 0 6px}
+  header p{margin:0 0 8px;color:var(--muted);font-size:14px;max-width:78ch;line-height:1.5}
+  header ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px;line-height:1.5;max-width:78ch}
+  .row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;padding:24px 16px 48px}
+  figure{margin:0;display:flex;flex-direction:column;gap:10px;width:390px;max-width:calc(100vw - 32px)}
+  figcaption b{display:block;font-size:16px}
+  figcaption span{font-size:13px;color:var(--muted);line-height:1.45}
+  iframe{width:100%;height:844px;border:1px solid rgba(0,0,0,.15);border-radius:28px;background:#fff}
+  .pisma-w{max-width:1240px;margin:0 auto;padding:8px 16px 0}
+  .pisma-w h2{font-size:17px;margin:0 0 4px}
+  .pisma-w p{margin:0 0 10px;color:var(--muted);font-size:14px;max-width:78ch;line-height:1.5}
+  #pisma{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+  .pf{display:flex;flex-direction:column;gap:4px;text-align:left;background:#fff;border:1px solid rgba(0,0,0,.12);
+    border-radius:10px;padding:10px 12px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .pf.on{outline:2px solid var(--ink);outline-offset:-1px}
+  .pf-s{font-size:22px;line-height:1.25;font-size-adjust:.5}
+  .pf-n{font-size:12.5px;color:var(--muted)}
+  .pisma-text{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+  .pisma-text .pf{min-width:0;width:100%}
+  .pisma-text .pf-s{font-size:14px;line-height:1.45;font-size-adjust:none}
+  #pisma-nadpis .pf-s{font-size:22px;line-height:1.25;font-weight:600;font-size-adjust:.5}
+  .pf-cz.bad{color:#B0492F;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <h1>Kolíčková tabule + linorytový zpravodaj</h1>
+  <p>Stejný průvodcovský přehled, stejná data, živý a klikací. Vpravo je jedna struktura a jeden materiál z kroku 2:</p>
+  <ul>
+    <li><b>Tabule (struktura):</b> nahoře visí týden. Každý den je pruh s programem a kolíček „dnes“ ukazuje, kde jsme. Program dne a akce se přesunuly na tabuli, samostatné karty pro ně zmizely.</li>
+    <li><b>Zpravodaj (materiál):</b> karty bez výplně a bez zaoblení, oddělené inkoustovou linkou jako v tisku. Tiskne se inkoustem a jednou barvou (zelená), barvu má jen kolíček, akce a stav absence. V hlavičce je logo jako jediná kresba, kterou škola má. Písmo zůstává schválené (Bricolage + Inter).</li>
+  </ul>
+</header>
+<div class="pisma-w">
+  <p>Test B (třetí telefon) má tři role písma a každá má vlastní přepínač. Kliknutí se hned projeví. Všechna písma jsou zdarma z Google Fonts. Jestli kreslí každý český znak, měří stránka sama a výsledek je u názvu.</p>
+  <h2>Tahy</h2>
+  <p>Linky, tah pod dneškem, podklad tlačítka a štítku DNES, kroužek kolem data a přerušovaná linka.</p>
+  <div id="tahy" class="pisma-text" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">
+    <button class="pf on" data-t="sada"><span class="pf-s" style="font-size:15px">Ze sady</span><span class="pf-n">tvoje EPS sada, vybraných 18 tahů</span></button>
+    <button class="pf" data-t="kod"><span class="pf-s" style="font-size:15px">Z kódu</span><span class="pf-n">dosavadní napodobenina</span></button>
+  </div>
+  <h2 style="margin-top:20px">1 · Nadpisy</h2>
+  <p>Datum v hlavičce, nadpisy karet, čísla docházky, program dneška a básnička. V appce token <code>--font-serif</code>, dnes Bricolage. Ukázky mají srovnanou výšku malých písmen.</p>
+  <div id="pisma-nadpis" class="pisma-text"></div>
+  <h2 style="margin-top:20px">2 · Běžný text</h2>
+  <p>Všechno ostatní: vzkazy, jména, popisky, tlačítka, časy. V appce token <code>--font-sans</code>, dnes Inter. Ukázky jsou ve skutečných 14 px. Nunito Sans a Baloo 2 tu nejsou, ty jsi v červenci zamítla jako dětské.</p>
+  <div id="pisma-text" class="pisma-text"></div>
+  <h2 style="margin-top:20px">3 · Ruční akcent</h2>
+  <p>Jen názvy dnů na tabuli a popisky „Básnička“ / „Písnička“.</p>
+  <div id="pisma"></div>
+</div>
+<div class="row">
+  <figure><iframe data-v="dnes" title="Dnes"></iframe>
+    <figcaption><b>Dnes</b><span>Schválená V2 pro srovnání.</span></figcaption></figure>
+  <figure><iframe data-v="tabule" title="Tabule a zpravodaj"></iframe>
+    <figcaption><b>Tabule + zpravodaj</b><span>Týden na tabuli s kolíčkem, pod ním dnešek jako list zpravodaje.</span></figcaption></figure>
+  <figure><iframe data-v="ruka" title="Tabule a zpravodaj s nedokonalostí"></iframe>
+    <figcaption><b>Test B · nedokonalost</b><span>Totéž, ale nepřesně. Každá linka je jinak rozklepaná a jinak dlouhá, dny na tabuli a kolíček jsou lehce pootočené, tlačítko má nepravidelný obrys a papír zrnitou texturu. Nadpisy jsou ručně psaným písmem, vybírá se nad telefony. <b>Jen test směru, ne návrh.</b> Rukopis i kresba jsou tu napodobené kódem.</span></figcaption></figure>
+</div>
+<script>
+/* Varianty se do obrazovek vkládají přes contentDocument. Při otevření souboru napřímo (file://)
+   to prohlížeč zakáže a obě obrazovky pak ukazují dnešní stav – proto výrazné upozornění. */
+function varovani() {
+  if (document.getElementById("varovani")) return;
+  const u = "http://localhost:8123/docs/" + location.pathname.split("/").pop();
+  document.querySelector("header").insertAdjacentHTML("beforeend",
+    `<p id="varovani" style="margin-top:12px;padding:12px 14px;background:#B0492F;color:#fff;font-weight:600;border-radius:8px;max-width:none">`
+    + `Otevřeno jako soubor, varianta se proto neprojeví. Otevři: <a href="${u}" style="color:#fff">${u}</a></p>`);
+}
+if (location.protocol === "file:") varovani();
+setTimeout(() => document.querySelectorAll("iframe").forEach(f => {
+  try { if (!f.contentDocument) varovani(); } catch (e) { varovani(); }
+}), 3000);
+
+/* Karty v přehledu nemají vlastní třídy – rozlišíme je podle nadpisu a označíme data-blk. */
+const MAP = {'Docházka dnes':'doch','Informace od rodičů':'zpr','Kdo dnes nepřijde':'nep','Program dne':'prog',
+  'Dnešní akce':'akce','Básnička a písnička týdne':'bas','Třídnice':'tri','Průvodci dnes':'pru'};
+
+const CSS = `
+  /* ── Zpravodaj: papír, inkoust, jedna barva tisku ── */
+  #dashhead .dh-t{color:var(--color-text)}
+  .zp-mast{display:flex;align-items:center;gap:var(--space-md);padding-bottom:var(--space-sm);
+    border-bottom:3px double var(--color-text);margin-bottom:var(--space-xs)}
+  .zp-mast img{width:52px;height:auto;flex:0 0 auto}
+  #content .tile{background:none;border:none;border-radius:0;border-top:1.5px solid var(--color-text);
+    padding:var(--space-sm) 0 0;margin:0 0 var(--space-lg);box-shadow:none}
+  #content .ch{color:var(--color-text);font-family:var(--font-sans);font-size:var(--text-micro);font-weight:600;
+    text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--space-sm)}
+  #content .dash-counts .tab{background:none;border:none;border-radius:0;padding:var(--space-xs) 0;text-align:left;min-width:0}
+  #content .dash-counts .tab .num{color:var(--color-text)}
+  #content .dash-counts .tab.num-danger .num{color:var(--state-danger-ink)}
+  #content .dash-counts .tab:nth-child(-n+2) .num{font-size:var(--text-number-lg)}
+  #content .addbig{border-radius:0}
+  #content .cardlink{border-top:1px dashed var(--color-border-strong);color:var(--color-text)}
+  #content [data-blk=bas] .tval{font-family:var(--font-serif);font-size:var(--text-title);line-height:var(--leading-snug);font-weight:500}
+  #content [data-blk=bas] .pa-cap{font-size:var(--text-micro);text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-muted)}
+  #content [data-blk=prog],#content [data-blk=akce]{display:none}
+  #content .np{border-color:var(--color-border-strong)}
+
+  /* ── Tabule: týden v pruzích, kolíček na dnešku ── */
+  .tb{margin:var(--space-xs) 0 var(--space-xl)}
+  .tb-band{display:block;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--color-text);
+    font:600 var(--text-note)/var(--leading-snug) var(--font-sans);color:var(--color-primary-strong);padding:6px 0;cursor:pointer;min-height:32px}
+  .tb-band span{color:var(--color-text-muted);font-weight:400}
+  .tb-days{display:flex;gap:4px;padding-top:22px}
+  .tb-d{flex:1 1 0;min-width:0;position:relative;background:none;border:none;border-top:1.5px solid var(--color-text);
+    padding:8px 2px 6px;text-align:left;font-family:var(--font-sans);color:var(--color-text);cursor:pointer;min-height:44px;
+    display:flex;flex-direction:column;justify-content:flex-start}
+  .tb-dow{display:block;font-size:var(--text-micro);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .tb-num{font-weight:400;color:var(--color-text-muted)}
+  .tb-prog{display:block;font-size:var(--text-note);line-height:var(--leading-snug);margin-top:2px;overflow-wrap:break-word;hyphens:auto}
+  .tb-pin{display:block;font-size:var(--text-micro);line-height:var(--leading-snug);margin-top:6px;padding-top:4px;
+    border-top:1px dashed var(--color-border-strong);color:var(--color-primary-strong);
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .tb-d.past{color:var(--color-text-hint);border-top-color:var(--color-border-strong)}
+  .tb-d.past .tb-num{color:var(--color-text-hint)}
+  .tb-d.today{flex:1.7 1 0;border-top:3px solid var(--color-primary-strong)}
+  .tb-d.today .tb-prog{font-family:var(--font-serif);font-size:var(--text-heading);font-weight:600;color:var(--color-primary-strong)}
+  .tb-kr{display:block;font-size:var(--text-micro);color:var(--color-text-muted);margin-top:2px}
+  /* kolíček: svislý štítek, který na pruh dneška „připíná" slovo DNES */
+  .tb-peg{position:absolute;left:6px;top:-22px;background:var(--color-primary-strong);color:var(--color-on-primary);
+    font-size:var(--text-chip);font-weight:700;letter-spacing:.1em;padding:3px 7px 4px;line-height:1}
+  .tb-peg::after{content:"";position:absolute;left:50%;bottom:-7px;width:2px;height:7px;background:var(--color-primary-strong)}
+  @media (min-width:900px){.tb-prog{font-size:var(--text-small)}}
+`;
+
+/* ── Test B: nedokonalost. Linky jsou SVG masky s rozklepanou cestou – každá jiná, ale stabilní
+   (seed z pořadí prvku), takže se při překreslení nehýbou. Barva jde přes mask + token, ne do SVG. ── */
+/* Vybrané tahy ze sady designérky (Freepik EPS převedené v Illustratoru). Leží v podklady/ mimo git,
+   takže skutečné tahy uvidí jen ten, kdo stránku pouští lokálně z repa. */
+const TAHY = '/podklady/nastenka/tahy-svg/vyber/';
+let tahy = 'sada';   // 'sada' = skutečné tahy, 'kod' = linky generované kódem
+const CSS_RUKA = `
+  #content .tile{border-top:none;position:relative}
+  #content .tile::before,.tb-d::before,.zp-mast::after,.zp-mast::before{content:"";display:block;height:7px;
+    background:var(--color-text);-webkit-mask:var(--wob) no-repeat center/100% 100%;mask:var(--wob) no-repeat center/100% 100%}
+  #content .tile::before{width:var(--wl,100%);margin:0 0 var(--space-sm) var(--wo,0)}
+  .zp-mast{border-bottom:none;flex-wrap:wrap;position:relative;padding-bottom:0}
+  .zp-mast::before,.zp-mast::after{order:9;flex:0 0 100%;--wob:var(--wob1)}
+  .zp-mast::after{--wob:var(--wob2);margin-top:-2px}
+  .tb-d{border-top:none;transform:rotate(var(--rot,0deg));transform-origin:top left}
+  .tb-d::before{margin:0 0 6px;height:6px}
+  .tb-d.today::before{background:var(--color-primary-strong);height:9px}
+  .tb-d.past::before{background:var(--color-text-hint)}
+  .tb-band{border-bottom:none}
+  .tb-peg{transform:rotate(-6deg);border-radius:3px 6px 2px 5px}
+  .tb-pin{border-top:none}
+  #content .addbig{border-radius:255px 18px 225px 15px/15px 225px 18px 255px;transform:rotate(-.6deg)}
+  #content .cardlink{border-top:none}
+  /* tři role písma: nadpisy = --font-serif, běžný text = --font-sans, ruční akcent = --hand
+     (jen názvy dnů na tabuli a popisky u básničky) */
+  #content .ch,.tb-dow,#content [data-blk=bas] .pa-cap{font-family:var(--font-serif);text-transform:none;
+    letter-spacing:0;font-weight:600;font-size:var(--text-display);line-height:var(--leading-tight);color:var(--color-text);
+    font-size-adjust:.5}
+  .tb-dow,#content [data-blk=bas] .pa-cap{font-family:var(--hand,"Itim"),cursive;font-weight:400}
+  #content [data-blk=bas] .pa-cap{font-size:var(--text-title);color:var(--color-text-muted)}
+  .tb-dow{font-size:var(--text-title)}
+  #dashhead .dh-t{transform:rotate(-.8deg);transform-origin:left}
+  /* zrnitý papír: šum jen jako průhlednost, barvu nese token */
+  .screen::after,body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.07;
+    background:var(--color-text);-webkit-mask:var(--grain);mask:var(--grain)}
+
+  /* ── Skutečné tahy ze sady (podklady/nastenka/tahy-svg/vyber/). Linky bere ruka() jako --wob,
+     tady navíc tah štětcem pod tlačítkem a štítkem DNES, kroužek kolem data a přerušovaná linka. ── */
+  .tahy-sada .tb-d.today::before{height:11px}
+  .tahy-sada #content .tile::before,.tahy-sada .zp-mast::before,.tahy-sada .zp-mast::after{height:5px}
+  .tahy-sada .zp-mast::after{margin-top:1px}
+  .tahy-sada #content .addbig{background:none;position:relative;isolation:isolate;border-radius:0;transform:none}
+  .tahy-sada #content .addbig::before{content:"";position:absolute;inset:-6px -8px;z-index:-1;background:var(--color-primary);
+    -webkit-mask:url(${TAHY}tlacitko.svg) no-repeat center/100% 100%;mask:url(${TAHY}tlacitko.svg) no-repeat center/100% 100%}
+  .tahy-sada .tb-peg{background:none;isolation:isolate;border-radius:0;padding:4px 9px 5px}
+  .tahy-sada .tb-peg::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--color-primary-strong);
+    -webkit-mask:url(${TAHY}stitek.svg) no-repeat center/100% 100%;mask:url(${TAHY}stitek.svg) no-repeat center/100% 100%}
+  .tahy-sada .tb-d.today .tb-num{position:relative;color:var(--color-primary-strong)}
+  .tahy-sada .tb-d.today .tb-num{margin-left:4px}
+  .tahy-sada .tb-d.today .tb-num::after{content:"";position:absolute;inset:-8px -9px -7px -8px;background:var(--color-primary-strong);
+    -webkit-mask:url(${TAHY}kruh.svg) no-repeat center/100% 100%;mask:url(${TAHY}kruh.svg) no-repeat center/100% 100%}
+  .tahy-sada #content .cardlink::before{content:"";display:block;height:4px;margin:-6px 0 8px;background:var(--color-text-hint);
+    -webkit-mask:url(${TAHY}preruseno.svg) no-repeat center/100% 100%;mask:url(${TAHY}preruseno.svg) no-repeat center/100% 100%}
+`;
+const GRAIN = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.6 -.55"/></filter><rect width="180" height="180" filter="url(#n)"/></svg>')}")`;
+function rnd(seed) { return () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }; }
+function wob(seed, h = 7) {
+  const r = rnd(seed * 7919 + 13), w = 400, pts = [];
+  let y = h / 2, t = 1.3 + r() * 1.2;
+  for (let x = 0; x <= w; x += 18 + r() * 22) { y = h / 2 + (r() - .5) * 2.4; pts.push([x.toFixed(1), y.toFixed(2)]); }
+  pts.push([w, (h / 2 + (r() - .5) * 2).toFixed(2)]);
+  let d = `M0 ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) { const p = pts[i - 1], q = pts[i]; d += ` Q${p[0]} ${p[1]} ${((+p[0] + +q[0]) / 2).toFixed(1)} ${((+p[1] + +q[1]) / 2).toFixed(2)}`; }
+  d += ` L${w} ${pts[pts.length - 1][1]}`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="${d}" fill="none" stroke="#000" stroke-width="${t.toFixed(2)}" stroke-linecap="round"/></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+function ruka(doc) {
+  const sada = tahy === 'sada', u = n => `url(${TAHY}${n}.svg)`;
+  doc.documentElement.style.setProperty('--grain', GRAIN);
+  doc.documentElement.classList.toggle('tahy-sada', sada);
+  const mast = doc.querySelector('.zp-mast');
+  if (mast && mast.dataset.r !== tahy) {
+    mast.dataset.r = tahy;
+    mast.style.setProperty('--wob1', sada ? u('dvojita-a') : wob(901));
+    mast.style.setProperty('--wob2', sada ? u('dvojita-b') : wob(902));
+  }
+  let karta = 0, den = 0;
+  doc.querySelectorAll('#content .tile, .tb-d').forEach((el, i) => {
+    const tile = el.classList.contains('tile');
+    const k = tile ? karta++ : den++;
+    if (el.dataset.r === tahy) return;
+    el.dataset.r = tahy;
+    const r = rnd(i * 31 + 7);
+    el.style.setProperty('--wob', !sada ? wob(i + 1)
+      : tile ? u('linka-' + (k % 6 + 1))
+      : el.classList.contains('today') ? u('silny') : u('kratka-' + (k % 5 + 1)));
+    if (el.classList.contains('tile')) { el.style.setProperty('--wl', (82 + r() * 18).toFixed(1) + '%'); el.style.setProperty('--wo', (r() * 6).toFixed(1) + 'px'); }
+    else el.style.setProperty('--rot', ((r() - .5) * 2.4).toFixed(2) + 'deg');
+  });
+}
+
+function tabule(win, doc) {
+  const g = n => win.eval(n);
+  const TODAYD = g('TODAYD'), wd = g('wd'), DOW = g('DOW'), RYTMUS = g('RYTMUS'), AKCE = g('AKCE');
+  const mon = TODAYD - wd(TODAYD);
+  const week = [0,1,2,3,4].map(i => mon + i);
+  const multi = AKCE.filter(a => a.dayEnd && a.day <= week[4] && a.dayEnd >= week[0]);
+  const single = d => AKCE.filter(a => !a.dayEnd && a.day === d);
+  let h = `<div class="tb">`;
+  multi.forEach(a => {
+    h += `<button class="tb-band" onclick="openAkceDetail('${a.id}')">${a.name} <span>· ${a.day}.–${a.dayEnd}. 6.${a.place ? ' · ' + a.place : ''}</span></button>`;
+  });
+  h += `<div class="tb-days">`;
+  week.forEach(d => {
+    const r = RYTMUS[wd(d)], cls = d < TODAYD ? 'past' : d === TODAYD ? 'today' : '';
+    const pins = single(d).map(a => `<span class="tb-pin">${a.name}</span>`).join('');
+    const click = single(d).length ? `openAkceDetail('${single(d)[0].id}')` : `go('priprava')`;
+    h += `<button class="tb-d ${cls}" onclick="${click}">`
+      + (d === TODAYD ? `<span class="tb-peg">DNES</span>` : '')
+      + `<span class="tb-dow">${DOW[wd(d)]} <span class="tb-num">${d}.</span></span>`
+      + `<span class="tb-prog">${r ? r.prog : ''}</span>`
+      + (d === TODAYD && r && r.krouzek ? `<span class="tb-kr">Kroužek: ${r.krouzek}</span>` : '')
+      + pins + `</button>`;
+  });
+  return h + `</div></div>`;
+}
+
+/* ── Přepínače písma pro test B: ručně psané (nadpisy, dny) a textové (vše ostatní, přes token
+   --font-sans). Jen Google Fonts; jestli písmo opravdu kreslí všechny české znaky, se měří níž –
+   chybějící znak prohlížeč vykreslí náhradním písmem a změní se šířka. ── */
+const FONTS = [
+  ['Itim', 'načítá ho web školy'], ['Shadows Into Light Two', 'nadpisy na webu školy'],
+  ['Patrick Hand', ''], ['Kalam', ''], ['Caveat', ''], ['Playpen Sans', 'navržené pro čitelnost'],
+  ['Mali', ''], ['Architects Daughter', ''], ['Edu AU VIC WA NT Hand', 'školní písmo'],
+  ['Klee One', ''], ['Gloria Hallelujah', ''], ['Indie Flower', ''],
+];
+/* Textová písma: bez Nunito Sans a Baloo 2 (zamítnuté jako dětské, decision-log 17. 7.).
+   Každé má řezy 400–700, které appka používá. */
+const BODY = [
+  ['Inter', 'dnešní schválené'], ['IBM Plex Serif', 'text na webu školy'], ['IBM Plex Sans', ''],
+  ['Source Serif 4', 'patkové, klidné'], ['Literata', 'knižní patkové'], ['Alegreya', 'kaligrafické kořeny'],
+  ['Atkinson Hyperlegible Next', 'navržené pro čitelnost'], ['Figtree', 'kulaté, ladí s Itim'],
+  ['Work Sans', ''], ['Karla', ''], ['Lexend', 'navržené pro čitelnost'], ['Fira Sans', 'humanistické'],
+];
+const fontUrl = (n, w) => 'https://fonts.googleapis.com/css2?family=' + n.replace(/ /g, '+') + (w ? ':wght@400;500;600;700' : '') + '&display=swap';
+// Každé písmo vlastním odkazem: jeden chybějící řez by jinak shodil celý hromadný požadavek.
+// Nadpisy se vybírají z textových písem + dnešního Bricolage pro srovnání.
+const HEAD = [['Bricolage Grotesque', 'dnešní schválené'], ...BODY.filter(([n]) => n !== 'Inter')];
+const FONT_LINKS = [...FONTS.map(([n]) => fontUrl(n, false)), ...[...BODY, HEAD[0]].map(([n]) => fontUrl(n, true))];
+// Volby designérky 27. 10. 2026: nadpisy Alegreya, běžný text Lexend, Itim jen jako ruční akcent.
+let hand = 'Itim';
+let head = 'Alegreya';
+let body = 'Lexend';
+const CZ = 'áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ';
+/* Vrací slib, který se splní, až jsou všechny styly písem načtené. Bez čekání se kontrola
+   češtiny spustila dřív, než prohlížeč o písmech věděl, a hlásila chybějící znaky všude. */
+const pridejPisma = doc => Promise.all(FONT_LINKS.map(h => new Promise(ok => {
+  const l = doc.createElement('link'); l.rel = 'stylesheet'; l.href = h;
+  l.onload = l.onerror = ok; doc.head.appendChild(l);
+})));
+/* Měří se v DOM, ne v canvasu: canvas sahal na písmo dřív, než se dotáhla sada latin-ext,
+   a hlásil chybějící znaky i tam, kde písmo háčky kreslí. */
+const sirka = (ch, fam) => {
+  const s = document.createElement('span');
+  s.textContent = ch.repeat(5);
+  s.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font-size:40px;font-family:${fam}`;
+  document.body.appendChild(s);
+  const w = s.getBoundingClientRect().width; s.remove(); return w;
+};
+function prepinac(boxId, list, current, sample, fallback, onPick) {
+  const box = document.getElementById(boxId);
+  box.innerHTML = list.map(([n, note]) => `<button class="pf${n === current ? ' on' : ''}" data-f="${n}">`
+    + `<span class="pf-s" style="font-family:'${n}',${fallback}">${sample}</span>`
+    + `<span class="pf-n">${n}${note ? ' · ' + note : ''}<span class="pf-cz">…</span></span></button>`).join('');
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.pf'); if (!b) return;
+    box.querySelectorAll('.pf').forEach(x => x.classList.toggle('on', x === b));
+    onPick(b.dataset.f);
+  });
+  pismaNactena.then(() => Promise.all(list.map(([n]) => document.fonts.load(`40px "${n}"`, CZ)))).then(() => document.fonts.ready).then(() => list.forEach(([n]) => {
+    const miss = [...CZ].filter(ch => sirka(ch, `"${n}",monospace`) !== sirka(ch, `"${n}",serif`));
+    const el = box.querySelector(`[data-f="${n}"] .pf-cz`);
+    el.textContent = miss.length ? ` · chybí: ${miss.join(' ')}` : ' · čeština ✓';
+    el.classList.toggle('bad', !!miss.length);
+  }));
+}
+/* Nadpisové písmo jde přes token --font-serif (historický název, dnes Bricolage): bere ho datum
+   v hlavičce, nadpisy karet, čísla docházky, program dneška i básnička. */
+const nastavPisma = root => {
+  root.style.setProperty('--hand', `"${hand}"`);
+  root.style.setProperty('--font-serif', `"${head}", system-ui, sans-serif`);
+  root.style.setProperty('--font-sans', `"${body}", system-ui, sans-serif`);
+};
+const vTestuB = () => { const f = document.querySelector('iframe[data-v=ruka]'); f.contentDocument && nastavPisma(f.contentDocument.documentElement); };
+const pismaNactena = pridejPisma(document);
+prepinac('pisma-nadpis', HEAD, head, 'Středa 3. června 2026 · Docházka dnes · 21', 'serif',
+  n => { head = n; vTestuB(); });
+prepinac('pisma-text', BODY, body,
+  '<b style="font-weight:600">Meda N.</b> Přijdeme později – <b style="font-weight:600">9:30</b> · Jdeme na kontrolu k zubaři. Přítomni 21 · Otevřít dnešní docházku →', 'sans-serif',
+  n => { body = n; vTestuB(); });
+document.getElementById('tahy').addEventListener('click', e => {
+  const b = e.target.closest('.pf'); if (!b) return;
+  tahy = b.dataset.t;
+  document.querySelectorAll('#tahy .pf').forEach(x => x.classList.toggle('on', x === b));
+  const f = document.querySelector('iframe[data-v=ruka]');
+  f.contentDocument && ruka(f.contentDocument);
+});
+prepinac('pisma', FONTS, hand, 'Po 1. · Út 2. · St 3. · Básnička · Písnička', 'cursive',
+  n => { hand = n; vTestuB(); });
+
+document.querySelectorAll('iframe').forEach(f => {
+  const v = f.dataset.v;
+  f.addEventListener('load', () => {
+    if (v === 'dnes') return;
+    const doc = f.contentDocument, win = f.contentWindow;
+    const s = doc.createElement('style');
+    s.textContent = CSS + (v === 'ruka' ? CSS_RUKA : '');
+    doc.head.appendChild(s);
+    if (v === 'ruka') {
+      pridejPisma(doc);
+      nastavPisma(doc.documentElement);
+    }
+    /* render() přepisuje #content i #dashhead při každém kliknutí – doplňujeme znovu přes MutationObserver. */
+    const apply = () => {
+      if (win.eval('section') !== 'prehled') return;
+      const content = doc.getElementById('content'), head = doc.getElementById('dashhead');
+      content.querySelectorAll('.tile').forEach(t => {
+        const h = t.querySelector('.ch'), k = h && MAP[h.textContent.trim()];
+        if (k && t.dataset.blk !== k) t.dataset.blk = k;
+      });
+      if (!content.querySelector('.tb')) content.insertAdjacentHTML('afterbegin', tabule(win, doc));
+      const t = head && head.querySelector('.dh-t');
+      if (t && !head.querySelector('.zp-mast')) {
+        const logo = (doc.querySelector('.brand-mark') || {}).src;
+        const wrap = doc.createElement('div');
+        wrap.className = 'zp-mast';
+        if (logo) wrap.innerHTML = `<img src="${logo}" alt="">`;
+        t.replaceWith(wrap);
+        wrap.appendChild(t);
+      }
+      if (v === 'ruka') ruka(doc);
+    };
+    apply();
+    new win.MutationObserver(apply).observe(doc.body, {childList: true, subtree: true});
+  });
+  f.src = '../src/pruvodce.html?t=' + Date.now();  // obejde cache prohlížeče
+});
+</script>
+</body>
+</html>

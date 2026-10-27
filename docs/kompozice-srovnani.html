@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Srovnání kompozice</title>
+<!-- Pracovní náhled mimo build (jako paleta-nahled.html, pozadi-srovnani.html). Načte živý
+     src/pruvodce.html čtyřikrát a do tří kopií vloží CSS, které mění jednu věc kompozice.
+     Appka se nemění. Funguje jen přes server (python3 -m http.server), ne přes file://. -->
+<style>
+  :root{--bg:#F3F3F1;--ink:#1F2A2E;--muted:#5C6560}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+  header{max-width:1240px;margin:0 auto;padding:28px 16px 8px}
+  h1{font-size:24px;margin:0 0 6px}
+  header p{margin:0;color:var(--muted);font-size:14px;max-width:72ch;line-height:1.5}
+  .row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;padding:24px 16px 48px}
+  figure{margin:0;display:flex;flex-direction:column;gap:10px;width:390px;max-width:calc(100vw - 32px)}
+  figcaption b{display:block;font-size:16px}
+  figcaption span{font-size:13px;color:var(--muted);line-height:1.45}
+  iframe{width:100%;height:844px;border:1px solid rgba(0,0,0,.15);border-radius:28px;background:#fff}
+</style>
+</head>
+<body>
+<header>
+  <h1>Co dělá přehled generickým?</h1>
+  <p>Stejný průvodcovský přehled, stejné barvy i data. Každá verze mění jen jednu věc kompozice.
+     Obrazovky jsou živé, dá se v nich scrollovat a klikat.</p>
+</header>
+<div class="row">
+  <figure><iframe data-v="dnes" title="Dnes"></iframe>
+    <figcaption><b>Dnes</b><span>Pro srovnání: sedm stejných karet pod sebou.</span></figcaption></figure>
+  <figure><iframe data-v="krabice" title="Verze A: bez krabic"></iframe>
+    <figcaption><b>A · Bez krabic</b><span>Žádné rámečky ani karty v kartách. Sekce dělí mezera, větší nadpis a tenká linka.</span></figcaption></figure>
+  <figure><iframe data-v="vaha" title="Verze B: nestejná váha"></iframe>
+    <figcaption><b>B · Nestejná váha</b><span>Docházka je velký tmavý blok s velkými čísly. Ranní informace zůstávají kartami, zbytek dne je menší a tišší.</span></figcaption></figure>
+  <figure><iframe data-v="svet" title="Verze C: svět školky"></iframe>
+    <figcaption><b>C · Svět školky</b><span>Logo u data, program dne na akvarelu z webu, básnička sázená velkým nadpisovým písmem.</span></figcaption></figure>
+</div>
+<script>
+/* Varianty se do obrazovek vkládají přes contentDocument. Při otevření souboru napřímo (file://)
+   to prohlížeč zakáže a všechny telefony pak ukazují dnešní stav – proto výrazné upozornění. */
+function varovani() {
+  if (document.getElementById("varovani")) return;
+  const u = "http://localhost:8123/docs/" + location.pathname.split("/").pop();
+  document.querySelector("header").insertAdjacentHTML("beforeend",
+    `<p id="varovani" style="margin-top:12px;padding:12px 14px;background:#B0492F;color:#fff;font-weight:600;border-radius:8px;max-width:none">`
+    + `Otevřeno jako soubor, varianty se proto neprojeví a všechny obrazovky vypadají stejně. Otevři: `
+    + `<a href="${u}" style="color:#fff">${u}</a></p>`);
+}
+if (location.protocol === "file:") varovani();
+/* Jiné prostředí, které přístup do obrazovek zakáže (např. náhled souboru): po načtení ověřit. */
+setTimeout(() => document.querySelectorAll("iframe").forEach(f => {
+  try { if (!f.contentDocument) varovani(); } catch (e) { varovani(); }
+}), 3000);
+/* Karty v přehledu nemají vlastní třídy – rozlišíme je podle nadpisu a označíme data-blk.
+   render() přepisuje obsah při každém kliknutí, proto se značkuje znovu přes MutationObserver. */
+const MAP = {'Docházka dnes':'doch','Informace od rodičů':'zpr','Kdo dnes nepřijde':'nep','Program dne':'prog',
+  'Dnešní akce':'akce','Básnička a písnička týdne':'bas','Třídnice':'tri','Průvodci dnes':'pru'};
+const QUIET = ['prog','akce','bas','tri','pru'].map(k => `#content [data-blk=${k}]`).join(',');
+
+const CSS = {
+  dnes: '',
+
+  krabice: `
+    #content .tile{background:none;border:none;border-radius:0;padding:var(--space-md) 2px 0;
+      margin:0 0 var(--space-xl);border-top:1px solid var(--color-border-strong)}
+    #content .ch{font-size:var(--text-title)}
+    #content .dash-counts{display:flex;gap:var(--space-md)}
+    #content .dash-counts .tab{background:none;border:none;border-radius:0;padding:var(--space-xs) 0;
+      text-align:left;min-width:0;flex:1}
+    #content .acard{background:none;border:none;padding:var(--space-xs) 0}
+    #content .cardlink{border-top:none;margin-top:var(--space-xs);padding-top:var(--space-xs)}`,
+
+  vaha: `
+    #content [data-blk=doch]{background:var(--color-primary-strong);border:none;padding:var(--space-lg) var(--space-lg) var(--space-md)}
+    #content [data-blk=doch] .ch{color:var(--color-on-primary);font-size:var(--text-small);font-family:var(--font-sans);opacity:.85}
+    #content [data-blk=doch] .dash-counts{gap:var(--space-sm) var(--space-lg)}
+    #content [data-blk=doch] .tab{background:none;border:none;padding:0;text-align:left;min-width:0}
+    #content [data-blk=doch] .tab .num{color:var(--color-on-primary)}
+    #content [data-blk=doch] .tab.num-danger .num{color:#F4B9A6}
+    #content [data-blk=doch] .tab:nth-child(-n+2) .num{font-size:64px;font-weight:700}
+    #content [data-blk=doch] .tab:nth-child(n+3){display:flex;align-items:baseline;gap:var(--space-sm)}
+    #content [data-blk=doch] .tab:nth-child(n+3) .num{font-size:var(--text-title)}
+    #content [data-blk=doch] .tab .lab{color:rgba(244,238,223,.82);font-size:var(--text-small);margin-top:0}
+    #content [data-blk=doch] .dash-spi,#content [data-blk=doch] .dash-spi b{color:var(--color-on-primary);border-color:rgba(244,238,223,.2)}
+    #content [data-blk=doch] .addbig{background:var(--color-on-primary);color:var(--color-primary-strong)}
+    ${QUIET}{background:none;border:none;padding:0 2px;margin:0 0 var(--space-lg)}
+    ${QUIET.replace(/\]/g,'] .ch')}{font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;color:var(--color-text-muted);margin-bottom:var(--space-xs)}
+    ${QUIET.replace(/\]/g,'] .tval')}{font-size:var(--text-small)}
+    ${QUIET.replace(/\]/g,'] .cardlink')}{border-top:none;margin-top:0;padding-top:0;font-size:var(--text-small)}
+    #content [data-blk=prog] .prog-day{font-size:var(--text-heading)}
+    #content [data-blk=akce] .acard{background:none;border:none;padding:var(--space-xs) 0}`,
+
+  svet: `
+    .dash-logo{float:right;width:64px;height:auto;margin:-6px 0 0 var(--space-sm)}
+    #content [data-blk=prog]{border:none;padding:var(--space-lg);
+      background:linear-gradient(rgba(249,247,241,.45),rgba(249,247,241,.72)),var(--wc-brand) center/cover no-repeat}
+    #content [data-blk=prog] .ch{font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-text)}
+    #content [data-blk=prog] .prog-day{font-size:44px;font-weight:700;line-height:1;color:var(--color-primary-strong);margin:var(--space-xs) 0 var(--space-sm)}
+    #content [data-blk=prog] .cardlink{border-top-color:rgba(31,42,46,.18)}
+    #content [data-blk=bas]{background:var(--tint-ochre);border:none;padding:var(--space-lg)}
+    #content [data-blk=bas] .ch{font-family:var(--font-sans);font-size:var(--text-small);color:var(--color-accent-ink)}
+    #content [data-blk=bas] .tval{font-family:var(--font-serif);font-size:20px;font-weight:500;line-height:var(--leading-snug);color:var(--color-text)}
+    #content [data-blk=bas] .pa-cap{color:var(--color-accent-ink);margin-top:var(--space-md)}
+    #content [data-blk=bas] .cardlink{border-top-color:var(--edge-accent);color:var(--color-accent-ink)}`
+};
+
+document.querySelectorAll('iframe').forEach(f => {
+  const v = f.dataset.v;
+  f.addEventListener('load', () => {
+    const doc = f.contentDocument, win = f.contentWindow;
+    const s = doc.createElement('style');
+    s.textContent = CSS[v];
+    doc.head.appendChild(s);
+    if (v === 'dnes') return;
+    const tag = () => {
+      doc.querySelectorAll('#content .tile').forEach(t => {
+        const h = t.querySelector('.ch'), k = h && MAP[h.textContent.trim()];
+        if (k && t.dataset.blk !== k) t.dataset.blk = k;
+      });
+      const head = doc.getElementById('dashhead');
+      if (v === 'svet' && head && head.firstChild && doc.querySelector('.brand-mark') && !head.querySelector('.dash-logo')) {
+        const img = doc.createElement('img');
+        img.className = 'dash-logo'; img.src = (doc.querySelector('.brand-mark') || {}).src; img.alt = '';
+        head.prepend(img);
+      }
+    };
+    tag();
+    new win.MutationObserver(tag).observe(doc.body, {childList: true, subtree: true});
+  });
+  f.src = '../src/pruvodce.html?t=' + Date.now();  // obejde cache prohlížeče
+});
+</script>
+</body>
+</html>
