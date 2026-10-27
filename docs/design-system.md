@@ -367,6 +367,15 @@ flex kontejneru – a mimo něj se to obcházelo inline `width:100%` (6×). Odsu
 - **Focus:** `:focus-visible` (2px `--color-primary` ring) jen při klávesové navigaci; `:focus{outline:none}`
   potlačuje ring po kliknutí myší. Hlavně pro desktop/admin.
 - **Oslovení:** **průvodce tyká, rodič vyká**, admin neosobní. Formát dat „D. M. RRRR".
+- **Žádná tečka „·“ jako oddělovač** (rozhodnutí designérky 27. 10. 2026). V textu se dělí česky
+  podle významu, ne jedním znakem:
+  - **typ / kategorie → dvojtečka:** „Zdravotní informace: Po ránu kapky do očí…", „Nemoc: Zvracela v noci…"
+  - **dvě věty nebo dva údaje → tečka:** „Přijdeme později – 9:30. Jdeme na kontrolu k zubaři."
+  - **čas nebo upřesnění na konci → závorka:** „Rodinné důvody (7:15)", „Táňa (otevírá)"
+  - **dvojice štítek–hodnota nebo rozsah → pomlčka „ – "** (s mezerami): „Včera – Út 2. 6.", „nepřišlo – nevyřešeno"
+  - když už text pomlčku obsahuje, druhou nepřidávat; použít tečku nebo čárku.
+  Platí pro texty v appkách i pro seed data; při převodu obrazovek do kódu se „ · " v šablonách
+  a v `data.js` mění podle těchto pravidel (v kódu ho je zatím kolem 150 výskytů).
 
 ## Formulářové popisky a výběr z možností (10. 9. 2026)
 

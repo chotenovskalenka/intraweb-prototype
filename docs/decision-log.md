@@ -1883,3 +1883,91 @@ s realistickými mezerami jako v Jaatě.
 **Vědomě nesedí:** minulé týdny Vhaaji v adminu a v průvodcovské appce se textově ani
 stavem nekryjí – appky nesdílejí data ani generátor; shoduje se jen tento týden.
 Zbytek prototypu (docházka, akce, služby) dál žije jen v červnu 2026.
+
+## Směr vizuálu: „Deník z háje" (27. 10. 2026)
+
+**Kontext:** designérka vnímala schválenou V2 (karty, Bricolage + Inter) jako generickou.
+Průzkum vlastního jazyka proběhl v krocích: nástěnka stop školky (web, příručky, třídní kniha,
+fotky – mimo git v `podklady/nastenka/`), šest metafor, živé varianty „kolíčková tabule +
+linorytový zpravodaj" (`docs/tabule-zpravodaj.html`) a test nedokonalosti. Poučení: měnit jen
+povrch (linky, štětec, textury) nad stejnou kostrou nefunguje – působí to jako filtr; ruka
+patří do obsahu, ne do každé hrany. Další práce proto jde přes Figmu: designérka ladí
+obrazovku ručně, kód ji pak přesně převezme.
+
+**Rozhodnutí (designérka):** z konceptu tří variant (A tabule, B lesní zpravodaj, C deník)
+se jde cestou **C · Deník z háje** – akvarel jako podklad hlavičky a programu dne, ručně
+psaný titulek dne („Dnes je pohyb"), měkké zaoblené karty, počty docházky v barevných
+skvrnách, kresby místo ikon. Koncept slouží jen jako vizuální vodítko; **obsah zůstává
+odsouhlasený** (slovník docházky z testování P2, všechny sekce přehledu včetně „Kdo dnes
+nepřijde"; řada „rytmus dne" z konceptu se nepřebírá).
+
+**Písma (zatím jen v draftu, ne v tokenech):** nadpisy Alegreya, text Lexend, ručně psaný
+akcent Itim (načítá ho i web vhaaji.cz). Mění typografii schválenou v 4.2 – před přenosem
+do kódu je potřeba rozhodnout, zda platí pro všechny čtyři školky, nebo jen pro skin Vhaaji.
+
+**Kde to je:** Figma „Vhaaji – design systém", stránka „Draft · přehled průvodce" (rámec
+„C · Deník z háje"), vedle V2, A a B a draftu s tahy. Kresby jsou zatím zástupné výřezy
+z konceptu; akvarel je skutečný z webu školy.
+
+**Otevřené:** skutečné kresby místo zástupných (ptáček, ikony sekcí); riziko „vkusného AI
+vzhledu" (akvarel + ptáček je dnes častý vzor) – hlídat, aby nesl stopy Vhaaji, ne obecný
+styl; licence sady tahů (vypadá jako Freepik) před použitím mimo prototyp.
+
+**Doplněno při ladění C ve Figmě (27. 10. 2026)** – změny obsahu přehledu průvodce, které se mají
+promítnout do kódu při převodu:
+- **Program dne patří do hlavičky** („Dnes je Pohyb" + kroužek pod datem), samostatná karta
+  „Program dne" zmizela – nesla málo informace s velkou vizuální vahou.
+- **Vzkazy od rodičů: čas hned za jménem** (ne vpravo, pletl se s časy v textu) a **řazení od
+  nejnovějšího** (dnes se řadí podle pořadí dětí).
+- **Třídnice ukazuje všechny nedoplněné dny za poslední 3 týdny** (dnes jen předchozí den –
+  starší díra jako Pá 15. 5. nebyla nikde vidět), nejvýš 3 řádky + „a další N ›", jinak
+  „Všechny zápisy jsou hotové"; řádek „Dnes píše…" zůstává. Starší díry hlídá vedení v adminu.
+- **Přihlášený uživatel v liště jako avatar + jméno + role** (text „Táňa – vedoucí průvodce"
+  se nečetl jako role).
+- **Pořadí karet na mobilu:** Docházka → Informace od rodičů → Kdo dnes nepřijde → **Třídnice** →
+  Dnešní akce → Básnička a písnička → Průvodci dnes (ranní provoz pohromadě, „dnešek" pod ním).
+- **Stavy absencí podle stavové palety:** „omluveno rodičem / vedoucí" je neutrální
+  (`--state-neutral-ink`), červená (`--state-danger-ink`) jen pro „neomluveno / nevyřešeno" –
+  červená má znamenat „tady jednej". Počet vzkazů od rodičů je neutrální odznak (tinta zelená),
+  ne červený poplach. Písnička na přehledu jen prvním veršem (celá v tématickém plánu).
+- **„Spí dnes" zpátky pod dlaždice docházky** (samostatný řádek s linkou), ne v hlavičce karty
+  vedle čísel – u „spí" se respondentka v testování zasekla (P2), nesmí se číst jako pátý stav.
+- **Otevírání ve dvou vlnách:** hlavička říká „Otevírají Táňa a Darča, dál Honza a Míša" –
+  **bez časů** (ty jsou v kartě Průvodci dnes), v kartě Průvodci mají „(otevírá)" oba z první vlny.
+  Za jednopísmenné předložky a spojky pevná mezera, ať „a" nevisí na konci řádku. Z testování: ráno otevírají
+  čtyři průvodci (dva dřív, dva později) a pořadí je důležité kvůli výměnám služeb; dnešní
+  kód (`opener`) označí jen jednoho nejdřívějšího.
+- **Odkazy na konci karet jsou sekundární tlačítka** (komponenta `Tlačítko/Sekundární (C)`:
+  světle zelená výplň `tint/green`, linka `edge-primary`, plné zaoblení, Lexend SemiBold + šipka →),
+  ne zelený text s linkou nad ním – víc lákají ke klepnutí. Primární (tmavé) zůstává jen
+  „Otevřít dnešní docházku".
+- **Řádek spaní zní „☾ Odpoledne spí 13 dětí ›"** (dřív „Spí dnes…"). Stojí pod dlaždicí
+  „Odpolední 3" a respondentka v testování „spí" ztotožnila s odpolední docházkou – „odpoledne
+  spí" říká, že jde o provozní fakt (lehátka), který se týká i celodenních dětí, ne o pátý stav.
+- **Spaní je úkol se jmény, ne jen počet** (doplnění designérky z praxe, 27. 10. 2026 – v testování
+  nezaznělo): průvodci potřebují vědět, *které* děti spí, aby je po obědě nahnali do spací maringotky.
+  Na přehledu zůstává sbalený řádek „☾ Odpoledne spí 13 dětí", **jména se ukážou až po rozkliku**
+  (rozbalí se v kartě, dva sloupce, abecedně podle seznamu; data `c.spi` u přítomných dětí,
+  které zůstávají odpoledne). Figma: stav „Docházka, spaní rozkliknuté".
+- **Chyba v počtu „Odpolední" (nalezeno 27. 10. 2026):** `inTab('odpoledni')` počítá jen plán
+  „odpolední", ale celodenní plán je mimo úterý odpolední docházka (kód `O`, viz „Celodenní
+  docházka je jen v úterý"). Ve středu tak přehled ukazuje 3 místo 20 (21 = 1 dopolední + 20
+  odpoledních). Oprava při převodu: počítat podle `getCode(c, den)`, ne podle `c.plan`.
+- **Dlaždice docházky podle dne:** Po/St/Čt/Pá čtyři (Přítomni, Absence, Dopolední, Odpolední),
+  **v úterý pět** – přibude Celodenní. Šestá dlaždice „Spí" ne (P2). Nula absencí je neutrální,
+  ne červená (červená = jednej).
+- **Spí a Celodenní jako dlaždice (rozhodnutí designérky, 27. 10. 2026)** – mění předchozí řádek
+  „Odpoledne spí" pod dlaždicemi. Kvůli P2 je dlaždice Spí **vizuálně odlišená od stavů docházky**
+  (bez výplně, čárkovaná linka, ☾ u čísla, popisek „Odpoledne spí") a po klepnutí ukáže jména.
+  **Celodenní jen v úterý** (jinak je 0 – celodenní děti se mimo úterý počítají do odpoledních).
+  Středa: Přítomni, Absence / Dopolední, Odpolední / Spí přes celou šířku. Úterý: tři řady po dvou.
+  Stojí za ověření v příštím testování – právě „spí" bylo jediné doložené zaseknutí.
+- **UX revize nástěnky, body 1–4 (27. 10. 2026):**
+  1. Nad Dopolední/Odpolední/Spí popisek **„Z přítomných"** – pět dlaždic nejsou souběžné
+     kategorie (Přítomni + Absence = všechny děti; zbytek je rozpad přítomných).
+  2. **Nejmenší písmo 11,5 px** (štítky, popisky skupin), popisky dlaždic a časy **12,5 px**
+     (styly Draft/Popisek a Draft/Mikro) – kvůli čtení venku na slunci; kontrast AA prošel
+     všude už předtím (nejnižší 4,8 : 1). Dlaždice nemají pevnou výšku (min. 74 px) – v kódu
+     `min-height`, ne `height`, a test při 200% písmu.
+  3. **Třídnice bez štítků „rozepsáno N z 8"** – nejasné „8 čeho" a duplicitní s „Chybí: …".
+  4. **„Kdo dnes nepřijde" řadí nevyřešené (neomluveno) nahoru**, omluvené pod ně.
