@@ -242,3 +242,7 @@
   .tr-tyden{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-md);align-items:start}
   .tr-deti,.tr-kdetem{display:block}
 }
+/* profil dítěte – rok z třídnice: souhrn a mezititulky měsíců */
+.tr-rok-sum{font-size:var(--text-note);color:var(--color-text-muted);margin:-4px 0 4px}
+.tr-rok-m{font-family:var(--font-serif);font-size:var(--text-body);font-weight:600;color:var(--color-primary-strong);margin:14px 0 2px}
+.tr-mesic{width:auto;min-height:44px}

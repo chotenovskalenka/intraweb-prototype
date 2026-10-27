@@ -1852,3 +1852,34 @@ rok u dítěte a mají je vidět i vedení. Psát je průvodce má ze zápisu dn
 v adminu číst (zatím každý, kdo má admin). Děti v adminu jsou z jeho matriky – jména se
 s průvodcovskou appkou kryjí jen u Elišky (má i stejnou poznámku), počet dětí s poznámkou
 u Vhaaji tento týden sedí (7 z 25).
+
+## Třídnice vyplněná za celý školní rok (11. 10. 2026)
+
+**Zadání (Lenka):** třídnice má být „už hodně vyplněná" – celý školní rok, v obou appkách,
+s realistickými mezerami jako v Jaatě.
+
+**Rozhodnutí:**
+- **Třídnice jako jediná část prototypu sahá přes červen** – od 1. 9. 2025 do dneška
+  (182 otevřených dnů, 38 týdnů). Den má klíč podle data (RRRRMMDD), ne „den v červnu";
+  kalendář zná víkendy, státní svátky a vánoční zavření (22. 12. – 2. 1.), zavřené dny
+  jsou v týdnu vidět jako „zavřeno", ale nedá se do nich psát. Data průvodce jsou
+  v novém souboru `pruvodce/tridnice-data.js`.
+- **Minulost je vygenerovaná deterministicky** (každé načtení ukáže totéž): témata týdnů
+  podle roku (Václav, Martin, advent, masopust, Morana…), program podle týdenního rytmu
+  Vhaaji (rytmika / putování / pohyb / tvorba / pohádka), sezónní tvoření, knížka na
+  odpočinek podle měsíce, počasí podle měsíce, básnička z tématického plánu.
+  **Slavnosti mají svůj den** (Martin 11. 11., adventní spirála 10. 12., masopust 17. 2.…);
+  zápis toho dne o nich mluví a poznámky k dětem o slavnosti padnou jen na něj.
+- **Mezery jako v Jaatě:** průvodce Vhaaji má zapsaných asi 80 % dnů, zbytek rozepsaný
+  nebo (výjimečně) bez zápisu; uzavření týdne chybí asi v desetině týdnů; asi pětina
+  zápisů vznikla až druhý den ráno (podpis ukazuje datum). Poznámky k dětem u 16–24
+  z 25 dětí týdně (Jaata 19 z 23), ručně psané poznámky z dřívějška zůstaly.
+- **Admin:** celý rok pro 4 školky s různou pečlivostí (Jaata nejpečlivější, Kouzlo lesa
+  nejméně) – vedení má v přehledu vyplnění co hlídat. Výpis evaluací po měsících
+  (výchozí květen – celý rok za všechny školky je dlouhý).
+- **Orientace v roce:** průvodce i admin mají vedle listování skok na měsíc; profil
+  dítěte ukazuje posledních 6 poznámek a celý rok (kolem 40–50) rozbalí po měsících.
+
+**Vědomě nesedí:** minulé týdny Vhaaji v adminu a v průvodcovské appce se textově ani
+stavem nekryjí – appky nesdílejí data ani generátor; shoduje se jen tento týden.
+Zbytek prototypu (docházka, akce, služby) dál žije jen v červnu 2026.

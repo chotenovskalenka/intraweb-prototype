@@ -115,11 +115,20 @@ function renderDite(i){
   /* Poznámky z třídnice za celý školní rok – jako „Listy dětí" v sešitu Jaaty, podklad
      k pohovorům. Na rozdíl od Poznámek týmu (spolupráce s rodinou) jsou to denní pozorování
      dítěte; píšou se v zápisu dne, tady se jen čtou. */
-  const rok=trDetiRok(i);
+  /* Za rok je to kolem padesáti poznámek – nahoře posledních šest, celý rok se rozbalí
+     a rozdělí po měsících (tak se před pohovorem hledá „jak to bylo v listopadu"). */
+  const rok=trDetiRok(i), vse=trRokVse===i, ROK_NAHLED=6;
+  const radek=x=>`<div class="rozh"><div class="rozhd">${x.datum} · ${esc(x.kdo)}</div>${esc(x.t)}</div>`;
+  let rokH='';
+  if(vse){let ym=0;rok.forEach(x=>{const m=Math.floor(x.srt/100);
+    if(m!==ym){ym=m;rokH+=`<div class="tr-rok-m">${MONTHS[m%100-1].replace(/^./,c=>c.toUpperCase())} ${Math.floor(m/100)}</div>`;}
+    rokH+=radek(x);});}
+  else rokH=rok.slice(0,ROK_NAHLED).map(radek).join('');
   h+=`<div class="tile" id="tr-rok"><div class="ch">Z třídnice · školní rok 2025/26</div>`
-    +(rok.length?rok.map(x=>`<div class="rozh"><div class="rozhd">${x.datum} · ${esc(x.kdo)}</div>${esc(x.t)}</div>`).join('')
+    +(rok.length?`<div class="tr-rok-sum">${rok.length} ${rok.length===1?'poznámka':rok.length<5?'poznámky':'poznámek'} od září</div>`+rokH
       :`<div class="empty-l">V třídnici zatím k dítěti nic není.</div>`)
-    +`<button class="cardlink" onclick="trNapsat(${i},TODAYD)">Napsat do dnešní třídnice ›</button></div>`;
+    +(rok.length>ROK_NAHLED?`<button class="btn-ghost btn-block" style="margin-top:var(--space-sm)" onclick="trRokPrepni(${i})" aria-expanded="${vse}">${vse?'Zobrazit jen posledních '+ROK_NAHLED:'Zobrazit celý rok ('+rok.length+')'}</button>`:'')
+    +`<button class="cardlink" onclick="trNapsat(${i},TR_DNES)">Napsat do dnešní třídnice ›</button></div>`;
   h+=`</div>`;
 
   // Záznam z konzultace: obě části naráz, každá s jasnou viditelností
@@ -163,6 +172,10 @@ window.setDiteF=(i,f,v)=>{data[i][f]=v;};   // bez render() – kurzor v poli mu
 window.togDitePre=i=>{data[i].predskolak=!data[i].predskolak;render();};
 window.setDetiF=f=>{detiFilter=f;render();};
 window.onDetiSearch=v=>{detiQuery=v;renderKeepFocus();};
+// celý rok poznámek z třídnice v profilu (index dítěte, nebo -1 = zabaleno)
+let trRokVse=-1;
+window.trRokPrepni=i=>{trRokVse=trRokVse===i?-1:i;render();
+  const el=document.getElementById('tr-rok');if(el)el.scrollIntoView({block:'start'});};
 window.openDite=i=>{detiOpen=i;rozhEdit=null;render();navPush();};
 window.closeDite=()=>{rozhEdit=null;navZpet();};
 window.setDopo=(i,v)=>{dopoMap[i]=v;};

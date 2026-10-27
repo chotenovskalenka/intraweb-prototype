@@ -9,29 +9,34 @@
    Žádné „Odeslat": třídnice se píše zpětně a víc lidmi (výzkum), formulář, který se odešle
    a zavře, to neunese. Psaní nevolá render() – kurzor v poli musí zůstat; přepisuje se jen
    podpis pole a stav dne přímo v DOM. Data a stavy jsou v data.js (TR_*). */
-let trView='den', trDay=TODAYD, trWeek=trTydenOd(TODAYD), trOpenDite=-1;
+let trView='den', trDay=TR_DNES, trWeek=trTydenOd(TR_DNES), trOpenDite=-1;   // den = klíč RRRRMMDD
 // formulář poznámky k dítěti v zápisu dne; rozepsaný text přežije render() (třeba klik na poučení)
 let trNoteForm=false, trNoteChild=-1, trNoteDraft='';
 // úprava / mazání jedné poznámky: {i: dítě, j: pozice v jeho poli}
 let trUprava=null, trUpravaDraft='', trMazani=null;
 const TR_DOW=['pondělí','úterý','středa','čtvrtek','pátek'];
-// pracovní dny června, které už začaly (budoucí se nepíšou ani neprocházejí)
-const trDny=()=>Array.from({length:TODAYD},(_,i)=>i+1).filter(d=>!isWE(d));
-const trTydny=()=>[...new Set(trDny().map(trTydenOd))];
-const trKdyLbl=z=>!z?'':`${z.kdo} · ${z.den===TODAYD?'dnes':z.den===TODAYD-1?'včera':z.den+'. 6.'} ${z.cas}`;
+// otevřené dny školního roku, které už začaly, a jejich týdny (kalendář je v tridnice-data.js)
+const trDny=()=>TR_DNY;
+const trTydny=()=>TR_TYDNY_SEZ;
+// podpis pole: kdo a kdy – u starších zápisů datum, ať je vidět, že se psalo třeba až druhý den
+const trKdyLbl=z=>{if(!z)return '';const x=trInfo(z.den);
+  return `${z.kdo} · ${z.den===TR_DNES?'dnes':z.den===trPredchozi(TR_DNES)?'včera':x?`${x.d}. ${x.m}.`:''} ${z.cas}`;};
 const trBdg=s=>`<span class="bdg st-${s.cls}">${s.lab}</span>`;
-const trDenLbl=d=>`${DOW[wd(d)]} ${d}. 6.`;
-const trTydenLbl=po=>{const dny=trDnyTydne(po);return `${dny[0]}.–${dny[dny.length-1]}. 6.`;};
-// kdo ten den slouží – z rozpisu služeb (stejný zdroj jako dashboard)
-const trSluzba=d=>shiftProDen(d).filter(g=>serving(g.days[wd(d)])).map(g=>g.n);
+// kdo ten den slouží – v červnu z rozpisu služeb (stejný zdroj jako dashboard), dřív ze základní roty
+const trSluzba=k=>{const x=trInfo(k);
+  return (x.y===2026&&x.m===6?shiftProDen(x.d):SHIFT_ROTA).filter(g=>serving(g.days[x.dow])).map(g=>g.n);};
 
 function renderTridnice(){
   const nav=trView==='den'
-    ? trNav(trDenLbl(trDay)+(trDay===TODAYD?'<i class="dn-cur"> · dnes</i>':''),'trStepDay',trDny().indexOf(trDay),trDny().length)
-    : trNav(trTydenLbl(trWeek)+(trWeek===trTydenOd(TODAYD)?'<i class="dn-cur"> · tento týden</i>':''),'trStepWeek',trTydny().indexOf(trWeek),trTydny().length);
+    ? trNav(trDenLbl(trDay)+(trDay===TR_DNES?'<i class="dn-cur"> · dnes</i>':''),'trStepDay',trDny().indexOf(trDay),trDny().length)
+    : trNav(trTydenLbl(trWeek)+(trWeek===trTydenOd(TR_DNES)?'<i class="dn-cur"> · tento týden</i>':''),'trStepWeek',trTydny().indexOf(trWeek),trTydny().length);
+  // skok na měsíc – školní rok má přes 180 dnů, po jednom se k září nikdo nedoklikne
+  const ym=Math.floor((trView==='den'?trDay:trWeek)/100);
+  const mesic=`<select class="pin tr-mesic" aria-label="Přejít na měsíc" onchange="trMesic(+this.value)">`
+    +TR_MESICE.map(x=>`<option value="${x.ym}"${x.ym===ym?' selected':''}>${x.lab}</option>`).join('')+`</select>`;
   let h=`<div class="tr"><div class="dfield"><div class="switch dsw">`
     +[['den','Den'],['tyden','Týden'],['deti','Děti']].map(v=>`<button class="${trView===v[0]?'on':''}" onclick="trSetView('${v[0]}')">${v[1]}</button>`).join('')
-    +`</div>${nav}</div>`;
+    +`</div>${nav}${mesic}</div>`;
   h+=trView==='den'?trRenderDen():trView==='tyden'?trRenderTyden():trRenderDeti();
   return h+`</div>`;
 }
@@ -41,9 +46,9 @@ function trNav(lbl,fn,i,n){
 
 /* ---- Den ---- */
 function trRenderDen(){
-  const d=trDay, z=trDen(d), sl=trSluzba(d);
-  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><span class="tlab">${TR_DOW[wd(d)].replace(/^./,m=>m.toUpperCase())} ${d}. června</span><span id="tr-stav">${trBdg(trStav(d))}</span></div>`
-    +`<div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b> · píše <b>${TR_ZAPISUJE[wd(d)]}</b></div>`
+  const d=trDay, x=trInfo(d), z=trDen(d), sl=trSluzba(d);
+  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><span class="tlab">${TR_DOW[x.dow].replace(/^./,m=>m.toUpperCase())} ${x.d}. ${MONTHS_G[x.m-1]} ${x.y}</span><span id="tr-stav">${trBdg(trStav(d))}</span></div>`
+    +`<div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b> · píše <b>${TR_ZAPISUJE[x.dow]}</b></div>`
     +`<div class="note2">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do části <a class="tr-inl" href="#tr-kdetem">K dětem</a> pod zápisem, kterou vidí jen tým.</div></div>`;
   h+=`<div class="tr-pole">`;
   TR_POLE.forEach(p=>{
@@ -132,7 +137,7 @@ window.trNoteUloz=()=>{
 };
 window.trSet=(k,v)=>{
   const z=trDen(trDay);
-  if(v.trim())z.pole[k]={t:v,kdo:ja().n,cas:TEDCAS,den:TODAYD};else delete z.pole[k];
+  if(v.trim())z.pole[k]={t:v,kdo:ja().n,cas:TEDCAS,den:TR_DNES};else delete z.pole[k];
   const kdo=document.getElementById('trk-'+k);if(kdo)kdo.textContent=trKdyLbl(z.pole[k]);
   const st=document.getElementById('tr-stav');if(st)st.innerHTML=trBdg(trStav(trDay));
 };
@@ -140,7 +145,7 @@ window.trPouceni=k=>{const z=trDen(trDay),i=z.pouceni.indexOf(k);i>=0?z.pouceni.
 
 /* ---- Týden ---- */
 function trRenderTyden(){
-  const po=trWeek, t=trTyden(po), dny=trDnyTydne(po), konec=dny[dny.length-1]<=TODAYD;
+  const po=trWeek, t=trTyden(po), dny=trDnyTydne(po), otevr=dny.filter(k=>!trInfo(k).zav), konec=otevr[otevr.length-1]<=TR_DNES;
   let h=`<div class="tr-tyden"><div class="tr-col">`;
   h+=`<div class="tile"><div class="ch">Týden</div>`
     +`<label class="pl" for="trt-tema">Téma týdne</label><input class="pin" id="trt-tema" value="${esc(t.tema)}" placeholder="např. Kytičky a věneček" oninput="trSetT('tema',this.value)">`
@@ -149,10 +154,10 @@ function trRenderTyden(){
   h+=`<div class="tile"><div class="ch">Dny</div>`;
   dny.forEach(d=>{
     // co chybí, jen u proběhlých dnů – dnešek ještě běží
-    const s=trStav(d), chybi=d<TODAYD?TR_POLE.filter(p=>!p.volitelne&&!(trDen(d).pole[p.k]||{}).t).map(p=>p.lab.toLowerCase()):[];
-    h+=`<button class="tr-den" onclick="trGoDay(${d})" ${d>TODAYD?'disabled':''}><span class="tr-den-d">${trDenLbl(d)}</span>`
-      +`<span class="tr-den-m">${trBdg(s)}${chybi.length&&s.k==='rozepsano'?`<span class="tr-chybi">chybí: ${chybi.join(', ')}</span>`:''}</span>`
-      +(d<=TODAYD?`<span class="tr-arr" aria-hidden="true">›</span>`:'')+`</button>`;
+    const s=trStav(d), jde=d<=TR_DNES&&s.k!=='zavreno', chybi=d<TR_DNES&&s.k==='rozepsano'?trChybi(d):[];
+    h+=`<button class="tr-den" onclick="trGoDay(${d})" ${jde?'':'disabled'}><span class="tr-den-d">${trDenLbl(d)}</span>`
+      +`<span class="tr-den-m">${trBdg(s)}${chybi.length?`<span class="tr-chybi">chybí: ${chybi.join(', ')}</span>`:''}</span>`
+      +(jde?`<span class="tr-arr" aria-hidden="true">›</span>`:'')+`</button>`;
   });
   h+=`</div></div><div class="tr-col">`;
   // uzavření týdne – Jaata ho má vyplněné ve 100 % týdnů; píše se po posledním dni
@@ -177,7 +182,7 @@ function trRenderTyden(){
   return h;
 }
 window.trSetT=(k,v)=>{trTyden(trWeek)[k]=v;};
-window.trSetUz=v=>{const t=trTyden(trWeek);t.uzavreni=v.trim()?{t:v,kdo:ja().n,cas:TEDCAS,den:TODAYD}:null;
+window.trSetUz=v=>{const t=trTyden(trWeek);t.uzavreni=v.trim()?{t:v,kdo:ja().n,cas:TEDCAS,den:TR_DNES}:null;
   const k=document.getElementById('trk-uz');if(k)k.textContent=trKdyLbl(t.uzavreni);};
 window.trUkol=i=>{const u=trTyden(trWeek).ukoly[i];u.done=!u.done;render();};
 window.trUkolAdd=()=>{const t=document.getElementById('tru-t'),k=document.getElementById('tru-k');
@@ -187,7 +192,7 @@ window.trGoDay=d=>{trDay=d;trView='den';render();};
 
 /* ---- Děti (jen pro tým) ---- */
 function trRenderDeti(){
-  const po=trWeek, poz=trDetiTyden(po), dny=trDnyTydne(po).filter(d=>d<=TODAYD);
+  const po=trWeek, poz=trDetiTyden(po), dny=trDnyTydne(po).filter(k=>k<=TR_DNES&&!trInfo(k).zav);
   const kDni=dny[dny.length-1];   // psát se dá k poslednímu proběhlému dni týdne (dnes, nebo pátek)
   const sPoz=data.filter((c,i)=>(poz[i]||[]).length).length;
   let h=`<div class="zona zona-int tr-deti"><div class="zona-h"><span class="zona-t">Poznámky k dětem</span>`
@@ -203,7 +208,7 @@ function trRenderDeti(){
       h+=`<div class="tr-dite-b">`;
       n.forEach(x=>{h+=`<div class="rozh"><div class="rozhd">${trDenLbl(x.d)} · ${esc(x.kdo)}</div>${esc(x.t)}</div>`;});
       // psaní vede do zápisu dne – jedno místo, kde poznámky vznikají
-      h+=`<div class="tr-dite-act"><button class="btn-ghost" onclick="trNapsat(${i},${kDni})">Napsat k ${kDni===TODAYD?'dnešku':trDenLbl(kDni)}</button>`
+      h+=`<div class="tr-dite-act"><button class="btn-ghost" onclick="trNapsat(${i},${kDni})">Napsat k ${kDni===TR_DNES?'dnešku':trDenLbl(kDni)}</button>`
         +`<button class="cardlink tr-rok-link" onclick="trRok(${i})">Celý rok v profilu dítěte ›</button></div></div>`;
     }
     h+=`</div>`;
@@ -222,5 +227,8 @@ const trNoteReset=()=>{trNoteForm=false;trNoteChild=-1;trNoteDraft='';trUprava=n
 window.trSetView=v=>{if(v!=='den')trWeek=trTydenOd(trDay);trView=v;trOpenDite=-1;trNoteReset();render();};
 window.trStepDay=dir=>{const ds=trDny(),i=ds.indexOf(trDay)+dir;if(i>=0&&i<ds.length){trDay=ds[i];trWeek=trTydenOd(trDay);trNoteReset();render();}};
 window.trStepWeek=dir=>{const ws=trTydny(),i=ws.indexOf(trWeek)+dir;if(i>=0&&i<ws.length){trWeek=ws[i];trOpenDite=-1;render();}};
+// skok na měsíc: den = první otevřený den měsíce, týden = jeho týden
+window.trMesic=ym=>{const k=TR_DNY.find(x=>Math.floor(x/100)===ym);if(!k)return;
+  trDay=k;trWeek=trTydenOd(k);trOpenDite=-1;trNoteReset();render();};
 // vstup z přehledu: rovnou na daný den
 window.trOtevrit=d=>{trDay=d;trWeek=trTydenOd(d);trView='den';trNoteReset();go('tridnice');};
