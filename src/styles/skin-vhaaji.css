@@ -1,0 +1,148 @@
+/* SKIN VHAAJI – vizuální směr „Deník z háje" (C), schválený designérkou 27. 10. 2026.
+   Předloha: Figma „Vhaaji – design systém", stránka „Draft · přehled průvodce" (rámce
+   „C · původní rozložení" a „C · desktop"). Viz docs/design-system.md „Skin Vhaaji".
+
+   Skin mění jen vzhled: písma, zaoblení, plochy, tlačítka, kresby. Rozložení a obsah
+   obrazovek zůstávají společné. Ostatní školky skin nenačítají a drží univerzální
+   typografii Bricolage + Inter z tokens.css. Načítá se poslední, po watercolor.css. */
+:root{
+  /* Typografie Vhaaji: nadpisy Alegreya, text Lexend, ručně psaný akcent Itim (je i na vhaaji.cz) */
+  --font-serif:"Alegreya",Georgia,serif;
+  --font-sans:"Lexend",system-ui,sans-serif;
+  --font-hand:"Itim","Lexend",system-ui,sans-serif;
+  /* Velikosti: nejmenší text 11,5 px, popisky a časy 12,5 px – čte se venku na slunci
+     (UX revize 27. 10. 2026). Lexend je při stejné velikosti větší než Inter. */
+  --text-chip:11.5px;
+  --text-micro:12px;
+  --text-note:12.5px;
+  --text-meta:12.5px;
+  --text-heading:19px;     /* nadpis karty – Alegreya Medium */
+  --text-display:26px;     /* datum v hlavičce přehledu */
+  --text-number:34px;
+  /* Plochy: karty bez linky, měkký stín, větší zaoblení; počty docházky jako „skvrny" */
+  --radius-lg:22px;
+  --radius-card:22px;
+  --shadow-card:0 2px 10px rgba(31,42,46,.06);
+  --blob-r:34px 26px 38px 28px;      /* nepravidelné zaoblení skvrny (TL TR BR BL) */
+  --hand-ink:var(--color-text);
+}
+body{font-family:var(--font-sans)}
+
+/* ---------- Karty ---------- */
+.tile{background:rgba(249,247,241,.92);border:none;border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:16px 18px}
+.ch{font-family:var(--font-serif);font-weight:500;font-size:var(--text-heading);color:var(--color-text);line-height:var(--leading-snug)}
+.vhead,.ttl,.modal h3{font-family:var(--font-serif);font-weight:500;color:var(--color-text)}
+.tlab{letter-spacing:.06em;font-weight:600;font-size:var(--text-chip)}
+
+/* ---------- Tlačítka ---------- */
+/* Primární: tmavě zelená pilulka. Sekundární (odkaz na konci karty = .cardlink):
+   světle zelená pilulka s linkou – víc láká ke klepnutí než zelený text. */
+.btn-primary,.addbig{background:var(--color-primary-strong);border-radius:var(--radius-full);font-weight:500}
+.btn-ghost{border-radius:var(--radius-full)}
+.cardlink{display:inline-flex;align-items:center;gap:8px;width:auto;min-height:44px;margin-top:12px;padding:10px 18px;
+  border:1px solid var(--edge-primary);border-radius:var(--radius-full);background:var(--tint-green);color:var(--color-primary-strong);font-weight:600}
+.cardlink:hover{background:var(--soft-primary)}
+
+/* ---------- Kresby ---------- */
+.kresba{display:block;fill:currentColor;color:var(--hand-ink)}
+/* kresba v hlavičce karty: vpravo nahoře, přesahuje do rohu karty (dekorace, aria-hidden) */
+.tile.has-kresba{position:relative}
+.tile.has-kresba>.ch{padding-right:84px}
+.tile>.kresba-k{position:absolute;top:-10px;right:10px;width:80px;height:80px;pointer-events:none}
+
+/* ---------- Hlavička přehledu ---------- */
+.dash-head.c-head{position:relative;display:block;margin:0 0 14px;padding:6px 0 4px}
+.c-head .dh-t{font-family:var(--font-serif);font-weight:700;font-size:var(--text-display);color:var(--color-primary-strong)}
+.c-head .c-lines{list-style:none;margin:6px 0 0;padding:0;max-width:calc(100% - 120px);display:flex;flex-direction:column;gap:3px}
+.c-head .c-lines li{display:flex;gap:9px;align-items:flex-start;font-size:var(--text-meta);color:var(--color-text);line-height:var(--leading-normal)}
+.c-head .c-lines li .kresba{flex:none;width:15px;height:15px;margin-top:3px;color:var(--color-primary-strong)}
+.c-head .c-lines b{font-weight:600}
+.c-head .c-bird{position:absolute;right:0;top:-4px;width:118px;height:auto;aspect-ratio:1462/1076}
+@media (min-width:900px){
+  .c-head{padding-right:240px}
+  .c-head .dh-t{font-size:36px}
+  .c-head .c-lines{flex-direction:row;flex-wrap:wrap;gap:6px 32px;max-width:none}
+  .c-head .c-lines li{font-size:16px}
+  .c-head .c-lines li .kresba{width:18px;height:18px;margin-top:2px}
+  .c-head .c-bird{width:200px;top:-10px}
+}
+
+/* ---------- Docházka: počty jako skvrny ---------- */
+.c-counts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.c-cap{grid-column:1/-1;margin:2px 0 -4px;font-size:var(--text-chip);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-muted)}
+.c-tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:74px;padding:12px 34px 12px 18px;
+  border:none;border-radius:var(--blob-r);background:var(--tint-green);cursor:pointer;text-align:left;font-family:var(--font-sans)}
+.c-tile .num{font-family:var(--font-serif);font-weight:700;font-size:var(--text-number);line-height:1;color:var(--color-text)}
+.c-tile .lab{font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.c-tile::after{content:"›";position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--color-text-muted)}
+.c-tile.t-abs{background:var(--tint-rose)}.c-tile.t-abs .num{color:var(--state-danger-ink)}
+.c-tile.t-abs.zero{background:var(--state-neutral-bg)}.c-tile.t-abs.zero .num{color:var(--color-text)}
+.c-tile.t-dop{background:var(--tint-blue)}
+.c-tile.t-odp{background:var(--tint-ochre)}
+.c-tile.t-cel{background:var(--soft-accent)}
+/* Spí není stav docházky (P2 z testování) – proto bez výplně, čárkovaně a s měsíčkem */
+.c-tile.t-spi{background:none;border:1.5px dashed var(--color-border-strong)}
+.c-tile.t-spi[aria-expanded="true"]::after{content:"⌃"}
+.c-spi-list{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:12px 14px;border-radius:16px;background:var(--tint-blue);font-size:var(--text-body);color:var(--color-text)}
+.c-counts+.addbig{margin-top:14px;margin-bottom:0}
+
+/* ---------- Vzkazy, nepřítomní, třídnice ---------- */
+.zprow .zp-head{display:flex;align-items:baseline;gap:8px}
+.zprow .zp-cas{font-size:var(--text-note);color:var(--color-text-muted)}
+.zprow .zp-typ{font-weight:600;color:var(--color-text)}
+.c-badge{display:inline-block;min-width:20px;padding:2px 7px;border-radius:var(--radius-full);background:var(--tint-green);color:var(--color-primary-strong);font-family:var(--font-sans);font-size:var(--text-chip);font-weight:600;text-align:center;margin-left:8px;vertical-align:3px}
+.prehl-abs .pa-r.ok{color:var(--state-neutral-ink)}
+.tr-dash-cap{font-size:var(--text-chip);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-muted);margin:2px 0 4px}
+.tr-dash-dalsi{font-size:var(--text-note);color:var(--color-text-muted);padding:4px 0}
+.tr-dash.today{border-top:1px solid var(--color-border)}
+
+/* ---------- Básnička ručním písmem, akce bez výplně ---------- */
+.c-basen{font-family:var(--font-hand);font-size:17px;line-height:1.4;color:var(--color-text)}
+.dash-c .acard{background:none;border:none;padding:4px 0}
+
+/* ---------- Horní lišta: přihlášený uživatel ---------- */
+.c-who{display:flex;align-items:center;gap:8px;margin-left:auto;background:none;border:none;cursor:pointer;font-family:var(--font-sans);text-align:left;min-height:44px;padding:0}
+.c-who .c-av{width:30px;height:30px;border-radius:50%;background:var(--tint-green);color:var(--color-primary-strong);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;flex:none}
+.c-who .c-nm{display:block;font-size:13px;font-weight:500;color:var(--color-text);line-height:1.2}
+.c-who .c-rl{display:block;font-size:var(--text-note);color:var(--color-text-muted);line-height:1.2}
+
+/* ---------- Mobilní pořadí karet a desktopová mřížka ---------- */
+.dash-c{display:flex;flex-direction:column}
+@media (min-width:900px){
+  .dash-row>.tile{border-radius:0;box-shadow:none;background:none}
+  .dash-row{border-radius:var(--radius-card);background:rgba(249,247,241,.92);box-shadow:var(--shadow-card)}
+  /* Průvodci + akce | básnička | třídnice (Figma „C · desktop") */
+  .dash-c{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"pru bas tri" "akc bas tri";
+    grid-template-rows:auto 1fr;gap:20px;align-items:start}
+  .dash-c>.t-pru{grid-area:pru}.dash-c>.t-akc{grid-area:akc}.dash-c>.t-bas{grid-area:bas}.dash-c>.t-tri{grid-area:tri}
+  .dash-c>.tile{margin:0}
+}
+/* štítek role → blok přihlášeného (přepíná roli v prototypu, viz core.js) */
+.role.c-who{background:none;border:none;padding:0;color:inherit;border-radius:0}
+.role.c-who.role-ro{background:none;color:inherit}
+
+/* hlavička přehledu přes celou šířku řádku (.dashhead je flex – jinak se smrskne na obsah) */
+.dashhead>.c-head{flex:1 1 100%;min-width:0}
+.c-head .dh-t{position:relative;z-index:1}
+.c-head .c-bird{top:10px}
+/* akvarel z vhaaji.cz nahoře přes celou šířku, dole se rozplyne do pozadí (Figma „C") */
+.screen::before{content:"";position:absolute;left:0;right:0;top:0;height:460px;
+  background:var(--wc-brand) center top/cover no-repeat;opacity:.32;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 45%,transparent 100%);
+          mask-image:linear-gradient(to bottom,#000 0,#000 45%,transparent 100%);
+  pointer-events:none;z-index:0}
+/* obsah karty s kresbou začíná pod kresbou (nadpis je vedle ní) */
+.tile.has-kresba>.ch{min-height:58px}
+/* datum akce Lexendem – Alegreya má skloněné (minuskové) číslice, v datu se hůř čtou */
+.adate{font-family:var(--font-sans);font-weight:500;color:var(--color-primary-strong)}
+@media (min-width:900px){
+  /* spodní mřížka přehledu jde přes celou šířku (#content je jinak dvousloupcový masonry) */
+  #content>.dash-c{column-span:all;margin-bottom:20px}
+  .c-head .c-bird{width:170px;top:-6px}
+  .c-head{padding-right:190px}
+}
+@media (min-width:900px){
+  .dash-head.c-head{padding-right:190px}
+  .c-tile{padding-right:28px}
+  .c-tile .lab{white-space:nowrap}
+}

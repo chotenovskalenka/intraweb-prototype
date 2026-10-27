@@ -78,7 +78,11 @@ function render(){
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';
   const rc=document.getElementById('rolechip');
-  if(rc){rc.textContent=ROLE_LABEL[role];rc.classList.toggle('role-ro',role==='pruvodce');
+  /* Přihlášený člověk jako avatar + jméno + role – samotný štítek „Průvodce · vedoucí"
+     se nečetl jako role (ladění C, 27. 10. 2026). Klepnutím se v prototypu dál přepíná role. */
+  const ROLE_POPIS={pruvodce:'průvodce',vedouci:'vedoucí průvodce',hospodarka:'průvodce a hospodářka',kuchyn:'kuchyň'};
+  if(rc){rc.classList.add('c-who');rc.innerHTML=`<span class="c-av" aria-hidden="true">${ja().n.charAt(0)}</span><span><span class="c-nm">${ja().n}</span><span class="c-rl">${ROLE_POPIS[role]}</span></span>`;
+    rc.classList.toggle('role-ro',role==='pruvodce');
     rc.disabled=ROLE_PINNED;rc.title=ROLE_PINNED?'Role je daná odkazem':'Přepnout roli (prototyp)';}
   renderDrawer();
   if(!sekceVidi(section))section='prehled';
