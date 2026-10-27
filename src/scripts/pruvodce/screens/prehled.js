@@ -1,9 +1,8 @@
-/* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce (stejný přístup jako rodič):
-   velký datumový nadpis, prioritní sloupce (.dash3), nadpisy karet .ch.
-   Na desktopu nahoře ranní řada (.dash-row): počty docházky · informace od rodičů ·
-   kdo nepřijde. Pod ní ve sloupcích (.dash3) zleva: průvodci ve službě · básnička a písnička ·
-   program dne + dnešní akce. Pořadí sloupců na desktopu dělá CSS `order` (.dash-swap);
-   v DOM zůstává mobilní priorita program → básnička → průvodci. */
+/* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce, vzhled C · Deník z háje
+   (Figma „Vhaaji – design systém" → „C · původní rozložení" a „C · desktop", decision-log
+   27. 10. 2026). Pořadí v DOM = pořadí na mobilu: docházka → informace od rodičů → kdo
+   nepřijde (ranní řada, na desktopu jedna plocha) → třídnice → akce → básnička → průvodci.
+   Na desktopu skládá spodní část mřížka (.dash-c): průvodci + akce | básnička | třídnice. */
 /* Dlouhé vzkazy se krátí na tři řádky. Jeden ukecaný rodič jinak zdvojnásobí výšku celé
    ranní řady (měřeno: 287 → 550 px) a průvodce při předávání dítěte potřebuje hlavně vědět,
    že něco přišlo a od koho. Práh je na délce textu, ne na změřeném přetečení – render()
@@ -11,70 +10,92 @@
 const ZP_DELKA=140;
 let zpRozbalene=new Set();
 window.zpToggle=id=>{zpRozbalene.has(id)?zpRozbalene.delete(id):zpRozbalene.add(id);render();};
+// spící děti se ukážou jménem až po rozkliknutí dlaždice (potřebují je nahnat do maringotky)
+let spiOtevreno=false;
+window.spiToggle=()=>{spiOtevreno=!spiOtevreno;render();};
 const PDOWFULL=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
-// Hlavička dashboardu (datum + kdo dnes slouží) – renderuje se do topbaru (viz core.js).
+const minOf=d=>{const [h,m]=d.s.split(':').map(Number);return h*60+m;};
+const jmena=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' a '+a[a.length-1];
+
+/* Hlavička dashboardu – renderuje se do topbaru (viz core.js). Tři řádky dne:
+   kdo otevírá (dvě vlny podle příchodu, bez časů – ty jsou v kartě Průvodci), program dne
+   a kroužek. Ptáček se mění s ročním obdobím, je jen dekorace. */
 function renderPrehledHead(){
   const den=PDOWFULL[wd(TODAYD)];
-  const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
-  const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
-  return `<h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. června 2026</h1><div class="dh-sub">Dnes ve školce: ${todays.length?todays.map(x=>`${x.g.n}${opener&&x.i===opener.i?' (otevírá)':''}`).join(', '):'nikdo nemá službu'}</div>`;
+  const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY])).sort((a,b)=>minOf(a.g.days[TODAY])-minOf(b.g.days[TODAY]));
+  const prvni=todays.length?minOf(todays[0].g.days[TODAY]):0;
+  const vlna1=todays.filter(x=>minOf(x.g.days[TODAY])===prvni).map(x=>x.g.n), dal=todays.filter(x=>minOf(x.g.days[TODAY])!==prvni).map(x=>x.g.n);
+  const ryt=RYTMUS[wd(TODAYD)];
+  const radky=[];
+  if(todays.length)radky.push(`${vlna1.length>1?'Otevírají':'Otevírá'} ${jmena(vlna1)}${dal.length?`, dál ${jmena(dal)}`:''}`);
+  else radky.push('Dnes nikdo nemá službu');
+  if(ryt)radky.push(`Dnes je <b>${ryt.prog}</b>`);
+  if(ryt&&ryt.krouzek)radky.push(esc(ryt.krouzek));
+  return `<div class="dash-head c-head"><h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. 6. 2026</h1>`
+    +`<ul class="c-lines">${radky.map(r=>`<li>${kresba('odrazka')}<span>${r}</span></li>`).join('')}</ul>`
+    +kresbaPtacek(6,'c-bird')+`</div>`;
 }
 function renderPrehled(){
   const c=counts();
-  const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
-  /* Kdo dnes otevírá. Dřív tu proměnná chyběla úplně a výraz `opener` sahal na window.opener
-     (standardní globál, normálně null) – značka „otevírá" se proto v seznamu nikdy neukázala. */
-  const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
+  const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY])).sort((a,b)=>minOf(a.g.days[TODAY])-minOf(b.g.days[TODAY]));
+  const prvni=todays.length?minOf(todays[0].g.days[TODAY]):0;
   const usIdx=todays.some(x=>x.i===uspavaToday)?uspavaToday:(todays[0]?todays[0].i:-1);
+  const utery=wd(TODAYD)===1;
 
-  // ── Ranní řada: počty · vzkazy od rodičů · kdo nepřijde ──
-  // stejný slovník jako v Docházce: přítomni · dopolední · odpolední · absence (P2)
-  /* Bez „Obědů": dlaždice ukazovala počet přítomných (c.pres), ne počet obědů – v běžném
-     režimu se obědy vůbec nepočítají. Souhrn pro kuchyni (obědy, svačiny) dostane vlastní
-     roli s vlastním pohledem, ne dlaždici v průvodcovském přehledu. Zbylá čtyři čísla
-     odpovídají záložkám v Docházce i slovníku z testování (P2). */
-  /* Pořadí: nahoře dvě čísla, na která se průvodce ptá ráno jako první (kolik jich je,
-     kolik chybí), pod nimi rozpad dne. Barva nese význam: absence je stav, který vyžaduje
-     pozornost (danger), dopolední/odpolední jsou jen rozvrh (neutral). */
-  const strip=[['Přítomni',c.pres,'rano',''],['Absence',c.neprit,'neprit','num-danger'],
-    ['Dopolední',c.poobede,'poobede','num-neutral'],['Odpolední',c.odpoledni,'odpoledni','num-neutral']];
-  let blkDochazka=`<div class="tile"><div class="ch">Docházka dnes</div>`
-    +`<div class="tabs wrap dash-counts">`+strip.map(([lab,n,k,cls])=>`<div class="tab ${cls}" onclick="goDochTab('${k}')"><div class="num">${n}</div><div class="lab">${lab}</div></div>`).join('')+`</div>`
-    /* Spinkání není stav docházky, ale informace k odpoledni (kolik lehátek v maringotce) –
-       proto řádek, ne pátá stejně velká dlaždice. */
-    +`<button class="dash-spi" onclick="goDochTab('spi')">☾ Spí dnes <b>${c.spi}</b> ${c.spi===1?'dítě':(c.spi>=2&&c.spi<=4?'děti':'dětí')} ›</button>`
-    +`<button class="addbig" style="margin-top:11px" onclick="go('dochazka')">Otevřít dnešní docházku →</button></div>`;
+  /* ── Docházka: počty jako skvrny ──
+     Přítomni + Absence = všechny děti. Pod nimi „z přítomných": dopolední, odpolední
+     (v úterý i celodenní – jinak se celodenní plán počítá do odpoledních) a spí. Spí není
+     stav docházky (P2 z testování), proto je dlaždice čárkovaná a po klepnutí ukáže jména. */
+  const spici=data.filter(x=>inTab(x,'spi'));
+  const dl=(cls,n,lab,click,extra='')=>`<button class="c-tile ${cls}" onclick="${click}" ${extra}><span class="num">${n}</span><span class="lab">${lab}</span></button>`;
+  let blkDochazka=`<div class="tile"><div class="ch">Docházka dnes</div><div class="c-counts">`
+    +dl('t-pri',c.pres,'Přítomni',"goDochTab('rano')")
+    +dl('t-abs'+(c.neprit?'':' zero'),c.neprit,'Absence',"goDochTab('neprit')")
+    +`<div class="c-cap">Z přítomných</div>`
+    +dl('t-dop',c.poobede,'Dopolední',"goDochTab('poobede')")
+    +dl('t-odp',c.odpoledni,'Odpolední',"goDochTab('odpoledni')")
+    +(utery?dl('t-cel',data.filter(x=>inTab(x,'celodenni')).length,'Celodenní',"goDochTab('celodenni')"):'')
+    +dl('t-spi','☾ '+spici.length,'Odpoledne spí','spiToggle()',`aria-expanded="${spiOtevreno}" aria-controls="spi-list"`)
+    +(spiOtevreno?`<div class="c-spi-list" id="spi-list">${spici.map(x=>`<span>${kratke(x)}</span>`).join('')||'<span>Dnes odpoledne nikdo nespí.</span>'}</div>`:'')
+    +`</div><button class="addbig" onclick="go('dochazka')">${smiZapisovat()?'Otevřít dnešní docházku':'Zobrazit docházku'} →</button></div>`;
 
-  /* Vzkazy od rodičů na dnešek. Zakládá je rodič ve své appce, tady jsou jen ke čtení
-     (appky spolu data nesdílejí). Trvalejší poznámky o dítěti sem nepatří – ty jsou
-     u dítěte v Docházce a v profilu. */
+  /* Vzkazy od rodičů na dnešek, od nejnovějšího. Typ vzkazu tučně na začátku – vyzvednutí
+     jiným a zdravotní informace se tak najdou okem, bez barev a stavů. Zakládá je rodič ve své
+     appce, tady jsou jen ke čtení (appky spolu data nesdílejí). */
   let blkZpravy='';
-  {const zpr=zpravyDnes();
+  {const zpr=[];zpravyDnes().forEach(({c})=>c.zpravy.filter(z=>z.den===TODAYD).forEach(z=>zpr.push({c,z})));
+   const min=s=>{const [h,m]=String(s).split(':').map(Number);return h*60+(m||0);};
+   zpr.sort((a,b)=>min(b.z.odeslano)-min(a.z.odeslano));
    if(zpr.length){
-     blkZpravy=`<div class="tile"><div class="ch">Informace od rodičů</div><div class="dash-scroll">`;
-     zpr.forEach(({c})=>{c.zpravy.filter(z=>z.den===TODAYD).forEach(z=>{
+     blkZpravy=`<div class="tile"><div class="ch">Informace od rodičů<span class="c-badge">${zpr.length}</span></div><div class="dash-scroll">`;
+     zpr.forEach(({c,z})=>{
+       const p=zpPotrebuje(z.typ), cas=String(z.cas||'').replace(/^0/,'');
+       const typ=p==='kdo'?`<span class="zp-typ">${ZPLAB[z.typ]}:</span> <b>${esc(z.kdo)}</b>.`
+         :p==='cas'?`<span class="zp-typ">${ZPLAB[z.typ]}</span> – <b>${esc(cas)}</b>.`
+         :`<span class="zp-typ">${ZPLAB[z.typ]}:</span>`;
+       const t=typ+(z.text?' '+esc(z.text):'');
        const dlouhy=(z.text||'').length>ZP_DELKA, open=zpRozbalene.has(z.id);
-       blkZpravy+=`<div class="zprow">${avatar(c,24)}<span class="zp-txt"><b>${kratke(c)}</b>`
-         +`<span class="zp-who${dlouhy&&!open?' zp-clamp':''}">${zpravaShrnuti(z)}</span>`
+       blkZpravy+=`<div class="zprow">${avatar(c,28)}<span class="zp-txt"><span class="zp-head"><b>${kratke(c)}</b><span class="zp-cas">${z.odeslano}</span></span>`
+         +`<span class="zp-who${dlouhy&&!open?' zp-clamp':''}">${t}</span>`
          +(dlouhy?`<button class="zp-vic" onclick="zpToggle('${z.id}')">${open?'zkrátit ›':'celý vzkaz ›'}</button>`:'')
-         +`</span><span class="zp-cas">${z.odeslano}</span></div>`;
-     });});
+         +`</span></div>`;
+     });
      blkZpravy+=`</div></div>`;
    }}
 
-  // kdo dnes nepřijde – jmenovitě, s důvodem (barva i text, ne jen barva)
-  const absent=data.map((x,i)=>({c:x,i})).filter(x=>x.c.status!=='pritomen');
+  /* Kdo dnes nepřijde – nevyřešené (neomluveno) nahoře, omluvené pod nimi.
+     Červená jen u toho, kde má průvodce jednat. */
+  const absent=data.filter(x=>x.status!=='pritomen');
+  const otevrene=x=>!x.parentExcuse&&!x.guideExcuse&&x.status!=='omluveno';
+  absent.sort((a,b)=>otevrene(b)-otevrene(a));
   let blkNeprijde=`<div class="tile"><div class="ch">Kdo dnes nepřijde</div><div class="dash-scroll">`;
   if(absent.length){
-    absent.forEach(({c})=>{
-      /* Vpravo u jména jen stav, pod jménem detail – stejný tvar jako v soupisu docházky:
-         důvod tučně, text od rodiče, čas. Samotné „nemoc" neřekne, jestli čekat zvracení,
-         teplotu nebo vyrážku; to rodič píše právě do poznámky. */
-      const r=c.parentExcuse?parentExcuseLine(c)
-        :c.guideExcuse?'omluveno vedoucí'
-        :(c.status==='omluveno'?'omluveno průvodcem':'nepřišlo · nevyřešeno');
-      const det=parentExcuseDetail(c)||guideExcuseDetail(c);
-      blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(c,24)}<span class="pa-nm">${kratke(c)}</span><span class="pa-r">${r}</span>`
+    absent.forEach(x=>{
+      const r=x.parentExcuse?'omluveno rodičem':x.guideExcuse?'omluveno vedoucí':(x.status==='omluveno'?'omluveno průvodcem':'neomluveno');
+      const e=x.parentExcuse||x.guideExcuse;
+      const det=e?`<b>${(e.reason||'').replace(/^./,m=>m.toUpperCase())}</b>`+(e.pozn?`: ${esc(e.pozn)}`:'')
+        +(x.guideExcuse?` Zapsala ${esc(e.by)} ${e.time}, bez náhrady.`:` (${e.time})`):'';
+      blkNeprijde+=`<button class="prehl-abs" onclick="goDochTab('neprit')">${avatar(x,24)}<span class="pa-nm">${kratke(x)}</span><span class="pa-r${otevrene(x)?'':' ok'}">${r}</span>`
         +(det?`<span class="pa-pozn">${det}</span>`:'')+`</button>`;
     });
   }else{
@@ -82,65 +103,53 @@ function renderPrehled(){
   }
   blkNeprijde+=`</div></div>`;
 
-  // ── Pod řadou: dnešek a tým ──
-  const ryt=RYTMUS[wd(TODAYD)];
-  let blkProgram=`<div class="tile"><div class="ch">Program dne</div>`
-    +`<div class="prog-day">${ryt?ryt.prog:'Volný program'}</div>`
-    +(ryt&&ryt.krouzek?`<div class="tval" style="font-size:13.5px">Kroužek: <b>${ryt.krouzek}</b></div>`:'')
-    +`<button class="cardlink" onclick="go('priprava')">Tématický plán ›</button></div>`;
+  /* Třídnice: všechny nedoplněné dny za poslední 3 týdny (zápis se dopisuje zpětně), nejvýš
+     tři + „a další", pak kdo píše dnes. Bez štítků „rozepsáno N z 8" – „Chybí: …" řekne víc. */
+  const nedopl=[];{let k=TR_DNES;for(let i=0;i<15;i++){k=trPredchozi(k);if(!k)break;const st=trStav(k).k;if(st==='rozepsano'||st==='chybi')nedopl.push(k);}}
+  const vcera=trPredchozi(TR_DNES);
+  let blkTridnice=`<div class="tile has-kresba t-tri">${kresba('tridnice','kresba-k')}<div class="ch">Třídnice</div>`;
+  if(nedopl.length){
+    blkTridnice+=`<div class="tr-dash-cap">Nedoplněné dny – poslední 3 týdny</div>`;
+    nedopl.slice(0,3).forEach(k=>{const ch=trChybi(k);
+      blkTridnice+=`<button class="tr-dash" onclick="trOtevrit(${k})"><span class="tr-dash-d">${k===vcera?'Včera – ':''}${trDenLbl(k)}</span>`
+        +`<span class="tr-dash-c">${trStav(k).k==='chybi'?'Chybí celý zápis':'Chybí: '+ch.join(', ')}</span>`+`</button>`;});
+    if(nedopl.length>3)blkTridnice+=`<div class="tr-dash-dalsi">a další ${nedopl.length-3} ›</div>`;
+  }else blkTridnice+=`<div class="tr-dash-dalsi">Všechny zápisy jsou hotové.</div>`;
+  blkTridnice+=`<button class="tr-dash today" onclick="trOtevrit(${TR_DNES})"><span class="tr-dash-d">Dnes píše ${TR_ZAPISUJE[trInfo(TR_DNES).dow]}</span></button>`;
+  blkTridnice+=`<button class="cardlink" onclick="trOtevrit(${TR_DNES})">Otevřít třídnici →</button></div>`;
 
-  /* Třídnice: BRIEF chce „rychlý vstup do třídnice". Výzkum: zápis se nestíhá ve stejný
-     den – proto nahoře včerejšek a co v něm chybí, pod tím kdo píše dnes. */
-  const vcera=trPredchozi(TR_DNES);   // předchozí otevřený den (přes víkend i svátek)
-  let blkTridnice=`<div class="tile"><div class="ch">Třídnice</div>`;
-  if(vcera){
-    const s=trStav(vcera), chybi=trChybi(vcera);
-    blkTridnice+=`<button class="tr-dash" onclick="trOtevrit(${vcera})"><span class="tr-dash-d">Včera · ${trDenLbl(vcera)}</span><span class="bdg st-${s.cls}">${s.lab}</span>`
-      +(s.k!=='hotovo'&&chybi.length?`<span class="tr-dash-c">Chybí: ${chybi.join(', ')}</span>`:'')+`</button>`;
-  }
-  {const s=trStav(TR_DNES);
-   blkTridnice+=`<button class="tr-dash" onclick="trOtevrit(${TR_DNES})"><span class="tr-dash-d">Dnes píše ${TR_ZAPISUJE[trInfo(TR_DNES).dow]}</span><span class="bdg st-${s.cls}">${s.lab}</span></button>`;}
-  blkTridnice+=`<button class="cardlink" onclick="trOtevrit(${TR_DNES})">Otevřít třídnici ›</button></div>`;
-
-  // básnička a písnička aktuálního týdne (3. 6. = 1. týden)
+  // básnička celá (do ranního kruhu), písnička jen prvním veršem – celá je v tématickém plánu
   const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
-  let blkBasnicka=`<div class="tile"><div class="ch">Básnička a písnička týdne</div>`;
+  let blkBasnicka=`<div class="tile has-kresba t-bas">${kresba('basnicka','kresba-k')}<div class="ch">Básnička a písnička týdne</div>`;
   if(wk&&(wk.b||wk.p)){
-    if(wk.b)blkBasnicka+=`<div class="pa-cap">Básnička</div><div class="tval">${wk.b}</div>`;
-    if(wk.p)blkBasnicka+=`<div class="pa-cap" style="margin-top:8px">Písnička</div><div class="tval">${wk.p}</div>`;
+    if(wk.b)blkBasnicka+=`<div class="pa-cap">Básnička</div><div class="c-basen">${wk.b}</div>`;
+    if(wk.p){const vers=(wk.p.match(/^[^.!?]*?,[^,.!?]*/)||[wk.p])[0];
+      blkBasnicka+=`<div class="pa-cap" style="margin-top:8px">Písnička</div><div class="c-basen">${vers}${vers.length<wk.p.length?'…':''}</div>`;}
   }else{
     blkBasnicka+=`<div class="empty" style="padding:6px 0 0;text-align:left;font-style:normal">Pro tento týden zatím nevyplněno.</div>`;
   }
-  blkBasnicka+=`<button class="cardlink" onclick="go('priprava')">Otevřít tématický plán ›</button></div>`;
+  blkBasnicka+=`<button class="cardlink" onclick="go('priprava')">Otevřít tématický plán →</button></div>`;
 
   // dnešní akce (pokud na dnešek nějaká je) – proklik na detail
   let blkAkce='';
   {const akToday=[...AKCE].filter(a=>a.day<=TODAYD&&(a.dayEnd?a.dayEnd>=TODAYD:a.day===TODAYD)).sort((a,b)=>a.day-b.day);
    if(akToday.length){
-     blkAkce=`<div class="tile"><div class="ch">Dnešní akce</div>`;
-     akToday.forEach(a=>{const m=[a.time,a.place].filter(Boolean).join(' · ');blkAkce+=`<button class="acard" style="margin:6px 0 0" onclick="openAkceDetail('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;});
-     blkAkce+=`<button class="cardlink" onclick="go('akce')">Všechny akce ›</button></div>`;
+     blkAkce=`<div class="tile has-kresba t-akc">${kresba('akce','kresba-k')}<div class="ch">Dnešní akce</div>`;
+     akToday.forEach(a=>{const m=[a.time,a.place].filter(Boolean).join(', ');blkAkce+=`<button class="acard" onclick="openAkceDetail('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;});
+     blkAkce+=`<button class="cardlink" onclick="go('akce')">Všechny akce →</button></div>`;
    }}
 
-  // průvodci dnes s hodinami (řádky .np jako v sekci Průvodci); kdo uspává = ☾ u jména
-  let blkPruvodci=`<div class="tile"><div class="ch">Průvodci dnes</div>`;
+  // průvodci dnes podle příchodu; kdo otevírá (první vlna) zeleně, kdo uspává = ☾
+  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Průvodci dnes</div>`;
   if(todays.length){
-    todays.forEach(x=>{const d=x.g.days[TODAY];blkPruvodci+=`<div class="np"><span>${x.g.n}${opener&&x.i===opener.i?' · <b style="color:var(--color-primary)">otevírá</b>':''}${x.i===usIdx?' <span style="color:var(--color-info)">☾</span>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
+    todays.forEach(x=>{const d=x.g.days[TODAY];blkPruvodci+=`<div class="np"><span>${x.g.n}${x.i===usIdx?' ☾':''}${minOf(d)===prvni?' <b style="color:var(--color-primary)">(otevírá)</b>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
   }else{blkPruvodci+=`<div class="empty" style="padding:6px">Dnes nikdo nemá službu.</div>`;}
-  blkPruvodci+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis ›</button></div>`;
+  blkPruvodci+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis →</button></div>`;
 
-  /* Na desktopu je ranní trojice v jedné řadě přes celou šířku – je to jeden okamžik dne
-     (kolik jich je · co vzkázali rodiče · kdo nepřijde) a průvodce ho má přečíst najednou.
-     Pod ní teprve kontext dne. Na mobilu se .dash-row stohuje, takže pořadí zůstává stejné. */
+  /* Ranní trojice: na mobilu tři karty pod sebou, na desktopu jedna plocha přes celou šířku
+     (je to jeden okamžik dne). Pod ní zbytek dne v pořadí mobilu; desktop ho skládá mřížkou. */
   let h=`<div class="dash-row">${blkDochazka}${blkZpravy}${blkNeprijde}</div>`;
-  /* Pořadí v DOM = pořadí na mobilu (program dne → básnička → průvodci, viz „soupis dne"
-     v CLAUDE.md). Na desktopu se sloupce prohazují přes CSS `order`: vlevo pod docházkou
-     sedí průvodci ve službě (tým k týmu), vpravo kontext dne. */
-  h+=`<div class="dash3 dash-swap">`;
-  h+=`<div class="dcol">${blkProgram}${blkAkce}</div>`;
-  h+=`<div class="dcol">${blkBasnicka}${blkTridnice}</div>`;
-  h+=`<div class="dcol">${blkPruvodci}</div>`;
-  h+=`</div>`;
+  h+=`<div class="dash-c">${blkTridnice}${blkAkce}${blkBasnicka}${blkPruvodci}</div>`;
   return h;
 }
 window.goDochTab=k=>{tab=k;view='den';denDay=TODAYD;open=-1;query='';go('dochazka');};
