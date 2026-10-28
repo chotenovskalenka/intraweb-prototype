@@ -2160,3 +2160,11 @@ Designérka: „opět hodně roztahané". Na desktopu bylo pět karet přes celo
   dnešek štítkem „dnes", toast „Uloženo: svačiny Jaata, obědy pro všechny".
 - Tlačítko v řádku nadpisu (`.dfield .btn-ghost`) má plochu jako listování – šedý obrys na
   akvarelu vypadal jako vypnutý.
+
+## Jídelníček: varianty k porovnání (28. 10. 2026)
+
+Designérka chce porovnat jiné vzory. V URL `?jdv=` (srovnání: `docs/jidelnicek-varianty.html`):
+A karty dnů (výchozí), B **tabulka** chod × den (na mobilu přepínač Po–Pá a jeden den),
+C **dnes nahoře** (ostatní dny jako rozbalovací řádky s hlavním jídlem a počtem jídel s alergeny),
+D **po chodech** (karta na chod a v ní pět dnů – svačinářka vidí svačiny týdne pod sebou).
+Úpravy jídelníčku jsou ve všech variantách v kartách (A). Po rozhodnutí zůstane jedna.

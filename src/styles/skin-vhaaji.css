@@ -360,3 +360,52 @@ button.chk.ro{cursor:default}
 .tile>.tr-add{margin:4px 0 6px}
 .tr-hotove-h{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;margin-top:6px;padding:0;border:none;border-top:1px solid var(--color-border);
   background:none;cursor:pointer;font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;color:var(--color-text-muted);text-align:left}
+
+/* ---------- Jídelníček: varianty k porovnání (?jdv=tabulka | dnes | chody, 28. 10. 2026) ---------- */
+/* tabulka chod × den: na desktopu celá, na mobilu přepínač dnů a jeden den */
+.jid-mx-w{display:none;padding:8px 10px;overflow-x:auto}
+.jid-mx{width:100%;border-collapse:collapse;table-layout:fixed}
+.jid-mx th,.jid-mx td{padding:10px 10px;vertical-align:top;text-align:left;border-top:1px solid var(--color-border)}
+.jid-mx thead th{border-top:none;font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--color-text);white-space:nowrap}
+.jid-mx tbody th{width:118px;font-size:var(--text-note);font-weight:500;color:var(--color-text-muted)}
+.jid-mx .dnes{background:var(--wash-primary)}
+.jid-mx thead th.dnes{border-radius:12px 12px 0 0}
+.jid-mx .jid-chod{padding:0;border:none}
+.jid-mx .jid-v{font-size:var(--text-small)}
+.jid-dny{margin-bottom:12px;background:rgba(249,247,241,.92);box-shadow:var(--shadow-card)}
+.jid-dny button.on{background:var(--color-primary-strong)}
+.jid-dny button{position:relative}
+.jid-dot{position:absolute;top:7px;right:calc(50% - 16px);width:6px;height:6px;border-radius:50%;background:var(--state-ok-ink)}
+.jid-dny button.on .jid-dot{background:var(--color-on-primary)}
+@media (min-width:900px){
+  .jid-mx-w{display:block}
+  .jid-mx-m{display:none}
+}
+/* dnes nahoře, ostatní dny jako rozbalovací řádky */
+.jid-dnes .ch{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.jid-dnes-d{font-family:var(--font-sans);font-size:var(--text-small);font-weight:500;color:var(--color-text-muted)}
+.jid-dalsi{padding:10px 18px}
+.jid-r{border-top:1px solid var(--color-border)}
+.jid-dalsi>.ch+.jid-r,.jid-dalsi>.jid-r:first-child{border-top:none}
+.jid-rh{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 0;border:none;background:none;cursor:pointer;text-align:left;font-family:var(--font-sans)}
+.jid-rd{flex:none;width:84px;font-size:var(--text-body);font-weight:600;color:var(--color-text)}
+.jid-r.bylo .jid-rd{color:var(--color-text-hint);font-weight:500}   /* den, který už proběhl */
+.jid-rn{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--text-note);color:var(--color-text-muted)}
+.jid-rc{flex:none;font-size:var(--text-chip);font-weight:600;color:var(--color-danger);background:var(--wash-danger);border-radius:var(--radius-xs);padding:3px 8px}
+.jid-ra{flex:none;color:var(--color-text-muted)}
+.jid-rb{padding:0 0 12px 96px}
+@media (max-width:899px){.jid-rd{width:70px}.jid-rb{padding-left:0}}
+@media (min-width:900px){
+  #content > .jid .jid-dnes,#content > .jid .jid-dalsi{max-width:760px}
+}
+/* po chodech: karta na chod, v ní pět dnů */
+.jid-cr{display:flex;gap:12px;align-items:baseline;padding:9px 0;border-top:1px solid var(--color-border)}
+.jid-cr:first-of-type{border-top:none;padding-top:2px}
+.jid-cd{flex:none;width:72px;font-size:var(--text-note);font-weight:500;color:var(--color-text-muted)}
+.jid-cr .jid-chod{flex:1;min-width:0;padding:0;border:none}
+.jid-cr.dnes .jid-cd{color:var(--state-ok-ink);font-weight:600}
+.jid-cr.dnes .jid-cd::after{content:" dnes";font-weight:400}
+@media (min-width:900px){
+  .jid-chody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch;margin-bottom:16px}
+  .jid-chody>.tile{margin:0}
+}
