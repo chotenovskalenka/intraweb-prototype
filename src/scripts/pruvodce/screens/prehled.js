@@ -143,13 +143,13 @@ function renderPrehled(){
   let blkJidlo='';
   {const den=jidelnicekDen(TODAYD,6);
    if(den&&den.some(it=>it[1])){
-     blkJidlo=`<div class="tile t-jid"><div class="ch">K jídlu</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
+     blkJidlo=`<div class="tile has-kresba t-jid">${kresba('jidlo','kresba-k')}<div class="ch">K jídlu</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
        +`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček →</button></div>`;
    }}
 
   // „dnes" je jen v hlavičce u data – v nadpisech karet se opakovalo (designérka 28. 10. 2026)
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) a kdo uspává, drobně pod jménem
-  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Sestava</div>`;
+  let blkPruvodci=`<div class="tile has-kresba t-pru">${kresba('sestava','kresba-k')}<div class="ch">Sestava</div>`;
   if(todays.length){
     // role pod jménem drobně, čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" a ☾ lámaly do času
     todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');
