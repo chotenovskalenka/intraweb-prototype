@@ -2213,3 +2213,9 @@ pod rozbalení. Varianty i srovnávací stránka jsou pryč.
 **Průvodci dnes (28. 10. 2026):** role pod jménem drobně („otevírá", „uspává" slovem místo ☾), čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" lámalo do času.
 
 **Tabulka po týdnech (28. 10. 2026):** karty dnů se špatně četly (18 dní × 4 popisky chodů, mřížka zleva doprava). Teď tabulka na týden – řádky dny, sloupce chody, popisek chodu jednou v záhlaví, dnešek zvýrazněný řádek. Mobil: týden jako jedna karta, dny jako bloky pod sebou. Úpravy zůstávají v kartách dnů.
+
+## Básnička na přehledu bez ručního písma (28. 10. 2026)
+
+Designérka: básnička a písnička byly „fontem na nadpisy a větší" (ruční Itim 17 px) – sjednotit s textem
+přehledu. Teď Lexend v základní velikosti jako názvy jídel. Itim se jinde nepoužíval, proto je pryč
+i z načítání písem a token `--font-hand` zrušen.

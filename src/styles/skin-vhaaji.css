@@ -9,7 +9,6 @@
   /* Typografie Vhaaji: nadpisy Alegreya, text Lexend, ručně psaný akcent Itim (je i na vhaaji.cz) */
   --font-serif:"Alegreya",Georgia,serif;
   --font-sans:"Lexend",system-ui,sans-serif;
-  --font-hand:"Itim","Lexend",system-ui,sans-serif;
   /* Velikosti: nejmenší text 11,5 px, popisky a časy 12,5 px – čte se venku na slunci
      (UX revize 27. 10. 2026). Lexend je při stejné velikosti větší než Inter. */
   --text-chip:11.5px;
@@ -97,7 +96,9 @@ body{font-family:var(--font-sans)}
 .tr-dash.today{border-top:1px solid var(--color-border)}
 
 /* ---------- Básnička ručním písmem, akce bez výplně ---------- */
-.c-basen{font-family:var(--font-hand);font-size:17px;line-height:1.4;color:var(--color-text)}
+/* básnička a písnička stejným písmem jako ostatní text na přehledu (dřív ruční Itim 17 px – designérka
+   28. 10. 2026: sjednotit, třeba jako názvy jídel) */
+.c-basen{font-family:var(--font-sans);font-size:var(--text-body);line-height:var(--leading-normal);color:var(--color-text)}
 .dash-c .acard{background:none;border:none;padding:4px 0}
 
 /* ---------- Horní lišta: přihlášený uživatel ---------- */

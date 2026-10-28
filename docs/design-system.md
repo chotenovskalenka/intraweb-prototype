@@ -423,7 +423,6 @@ skin nenačítají a drží univerzální Bricolage + Inter (oddíl „Univerzá
 |---|---|---|
 | Nadpisy, datum, čísla | Alegreya (Medium 19 nadpis karty, Bold 26/36 datum, Bold 34 čísla) | `--font-serif` |
 | Text, popisky, tlačítka | Lexend | `--font-sans` |
-| Ruční akcent (básnička, písnička) | Itim – je i na vhaaji.cz | `--font-hand` |
 
 Nejmenší text **11,5 px** (štítky, popisky skupin), popisky a časy **12,5 px** – kvůli čtení
 venku. Kontrast AA prošel všude (nejnižší šedá na pastelu 4,8 : 1). Datum akce a jiné číslice
