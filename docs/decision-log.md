@@ -2010,3 +2010,23 @@ proto se převádí jako první.
 je v patě menu. Role je teď v menu pod jménem (místo „Můj profil · výkaz hodin"). Na mobilu je
 datum přehledu v prvním řádku vedle Menu, řádky dne pod ním. Přepínač role pro moderaci testů
 (bez `?role=`) se přesunul do menu jako „Přepnout roli (prototyp)".
+
+## Docházka na desktopu: úzký soupis a panel „Dnes k řešení" (28. 10. 2026)
+
+**Proč:** UX revize desktopové docházky (skill ui-ux-pro-max). Soupis přes celou šířku měl
+zaškrtávátko ~900 px od jména a vzkazy s řádky o ~180 znacích (doporučeno 65–75); 21 stejně
+vážených řádků nepomáhalo najít, co je dnes potřeba řešit; filtry ve třech řádcích.
+
+**Rozhodnutí designérky (varianta A):**
+- soupis vlevo, úzký; **zaškrtávátko hned u jména** (na desktopu vlevo před avatarem, na mobilu
+  zůstává vpravo pod palcem);
+- vpravo **panel „Dnes k řešení"** se vším, co dnes přišlo od rodičů (vzkazy, omluvenky, omluvy
+  vedoucí) a pod ním **porce pro kuchyň**. Klepnutí na dítě v panelu přepne záložku, rozbalí
+  řádek a doroluje k němu. V soupisu poznámky nahrazuje štítek „vzkaz" (v rozbaleném řádku jsou);
+- seznam a hledání v jednom řádku;
+- „spí / nespí" šedě, ne okrově (nebylo to varování); na desktopu jako štítek s obrysem,
+  spí čárkovaně jako dlaždice Spí;
+- z patičky pryč „nainstalovatelné, funguje offline (PWA)" – vývojářský žargon.
+
+**Mobil** zůstává: poznámky pod řádky, porce v patičce, panel skrytý.
+Menu vlevo „končící v půlce" byl jen snímek celé stránky – sidebar je přilepený a drží výšku okna.

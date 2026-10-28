@@ -229,3 +229,49 @@ body{font-family:var(--font-sans)}
   .doch-today>.doch-counts{flex-wrap:nowrap}
   .doch-today>.doch-counts .tab{flex:1 1 0;max-width:200px}
 }
+
+/* ---------- Docházka: úzký soupis + panel „Dnes k řešení" (varianta A, 28. 10. 2026) ---------- */
+/* Filtry: seznam a hledání (na desktopu v jednom řádku) */
+.doch-filtry{display:flex;flex-direction:column;gap:8px;margin:6px 0 10px}
+.doch-filtry .dsez{margin:0}
+.doch-filtry .search{margin:0}
+/* Spaní a další stav dítěte jako štítek – stejný tvar jako režim docházky, ale bez výplně
+   (není to stav docházky). Spí čárkovaně jako dlaždice Spí; „nespí" bez okrové, nebylo to varování.
+   Obrys jen na desktopu – na mobilu by ubral místo jménu. */
+.rmain .ind.sleep,.rmain .ind.awake{color:var(--color-text-muted)}
+@media (min-width:900px){
+  .rmain .ind{padding:2px 9px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);font-size:var(--text-chip)}
+  .rmain .ind.sleep{border-style:dashed}
+  .rmain .ind.off{border-color:var(--edge-danger)}
+}
+.r-vzkaz{display:none}
+.doch-aside{display:none}
+/* panel vedle soupisu */
+.doch-panel>.ch{margin-bottom:6px}
+.dp-item{padding:10px 0;border-top:1px solid var(--color-border)}
+.dp-item:first-of-type{border-top:none;padding-top:2px}
+.dp-who{display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:0;border:none;background:none;cursor:pointer;font-family:var(--font-sans);font-size:var(--text-body);font-weight:600;color:var(--color-text);text-align:left}
+.dp-who .dp-stav{margin-left:auto;font-size:var(--text-note);font-weight:400;color:var(--color-text-muted)}
+.dp-who:hover>span:nth-of-type(1){text-decoration:underline}
+.doch-panel .rnote{margin:4px 0 0}
+.dp-prazdno{font-size:var(--text-note);color:var(--color-text-muted)}
+.dp-porce{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dp-porce div{display:flex;flex-direction:column;padding:10px 12px;border-radius:16px;background:var(--tint-ochre)}
+.dp-porce b{font-family:var(--font-serif);font-weight:700;font-size:28px;line-height:1;color:var(--color-text)}
+.dp-porce span{font-size:var(--text-note);color:var(--color-text-muted);margin-top:4px}
+@media (min-width:900px){
+  .doch-filtry{flex-direction:row;align-items:center;gap:12px}
+  .doch-filtry .search{flex:1;min-height:44px}
+  .doch-filtry .dsez .pin{min-width:200px}
+  /* soupis vlevo (úzký, rychle čitelný), panel vpravo. Nepřilepený – bývá vyšší než okno. */
+  .doch-body{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start}
+  .doch-aside{display:flex;flex-direction:column;gap:16px}
+  .doch-aside>.tile{margin:0}
+  /* zaškrtávátko hned u jména, ne na druhém konci řádku */
+  .doch-main .rmain>.chk{order:-1;margin-left:0}
+  /* poznámky jsou v panelu – v soupisu zůstane jen štítek „vzkaz" */
+  .doch-main .rosterbox .rnote{display:none}
+  .doch-main .rosterbox .row.open .rnote{display:block;margin:0 12px 10px}
+  .r-vzkaz{display:inline-block;padding:2px 9px;border-radius:var(--radius-full);border:1px solid var(--edge-primary);color:var(--color-primary-strong);font-size:var(--text-chip);font-weight:600;flex-shrink:0}
+  .doch-main>.doch-mealsfoot{display:none}
+}

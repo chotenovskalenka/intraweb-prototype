@@ -71,30 +71,37 @@ function editPanel(c,i){
   if(staysPM(c))h+=`<div class="field"><div class="l">Odpoledne</div><div class="mini">${seg([[true,'Spí'],[false,'Nespí']],c.spi,'setSpi')}</div></div>`;
   return h;
 }
+// dnes je u dítěte co číst: vzkaz z rodičovské appky, poznámka z omluvenky, omluva od vedoucí
+const maPoznDnes=c=>!!((c.parentExcuse&&c.parentExcuse.pozn)||c.guideExcuse||(c.zpravy||[]).some(z=>z.den===TODAYD));
+/* Všechno, co dnes přišlo od rodiče, na jednom místě u dítěte: vzkazy z rodičovské appky
+   (kdo vyzvedne, pozdější příchod, lék), volný text z omluvenky a omluva zapsaná vedoucí.
+   Vzkazy jsou provozní (neutrální), poznámka a omluvenka nesou zdravotní/absenční
+   kontext – proto zůstávají v danger tónu .rnote. Na mobilu pod řádkem dítěte, na desktopu
+   v panelu „Dnes k řešení" vedle soupisu. */
+function poznamkyDne(c){
+  // dlouhý vzkaz se krátí stejně jako na přehledu – jinak jeden odstavec odtlačí
+  // pod okraj obrazovky celý zbytek soupisu
+  let h=(c.zpravy||[]).filter(z=>z.den===TODAYD).map(z=>{
+    const dlouhy=(z.text||'').length>ZP_DELKA, rozbalen=zpRozbalene.has(z.id);
+    return `<div class="rnote rnote-info"><span class="${dlouhy&&!rozbalen?'zp-clamp':''}">${zpravaShrnuti(z)}</span> <span class="rn-cas">${z.odeslano}</span>`
+      +(dlouhy?`<button class="zp-vic" onclick="event.stopPropagation();zpToggle('${z.id}')">${rozbalen?'zkrátit ›':'celý vzkaz ›'}</button>`:'')+`</div>`;
+  }).join('');
+  /* Poznámku z omluvenky uvozuje důvod, který rodič vybral (nemoc / rodinné důvody / jiné) –
+     „K omluvence" nic neříkalo, přitom příznak omluvenka nese a na řádku jinak není vidět. */
+  if(c.parentExcuse&&c.parentExcuse.pozn){const d=c.parentExcuse.reason||'omluvenka';
+    h+=`<div class="rnote"><b>${d.charAt(0).toUpperCase()+d.slice(1)}:</b> ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
+  if(c.guideExcuse)h+=`<div class="rnote">${guideExcuseDetail(c)}</div>`;
+  return h;
+}
 function rosterHTML(){
   let out='',shown=0;
-  // nahoru děti, u kterých je dnes co číst (vzkaz, poznámka z omluvenky, omluva od vedoucí)
-  const maPozn=c=>((c.parentExcuse&&c.parentExcuse.pozn)||c.guideExcuse||(c.zpravy||[]).some(z=>z.den===TODAYD))?0:1;
+  // nahoru děti, u kterých je dnes co číst
+  const maPozn=c=>maPoznDnes(c)?0:1;
   const lst=data.map((c,i)=>({c,i})).sort((a,b)=>{const an=maPozn(a.c),bn=maPozn(b.c);if(an!==bn)return an-bn;return byAlpha(a,b);});
   lst.forEach(({c,i})=>{
     const match=(query?norm(full(c)).includes(norm(query)):inTab(c,tab))&&(dochSeznam==='all'||veSeznamu(c,i,dochSeznam));
     if(!match)return;shown++;
-    /* Všechno, co dnes přišlo od rodiče, na jednom místě u dítěte: vzkazy z rodičovské appky
-       (kdo vyzvedne, pozdější příchod, lék), volný text z omluvenky a omluva zapsaná vedoucí.
-       Vzkazy jsou provozní (neutrální), poznámka a omluvenka nesou zdravotní/absenční
-       kontext – proto zůstávají v danger tónu .rnote. */
-    // dlouhý vzkaz se krátí stejně jako na přehledu – jinak jeden odstavec odtlačí
-    // pod okraj obrazovky celý zbytek soupisu
-    let noteLine=(c.zpravy||[]).filter(z=>z.den===TODAYD).map(z=>{
-      const dlouhy=(z.text||'').length>ZP_DELKA, rozbalen=zpRozbalene.has(z.id);
-      return `<div class="rnote rnote-info"><span class="${dlouhy&&!rozbalen?'zp-clamp':''}">${zpravaShrnuti(z)}</span> <span class="rn-cas">${z.odeslano}</span>`
-        +(dlouhy?`<button class="zp-vic" onclick="event.stopPropagation();zpToggle('${z.id}')">${rozbalen?'zkrátit ›':'celý vzkaz ›'}</button>`:'')+`</div>`;
-    }).join('');
-    /* Poznámku z omluvenky uvozuje důvod, který rodič vybral (nemoc / rodinné důvody / jiné) –
-       „K omluvence" nic neříkalo, přitom příznak omluvenka nese a na řádku jinak není vidět. */
-    if(c.parentExcuse&&c.parentExcuse.pozn){const d=c.parentExcuse.reason||'omluvenka';
-      noteLine+=`<div class="rnote"><b>${d.charAt(0).toUpperCase()+d.slice(1)}:</b> ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
-    if(c.guideExcuse)noteLine+=`<div class="rnote">${guideExcuseDetail(c)}</div>`;
+    const noteLine=poznamkyDne(c);
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();
     /* Zapisující role má vpravo zaškrtávátko, stav tedy sedí hned za jménem. Role, která
@@ -103,8 +110,8 @@ function rosterHTML(){
     const chk=zapis
       ? `<span class="chk ${here(c)?'on':''}" role="checkbox" aria-checked="${here(c)}" aria-label="${full(c)} je ve školce" title="${here(c)?'Je ve školce – odškrtnutím zapíšeš absenci':'Zapsáno jako absence – zaškrtnutím vrátíš do školky'}" onclick="event.stopPropagation();presence(${i})">${here(c)?'✓':''}</span>`
       : '';
-    out+=`<div class="row${c.status!=='pritomen'?' absent':''}${open===i?' open':''}"><div class="rmain"${zapis?` onclick="toggle(${i})"`:' style="cursor:default"'}>`+
-      `${avatar(c,30)}<span class="nm">${full(c)}</span>${planPill(c)}${indicator(c,!zapis)}`+
+    out+=`<div class="row${c.status!=='pritomen'?' absent':''}${open===i?' open':''}" id="r${i}"><div class="rmain"${zapis?` onclick="toggle(${i})"`:' style="cursor:default"'}>`+
+      `${avatar(c,30)}<span class="nm">${full(c)}</span>${planPill(c)}${indicator(c,!zapis)}${noteLine?'<span class="r-vzkaz">vzkaz</span>':''}`+
       chk+`</div>`+
       noteLine+
       `<div class="edit" style="display:${open===i&&zapis?'block':'none'}">${open===i&&zapis?editPanel(c,i):''}</div></div>`;
@@ -142,19 +149,27 @@ function todayRoster(){
   const vSez=data.map((x,i)=>({x,i})).filter(({x,i})=>dochSeznam==='all'||veSeznamu(x,i,dochSeznam));
   const presS=vSez.filter(({x})=>here(x)).length;
   let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` (${nazevSeznamu(dochSeznam).toLowerCase()})`}</span></div>`;
-  main+=`<div class="dsez"><label class="pl" for="dsez">Seznam</label><select class="pin" id="dsez" onchange="setDochSeznam(this.value)">`
+  main+=`<div class="doch-filtry"><div class="dsez"><label class="pl" for="dsez">Seznam</label><select class="pin" id="dsez" onchange="setDochSeznam(this.value)">`
     +`<option value="all"${dochSeznam==='all'?' selected':''}>Všechny děti</option>`
     +SEZNAMY.map(s=>`<option value="${s.id}"${dochSeznam===s.id?' selected':''}>${s.nazev}</option>`).join('')+`</select></div>`;
   // vysvětlivku k záložce má jen zapisující role; roli samotnou nese odznak v topbaru
+  main+=`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)"></div>`;
   {const tip=smiZapisovat()?(CTX[tab][1]||''):'';
    if(tip)main+=`<div class="sectip">${tip}</div>`;}
-  main+=`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)">`;
   main+=`<div class="rosterbox"><div id="roster">${rosterHTML()}</div></div>`;
   /* Dřív „Obědy X · svačiny X" s počtem přítomných dětí – oběd ani odpolední svačina se tak
      nepočítají. Teď týž výpočet jako přehled kuchyně (porceDne), za celou školku. */
-  {const pk=porceDne(TODAYD);
-   main+=`<div class="doch-mealsfoot"><span class="meals">Kuchyň: dop. svačina <b>${pk.dop}</b>, oběd <b>${pk.obed}</b>, odp. svačina <b>${pk.odpN}</b></span><span class="pwa">nainstalovatelné, funguje offline (PWA)</span></div>`;}
-  return `<div class="doch-today">${side}<div class="doch-main">${main}</div></div>`;
+  const pk=porceDne(TODAYD);
+  main+=`<div class="doch-mealsfoot"><span class="meals">Kuchyň: dop. svačina <b>${pk.dop}</b>, oběd <b>${pk.obed}</b>, odp. svačina <b>${pk.odpN}</b></span></div>`;
+  /* Desktop: vedle soupisu panel „Dnes k řešení" (co dnes přišlo od rodičů) a porce pro kuchyň.
+     Soupis tak zůstane úzký a rychle čitelný – poznámky v něm na desktopu nahrazuje štítek „vzkaz".
+     Klepnutí na dítě v panelu skočí na jeho řádek. Na mobilu je panel skrytý (poznámky jsou pod řádky). */
+  const sPozn=data.map((x,i)=>({x,i})).filter(({x})=>maPoznDnes(x));
+  const aside=`<div class="tile doch-panel"><div class="ch">Dnes k řešení${sPozn.length?`<span class="c-badge">${sPozn.length}</span>`:''}</div>`
+    +(sPozn.length?sPozn.map(({x,i})=>`<div class="dp-item"><button class="dp-who" onclick="dochUkaz(${i})">${avatar(x,24)}<span>${kratke(x)}</span><span class="dp-stav">${here(x)?'ve školce':'nepřijde'}</span></button>${poznamkyDne(x)}</div>`).join('')
+      :'<div class="dp-prazdno">Od rodičů dnes nic nepřišlo.</div>')+`</div>`
+    +`<div class="tile doch-panel"><div class="ch">Kuchyň dnes</div><div class="dp-porce"><div><b>${pk.dop}</b><span>dop. svačina</span></div><div><b>${pk.obed}</b><span>oběd</span></div><div><b>${pk.odpN}</b><span>odp. svačina</span></div></div></div>`;
+  return `<div class="doch-today">${side}<div class="doch-body"><div class="doch-main">${main}</div><aside class="doch-aside">${aside}</aside></div></div>`;
 }
 function specialBar(d){
   if(!SPECIAL[d])return '';
@@ -202,6 +217,9 @@ function renderDenRoster(d){
 }
 window.setDView=v=>{view=v;open=-1;query='';monthDay=-1;if(v==='den')denDay=TODAYD;if(v==='tyden')weekStart=1;render();};
 window.setTab=k=>{tab=k;open=-1;render();};
+// z panelu „Dnes k řešení": přepne na záložku, kde dítě je, rozbalí ho (kdo zapisuje) a doroluje k němu
+window.dochUkaz=i=>{const c=data[i];query='';if(!inTab(c,tab))tab=here(c)?(mode==='bezny'?'rano':'skolka'):'neprit';
+  open=smiZapisovat()?i:-1;render();const r=document.getElementById('r'+i);if(r)r.scrollIntoView({behavior:'smooth',block:'center'});};
 window.toggle=i=>{if(!smiZapisovat())return;open=open===i?-1:i;document.getElementById('roster').innerHTML=rosterHTML();};
 window.onSearch=v=>{query=v;document.getElementById('roster').innerHTML=rosterHTML();};
 window.presence=i=>{if(!smiZapisovat())return;const c=data[i];const bylTu=here(c);c.status=bylTu?'neomluveno':'pritomen';
