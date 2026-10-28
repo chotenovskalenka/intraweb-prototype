@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* Srovnávací stránka: čtyři varianty jídelníčku s dneškem v popředí, každá jako živá appka
-     na telefonu a na desktopu (src/pruvodce.html?jdv=…). Desktop je zmenšený na dvě třetiny. */
+     na telefonu a na desktopu (dist/prototyp_pruvodce.html?jdv=…; sestavená appka – zdrojové skripty si prohlížeč drží v mezipaměti). Desktop je zmenšený na dvě třetiny. */
   body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:"Lexend",system-ui,sans-serif}
   header{max-width:1500px;margin:0 auto;padding:28px 24px 0}
   h1{font-family:"Alegreya",Georgia,serif;font-weight:700;font-size:30px;margin:0 0 6px;color:var(--color-primary-strong)}
@@ -36,26 +36,26 @@
 <section id="dnes">
   <h2>A: Dnes nahoře (současná)</h2>
   <p>Dnešní jídla celá nahoře, ostatní dny jako řádky s hlavním jídlem. Klepnutím se den rozbalí.</p>
-  <div class="pair"><iframe class="phone" src="../src/pruvodce.html?role=vedouci&sekce=jidelnicek" title="A mobil"></iframe>
-  <div class="desk"><iframe src="../src/pruvodce.html?role=vedouci&sekce=jidelnicek" title="A desktop"></iframe></div></div>
+  <div class="pair"><iframe class="phone" src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=jidelnicek" title="A mobil"></iframe>
+  <div class="desk"><iframe src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=jidelnicek" title="A desktop"></iframe></div></div>
 </section>
 <section id="den">
   <h2>B: Den po dni</h2>
   <p>Pás pěti dnů nahoře, pod ním vždy jen jeden den, výchozí dnešek. Týden je o klepnutí vedle.</p>
-  <div class="pair"><iframe class="phone" src="../src/pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=den" title="B mobil"></iframe>
-  <div class="desk"><iframe src="../src/pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=den" title="B desktop"></iframe></div></div>
+  <div class="pair"><iframe class="phone" src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=den" title="B mobil"></iframe>
+  <div class="desk"><iframe src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=den" title="B desktop"></iframe></div></div>
 </section>
 <section id="zitra">
   <h2>C: Dnes a zítra</h2>
   <p>Dnešek a zítřek celé (na desktopu vedle sebe), zbytek týdne sbalený v řádcích.</p>
-  <div class="pair"><iframe class="phone" src="../src/pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=zitra" title="C mobil"></iframe>
-  <div class="desk"><iframe src="../src/pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=zitra" title="C desktop"></iframe></div></div>
+  <div class="pair"><iframe class="phone" src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=zitra" title="C mobil"></iframe>
+  <div class="desk"><iframe src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=zitra" title="C desktop"></iframe></div></div>
 </section>
 <section id="dlazdice">
   <h2>D: Dlaždice</h2>
   <p>Dnešní chody jako barevné dlaždice jako na přehledu, porce bez alergenu přímo v nich. Zbytek týdne v řádcích.</p>
-  <div class="pair"><iframe class="phone" src="../src/pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=dlazdice" title="D mobil"></iframe>
-  <div class="desk"><iframe src="../src/pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=dlazdice" title="D desktop"></iframe></div></div>
+  <div class="pair"><iframe class="phone" src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=dlazdice" title="D mobil"></iframe>
+  <div class="desk"><iframe src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=jidelnicek&jdv=dlazdice" title="D desktop"></iframe></div></div>
 </section>
 </body>
 </html>
