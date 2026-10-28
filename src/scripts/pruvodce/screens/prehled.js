@@ -121,7 +121,7 @@ function renderPrehled(){
 
   // básnička celá (do ranního kruhu), písnička jen prvním veršem – celá je v tématickém plánu
   const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
-  let blkBasnicka=`<div class="tile has-kresba t-bas">${kresba('basnicka','kresba-k')}<div class="ch">Do kruhu<span class="ch-sub">básnička a písnička týdne</span></div>`;
+  let blkBasnicka=`<div class="tile has-kresba t-bas">${kresba('basnicka','kresba-k')}<div class="ch">Básnička a písnička týdne</div>`;
   if(wk&&(wk.b||wk.p)){
     if(wk.b)blkBasnicka+=`<div class="pa-cap">Básnička</div><div class="c-basen">${wk.b}</div>`;
     if(wk.p){const vers=(wk.p.match(/^[^.!?]*?,[^,.!?]*/)||[wk.p])[0];
@@ -149,7 +149,7 @@ function renderPrehled(){
    }}
 
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) a kdo uspává, drobně pod jménem
-  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Kdo je dnes ve službě</div>`;
+  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Průvodci dnes</div>`;
   if(todays.length){
     // role pod jménem drobně, čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" a ☾ lámaly do času
     todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');

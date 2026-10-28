@@ -93,7 +93,6 @@ body{font-family:var(--font-sans)}
 .c-badge{display:inline-block;min-width:20px;padding:2px 7px;border-radius:var(--radius-full);background:var(--tint-green);color:var(--color-primary-strong);font-family:var(--font-sans);font-size:var(--text-chip);font-weight:600;text-align:center;margin-left:8px;vertical-align:3px}
 .prehl-abs .pa-r.ok{color:var(--state-neutral-ink)}
 .tr-dash-cap{font-size:var(--text-note);font-weight:500;color:var(--color-text-muted);margin:2px 0 4px}
-.ch-sub{display:block;font-family:var(--font-sans);font-size:var(--text-note);font-weight:400;color:var(--color-text-muted);margin-top:2px}
 .tr-dash-dalsi{font-size:var(--text-note);color:var(--color-text-muted);padding:4px 0}
 .tr-dash.today{border-top:1px solid var(--color-border)}
 
