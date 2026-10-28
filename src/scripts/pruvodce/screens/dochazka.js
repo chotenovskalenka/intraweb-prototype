@@ -129,10 +129,11 @@ function rosterHTML(d=denDay){
     const noteLine=dnes?poznamkyDne(c):'';
     const k=getCode(c,d),pr=!!k&&k!=='OM';
     const klik=!zapis?'':dnes?`toggle(${i})`:`openCell(${i},${d})`;
-    const chk=`<span class="chk${pr?' on':''}${zapis?'':' ro'}" role="checkbox" aria-checked="${pr}" aria-disabled="${!zapis}" aria-label="${full(c)} ${pr?'je':'není'} ve školce"`
+    // skutečná tlačítka – na desktopu se docházka dá projít i klávesnicí (Tab, mezerník)
+    const chk=`<button type="button" class="chk${pr?' on':''}${zapis?'':' ro'}" role="checkbox" aria-checked="${pr}"${zapis?'':' disabled'} aria-label="${full(c)} ${pr?'je':'není'} ve školce"`
       +(zapis?` title="${pr?'Ve školce – odškrtnutím zapíšeš absenci':'Absence – zaškrtnutím vrátíš do školky'}" onclick="event.stopPropagation();${dnes?`presence(${i})`:`presenceD(${i},${d})`}"`:'')
-      +`>${pr?'✓':''}</span>`;
-    out+=`<div class="row${pr?'':' absent'}${dnes&&open===i?' open':''}" id="r${i}"><div class="rmain"${klik?` onclick="${klik}"`:' style="cursor:default"'}>`
+      +`>${pr?'✓':''}</button>`;
+    out+=`<div class="row${pr?'':' absent'}${dnes&&open===i?' open':''}" id="r${i}"><div class="rmain"${klik?` onclick="${klik}" tabindex="0" role="button"${dnes?` aria-expanded="${open===i}"`:''} onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();this.click()}"`:' style="cursor:default"'}>`
       +`${avatar(c,30)}<span class="nm">${full(c)}</span>`
       +(noteLine?'<span class="r-tecka" role="img" aria-label="má vzkaz od rodiče" title="Vzkaz od rodiče"></span>':'')
       +rezimPill(c,d)+doplnek(c,d)+chk+`</div>`
@@ -169,7 +170,7 @@ function renderDen(){
   const presS=vSez.filter(({x})=>{const k=getCode(x,d);return k&&k!=='OM';}).length;
   // dlaždice nesou barvu stavu (k-…) a rozpad přítomných uvozuje „Z přítomných" – stejně jako na přehledu
   const side=`<div class="tabs wrap doch-counts">`+tabs.map(([k,l])=>((!dnes||mode==='bezny')&&k==='poobede'?'<div class="c-cap">Z přítomných</div>':'')
-    +`<div class="tab k-${k}${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}${k==='neprit'&&!cnt[k]?' zero':''}" role="button" aria-pressed="${tab===k}" onclick="setTab('${k}')"><div class="num">${cnt[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
+    +`<button type="button" class="tab k-${k}${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}${k==='neprit'&&!cnt[k]?' zero':''}" aria-pressed="${tab===k}" onclick="setTab('${k}')"><span class="num">${cnt[k]}</span><span class="lab">${l}</span></button>`).join('')+`</div>`;
   const titul=tab==='rano'?(dnes?'Kdo dnes přišel':d<TODAYD?'Kdo přišel':'Kdo přijde'):CTX[tab][0];
   let main=`<div class="ctxhead"><span class="t">${titul}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` (${nazevSeznamu(dochSeznam).toLowerCase()})`}</span></div>`;
   /* P4: seznam jako druhý filtr k dlaždici – „Absence" × „Předškoláci" odpoví na otázku
@@ -241,17 +242,24 @@ function renderDenRoster(d){
   return h;
 }
 window.setDView=v=>{view=v;open=-1;query='';monthDay=-1;if(v==='den')denDay=TODAYD;if(v==='tyden')weekStart=1;render();};
-window.setTab=k=>{tab=k;open=-1;render();};
+// render() přepíše obsah – fokus se vrací na prvek, který akci spustil (ovládání klávesnicí)
+const vratFokus=sel=>{const e=document.querySelector(sel);if(e)e.focus({preventScroll:true});};
+/* Zaškrtávátko: odškrtnuté dítě ze záložky přítomných zmizí – fokus pak dostane zaškrtávátko,
+   které je na jeho místě (dá se pokračovat dalším dítětem). */
+const poziceChk=i=>[...document.querySelectorAll('#roster .chk')].findIndex(e=>e.closest('.row').id==='r'+i);
+const vratFokusChk=(i,pos)=>{const e=document.querySelector(`#r${i} .chk`)||document.querySelectorAll('#roster .chk')[pos]||[...document.querySelectorAll('#roster .chk')].pop();
+  if(e)e.focus({preventScroll:true});};
+window.setTab=k=>{tab=k;open=-1;render();vratFokus('.doch-counts .k-'+k);};
 // jiný den (jen vedoucí): zaškrtávátko přepíná přítomen podle plánu ↔ absence; jemnější volba je v openCell
-window.presenceD=(i,d)=>{if(!denEditovatelny(d))return;const c=data[i],k=getCode(c,d),pr=!!k&&k!=='OM';
-  c.att[d]=pr?'':baseCode(c,d);render();showToast(pr?`${full(c)} → absence`:`${full(c)} → ve školce`);};
+window.presenceD=(i,d)=>{if(!denEditovatelny(d))return;const pos=poziceChk(i);const c=data[i],k=getCode(c,d),pr=!!k&&k!=='OM';
+  c.att[d]=pr?'':baseCode(c,d);render();vratFokusChk(i,pos);showToast(pr?`${full(c)} → absence`:`${full(c)} → ve školce`);};
 // z panelu „Dnes k řešení": přepne na záložku, kde dítě je, rozbalí ho (kdo zapisuje) a doroluje k němu
 window.dochUkaz=i=>{const c=data[i];query='';if(!inTab(c,tab))tab=here(c)?(mode==='bezny'?'rano':'skolka'):'neprit';
   open=smiZapisovat()?i:-1;render();const r=document.getElementById('r'+i);if(r)r.scrollIntoView({behavior:'smooth',block:'center'});};
-window.toggle=i=>{if(!smiZapisovat())return;open=open===i?-1:i;document.getElementById('roster').innerHTML=rosterHTML();};
+window.toggle=i=>{if(!smiZapisovat())return;open=open===i?-1:i;document.getElementById('roster').innerHTML=rosterHTML();vratFokus(`#r${i} .rmain`);};
 window.onSearch=v=>{query=v;document.getElementById('roster').innerHTML=rosterHTML();};
-window.presence=i=>{if(!smiZapisovat())return;const c=data[i];const bylTu=here(c);c.status=bylTu?'neomluveno':'pritomen';
-  render();showToast(bylTu?`${full(c)} → absence`:`${full(c)} → ve školce`);};
+window.presence=i=>{if(!smiZapisovat())return;const pos=poziceChk(i);const c=data[i];const bylTu=here(c);c.status=bylTu?'neomluveno':'pritomen';
+  render();vratFokusChk(i,pos);showToast(bylTu?`${full(c)} → absence`:`${full(c)} → ve školce`);};
 window.setPlan=(i,v)=>{if(!smiZapisovat())return;data[i].plan=v;render();showToast('Docházka uložena ✓');};
 window.setStatus=(i,v)=>{if(!smiZapisovat())return;const c=data[i];c.status=v;
   if(v==='pritomen')delete c.guideExcuse;   // vrácení do školky ruší i ruční omluvenku

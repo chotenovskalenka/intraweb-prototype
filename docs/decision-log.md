@@ -2061,3 +2061,17 @@ tak bylo dnes „celodenní" a zítra „odpolední" (plán × kód dne – zmat
 Vedoucího průvodce nezajímají – řeší je kuchyň (Ksenia) na svém přehledu v roli `kuchyn`.
 Panel vpravo má tak dnes „Dnes k řešení", v den výpravy či horolezení kartu zvláštního dne,
 jinak je prázdný (soupis drží stejnou šířku).
+
+## Docházka: ovládání klávesnicí (28. 10. 2026)
+
+Revize podle zásad skillu ui-styling (shadcn/Tailwind se na prototyp bez frameworku nehodí,
+použité jsou jen obecné zásady: přístupnost, tokeny, stavy fokusu). Na desktopu – kde vedoucí
+pracuje s notebookem – nešly dlaždice, zaškrtávátka ani řádky ovládat klávesnicí (byly to
+`div`/`span` s `onclick`). Teď jsou dlaždice a zaškrtávátka `<button>` (neaktivní den = `disabled`),
+řádek má `tabindex` + Enter/mezerník. Po překreslení se fokus vrací na prvek, který akci spustil;
+když odškrtnuté dítě ze záložky zmizí, dostane fokus zaškrtávátko na jeho místě. Vzhled beze změny,
+jen obrys fokusu z `base.css` při ovládání klávesnicí. Hledání se na užším desktopu zalomí pod seznam.
+
+**Otevřené (rozhodne designérka):** v obrazovce je 9 velikostí písma (11,5–34 px, z toho pět mezi
+11,5 a 14) a 9 zaoblení (6–34 px). Šlo by je stáhnout na škálu 12 / 14 / 16 / 19 / 26 / 34
+a zaoblení 12 (vnitřní) / 22 (plochy) / plná pilulka.
