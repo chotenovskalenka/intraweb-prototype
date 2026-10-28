@@ -14,29 +14,34 @@ let trView='den', trDay=TR_DNES, trWeek=trTydenOd(TR_DNES), trOpenDite=-1;   // 
 let trNoteForm=false, trNoteChild=-1, trNoteDraft='';
 // úprava / mazání jedné poznámky: {i: dítě, j: pozice v jeho poli}
 let trUprava=null, trUpravaDraft='', trMazani=null;
-const TR_DOW=['pondělí','úterý','středa','čtvrtek','pátek'];
 // otevřené dny školního roku, které už začaly, a jejich týdny (kalendář je v tridnice-data.js)
 const trDny=()=>TR_DNY;
 const trTydny=()=>TR_TYDNY_SEZ;
 // podpis pole: kdo a kdy – u starších zápisů datum, ať je vidět, že se psalo třeba až druhý den
 const trKdyLbl=z=>{if(!z)return '';const x=trInfo(z.den);
-  return `${z.kdo} · ${z.den===TR_DNES?'dnes':z.den===trPredchozi(TR_DNES)?'včera':x?`${x.d}. ${x.m}.`:''} ${z.cas}`;};
+  return `${z.kdo} (${z.den===TR_DNES?'dnes':z.den===trPredchozi(TR_DNES)?'včera':x?`${x.d}. ${x.m}.`:''} ${z.cas})`;};
 const trBdg=s=>`<span class="bdg st-${s.cls}">${s.lab}</span>`;
 // kdo ten den slouží – v červnu z rozpisu služeb (stejný zdroj jako dashboard), dřív ze základní roty
 const trSluzba=k=>{const x=trInfo(k);
   return (x.y===2026&&x.m===6?shiftProDen(x.d):SHIFT_ROTA).filter(g=>serving(g.days[x.dow])).map(g=>g.n);};
 
-function renderTridnice(){
+/* Přepínač Den/Týden/Děti, listování a skok na měsíc – v řádku nadpisu jako u Docházky
+   (core.js render). Dřív tři řádky ovládání nad obsahem (převod do vzhledu C, 28. 10. 2026). */
+function trHlavicka(){
   const nav=trView==='den'
-    ? trNav(trDenLbl(trDay)+(trDay===TR_DNES?'<i class="dn-cur"> · dnes</i>':''),'trStepDay',trDny().indexOf(trDay),trDny().length)
-    : trNav(trTydenLbl(trWeek)+(trWeek===trTydenOd(TR_DNES)?'<i class="dn-cur"> · tento týden</i>':''),'trStepWeek',trTydny().indexOf(trWeek),trTydny().length);
+    ? trNav(trDenLbl(trDay)+(trDay===TR_DNES?'<i class="dn-cur"> (dnes)</i>':''),'trStepDay',trDny().indexOf(trDay),trDny().length)
+    : trNav(trTydenLbl(trWeek)+(trWeek===trTydenOd(TR_DNES)?'<i class="dn-cur"> (tento týden)</i>':''),'trStepWeek',trTydny().indexOf(trWeek),trTydny().length);
   // skok na měsíc – školní rok má přes 180 dnů, po jednom se k září nikdo nedoklikne
   const ym=Math.floor((trView==='den'?trDay:trWeek)/100);
   const mesic=`<select class="pin tr-mesic" aria-label="Přejít na měsíc" onchange="trMesic(+this.value)">`
-    +TR_MESICE.map(x=>`<option value="${x.ym}"${x.ym===ym?' selected':''}>${x.lab}</option>`).join('')+`</select>`;
-  let h=`<div class="tr"><div class="dfield"><div class="switch dsw">`
+    // jen název měsíce – školní rok (září–červen) má každý měsíc jednou, rok by jen zabíral místo
+    +TR_MESICE.map(x=>`<option value="${x.ym}"${x.ym===ym?' selected':''}>${x.lab.replace(/ \d{4}$/,'')}</option>`).join('')+`</select>`;
+  return `<div class="dfield"><div class="switch dsw">`
     +[['den','Den'],['tyden','Týden'],['deti','Děti']].map(v=>`<button class="${trView===v[0]?'on':''}" onclick="trSetView('${v[0]}')">${v[1]}</button>`).join('')
     +`</div>${nav}${mesic}</div>`;
+}
+function renderTridnice(){
+  let h=`<div class="tr">`;
   h+=trView==='den'?trRenderDen():trView==='tyden'?trRenderTyden():trRenderDeti();
   return h+`</div>`;
 }
@@ -47,13 +52,13 @@ function trNav(lbl,fn,i,n){
 /* ---- Den ---- */
 function trRenderDen(){
   const d=trDay, x=trInfo(d), z=trDen(d), sl=trSluzba(d);
-  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><span class="tlab">${TR_DOW[x.dow].replace(/^./,m=>m.toUpperCase())} ${x.d}. ${MONTHS_G[x.m-1]} ${x.y}</span><span id="tr-stav">${trBdg(trStav(d))}</span></div>`
-    +`<div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b> · píše <b>${TR_ZAPISUJE[x.dow]}</b></div>`
+  // datum nese listování v hlavičce – karta dne říká jen stav, kdo slouží a kdo píše
+  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b>. Píše <b>${TR_ZAPISUJE[x.dow]}</b>.</div><span id="tr-stav">${trBdg(trStav(d))}</span></div>`
     +`<div class="note2">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do části <a class="tr-inl" href="#tr-kdetem">K dětem</a> pod zápisem, kterou vidí jen tým.</div></div>`;
   h+=`<div class="tr-pole">`;
   TR_POLE.forEach(p=>{
     const v=z.pole[p.k];
-    h+=`<div class="tile tr-f${p.siroke?' tr-f-wide':''}"><div class="tr-fh"><label class="tlab" for="trf-${p.k}">${p.lab}${p.volitelne?' <span class="tr-vol">nepovinné</span>':''}</label>`
+    h+=`<div class="tile tr-f${p.siroke?' tr-f-wide':''}"><div class="tr-fh"><label class="tr-fl" for="trf-${p.k}">${p.lab}${p.volitelne?' <span class="tr-vol">nepovinné</span>':''}</label>`
       +`<span class="tr-kdo" id="trk-${p.k}">${trKdyLbl(v)}</span></div>`
       +(p.kratke
         ? `<input class="pin" id="trf-${p.k}" value="${esc(v?v.t:'')}" placeholder="${p.ph}" oninput="trSet('${p.k}',this.value)">`
@@ -79,7 +84,7 @@ function trRenderKDetem(d){
     const deti=data.map((c,i)=>({c,i})).sort(byAlpha);
     h+=`<div class="tr-kd-form"><label class="pl" for="trn-dite">Dítě</label>`
       +`<select class="pin" id="trn-dite" onchange="trNoteChild=+this.value"><option value="-1">Vyber dítě…</option>`
-      +deti.map(({c,i})=>`<option value="${i}"${trNoteChild===i?' selected':''}>${full(c)}${maDnes.has(i)?' · už má poznámku':''}</option>`).join('')+`</select>`
+      +deti.map(({c,i})=>`<option value="${i}"${trNoteChild===i?' selected':''}>${full(c)}${maDnes.has(i)?' (už má poznámku)':''}</option>`).join('')+`</select>`
       +`<label class="pl" for="trn-text">Poznámka</label><textarea class="pta" id="trn-text" placeholder="Nálada, vztahy, co se povedlo, zdraví…" oninput="trNoteDraft=this.value">${escTa(trNoteDraft)}</textarea>`
       +`<div class="tr-kd-act"><button class="btn-ghost" onclick="trNoteZavri()">Hotovo</button><button class="btn-primary" onclick="trNoteUloz()">Uložit a další</button></div></div>`;
   }else{
@@ -93,7 +98,7 @@ function trRenderKDetem(d){
 function trRenderPozn(x){
   const c=data[x.i], ja_=trUprava&&trUprava.i===x.i&&trUprava.j===x.j, maz=trMazani&&trMazani.i===x.i&&trMazani.j===x.j;
   let h=`<div class="tr-kd${ja_||maz?' tr-kd-on':''}">${avatar(c,28)}<div class="tr-kd-b"><div class="tr-kd-h"><b>${full(c)}</b>`
-    +`<span class="tr-kdo">${esc(x.kdo)}${x.upr&&x.upr!==x.kdo?` · upraveno (${esc(x.upr)})`:''}</span></div>`;
+    +`<span class="tr-kdo">${esc(x.kdo)}${x.upr&&x.upr!==x.kdo?` (upraveno: ${esc(x.upr)})`:''}</span></div>`;
   if(ja_){
     h+=`<textarea class="pta" id="tre-text" aria-label="Upravit poznámku k ${full(c)}" oninput="trUpravaDraft=this.value">${escTa(trUpravaDraft)}</textarea>`
       +`<div class="tr-kd-act"><button class="btn-ghost" onclick="trUpravZrus()">Zrušit</button><button class="btn-primary" onclick="trUpravUloz()">Uložit změnu</button></div>`;
@@ -206,7 +211,7 @@ function trRenderDeti(){
       +`<span class="tr-dite-s">${n.length?`${n.length} ${n.length===1?'poznámka':n.length<5?'poznámky':'poznámek'}`:'<i>zatím bez poznámky</i>'}</span></button>`;
     if(open){
       h+=`<div class="tr-dite-b">`;
-      n.forEach(x=>{h+=`<div class="rozh"><div class="rozhd">${trDenLbl(x.d)} · ${esc(x.kdo)}</div>${esc(x.t)}</div>`;});
+      n.forEach(x=>{h+=`<div class="rozh"><div class="rozhd">${trDenLbl(x.d)} – ${esc(x.kdo)}</div>${esc(x.t)}</div>`;});
       // psaní vede do zápisu dne – jedno místo, kde poznámky vznikají
       h+=`<div class="tr-dite-act"><button class="btn-ghost" onclick="trNapsat(${i},${kDni})">Napsat k ${kDni===TR_DNES?'dnešku':trDenLbl(kDni)}</button>`
         +`<button class="cardlink tr-rok-link" onclick="trRok(${i})">Celý rok v profilu dítěte ›</button></div></div>`;

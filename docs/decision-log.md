@@ -2087,3 +2087,17 @@ Průchod všech 13 obrazovek (mobil + desktop) podle priorit skillu ui-ux-pro-ma
 Zbývá na převod obrazovek do C: různé vzory filtrů a přepínačů (Docházka dlaždice, Děti záložky,
 Třídnice tři řádky ovládání), nesjednocené akce v hlavičce, 69 teček „·" na 9 obrazovkách,
 drobné verzálky s prostrkáním. Kalendář drží barvy Googlu záměrně.
+
+## Třídnice ve vzhledu C (28. 10. 2026)
+
+- **Ovládání v řádku nadpisu** jako u Docházky (`trHlavicka()` v core.js): přepínač Den/Týden/Děti,
+  listování a skok na měsíc. Na mobilu dva řádky (přepínač; listování + měsíc) místo tří nad obsahem.
+- **Skok na měsíc bez roku** („Listopad", ne „Listopad 2025") – školní rok září–červen má každý
+  měsíc jednou; rok jen zabíral místo a na mobilu vytlačil pole na další řádek.
+- **Karta dne bez zdvojeného data** (datum nese listování): stav, kdo slouží a kdo píše.
+- **Popisky polí jako nadpisy karet** (Alegreya) místo drobných verzálek s prostrkáním.
+- Pole a interní zóna „K dětem" se zaoblením karet; čárkovaný okraj dál znamená „jen pro tým".
+- **Tečky pryč:** „Honza (dnes 9:40)", „Ve službě: … Píše Honza.", „(už má poznámku)",
+  „(upraveno: Míša)", „Út 2. 6. – Gabča".
+- Popisky formulářových polí `.pl` („TÉMA TÝDNE", „SEZNAM") zůstávají verzálkami – sdílený prvek
+  napříč appkou, rozhodne se při sjednocení škály písma.

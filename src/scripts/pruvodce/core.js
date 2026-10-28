@@ -80,6 +80,7 @@ function render(){
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     // Docházka: přepínač Den/Týden a listování data v řádku nadpisu, ne pod ním (ladění C, 28. 10. 2026)
     : section==='dochazka' ? `<h1 class="dh-t">Docházka</h1>${renderDochNav()}`
+    : section==='tridnice' ? `<h1 class="dh-t">Třídnice</h1>${trHlavicka()}`
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';

@@ -294,3 +294,25 @@ button.chk.ro{cursor:default}
 .ctxhead .t-pozn{font-family:var(--font-sans);font-size:var(--text-small);font-weight:400;color:var(--color-text-muted)}
 /* Spí: bíle průsvitná výplň s čárkovaným okrajem (přehled i docházka) – na akvarelu jinak „díra" */
 .c-tile.t-spi,.doch-counts .tab.k-spi{background:rgba(249,247,241,.55)}
+
+/* ---------- Třídnice ve vzhledu C (28. 10. 2026) ---------- */
+/* popisek pole jako nadpis karty – dřív drobné verzálky s prostrkáním, hůř čitelné */
+.tr-fl{font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--color-text);line-height:var(--leading-snug)}
+.tr-fh{align-items:baseline;margin-bottom:9px}
+.tr-meta-r{align-items:flex-start}
+.tr-meta-r .tval{flex:1;min-width:0}
+/* skok na měsíc jako pilulka vedle listování (stejná plocha jako přepínač a datum) */
+.dfield .tr-mesic{width:auto;min-height:52px;border:none;border-radius:var(--radius-full);background-color:rgba(249,247,241,.92);box-shadow:var(--shadow-card);padding-left:18px}
+/* psací pole: měkčí rohy, plocha karty */
+.tr-f .pin,.tr-f .pta,.tr .pta,.tr .pin{border-radius:14px}
+/* interní zóna „K dětem" / „Poznámky k dětem": čárkovaně dál znamená „jen pro tým", rohy jako karty */
+.zona-int{border-radius:var(--radius-card)}
+.zona-int>.tile,.zona-int .tile{box-shadow:none}
+/* poučení o pravidlech: popisek nad volbami jako ostatní popisky formulářů */
+.tr-f .pl{margin-top:12px}
+/* mobil: listování a skok na měsíc v jednom řádku pod přepínačem (dřív tři řádky ovládání) */
+@media (max-width:899px){
+  .dfield .tr-mesic{padding:0 34px 0 14px}
+}
+/* „Celý rok v profilu dítěte" – sekundární pilulka s vlastním odsazením (základní styl ho nuloval) */
+.tr-dite-act .tr-rok-link{padding:10px 18px;margin:0}
