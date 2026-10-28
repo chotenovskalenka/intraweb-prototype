@@ -152,3 +152,41 @@ body{font-family:var(--font-sans)}
   .dash-head.c-head{position:static;padding-right:0}
   .c-head .c-bird{right:0;top:-6px}
 }
+
+/* ---------- Docházka: dlaždice jako na přehledu, řádky jako karty ---------- */
+/* Dlaždice jsou tady filtry soupisu: vybraná má tmavý prstenec, barvu stavu si drží. */
+.doch-counts{gap:12px}
+.doch-counts .c-cap{margin:2px 0 -4px}
+.doch-counts .tab{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:74px;padding:12px 18px;
+  border:none;border-radius:var(--blob-r);background:var(--tint-green);text-align:left;box-shadow:none}
+.doch-counts .tab .num{font-weight:700;font-size:var(--text-number);color:var(--color-text)}
+.doch-counts .tab .lab{font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.doch-counts .tab.k-neprit{background:var(--tint-rose)}.doch-counts .tab.k-neprit .num{color:var(--state-danger-ink)}
+.doch-counts .tab.k-neprit.zero{background:var(--state-neutral-bg)}.doch-counts .tab.k-neprit.zero .num{color:var(--color-text)}
+.doch-counts .tab.k-poobede,.doch-counts .tab.k-obed{background:var(--tint-blue)}
+.doch-counts .tab.k-odpoledni,.doch-counts .tab.k-vyprava{background:var(--tint-ochre)}
+.doch-counts .tab.k-celodenni{background:var(--soft-accent)}
+.doch-counts .tab.k-spi{background:none;border:1.5px dashed var(--color-border-strong)}
+.doch-counts .tab.on{box-shadow:inset 0 0 0 2.5px var(--color-primary-strong)}
+.doch-counts .tab.on .num,.doch-counts .tab.on.lead .num{color:var(--color-text)}
+.doch-counts .tab.on.k-neprit:not(.zero) .num{color:var(--state-danger-ink)}
+.doch-counts .tab.on .lab{color:var(--color-text);font-weight:600}
+/* datum v přepínači dne Lexendem (číslice), nadpis soupisu jako nadpis karty */
+.dnav span{font-family:var(--font-sans);font-weight:500;font-size:var(--text-small)}
+.ctxhead .t{font-weight:500;color:var(--color-text)}
+.search,.pin{border-radius:14px;background:var(--color-surface)}
+/* soupis bez rámečku kolem, každé dítě jako karta */
+.rosterbox{border:none;background:none;padding:2px}
+.row{border:none;border-radius:18px;background:rgba(249,247,241,.92);box-shadow:var(--shadow-card);margin-bottom:8px}
+.rnote{border-radius:12px}
+.chk{border-radius:10px}
+.chk.on{background:var(--color-primary-strong);border-color:var(--color-primary-strong)}
+/* režim docházky ve stejných barvách jako dlaždice: dopolední modrá, odpolední okrová */
+.pill{border-radius:var(--radius-full);padding:2px 9px}
+.p-dop{background:var(--tint-blue);color:var(--color-info)}
+.p-odp{background:var(--tint-ochre);color:var(--color-accent-ink)}
+.p-cel{background:var(--tint-green);color:var(--color-primary-strong)}
+@media (min-width:900px){
+  .doch-counts .c-cap{display:none}
+  .doch-today>.doch-counts .tab{flex:1;min-width:0}
+}

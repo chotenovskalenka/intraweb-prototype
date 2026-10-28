@@ -1153,6 +1153,44 @@ body{font-family:var(--font-sans)}
   .dash-head.c-head{position:static;padding-right:0}
   .c-head .c-bird{right:0;top:-6px}
 }
+
+/* ---------- Docházka: dlaždice jako na přehledu, řádky jako karty ---------- */
+/* Dlaždice jsou tady filtry soupisu: vybraná má tmavý prstenec, barvu stavu si drží. */
+.doch-counts{gap:12px}
+.doch-counts .c-cap{margin:2px 0 -4px}
+.doch-counts .tab{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:74px;padding:12px 18px;
+  border:none;border-radius:var(--blob-r);background:var(--tint-green);text-align:left;box-shadow:none}
+.doch-counts .tab .num{font-weight:700;font-size:var(--text-number);color:var(--color-text)}
+.doch-counts .tab .lab{font-size:var(--text-note);color:var(--color-text-muted);margin-top:2px}
+.doch-counts .tab.k-neprit{background:var(--tint-rose)}.doch-counts .tab.k-neprit .num{color:var(--state-danger-ink)}
+.doch-counts .tab.k-neprit.zero{background:var(--state-neutral-bg)}.doch-counts .tab.k-neprit.zero .num{color:var(--color-text)}
+.doch-counts .tab.k-poobede,.doch-counts .tab.k-obed{background:var(--tint-blue)}
+.doch-counts .tab.k-odpoledni,.doch-counts .tab.k-vyprava{background:var(--tint-ochre)}
+.doch-counts .tab.k-celodenni{background:var(--soft-accent)}
+.doch-counts .tab.k-spi{background:none;border:1.5px dashed var(--color-border-strong)}
+.doch-counts .tab.on{box-shadow:inset 0 0 0 2.5px var(--color-primary-strong)}
+.doch-counts .tab.on .num,.doch-counts .tab.on.lead .num{color:var(--color-text)}
+.doch-counts .tab.on.k-neprit:not(.zero) .num{color:var(--state-danger-ink)}
+.doch-counts .tab.on .lab{color:var(--color-text);font-weight:600}
+/* datum v přepínači dne Lexendem (číslice), nadpis soupisu jako nadpis karty */
+.dnav span{font-family:var(--font-sans);font-weight:500;font-size:var(--text-small)}
+.ctxhead .t{font-weight:500;color:var(--color-text)}
+.search,.pin{border-radius:14px;background:var(--color-surface)}
+/* soupis bez rámečku kolem, každé dítě jako karta */
+.rosterbox{border:none;background:none;padding:2px}
+.row{border:none;border-radius:18px;background:rgba(249,247,241,.92);box-shadow:var(--shadow-card);margin-bottom:8px}
+.rnote{border-radius:12px}
+.chk{border-radius:10px}
+.chk.on{background:var(--color-primary-strong);border-color:var(--color-primary-strong)}
+/* režim docházky ve stejných barvách jako dlaždice: dopolední modrá, odpolední okrová */
+.pill{border-radius:var(--radius-full);padding:2px 9px}
+.p-dop{background:var(--tint-blue);color:var(--color-info)}
+.p-odp{background:var(--tint-ochre);color:var(--color-accent-ink)}
+.p-cel{background:var(--tint-green);color:var(--color-primary-strong)}
+@media (min-width:900px){
+  .doch-counts .c-cap{display:none}
+  .doch-today>.doch-counts .tab{flex:1;min-width:0}
+}
 </style>
 </head>
 <body>
@@ -2427,15 +2465,16 @@ const inTab=(c,t)=>{
 /* Pojmenování stavů drží jeden slovník napříč appkou: přítomni · dopolední · odpolední · absence.
    „Ráno" bylo matoucí (číslo platí celý den, ne jen ráno) a „Po obědě" popisovalo důsledek
    místo režimu docházky. Viz docs/vyzkum-testovani-pruvodci.md, P2.
-   Záložka „Spí" zůstává – spáči v maringotce jsou provozní fakt, ne režim docházky. */
-const TABS_BEZNY=[['rano','Přítomni'],['spi','Spí'],['poobede','Dopolední'],['odpoledni','Odpolední'],['neprit','Absence']];
+   Záložka „Spí" zůstává – spáči v maringotce jsou provozní fakt, ne režim docházky.
+   Pořadí jako dlaždice na přehledu: přítomni, absence, pak rozpad přítomných a spáči na konci. */
+const TABS_BEZNY=[['rano','Přítomni'],['neprit','Absence'],['poobede','Dopolední'],['odpoledni','Odpolední'],['spi','Spí']];
 const TABS_SPEC=g=>[['skolka','Školka ráno'],['vyprava',g],['obed','Oběd'],['spi','Spí'],['neprit','Absence']];
 const TABS_BY=()=>mode==='bezny'?(wd(TODAYD)===1?[...TABS_BEZNY.slice(0,4),['celodenni','Celodenní'],TABS_BEZNY[4]]:TABS_BEZNY):TABS_SPEC(mode==='pred'?'Předškoláci':'Lezci');
 const CTX={rano:['Kdo dnes přišel',''],
   skolka:['Ráno ve školce',''],
   vyprava:['Na výpravě',''],
   obed:['Oběd – všichni',''],
-  spi:['Maringotka · spáči','Zaškrtnuté dítě je ve školce. Odškrtnutím ho zapíšeš jako absenci – zaškrtnutím ho vrátíš zpět.'],
+  spi:['Spáči v maringotce','Zaškrtnuté dítě je ve školce. Odškrtnutím ho zapíšeš jako absenci – zaškrtnutím ho vrátíš zpět.'],
   poobede:['Dopolední docházka','Tyhle děti odcházejí po obědě.'],
   celodenni:['Celodenní docházka','Úterní dlouhý den – tyhle děti zůstávají až do 17:00.'],
   odpoledni:['Odpolední docházka','Tyhle děti zůstávají i odpoledne (do 15:00).'],
@@ -2471,7 +2510,7 @@ function editPanel(c,i){
       +`<textarea class="pta" style="margin-top:8px" placeholder="Co ti rodič řekl (nepovinné)" oninput="setGuidePozn(${i},this.value)">${c.guideExcuse?esc(c.guideExcuse.pozn||''):''}</textarea></div>`;
   }
   if(c.guideExcuse)h+=`<div class="field"><div class="l">Omluveno vedoucí – po 8:30, bez náhrady</div><div class="pnote">${guideExcuseDetail(c)}</div></div>`;
-  if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.time} · ${c.parentExcuse.reason}${c.parentExcuse.pozn?`<div class="pn-pozn">${esc(c.parentExcuse.pozn)}</div>`:''}</div></div>`;
+  if(c.parentExcuse)h+=`<div class="field"><div class="l">Omluvenka od rodiče</div><div class="pnote">${c.parentExcuse.reason} (${c.parentExcuse.time})${c.parentExcuse.pozn?`<div class="pn-pozn">${esc(c.parentExcuse.pozn)}</div>`:''}</div></div>`;
   {const zpr=(c.zpravy||[]).filter(z=>z.den===TODAYD);
    if(zpr.length)h+=`<div class="field"><div class="l">Vzkazy od rodičů dnes</div>`
      +zpr.map(z=>`<div class="pnote">${zpravaShrnuti(z)}<div class="pn-pozn">odesláno ${z.odeslano}</div></div>`).join('')+`</div>`;}
@@ -2500,7 +2539,7 @@ function rosterHTML(){
     /* Poznámku z omluvenky uvozuje důvod, který rodič vybral (nemoc / rodinné důvody / jiné) –
        „K omluvence" nic neříkalo, přitom příznak omluvenka nese a na řádku jinak není vidět. */
     if(c.parentExcuse&&c.parentExcuse.pozn){const d=c.parentExcuse.reason||'omluvenka';
-      noteLine+=`<div class="rnote"><b>${d.charAt(0).toUpperCase()+d.slice(1)}</b> · ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
+      noteLine+=`<div class="rnote"><b>${d.charAt(0).toUpperCase()+d.slice(1)}:</b> ${esc(c.parentExcuse.pozn)} <span class="rn-cas">${c.parentExcuse.time}</span></div>`;}
     if(c.guideExcuse)noteLine+=`<div class="rnote">${guideExcuseDetail(c)}</div>`;
     // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
     const zapis=smiZapisovat();
@@ -2531,7 +2570,7 @@ function renderDochNav(){
   const tog=`<div class="switch dsw">`+[['den','Den'],['tyden','Týden']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setDView('${v[0]}')">${v[1]}</button>`).join('')+`</div>`;
   let label,prev,next,pdis,ndis;
   if(view==='tyden'){label=`${weekStart}.–${Math.min(weekStart+4,30)}. 6.`;prev='stepWeek(-1)';next='stepWeek(1)';pdis=weekStart<=1;ndis=weekStart+7>30;}
-  else{label=`${DOW[wd(denDay)]} ${denDay}. 6.${denDay===TODAYD?' · dnes':''}`;prev='stepDen(-1)';next='stepDen(1)';pdis=denDay<=1;ndis=denDay>=30;}
+  else{label=`${DOW[wd(denDay)]} ${denDay}. 6.${denDay===TODAYD?' (dnes)':''}`;prev='stepDen(-1)';next='stepDen(1)';pdis=denDay<=1;ndis=denDay>=30;}
   return `<div class="dfield">${tog}<div class="dnav"><button onclick="${prev}" ${pdis?'disabled':''} aria-label="Předchozí">‹</button><span>${label}</span><button onclick="${next}" ${ndis?'disabled':''} aria-label="Další">›</button></div></div>`;
 }
 function renderDen(){return denDay===TODAYD?todayRoster():dayRoster(denDay);}
@@ -2540,13 +2579,15 @@ function todayRoster(){
   const c=dochSeznam==='all'?counts():(()=>{const o={};const v=data.filter((x,i)=>veSeznamu(x,i,dochSeznam));
     TABS_BY().forEach(([k])=>o[k]=v.filter(x=>inTab(x,k)).length);o.pres=v.filter(here).length;return o;})();
   // počty (zároveň filtry) – vodorovná řada nad seznamem; listování dne je nahoře ve sloučeném poli
-  let side=`<div class="tabs wrap doch-counts">`+TABS_BY().map(([k,l])=>`<div class="tab${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
+  // dlaždice nesou barvu stavu (k-…) a rozpad přítomných uvozuje „Z přítomných" – stejně jako na přehledu
+  let side=`<div class="tabs wrap doch-counts">`+TABS_BY().map(([k,l])=>(mode==='bezny'&&k==='poobede'?'<div class="c-cap">Z přítomných</div>':'')
+    +`<div class="tab k-${k}${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}${k==='neprit'&&!c[k]?' zero':''}" role="button" aria-pressed="${tab===k}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
   // pod řadou: kontext + hledání + roster + souhrn jídel na plnou šířku
   /* P4: seznam jako druhý filtr k záložce – „Absence" × „Předškoláci" odpoví na otázku
      z testování, kdo z nepřítomných je předškolák. Počet přítomných se pak vztahuje k seznamu. */
   const vSez=data.map((x,i)=>({x,i})).filter(({x,i})=>dochSeznam==='all'||veSeznamu(x,i,dochSeznam));
   const presS=vSez.filter(({x})=>here(x)).length;
-  let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` · ${nazevSeznamu(dochSeznam).toLowerCase()}`}</span></div>`;
+  let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` (${nazevSeznamu(dochSeznam).toLowerCase()})`}</span></div>`;
   main+=`<div class="dsez"><label class="pl" for="dsez">Seznam</label><select class="pin" id="dsez" onchange="setDochSeznam(this.value)">`
     +`<option value="all"${dochSeznam==='all'?' selected':''}>Všechny děti</option>`
     +SEZNAMY.map(s=>`<option value="${s.id}"${dochSeznam===s.id?' selected':''}>${s.nazev}</option>`).join('')+`</select></div>`;
@@ -2558,7 +2599,7 @@ function todayRoster(){
   /* Dřív „Obědy X · svačiny X" s počtem přítomných dětí – oběd ani odpolední svačina se tak
      nepočítají. Teď týž výpočet jako přehled kuchyně (porceDne), za celou školku. */
   {const pk=porceDne(TODAYD);
-   main+=`<div class="doch-mealsfoot"><span class="meals">Kuchyň: dop. svačina <b>${pk.dop}</b> · oběd <b>${pk.obed}</b> · odp. svačina <b>${pk.odpN}</b></span><span class="pwa">nainstalovatelné · offline (PWA)</span></div>`;}
+   main+=`<div class="doch-mealsfoot"><span class="meals">Kuchyň: dop. svačina <b>${pk.dop}</b>, oběd <b>${pk.obed}</b>, odp. svačina <b>${pk.odpN}</b></span><span class="pwa">nainstalovatelné, funguje offline (PWA)</span></div>`;}
   return `<div class="doch-today">${side}<div class="doch-main">${main}</div></div>`;
 }
 function specialBar(d){
@@ -2567,7 +2608,7 @@ function specialBar(d){
   const pres=data.filter(c=>{const k=getCode(c,d);return k&&k!=='OM';});
   const trip=c=>kind==='pred'?c.predskolak:c.lez;
   const vyp=pres.filter(trip).length, skl=pres.length-vyp;
-  return `<div class="specbar"><div class="spectit">Zvláštní den · ${name}</div><div class="specnums"><span><b>${skl}</b> školka ráno</span><span><b>${vyp}</b> ${lab.toLowerCase()}</span><span><b>${pres.length}</b> oběd</span></div></div>`;
+  return `<div class="specbar"><div class="spectit">Zvláštní den: ${name}</div><div class="specnums"><span><b>${skl}</b> školka ráno</span><span><b>${vyp}</b> ${lab.toLowerCase()}</span><span><b>${pres.length}</b> oběd</span></div></div>`;
 }
 function dayRoster(d){
   // dnešek zapisuje každý; proběhlý i budoucí den mění jen vedoucí průvodce
