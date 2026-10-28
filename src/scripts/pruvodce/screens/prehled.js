@@ -116,7 +116,7 @@ function renderPrehled(){
         +`<span class="tr-dash-c">${trStav(k).k==='chybi'?'Chybí celý zápis':'Chybí: '+ch.join(', ')}</span>`+`</button>`;});
     if(nedopl.length>3)blkTridnice+=`<div class="tr-dash-dalsi">a další ${nedopl.length-3} ›</div>`;
   }else blkTridnice+=`<div class="tr-dash-dalsi">Všechny zápisy jsou hotové.</div>`;
-  blkTridnice+=`<button class="cardlink" onclick="trOtevrit(${TR_DNES})">Otevřít třídnici →</button></div>`;
+  blkTridnice+=`<button class="cardlink" onclick="trOtevrit(${TR_DNES})">Otevřít třídnici<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
 
   // básnička celá (do ranního kruhu), písnička jen prvním veršem – celá je v tématickém plánu
   const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
@@ -128,7 +128,7 @@ function renderPrehled(){
   }else{
     blkBasnicka+=`<div class="empty" style="padding:6px 0 0;text-align:left;font-style:normal">Pro tento týden zatím nevyplněno.</div>`;
   }
-  blkBasnicka+=`<button class="cardlink" onclick="go('priprava')">Celý plán týdne →</button></div>`;
+  blkBasnicka+=`<button class="cardlink" onclick="go('priprava')">Celý plán týdne<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
 
   // dnešní akce (pokud na dnešek nějaká je) – proklik na detail
   let blkAkce='';
@@ -136,7 +136,7 @@ function renderPrehled(){
    if(akToday.length){
      blkAkce=`<div class="tile has-kresba t-akc">${kresba('akce','kresba-k')}<div class="ch">${akToday.some(a=>a.dayEnd)?'Probíhá':'Akce'}</div>`;
      akToday.forEach(a=>{const m=[a.time,a.place].filter(Boolean).join(', ');blkAkce+=`<button class="acard" onclick="openAkceDetail('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;});
-     blkAkce+=`<button class="cardlink" onclick="go('akce')">Všechny akce →</button></div>`;
+     blkAkce+=`<button class="cardlink" onclick="go('akce')">Všechny akce<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
    }}
 
   // dnešní jídlo – na přehledu, ne v jídelníčku (designérka 28. 10. 2026); porce bez alergenu u jídla
@@ -144,7 +144,7 @@ function renderPrehled(){
   {const den=jidelnicekDen(TODAYD,6);
    if(den&&den.some(it=>it[1])){
      blkJidlo=`<div class="tile has-kresba t-jid">${kresba('jidlo','kresba-k')}<div class="ch">K jídlu</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
-       +`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček →</button></div>`;
+       +`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
    }}
 
   // „dnes" je jen v hlavičce u data – v nadpisech karet se opakovalo (designérka 28. 10. 2026)
@@ -155,7 +155,7 @@ function renderPrehled(){
     todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');
       blkPruvodci+=`<div class="np"><span class="np-n">${x.g.n}${role?`<span class="np-r">${role}</span>`:''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
   }else{blkPruvodci+=`<div class="empty" style="padding:6px">Nikdo nemá službu.</div>`;}
-  blkPruvodci+=`<button class="cardlink" onclick="go('pruvodci')">Celý rozpis →</button></div>`;
+  blkPruvodci+=`<button class="cardlink" onclick="go('pruvodci')">Celý rozpis<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
 
   /* Ranní trojice: na mobilu tři karty pod sebou, na desktopu jedna plocha přes celou šířku
      (je to jeden okamžik dne). Pod ní zbytek dne v pořadí mobilu; desktop ho skládá mřížkou. */

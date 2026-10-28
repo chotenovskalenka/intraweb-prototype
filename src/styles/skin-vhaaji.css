@@ -371,3 +371,11 @@ button.chk.ro{cursor:default}
 .t-pru .np-n{min-width:0}
 .t-pru .np-r{display:block;font-size:var(--text-note);font-weight:600;color:var(--color-primary)}
 .t-pru .np>b{flex:none;white-space:nowrap}
+
+/* Přehled: odkaz na konci karty jako patička – pod dělicí čarou přes celou spodní plochu karty,
+   text vlevo, šipka vpravo (designérka 28. 10. 2026; dřív pilulka). Celá plocha je dotykový cíl. */
+.dash-c .tile>.cardlink{display:flex;justify-content:space-between;align-items:center;width:calc(100% + 36px);min-height:52px;
+  margin:16px -18px -16px;padding:14px 18px;border:none;border-top:1px solid var(--color-border);
+  border-radius:0 0 var(--radius-card) var(--radius-card);background:none;text-align:left}
+.dash-c .tile>.cardlink:hover{background:var(--wash-primary)}
+.cardlink .cl-sip{margin-left:12px}

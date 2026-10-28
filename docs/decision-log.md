@@ -2242,3 +2242,5 @@ Kresby designérky „jídlo" a „sestava" (podklady/icon/) doplněny do kresby
 Kresby v rohu karet mají stejnou plochu (80 × 80 px), ne stejný čtverec – šířka a výška podle poměru stran, svisle vystředěné (designérka 28. 10. 2026: srovnat velikost a poměry; široké jídlo a sestava jinak vycházely menší).
 Třídnice (sešit) optický ořez na 90 % – je hutná a vyplní celé plátno, na oko působila větší.
 Desktop přehled: mezera pod ranní trojicí 32 px (dřív 12 px – menší než mezi kartami a kresby přečnívaly nad kartu).
+
+Přehled: odkaz na konci karty jako patička – pod dělicí čarou přes celou spodní plochu karty, text vlevo, šipka vpravo, výška 52 px (designérka 28. 10. 2026; dřív pilulka). Zatím jen na přehledu, jinde zůstávají pilulky.
