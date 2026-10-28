@@ -2154,7 +2154,7 @@ Designérka: „opět hodně roztahané". Na desktopu bylo pět karet přes celo
 řádku a různě široké verzálkové popisky chodů posouvaly začátek jídla.
 - **Listování týdnem a „Upravit" v řádku nadpisu** (`jidHlavicka()`), jako u Docházky a Třídnice;
   samostatný řádek „Týden" pod nadpisem zrušen.
-- **Dny v mřížce** na desktopu (tři vedle sebe, šestá buňka je poznámka o Mamafoodu), všechny karty stejně vysoké; na mobilu pod sebou.
+- **Dny v mřížce** na desktopu (tři vedle sebe), všechny karty stejně vysoké; na mobilu pod sebou.
 - **Chod jako popisek nad jídlem** (bez verzálek), porce bez alergenu jako štítky pod jídlem.
 - **Tečky pryč:** „5 porcí bez mléka" místo „bez mléka · 5 porcí" (i na přehledu kuchyně),
   dnešek štítkem „dnes", toast „Uloženo: svačiny Jaata, obědy pro všechny".
@@ -2168,3 +2168,5 @@ A karty dnů (výchozí), B **tabulka** chod × den (na mobilu přepínač Po–
 C **dnes nahoře** (ostatní dny jako rozbalovací řádky s hlavním jídlem a počtem jídel s alergeny),
 D **po chodech** (karta na chod a v ní pět dnů – svačinářka vidí svačiny týdne pod sebou).
 Úpravy jídelníčku jsou ve všech variantách v kartách (A). Po rozhodnutí zůstane jedna.
+
+Poznámka pod jídelníčkem („Obědy dodává Mamafood… počítá se z karet dětí") smazána – designérka 28. 10. 2026.

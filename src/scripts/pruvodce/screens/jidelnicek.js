@@ -74,7 +74,7 @@ function jidHlavicka(){
 }
 /* Varianta „karty" (výchozí): dny jako karty – na mobilu pod sebou, na desktopu v mřížce vedle sebe
    (dřív pět karet přes celou šířku, jídlo v dlouhém řádku a popisky chodů různě široké). */
-function jidKarty(t,jinaSkolka,pozn){
+function jidKarty(t,jinaSkolka){
   let h=`<div class="jid-tyden">`;
   t.dny.forEach((den,i)=>{
     const d=t.od+i, dnes=jidJeDnes(t,i);
@@ -89,8 +89,7 @@ function jidKarty(t,jinaSkolka,pozn){
     });
     h+=`</div>`;
   });
-  // poznámka o dodavateli jako šestá buňka – na desktopu vyplní volné místo vedle pátku
-  return h+pozn+`</div>`;
+  return h+`</div>`;
 }
 /* Jeden chod: popisek nad jídlem, porce bez alergenu jako štítky pod ním (vedle textu si štítek
    ukousl šířku a název se lámal). bezPopisku = chod nese řádek/sloupec (tabulka, po chodech). */
@@ -167,10 +166,9 @@ function renderJidelnicek(){
   // kuchyň Děti nevidí – alergie na výdej má na svém přehledu
   h+=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
     :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
-  const pozn=`<div class="note2 jid-pozn">Obědy dodává Mamafood – jsou společné pro všechny školky. Svačiny chystá každá školka sama, proto má každá vlastní.${jinaSkolka?' V prototypu má děti (a tedy porce bez alergenu) jen Vhaaji.':' U jídla je vidět, kolik porcí musí být bez kterého alergenu – počítá se z karet dětí.'}</div>`;
   // úpravy jsou vždy v kartách – varianty jsou jen pro čtení
-  if(jidEdit||JID_VAR==='karty')h+=jidKarty(t,jinaSkolka,pozn);
-  else h+=(JID_VAR==='tabulka'?jidTabulka:JID_VAR==='dnes'?jidDnes:jidChody)(t,jinaSkolka)+pozn;
+  if(jidEdit||JID_VAR==='karty')h+=jidKarty(t,jinaSkolka);
+  else h+=(JID_VAR==='tabulka'?jidTabulka:JID_VAR==='dnes'?jidDnes:jidChody)(t,jinaSkolka);
   return h+`</div>`;
 }
 window.jidEditOn=()=>{jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
