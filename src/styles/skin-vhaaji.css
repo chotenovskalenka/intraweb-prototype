@@ -190,3 +190,17 @@ body{font-family:var(--font-sans)}
   .doch-counts .c-cap{display:none}
   .doch-today>.doch-counts .tab{flex:1;min-width:0}
 }
+
+/* ---------- Horní lišta bez role, datum nahoře vedle Menu (28. 10. 2026) ---------- */
+/* Kdo je přihlášený a v jaké roli, je v patě menu – v liště to zabíralo místo datu. */
+#rolechip{display:none}
+@media (max-width:899px){
+  /* Přehled: datum v prvním řádku vedle Menu, řádky dne pod ním přes celou šířku,
+     ptáček vpravo vedle řádků. .dashhead a .c-head se rozpustí do mřížky lišty. */
+  .topbar:has(.c-head){display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;align-items:center}
+  .topbar:has(.c-head)>.dashhead,.topbar:has(.c-head) .c-head{display:contents}
+  .topbar:has(.c-head)>.ttl{display:none}
+  .c-head .dh-t{grid-column:2;grid-row:1;margin:0}
+  .c-head .c-lines{grid-column:1/-1;grid-row:2;margin-top:14px}
+  .c-head .c-bird{top:58px}
+}

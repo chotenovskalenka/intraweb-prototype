@@ -34,6 +34,8 @@ let section='prehled', drawerOpen=false, wquery='';
    Pro testování se role bere z URL (?role=vedouci) – respondent si ji nemá jak přepnout.
    Bez parametru je štítek v topbaru přepínač, aby šly stavy ukázat při moderaci. */
 const ROLE_LABEL={pruvodce:'Průvodce',vedouci:'Průvodce · vedoucí',hospodarka:'Průvodce · hospodářka',kuchyn:'Kuchyň'};
+/* Role česky pod jménem v patě menu (v horní liště ji designérka zrušila, 28. 10. 2026). */
+const ROLE_POPIS={pruvodce:'průvodce',vedouci:'vedoucí průvodce',hospodarka:'průvodce a hospodářka',kuchyn:'kuchyň'};
 const ROLE_URL=(new URLSearchParams(location.search).get('role')||'').toLowerCase();
 const ROLE_PINNED=Object.prototype.hasOwnProperty.call(ROLE_LABEL,ROLE_URL);
 let role=ROLE_PINNED?ROLE_URL:'hospodarka';
@@ -64,7 +66,9 @@ function renderDrawer(){
   document.getElementById('scrim').classList.toggle('on',drawerOpen);
   d.innerHTML=`<div class="dh"><img class="brand-mark" src="${VHAAJI_LOGO}" alt=""><span class="brand-txt">IS Vhaaji</span><button class="dclose" onclick="closeDrawer()" aria-label="Zavřít menu">✕</button></div>`+SECTIONS.filter(s=>sekceVidi(s[0])).map(s=>`<button class="ditem ${section===s[0]?'on':''}" onclick="go('${s[0]}')"><span class="ic">${icon(s[0])||s[2]}</span>${s[1]}</button>`).join('')
     // pata menu jako v rodičovské appce: kdo je přihlášený (→ profil s výkazem) a odhlášení (P6)
-    +`<div class="dfoot"><button class="ditem ${section==='mujprofil'?'on':''}" onclick="go('mujprofil')"><span class="dfoot-acc">${ja().n} ${ja().sur}<small>${role==='kuchyn'?'Můj profil':'Můj profil · výkaz hodin'}</small></span></button>`
+    // pod jménem role – horní lišta ji už neukazuje; přepínač role jen v prototypu bez ?role=
+    +`<div class="dfoot"><button class="ditem ${section==='mujprofil'?'on':''}" onclick="go('mujprofil')"><span class="dfoot-acc">${ja().n} ${ja().sur}<small>${ROLE_POPIS[role]}</small></span></button>`
+    +(ROLE_PINNED?'':`<button class="ditem" onclick="togHosp()"><span class="ic">⇄</span>Přepnout roli (prototyp)</button>`)
     +`<button class="ditem" onclick="showToast('Odhlášení – jen náhled, v prototypu nefunguje')"><span class="ic">${icon('odhlasit')||'⏻'}</span>Odhlásit se</button></div>`;
 }
 function render(){
@@ -78,9 +82,8 @@ function render(){
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';
   const rc=document.getElementById('rolechip');
-  /* Přihlášený člověk jako avatar + jméno + role – samotný štítek „Průvodce · vedoucí"
-     se nečetl jako role (ladění C, 27. 10. 2026). Klepnutím se v prototypu dál přepíná role. */
-  const ROLE_POPIS={pruvodce:'průvodce',vedouci:'vedoucí průvodce',hospodarka:'průvodce a hospodářka',kuchyn:'kuchyň'};
+  /* Přihlášený člověk jako avatar + jméno + role. Skin Vhaaji štítek skrývá (role je v patě
+     menu); bez skinu zůstává a klepnutím se v prototypu přepíná role. */
   if(rc){rc.classList.add('c-who');rc.innerHTML=`<span class="c-av" aria-hidden="true">${ja().n.charAt(0)}</span><span><span class="c-nm">${ja().n}</span><span class="c-rl">${ROLE_POPIS[role]}</span></span>`;
     rc.classList.toggle('role-ro',role==='pruvodce');
     rc.disabled=ROLE_PINNED;rc.title=ROLE_PINNED?'Role je daná odkazem':'Přepnout roli (prototyp)';}

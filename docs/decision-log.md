@@ -2003,3 +2003,10 @@ proto se převádí jako první.
   samotný typ uvozuje text dvojtečkou („Jiné: Dobrý den…"), za údajem začíná text větou
   („Přijdeme později – 9:30. Jdeme na kontrolu…").
 - Týdenní tabulka zůstává pracovní plochou s linkami (viz výše).
+
+## Horní lišta bez role, datum nahoře (28. 10. 2026)
+
+**Rozhodnutí designérky:** blok „Táňa / vedoucí průvodce" v horní liště zrušit – kdo je přihlášený,
+je v patě menu. Role je teď v menu pod jménem (místo „Můj profil · výkaz hodin"). Na mobilu je
+datum přehledu v prvním řádku vedle Menu, řádky dne pod ním. Přepínač role pro moderaci testů
+(bez `?role=`) se přesunul do menu jako „Přepnout roli (prototyp)".
