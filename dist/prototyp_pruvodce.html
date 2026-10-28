@@ -843,7 +843,7 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .rozh-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
 .rozh-top .zsdil{margin:-12px 0}   /* dotykový cíl zůstává 44 px, řádek se nenafoukne */
 .rozh-chybi{margin-top:4px;font-size:var(--text-note);color:var(--state-warn-ink)}
-.jid-kdo{margin:0 0 var(--space-md);border-top:none;padding-top:0}
+.jid-kdo{margin:4px 0 var(--space-md);border-top:none;padding-top:0}
 /* Den jídelníčku: chod jako popisek nad jídlem (dřív vlevo – různě široké popisky rozhodily
    začátek jídla), porce bez alergenu jako štítky pod jídlem. Na desktopu dny v mřížce. */
 .jid-chod{padding:9px 0;border-top:1px solid var(--color-border)}
@@ -4047,11 +4047,12 @@ function renderJidelnicek(){
   const t=tydenSkolky(jidTyden), jinaSkolka=jidSkolka!=='vhaaji';
   let h=`<div class="doch jid">`;
   if(role==='kuchyn')h+=`<div class="filters jid-sk">`+JID_SKOLKY.map(([k,l])=>`<button class="${jidSkolka===k?'on':''}" onclick="setJidSkolka('${k}')" aria-pressed="${jidSkolka===k}">${l}</button>`).join('')+`</div>`;
+  // úpravy celého týdne v kartách, čtení po dnech
+  h+=jidEdit?jidKarty(t,jinaSkolka):jidDenPoDni(t,jinaSkolka);
+  // odkaz na alergie až pod jídlem – není to to hlavní (designérka 28. 10. 2026);
   // kuchyň Děti nevidí – alergie na výdej má na svém přehledu
   h+=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
     :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
-  // úpravy celého týdne v kartách, čtení po dnech
-  h+=jidEdit?jidKarty(t,jinaSkolka):jidDenPoDni(t,jinaSkolka);
   return h+`</div>`;
 }
 window.jidEditOn=()=>{jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};

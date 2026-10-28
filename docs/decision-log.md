@@ -2188,3 +2188,5 @@ není – skutečné časy svačin a oběda v datech nejsou a vymýšlet je nech
 výchozí dnešek, nadpis karty podle dne („Dnes se jí", „Zítra", „Bylo", „V plánu"); proběhlé dny
 v pásu tlumeně. V jiném týdnu se otevře pondělí. Úpravy týdne zůstávají v kartách dnů.
 Dnes nahoře, dnes a zítra, dlaždice, parametr `?jdv=` i srovnávací stránka jsou pryč.
+
+Odkaz „Kdo má jakou alergii" je až pod jídlem dne, ne nad pásem dnů – není to to hlavní (designérka 28. 10. 2026).
