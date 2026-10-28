@@ -2228,3 +2228,5 @@ Vzkazy od rodičů, Dnes nepřijdou, „zatím bez omluvy" / „omluva od rodič
 Celý plán týdne, Chybí doplnit, Celý rozpis. Nadpisy „Básnička a písnička týdne" a „Průvodci dnes"
 zůstávají (designérka: „Do kruhu" ne, „ve službě" zní divně). U jídla průvodce vidí děti („bez mléka: 5 dětí"), kuchyň dál porce. Popisky skupin bez verzálek.
 Neověřeno: jestli průvodci u jídla chtějí počet, nebo jména.
+
+Třídnice na přehledu: nadpis „Třídnici dnes píše Honza" místo „Třídnice" + samostatného řádku „Dnes píše Honza" (designérka 28. 10. 2026).

@@ -2624,7 +2624,7 @@ function renderPrehled(){
      tři + „a další", pak kdo píše dnes. Bez štítků „rozepsáno N z 8" – „Chybí: …" řekne víc. */
   const nedopl=[];{let k=TR_DNES;for(let i=0;i<15;i++){k=trPredchozi(k);if(!k)break;const st=trStav(k).k;if(st==='rozepsano'||st==='chybi')nedopl.push(k);}}
   const vcera=trPredchozi(TR_DNES);
-  let blkTridnice=`<div class="tile has-kresba t-tri">${kresba('tridnice','kresba-k')}<div class="ch">Třídnice</div>`;
+  let blkTridnice=`<div class="tile has-kresba t-tri">${kresba('tridnice','kresba-k')}<div class="ch">Třídnici dnes píše ${TR_ZAPISUJE[trInfo(TR_DNES).dow]}</div>`;   // kdo píše rovnou v nadpisu (designérka 28. 10. 2026)
   if(nedopl.length){
     blkTridnice+=`<div class="tr-dash-cap">Chybí doplnit</div>`;
     nedopl.slice(0,3).forEach(k=>{const ch=trChybi(k);
@@ -2632,7 +2632,6 @@ function renderPrehled(){
         +`<span class="tr-dash-c">${trStav(k).k==='chybi'?'Chybí celý zápis':'Chybí: '+ch.join(', ')}</span>`+`</button>`;});
     if(nedopl.length>3)blkTridnice+=`<div class="tr-dash-dalsi">a další ${nedopl.length-3} ›</div>`;
   }else blkTridnice+=`<div class="tr-dash-dalsi">Všechny zápisy jsou hotové.</div>`;
-  blkTridnice+=`<button class="tr-dash today" onclick="trOtevrit(${TR_DNES})"><span class="tr-dash-d">Dnes píše ${TR_ZAPISUJE[trInfo(TR_DNES).dow]}</span></button>`;
   blkTridnice+=`<button class="cardlink" onclick="trOtevrit(${TR_DNES})">Otevřít třídnici →</button></div>`;
 
   // básnička celá (do ranního kruhu), písnička jen prvním veršem – celá je v tématickém plánu
