@@ -2175,3 +2175,11 @@ Poznámka pod jídelníčkem („Obědy dodává Mamafood… počítá se z kare
 Dnešní jídla celá nahoře, ostatní dny jako rozbalovací řádky (hlavní jídlo, „alergeny (N)"),
 proběhlé dny šedě; v týdnu bez dneška jsou všechny dny řádky. Úpravy týdne zůstávají v kartách
 dnů. Tabulka, po chodech, parametr `?jdv=` a `docs/jidelnicek-varianty.html` jsou pryč.
+
+## Jídelníček: další varianty s dneškem v popředí (28. 10. 2026)
+
+Designérka chce další varianty „dnes nahoře". V URL `?jdv=` (srovnání: `docs/jidelnicek-varianty.html`):
+A dnes nahoře (výchozí), B **den po dni** (pás pěti dnů, pod ním jeden den, výchozí dnešek),
+C **dnes a zítra** (dvě celé karty, na desktopu vedle sebe, zbytek týdne v řádcích),
+D **dlaždice** (dnešní chody jako barevné skvrny jako na přehledu). Časová osa dne podle hodin
+není – skutečné časy svačin a oběda v datech nejsou a vymýšlet je nechceme.
