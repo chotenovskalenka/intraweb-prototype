@@ -2232,3 +2232,5 @@ Neověřeno: jestli průvodci u jídla chtějí počet, nebo jména.
 Třídnice na přehledu: nadpis „Třídnici píše Honza" místo „Třídnice" + samostatného řádku „Dnes píše Honza" (designérka 28. 10. 2026).
 
 Karta jídla na přehledu: „Co je dnes k jídlu" místo „Dnes se jí" (designérka 28. 10. 2026 – zkusit jinak).
+
+**Bez „dnes" v nadpisech (28. 10. 2026):** přehled je celý o dnešku a datum je nahoře – „dnes" se opakovalo. Nadpisy: Děti, Vzkazy od rodičů, Nepřijdou, Akce / Probíhá, K jídlu, Kdo je tu, Třídnici píše Honza. „Dnes je Pohyb" v hlavičce zůstává.

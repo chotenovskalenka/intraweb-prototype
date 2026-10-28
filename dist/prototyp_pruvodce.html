@@ -2564,7 +2564,7 @@ function renderPrehled(){
      stav docházky (P2 z testování), proto je dlaždice čárkovaná a po klepnutí ukáže jména. */
   const spici=data.filter(x=>inTab(x,'spi'));
   const dl=(cls,n,lab,click,extra='')=>`<button class="c-tile ${cls}" onclick="${click}" ${extra}><span class="num">${n}</span><span class="lab">${lab}</span></button>`;
-  let blkDochazka=`<div class="tile"><div class="ch">Děti dnes</div><div class="c-counts">`
+  let blkDochazka=`<div class="tile"><div class="ch">Děti</div><div class="c-counts">`
     +dl('t-pri',c.pres,'Přítomni',"goDochTab('rano')")
     +dl('t-abs'+(c.neprit?'':' zero'),c.neprit,'Absence',"goDochTab('neprit')")
     +`<div class="c-cap">Z nich</div>`
@@ -2572,7 +2572,7 @@ function renderPrehled(){
     +dl('t-odp',c.odpoledni,'Odpolední',"goDochTab('odpoledni')")
     +(utery?dl('t-cel',data.filter(x=>inTab(x,'celodenni')).length,'Celodenní',"goDochTab('celodenni')"):'')
     +dl('t-spi','☾ '+spici.length,'Odpoledne spí','spiToggle()',`aria-expanded="${spiOtevreno}" aria-controls="spi-list"`)
-    +(spiOtevreno?`<div class="c-spi-list" id="spi-list">${spici.map(x=>`<span>${kratke(x)}</span>`).join('')||'<span>Dnes odpoledne nikdo nespí.</span>'}</div>`:'')
+    +(spiOtevreno?`<div class="c-spi-list" id="spi-list">${spici.map(x=>`<span>${kratke(x)}</span>`).join('')||'<span>Odpoledne nikdo nespí.</span>'}</div>`:'')
     +`</div><button class="addbig" onclick="go('dochazka')">${smiZapisovat()?'Zapsat docházku':'Zobrazit docházku'} →</button></div>`;
 
   /* Vzkazy od rodičů na dnešek, od nejnovějšího. Typ vzkazu tučně na začátku – vyzvednutí
@@ -2604,7 +2604,7 @@ function renderPrehled(){
   const absent=data.filter(x=>x.status!=='pritomen');
   const otevrene=x=>!x.parentExcuse&&!x.guideExcuse&&x.status!=='omluveno';
   absent.sort((a,b)=>otevrene(b)-otevrene(a));
-  let blkNeprijde=`<div class="tile"><div class="ch">Dnes nepřijdou</div><div class="dash-scroll">`;
+  let blkNeprijde=`<div class="tile"><div class="ch">Nepřijdou</div><div class="dash-scroll">`;
   if(absent.length){
     absent.forEach(x=>{
       // z pohledu průvodce: kdo o absenci ví; „zatím bez omluvy" zní jako úkol (zjistit), ne jako přestupek
@@ -2616,7 +2616,7 @@ function renderPrehled(){
         +(det?`<span class="pa-pozn">${det}</span>`:'')+`</button>`;
     });
   }else{
-    blkNeprijde+=`<div class="empty" style="padding:6px">Dnes dorazí všichni. Všichni jsme Vhaaji.</div>`;
+    blkNeprijde+=`<div class="empty" style="padding:6px">Dorazí všichni. Všichni jsme Vhaaji.</div>`;
   }
   blkNeprijde+=`</div></div>`;
 
@@ -2650,7 +2650,7 @@ function renderPrehled(){
   let blkAkce='';
   {const akToday=[...AKCE].filter(a=>a.day<=TODAYD&&(a.dayEnd?a.dayEnd>=TODAYD:a.day===TODAYD)).sort((a,b)=>a.day-b.day);
    if(akToday.length){
-     blkAkce=`<div class="tile has-kresba t-akc">${kresba('akce','kresba-k')}<div class="ch">${akToday.some(a=>a.dayEnd)?'Probíhá':'Dnes je akce'}</div>`;
+     blkAkce=`<div class="tile has-kresba t-akc">${kresba('akce','kresba-k')}<div class="ch">${akToday.some(a=>a.dayEnd)?'Probíhá':'Akce'}</div>`;
      akToday.forEach(a=>{const m=[a.time,a.place].filter(Boolean).join(', ');blkAkce+=`<button class="acard" onclick="openAkceDetail('${a.id}')"><span class="adate">${dayLbl(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span></button>`;});
      blkAkce+=`<button class="cardlink" onclick="go('akce')">Všechny akce →</button></div>`;
    }}
@@ -2659,17 +2659,18 @@ function renderPrehled(){
   let blkJidlo='';
   {const den=jidelnicekDen(TODAYD,6);
    if(den&&den.some(it=>it[1])){
-     blkJidlo=`<div class="tile t-jid"><div class="ch">Co je dnes k jídlu</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
+     blkJidlo=`<div class="tile t-jid"><div class="ch">K jídlu</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
        +`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček →</button></div>`;
    }}
 
+  // „dnes" je jen v hlavičce u data – v nadpisech karet se opakovalo (designérka 28. 10. 2026)
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) a kdo uspává, drobně pod jménem
-  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Dnes jsme tu</div>`;
+  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Kdo je tu</div>`;
   if(todays.length){
     // role pod jménem drobně, čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" a ☾ lámaly do času
     todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');
       blkPruvodci+=`<div class="np"><span class="np-n">${x.g.n}${role?`<span class="np-r">${role}</span>`:''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
-  }else{blkPruvodci+=`<div class="empty" style="padding:6px">Dnes nikdo nemá službu.</div>`;}
+  }else{blkPruvodci+=`<div class="empty" style="padding:6px">Nikdo nemá službu.</div>`;}
   blkPruvodci+=`<button class="cardlink" onclick="go('pruvodci')">Celý rozpis →</button></div>`;
 
   /* Ranní trojice: na mobilu tři karty pod sebou, na desktopu jedna plocha přes celou šířku
