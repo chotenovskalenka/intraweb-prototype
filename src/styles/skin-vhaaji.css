@@ -181,11 +181,12 @@ body{font-family:var(--font-sans)}
 .rnote{border-radius:12px}
 .chk{border-radius:10px}
 .chk.on{background:var(--color-primary-strong);border-color:var(--color-primary-strong)}
-/* režim docházky ve stejných barvách jako dlaždice: dopolední modrá, odpolední okrová */
+/* režim docházky ve stejných barvách jako dlaždice: dopolední modrá, odpolední okrová, celodenní světle okrová, absence růžová */
 .pill{border-radius:var(--radius-full);padding:2px 9px}
 .p-dop{background:var(--tint-blue);color:var(--color-info)}
 .p-odp{background:var(--tint-ochre);color:var(--color-accent-ink)}
-.p-cel{background:var(--tint-green);color:var(--color-primary-strong)}
+.p-cel{background:var(--soft-accent);color:var(--color-accent-ink)}
+.p-abs{background:var(--tint-rose);color:var(--state-danger-ink)}
 @media (min-width:900px){
   .doch-counts .c-cap{display:none}
   .doch-today>.doch-counts .tab{flex:1;min-width:0}
@@ -235,16 +236,6 @@ body{font-family:var(--font-sans)}
 .doch-filtry{display:flex;flex-direction:column;gap:8px;margin:6px 0 10px}
 .doch-filtry .dsez{margin:0}
 .doch-filtry .search{margin:0}
-/* Spaní a další stav dítěte jako štítek – stejný tvar jako režim docházky, ale bez výplně
-   (není to stav docházky). Spí čárkovaně jako dlaždice Spí; „nespí" bez okrové, nebylo to varování.
-   Obrys jen na desktopu – na mobilu by ubral místo jménu. */
-.rmain .ind.sleep,.rmain .ind.awake{color:var(--color-text-muted)}
-@media (min-width:900px){
-  .rmain .ind{padding:2px 9px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);font-size:var(--text-chip)}
-  .rmain .ind.sleep{border-style:dashed}
-  .rmain .ind.off{border-color:var(--edge-danger)}
-}
-.r-vzkaz{display:none}
 .doch-aside{display:none}
 /* panel vedle soupisu */
 .doch-panel>.ch{margin-bottom:6px}
@@ -269,23 +260,26 @@ body{font-family:var(--font-sans)}
   .doch-aside>.tile{margin:0}
   /* zaškrtávátko hned u jména, ne na druhém konci řádku */
   .doch-main .rmain>.chk{order:-1;margin-left:0}
-  /* poznámky jsou v panelu – v soupisu zůstane jen štítek „vzkaz" */
   .doch-main .rosterbox .rnote{display:none}
   .doch-main .rosterbox .row.open .rnote{display:block;margin:0 12px 10px}
-  .r-vzkaz{display:inline-block;padding:2px 9px;border-radius:var(--radius-full);border:1px solid var(--edge-primary);color:var(--color-primary-strong);font-size:var(--text-chip);font-weight:600;flex-shrink:0}
   .doch-main>.doch-mealsfoot{display:none}
 }
-/* listování dny bez poskakování: datum má pevnou šířku (šipky zůstanou pod kurzorem)
-   a jiný den má stejnou kostru jako dnešek – panel se souhrnem dne je vidět i na mobilu, nad soupisem */
+/* listování dny bez poskakování: datum má pevnou šířku (šipky zůstanou pod kurzorem) */
 .dfield .dnav span{min-width:104px;text-align:center}
 @media (min-width:900px){.dfield .dnav span{min-width:118px}}
-.doch-jiny .doch-aside{display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
-.doch-jiny .doch-aside>*{margin:0}
-@media (min-width:900px){
-  .doch-jiny .doch-aside{margin-bottom:0}
-}
-@media (max-width:899px){
-  .doch-jiny .doch-body{display:flex;flex-direction:column}
-  .doch-jiny .doch-aside{order:-1}
-}
 .specbar{border:none;border-radius:var(--radius-card);background:var(--tint-ochre)}
+
+/* ---------- Docházka: jeden řádek pro každý den (28. 10. 2026) ---------- */
+/* doplněk k režimu (spí, na výpravě) – šedý text, ne štítek */
+.r-dopl{font-size:var(--text-note);color:var(--color-text-muted);flex-shrink:0;white-space:nowrap}
+/* den, který role nesmí měnit: stav je vidět, klepnout nejde */
+.chk.ro{opacity:.45;cursor:default}
+.row.absent .p-abs{text-decoration:none}
+/* tečka vzkazu u jména (desktop – na mobilu je vzkaz rovnou pod řádkem) */
+.r-tecka{display:none}
+.doch-spec-m>.specbar{margin:0 0 10px}
+@media (min-width:900px){
+  .r-tecka{display:inline-block;flex:none;width:9px;height:9px;border-radius:50%;background:var(--color-primary);margin-left:-2px}
+  .doch-spec-m{display:none}
+  .doch-aside>.specbar{margin:0}
+}

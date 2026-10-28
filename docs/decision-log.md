@@ -2038,3 +2038,21 @@ podle textu („St 3. 6. (dnes)" je o 43 px širší než „Čt 4. 6.") a šipk
 jiný den měl zrcadlové rozložení (souhrn vlevo, soupis vpravo) proti dnešku (soupis vlevo,
 panel vpravo). Teď má datum pevnou šířku a jiný den stejnou kostru – soupis vlevo stejně široký,
 zvláštní den a počet přítomných v panelu vpravo (na mobilu nad soupisem).
+
+## Docházka: jedna kostra pro každý den (28. 10. 2026)
+
+**Proč:** druhá UX revize (ui-ux-pro-max) – každý den byl jiná obrazovka. Dnešek měl dlaždice,
+filtry, zaškrtávátka a štítek plánu u jména; jiný den nic z toho a kód dne vpravo. Stejné dítě
+tak bylo dnes „celodenní" a zítra „odpolední" (plán × kód dne – zmatek z testování P2) a barvy
+štítků se lišily. Řádek dneška navíc nesl až čtyři podobné pilulky.
+
+**Rozhodnutí designérky:**
+- **každý den** má dlaždice s počty (filtry), seznam + hledání, soupis vlevo a panel vpravo;
+  počty jiného dne se berou z kódu dne (`inTabD`), Spí podle zvyku spát u odpoledních/celodenních;
+- **stejný řádek**: dítě, tečka vzkazu, **jeden štítek režimu podle kódu dne** (barva jeho
+  dlaždice; omluveno / absence růžově), šedý doplněk „spí" nebo „na výpravě", zaškrtávátko.
+  Den, který role nesmí měnit, má zaškrtávátko neaktivní – stav je vidět, klepnout nejde.
+  Vedoucí v jiný den zaškrtávátkem přepíná přítomen ↔ absence, klepnutím na řádek volí kód;
+- „po obědě domů" a „nespí" zmizely (říká to „dopolední", resp. je to výchozí stav);
+- **vzkaz jako tečka** u jména (desktop; text je v panelu „Dnes k řešení", na mobilu pod řádkem);
+- panel: dnes „Dnes k řešení", jiný den zvláštní den; vždy „Porce pro kuchyň" toho dne.

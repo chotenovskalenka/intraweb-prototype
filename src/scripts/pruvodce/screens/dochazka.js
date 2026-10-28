@@ -34,19 +34,27 @@ const CTX={rano:['Kdo dnes přišel',''],
   odpoledni:['Odpolední docházka','Tyhle děti zůstávají i odpoledne (do 15:00).'],
   neprit:['Absence','']};
 function counts(){const o={};TABS_BY().forEach(([k])=>o[k]=data.filter(c=>inTab(c,k)).length);o.pres=data.filter(here).length;return o;}
-function planPill(c){return c.plan==='celodenní'?'<span class="pill p-cel">celodenní</span>':c.plan==='dopolední'?'<span class="pill p-dop">dopolední</span>':'<span class="pill p-odp">odpolední</span>';}
+/* Jeden štítek režimu na řádek, vždy podle KÓDU DNE (ne přihlášeného plánu): celodenní plán je
+   mimo úterý odpolední docházka. Dřív dnešek ukazoval plán („celodenní") a jiný den kód
+   („odpolední") – stejné dítě tak měnilo režim podle toho, který den se zrovna listoval.
+   Barvy jako dlaždice: dopolední modrá, odpolední okrová, celodenní světle okrová, absence růžová. */
+function rezimPill(c,d){
+  const k=getCode(c,d);
+  if(k==='C')return '<span class="pill p-cel">celodenní</span>';
+  if(k==='D')return '<span class="pill p-dop">dopolední</span>';
+  if(k==='O')return '<span class="pill p-odp">odpolední</span>';
+  if(k==='OM')return '<span class="pill p-abs">omluveno</span>';
+  return `<span class="pill p-abs">${d===TODAYD&&c.status==='neomluveno'?'nepřišlo':'absence'}</span>`;
+}
 function cellMark(code){if(!code)return '<span class="wc c-N">N</span>';if(code==='OM')return '<span class="bdg al" style="font-size:9px">om</span>';return `<span class="wc c-${code}">${code}</span>`;}
 function codeLabel(code){const M={C:['celodenní',CODES.C[1]],D:['dopolední',CODES.D[1]],O:['odpolední',CODES.O[1]],OM:['omluveno',CODES.OM[1]]};const m=M[code];return m?`<span style="color:${m[1]}">${m[0]}</span>`:'<span style="color:var(--color-text-hint)">absence</span>';}
-/* Stav dítěte (spí / omluveno / na výpravě…). Sedí hned za chipem docházky – u pravého
-   okraje vedle zaškrtávátka to čtlo, jako by se odškrtávalo zrovna „spí" nebo „omluveno".
-   Proto ind-inline: ruší margin-left:auto, kterým se .ind jinde tlačí doprava. */
-function indicator(c,vpravo){
-  const cls='ind'+(vpravo?'':' ind-inline');
-  if(here(c)&&onTrip(c))return`<span class="${cls} awake" style="color:var(--color-accent-ink)">na výpravě</span>`;
-  if(c.status==='omluveno')return`<span class="${cls} off">omluveno</span>`;
-  if(c.status==='neomluveno')return`<span class="${cls} off">nepřišlo</span>`;
-  if(c.plan==='dopolední')return`<span class="${cls}">po obědě domů</span>`;
-  return c.spi?`<span class="${cls} sleep">spí</span>`:`<span class="${cls} awake">nespí</span>`;
+/* Doplněk k režimu jako obyčejný šedý text, ne další štítek: „spí" (odpoledne v maringotce)
+   a dnes „na výpravě". Omluveno/nepřišlo nese štítek režimu, „po obědě domů" říká už „dopolední"
+   a „nespí" je výchozí stav – řádek je tak čitelný jedním pohledem. */
+function doplnek(c,d){
+  if(d===TODAYD&&here(c)&&onTrip(c))return '<span class="r-dopl">na výpravě</span>';
+  const k=getCode(c,d);
+  return (k==='O'||k==='C')&&c.spi?'<span class="r-dopl">spí</span>':'';
 }
 function editPanel(c,i){
   const seg=(arr,cur,fn)=>arr.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="${fn}(${i},'${o[0]}')">${o[1]}</button>`).join('');
@@ -93,30 +101,45 @@ function poznamkyDne(c){
   if(c.guideExcuse)h+=`<div class="rnote">${guideExcuseDetail(c)}</div>`;
   return h;
 }
-function rosterHTML(){
+/* Filtr dlaždic pro libovolný den. Dnešek bere živý stav (inTab), ostatní dny kód dne. */
+function inTabD(c,t,d){
+  if(d===TODAYD)return inTab(c,t);
+  const k=getCode(c,d),pr=!!k&&k!=='OM';
+  if(t==='rano')return pr;
+  if(t==='neprit')return !pr;
+  if(t==='poobede')return k==='D';
+  if(t==='odpoledni')return k==='O';
+  if(t==='celodenni')return k==='C';
+  if(t==='spi')return (k==='O'||k==='C')&&!!c.spi;
+  return pr;
+}
+const tabsDne=d=>d===TODAYD?TABS_BY():(wd(d)===1?[...TABS_BEZNY.slice(0,4),['celodenni','Celodenní'],TABS_BEZNY[4]]:TABS_BEZNY);
+/* Řádek dítěte je stejný každý den: zaškrtávátko, dítě, tečka vzkazu, jeden štítek režimu,
+   šedý doplněk. Den, který role nesmí měnit, má zaškrtávátko neaktivní (stav je vidět, nejde
+   klepnout). Dnešek rozbaluje řádek s úpravami, jiný den otevře volbu kódu (openCell). */
+function rosterHTML(d=denDay){
+  const dnes=d===TODAYD, zapis=denEditovatelny(d);
   let out='',shown=0;
-  // nahoru děti, u kterých je dnes co číst
-  const maPozn=c=>maPoznDnes(c)?0:1;
+  // nahoru děti, u kterých je dnes co číst; jinak abecedně – ať děti při listování nemění místo
+  const maPozn=c=>dnes&&maPoznDnes(c)?0:1;
   const lst=data.map((c,i)=>({c,i})).sort((a,b)=>{const an=maPozn(a.c),bn=maPozn(b.c);if(an!==bn)return an-bn;return byAlpha(a,b);});
   lst.forEach(({c,i})=>{
-    const match=(query?norm(full(c)).includes(norm(query)):inTab(c,tab))&&(dochSeznam==='all'||veSeznamu(c,i,dochSeznam));
+    const match=(query?norm(full(c)).includes(norm(query)):inTabD(c,tab,d))&&(dochSeznam==='all'||veSeznamu(c,i,dochSeznam));
     if(!match)return;shown++;
-    const noteLine=poznamkyDne(c);
-    // řadový průvodce docházku jen čte – žádné zaškrtávátko, řádek se nerozklikává (Z1)
-    const zapis=smiZapisovat();
-    /* Zapisující role má vpravo zaškrtávátko, stav tedy sedí hned za jménem. Role, která
-       docházku jen čte, zaškrtávátko nemá – stav jde na jeho místo doprava. Dřív tam navíc
-       viselo druhé slovo („absence"), které říkalo totéž co stav vedle jména. */
-    const chk=zapis
-      ? `<span class="chk ${here(c)?'on':''}" role="checkbox" aria-checked="${here(c)}" aria-label="${full(c)} je ve školce" title="${here(c)?'Je ve školce – odškrtnutím zapíšeš absenci':'Zapsáno jako absence – zaškrtnutím vrátíš do školky'}" onclick="event.stopPropagation();presence(${i})">${here(c)?'✓':''}</span>`
-      : '';
-    out+=`<div class="row${c.status!=='pritomen'?' absent':''}${open===i?' open':''}" id="r${i}"><div class="rmain"${zapis?` onclick="toggle(${i})"`:' style="cursor:default"'}>`+
-      `${avatar(c,30)}<span class="nm">${full(c)}</span>${planPill(c)}${indicator(c,!zapis)}${noteLine?'<span class="r-vzkaz">vzkaz</span>':''}`+
-      chk+`</div>`+
-      noteLine+
-      `<div class="edit" style="display:${open===i&&zapis?'block':'none'}">${open===i&&zapis?editPanel(c,i):''}</div></div>`;
+    const noteLine=dnes?poznamkyDne(c):'';
+    const k=getCode(c,d),pr=!!k&&k!=='OM';
+    const klik=!zapis?'':dnes?`toggle(${i})`:`openCell(${i},${d})`;
+    const chk=`<span class="chk${pr?' on':''}${zapis?'':' ro'}" role="checkbox" aria-checked="${pr}" aria-disabled="${!zapis}" aria-label="${full(c)} ${pr?'je':'není'} ve školce"`
+      +(zapis?` title="${pr?'Ve školce – odškrtnutím zapíšeš absenci':'Absence – zaškrtnutím vrátíš do školky'}" onclick="event.stopPropagation();${dnes?`presence(${i})`:`presenceD(${i},${d})`}"`:'')
+      +`>${pr?'✓':''}</span>`;
+    out+=`<div class="row${pr?'':' absent'}${dnes&&open===i?' open':''}" id="r${i}"><div class="rmain"${klik?` onclick="${klik}"`:' style="cursor:default"'}>`
+      +`${avatar(c,30)}<span class="nm">${full(c)}</span>`
+      +(noteLine?'<span class="r-tecka" role="img" aria-label="má vzkaz od rodiče" title="Vzkaz od rodiče"></span>':'')
+      +rezimPill(c,d)+doplnek(c,d)+chk+`</div>`
+      +noteLine
+      +(dnes?`<div class="edit" style="display:${open===i&&zapis?'block':'none'}">${open===i&&zapis?editPanel(c,i):''}</div>`:'')+`</div>`;
   });
-  if(!shown)out='<div class="empty">'+(tab==='neprit'?'Všichni dorazili. Všichni jsme Vhaaji.':(query?'Nic nenalezeno.':'Nic tu není.'))+'</div>';
+  if(!shown)out='<div class="empty">'+(tab==='neprit'?(dnes?'Všichni dorazili. Všichni jsme Vhaaji.':'Nikdo nechybí.'):(query?'Nic nenalezeno.':'Nic tu není.'))+'</div>';
   return out;
 }
 function renderDochazka(){
@@ -134,41 +157,51 @@ function renderDochNav(){
   else{label=`${DOW[wd(denDay)]} ${denDay}. 6.${denDay===TODAYD?' (dnes)':''}`;prev='stepDen(-1)';next='stepDen(1)';pdis=denDay<=1;ndis=denDay>=30;}
   return `<div class="dfield">${tog}<div class="dnav"><button onclick="${prev}" ${pdis?'disabled':''} aria-label="Předchozí">‹</button><span>${label}</span><button onclick="${next}" ${ndis?'disabled':''} aria-label="Další">›</button></div></div>`;
 }
-function renderDen(){return denDay===TODAYD?todayRoster():dayRoster(denDay);}
-function todayRoster(){
-  // počty na záložkách se počítají ze stejného výběru jako soupis (celá školka, nebo seznam)
-  const c=dochSeznam==='all'?counts():(()=>{const o={};const v=data.filter((x,i)=>veSeznamu(x,i,dochSeznam));
-    TABS_BY().forEach(([k])=>o[k]=v.filter(x=>inTab(x,k)).length);o.pres=v.filter(here).length;return o;})();
-  // počty (zároveň filtry) – vodorovná řada nad seznamem; listování dne je nahoře ve sloučeném poli
-  // dlaždice nesou barvu stavu (k-…) a rozpad přítomných uvozuje „Z přítomných" – stejně jako na přehledu
-  let side=`<div class="tabs wrap doch-counts">`+TABS_BY().map(([k,l])=>(mode==='bezny'&&k==='poobede'?'<div class="c-cap">Z přítomných</div>':'')
-    +`<div class="tab k-${k}${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}${k==='neprit'&&!c[k]?' zero':''}" role="button" aria-pressed="${tab===k}" onclick="setTab('${k}')"><div class="num">${c[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
-  // pod řadou: kontext + hledání + roster + souhrn jídel na plnou šířku
-  /* P4: seznam jako druhý filtr k záložce – „Absence" × „Předškoláci" odpoví na otázku
-     z testování, kdo z nepřítomných je předškolák. Počet přítomných se pak vztahuje k seznamu. */
+/* Jedna kostra pro každý den (sjednoceno 28. 10. 2026 po UX revizi): dlaždice s počty jako
+   filtry, seznam + hledání, soupis vlevo, panel vpravo. Mění se jen data a to, jestli jde den
+   měnit – dřív měl jiný den úplně jinou obrazovku (bez počtů, filtrů a zaškrtávátek). */
+function renderDen(){
+  const d=denDay,dnes=d===TODAYD,tabs=tabsDne(d);
+  if(!tabs.some(([k])=>k===tab))tab='rano';
+  // počty se počítají ze stejného výběru jako soupis (celá školka, nebo seznam)
   const vSez=data.map((x,i)=>({x,i})).filter(({x,i})=>dochSeznam==='all'||veSeznamu(x,i,dochSeznam));
-  const presS=vSez.filter(({x})=>here(x)).length;
-  let main=`<div class="ctxhead"><span class="t">${CTX[tab][0]}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` (${nazevSeznamu(dochSeznam).toLowerCase()})`}</span></div>`;
+  const cnt={};tabs.forEach(([k])=>cnt[k]=vSez.filter(({x})=>inTabD(x,k,d)).length);
+  const presS=vSez.filter(({x})=>{const k=getCode(x,d);return k&&k!=='OM';}).length;
+  // dlaždice nesou barvu stavu (k-…) a rozpad přítomných uvozuje „Z přítomných" – stejně jako na přehledu
+  const side=`<div class="tabs wrap doch-counts">`+tabs.map(([k,l])=>((!dnes||mode==='bezny')&&k==='poobede'?'<div class="c-cap">Z přítomných</div>':'')
+    +`<div class="tab k-${k}${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}${k==='neprit'&&!cnt[k]?' zero':''}" role="button" aria-pressed="${tab===k}" onclick="setTab('${k}')"><div class="num">${cnt[k]}</div><div class="lab">${l}</div></div>`).join('')+`</div>`;
+  const titul=tab==='rano'?(dnes?'Kdo dnes přišel':d<TODAYD?'Kdo přišel':'Kdo přijde'):CTX[tab][0];
+  let main=`<div class="ctxhead"><span class="t">${titul}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` (${nazevSeznamu(dochSeznam).toLowerCase()})`}</span></div>`;
+  /* P4: seznam jako druhý filtr k dlaždici – „Absence" × „Předškoláci" odpoví na otázku
+     z testování, kdo z nepřítomných je předškolák. */
   main+=`<div class="doch-filtry"><div class="dsez"><label class="pl" for="dsez">Seznam</label><select class="pin" id="dsez" onchange="setDochSeznam(this.value)">`
     +`<option value="all"${dochSeznam==='all'?' selected':''}>Všechny děti</option>`
-    +SEZNAMY.map(s=>`<option value="${s.id}"${dochSeznam===s.id?' selected':''}>${s.nazev}</option>`).join('')+`</select></div>`;
-  // vysvětlivku k záložce má jen zapisující role; roli samotnou nese odznak v topbaru
-  main+=`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)"></div>`;
-  {const tip=smiZapisovat()?(CTX[tab][1]||''):'';
-   if(tip)main+=`<div class="sectip">${tip}</div>`;}
-  main+=`<div class="rosterbox"><div id="roster">${rosterHTML()}</div></div>`;
-  /* Dřív „Obědy X · svačiny X" s počtem přítomných dětí – oběd ani odpolední svačina se tak
-     nepočítají. Teď týž výpočet jako přehled kuchyně (porceDne), za celou školku. */
-  const pk=porceDne(TODAYD);
+    +SEZNAMY.map(s=>`<option value="${s.id}"${dochSeznam===s.id?' selected':''}>${s.nazev}</option>`).join('')+`</select></div>`
+    +`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)"></div>`;
+  // vysvětlivka: dnes jen zapisující roli (k záložce), jiný den kdo ho smí měnit
+  const locked=!denEditovatelny(d),minuly=d<TODAYD;
+  const tip=dnes?(smiZapisovat()?(CTX[tab][1]||''):'')
+    :!smiZapisovat()?'Docházku zapisuje vedoucí průvodce – tady ji jen kontroluješ.'
+    :locked?(minuly?'Proběhlý den – jen ke čtení. Opravit ho může vedoucí průvodce.':'Budoucí den – jen ke čtení. Plánuje ho vedoucí průvodce.')
+    :(minuly?'Proběhlý den – jako vedoucí ho můžeš opravit.':'Budoucí den – jako vedoucí můžeš docházku naplánovat.');
+  if(tip)main+=`<div class="sectip">${tip}</div>`;
+  // zvláštní den na mobilu nad soupisem (na desktopu je v panelu)
+  const spec=specialBar(d);
+  if(spec)main+=`<div class="doch-spec-m">${spec}</div>`;
+  main+=`<div class="rosterbox"><div id="roster">${rosterHTML(d)}</div></div>`;
+  /* Porce stejným výpočtem jako přehled kuchyně (porceDne), za celou školku – pro libovolný den. */
+  const pk=porceDne(d);
   main+=`<div class="doch-mealsfoot"><span class="meals">Kuchyň: dop. svačina <b>${pk.dop}</b>, oběd <b>${pk.obed}</b>, odp. svačina <b>${pk.odpN}</b></span></div>`;
-  /* Desktop: vedle soupisu panel „Dnes k řešení" (co dnes přišlo od rodičů) a porce pro kuchyň.
-     Soupis tak zůstane úzký a rychle čitelný – poznámky v něm na desktopu nahrazuje štítek „vzkaz".
-     Klepnutí na dítě v panelu skočí na jeho řádek. Na mobilu je panel skrytý (poznámky jsou pod řádky). */
-  const sPozn=data.map((x,i)=>({x,i})).filter(({x})=>maPoznDnes(x));
-  const aside=`<div class="tile doch-panel"><div class="ch">Dnes k řešení${sPozn.length?`<span class="c-badge">${sPozn.length}</span>`:''}</div>`
-    +(sPozn.length?sPozn.map(({x,i})=>`<div class="dp-item"><button class="dp-who" onclick="dochUkaz(${i})">${avatar(x,24)}<span>${kratke(x)}</span><span class="dp-stav">${here(x)?'ve školce':'nepřijde'}</span></button>${poznamkyDne(x)}</div>`).join('')
-      :'<div class="dp-prazdno">Od rodičů dnes nic nepřišlo.</div>')+`</div>`
-    +`<div class="tile doch-panel"><div class="ch">Kuchyň dnes</div><div class="dp-porce"><div><b>${pk.dop}</b><span>dop. svačina</span></div><div><b>${pk.obed}</b><span>oběd</span></div><div><b>${pk.odpN}</b><span>odp. svačina</span></div></div></div>`;
+  /* Panel vpravo (desktop) má každý den stejné místo: dnes „Dnes k řešení" (co přišlo od rodičů),
+     jiný den zvláštní den, vždy porce pro kuchyň. Klepnutí na dítě v panelu skočí na jeho řádek.
+     Na mobilu je panel skrytý – poznámky jsou pod řádky a porce v patičce. */
+  let aside='';
+  if(dnes){const sPozn=data.map((x,i)=>({x,i})).filter(({x})=>maPoznDnes(x));
+    aside+=`<div class="tile doch-panel"><div class="ch">Dnes k řešení${sPozn.length?`<span class="c-badge">${sPozn.length}</span>`:''}</div>`
+      +(sPozn.length?sPozn.map(({x,i})=>`<div class="dp-item"><button class="dp-who" onclick="dochUkaz(${i})">${avatar(x,24)}<span>${kratke(x)}</span><span class="dp-stav">${here(x)?'ve školce':'nepřijde'}</span></button>${poznamkyDne(x)}</div>`).join('')
+        :'<div class="dp-prazdno">Od rodičů dnes nic nepřišlo.</div>')+`</div>`;}
+  aside+=spec;
+  aside+=`<div class="tile doch-panel"><div class="ch">Porce pro kuchyň</div><div class="dp-porce"><div><b>${pk.dop}</b><span>dop. svačina</span></div><div><b>${pk.obed}</b><span>oběd</span></div><div><b>${pk.odpN}</b><span>odp. svačina</span></div></div></div>`;
   return `<div class="doch-today">${side}<div class="doch-body"><div class="doch-main">${main}</div><aside class="doch-aside">${aside}</aside></div></div>`;
 }
 function specialBar(d){
@@ -178,22 +211,6 @@ function specialBar(d){
   const trip=c=>kind==='pred'?c.predskolak:c.lez;
   const vyp=pres.filter(trip).length, skl=pres.length-vyp;
   return `<div class="specbar"><div class="spectit">Zvláštní den: ${name}</div><div class="specnums"><span><b>${skl}</b> školka ráno</span><span><b>${vyp}</b> ${lab.toLowerCase()}</span><span><b>${pres.length}</b> oběd</span></div></div>`;
-}
-function dayRoster(d){
-  // dnešek zapisuje každý; proběhlý i budoucí den mění jen vedoucí průvodce
-  const locked=!denEditovatelny(d);
-  const jiny=d!==TODAYD&&smiJinyDen();
-  const minuly=d<TODAYD;
-  // panel vpravo: jen zvláštní den (výprava, horolezení); běžný den panel nemá
-  let side=specialBar(d);
-  // počet přítomných a stav dne nese nadpis soupisu a vysvětlivka – dřívější kartička „Přítomno" je opakovala
-  let main=`<div class="ctxhead"><span class="t">Docházka dne</span><span class="pres">přítomno <b>${presentCount(d)}</b> / ${data.length}</span></div>`;
-  main+=`<div class="sectip">${!smiZapisovat()?'Docházku zapisuje vedoucí průvodce – tady ji jen kontroluješ.':locked?(minuly?'Proběhlý den – jen ke čtení. Opravit ho může vedoucí průvodce.':'Budoucí den – jen ke čtení. Plánuje ho vedoucí průvodce.'):jiny?(minuly?'Proběhlý den – jako vedoucí ho můžeš opravit.':'Budoucí den – jako vedoucí můžeš docházku naplánovat.'):'Klepni na dítě a zapiš dnešní docházku.'}</div>`;
-  // abecedně jako dnešek – ať děti při listování dny nemění místo
-  main+=`<div class="rosterbox">`+data.map((c,i)=>({c,i})).sort(byAlpha).map(({c,i:ci})=>{const code=getCode(c,d);return `<div class="row"><div class="rmain" ${locked?'style="cursor:default"':`onclick="openCell(${ci},${d})"`}>${avatar(c,30)}<span class="nm">${full(c)}</span><span class="ind" style="margin-left:auto;font-weight:500">${codeLabel(code)}</span></div></div>`;}).join('')+`</div>`;
-  /* Stejná kostra jako dnešek (soupis vlevo, panel vpravo) – dřív byl souhrn vlevo a soupis
-     vpravo, takže při listování dny obsah přeskakoval na druhou stranu. Na mobilu je panel nad soupisem. */
-  return `<div class="doch-today doch-jiny"><div class="doch-body"><div class="doch-main">${main}</div>${side?`<aside class="doch-aside">${side}</aside>`:''}</div></div>`;
 }
 const dlegend=`<div class="legend"><span><b style="color:${CODES.C[1]}">C</b> celodenní</span><span><b style="color:${CODES.D[1]}">D</b> dopolední</span><span><b style="color:${CODES.O[1]}">O</b> odpolední</span><span><b style="color:${CODES.OM[1]}">om</b> omluveno</span><span><b style="color:${CODES.NE[1]}">N</b> absence</span></div>`;
 function renderTydenD(){
@@ -220,6 +237,9 @@ function renderDenRoster(d){
 }
 window.setDView=v=>{view=v;open=-1;query='';monthDay=-1;if(v==='den')denDay=TODAYD;if(v==='tyden')weekStart=1;render();};
 window.setTab=k=>{tab=k;open=-1;render();};
+// jiný den (jen vedoucí): zaškrtávátko přepíná přítomen podle plánu ↔ absence; jemnější volba je v openCell
+window.presenceD=(i,d)=>{if(!denEditovatelny(d))return;const c=data[i],k=getCode(c,d),pr=!!k&&k!=='OM';
+  c.att[d]=pr?'':baseCode(c,d);render();showToast(pr?`${full(c)} → absence`:`${full(c)} → ve školce`);};
 // z panelu „Dnes k řešení": přepne na záložku, kde dítě je, rozbalí ho (kdo zapisuje) a doroluje k němu
 window.dochUkaz=i=>{const c=data[i];query='';if(!inTab(c,tab))tab=here(c)?(mode==='bezny'?'rano':'skolka'):'neprit';
   open=smiZapisovat()?i:-1;render();const r=document.getElementById('r'+i);if(r)r.scrollIntoView({behavior:'smooth',block:'center'});};
