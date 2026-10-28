@@ -204,3 +204,9 @@ body{font-family:var(--font-sans)}
   .c-head .c-lines{grid-column:1/-1;grid-row:2;margin-top:14px}
   .c-head .c-bird{top:58px}
 }
+/* desktop: ptáček v pravém horním rohu celé obrazovky, ne lišty – a větší (28. 10. 2026).
+   Lišta a .scroll se na přehledu nepozicují, takže se kresba měří od .screen. */
+@media (min-width:900px){
+  .screen:has(.c-head) .scroll,.screen:has(.c-head) .scroll>.topbar{position:static}
+  .c-head .c-bird{right:28px;top:10px;width:clamp(170px,15vw,250px);z-index:2}
+}
