@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Třídnice – varianty zápisu dne</title>
+<link rel="stylesheet" href="../src/styles/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Srovnávací stránka: tři varianty zápisu dne v Třídnici vedle sebe, každá je živá appka
+     (src/pruvodce.html?trv=…). Dá se v nich psát, rozbalovat a listovat dny. */
+  body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:"Lexend",system-ui,sans-serif}
+  header{max-width:1280px;margin:0 auto;padding:28px 24px 8px}
+  h1{font-family:"Alegreya",Georgia,serif;font-weight:700;font-size:30px;margin:0 0 6px;color:var(--color-primary-strong)}
+  header p{margin:0;max-width:70ch;color:var(--color-text-muted);line-height:1.5}
+  .varianty{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;padding:24px 16px 48px}
+  figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px}
+  figcaption{text-align:center;max-width:390px}
+  figcaption b{display:block;font-family:"Alegreya",Georgia,serif;font-weight:500;font-size:20px}
+  figcaption span{font-size:13px;color:var(--color-text-muted)}
+  iframe{width:390px;height:844px;border:none;border-radius:34px;background:var(--color-surface);
+    box-shadow:0 0 0 10px var(--color-text),0 18px 40px rgba(31,42,46,.18)}
+  @media (max-width:440px){iframe{width:calc(100vw - 40px)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Třídnice – jak zapisovat den</h1>
+  <p>Tři varianty téhož dne (středa 3. 6.) na stejných datech. Každý telefon je živá appka: dá se psát,
+  rozbalovat a listovat dny. Zápis se v nich neukládá trvale.</p>
+</header>
+<div class="varianty">
+  <figure>
+    <iframe src="../src/pruvodce.html?role=vedouci&sekce=tridnice" title="Varianta A: formulář"></iframe>
+    <figcaption><b>A · Formulář (dnes)</b><span>Všech 9 polí jako karty pod sebou.</span></figcaption>
+  </figure>
+  <figure>
+    <iframe src="../src/pruvodce.html?role=vedouci&sekce=tridnice&trv=seznam" title="Varianta B: seznam k odškrtání"></iframe>
+    <figcaption><b>B · Seznam k odškrtání</b><span>Řádek na pole se stavem a náhledem, klepnutím se rozbalí.</span></figcaption>
+  </figure>
+  <figure>
+    <iframe src="../src/pruvodce.html?role=vedouci&sekce=tridnice&trv=osa" title="Varianta C: časová osa"></iframe>
+    <figcaption><b>C · Časová osa (deník)</b><span>Den podél čáry, vyplněné se čte jako text, prázdné „+ doplnit“.</span></figcaption>
+  </figure>
+</div>
+</body>
+</html>

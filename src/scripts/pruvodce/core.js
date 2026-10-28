@@ -114,5 +114,7 @@ window.togHosp=()=>{if(ROLE_PINNED)return;
 window.openDrawer=()=>{drawerOpen=true;render();};
 window.closeDrawer=()=>{drawerOpen=false;render();};
 
+// ?sekce=tridnice – odkaz rovnou na obrazovku (srovnávací stránky v docs/)
+{const sk=(new URLSearchParams(location.search).get('sekce')||'');if(TITLES[sk]&&sekceVidi(sk))section=sk;}
 history.replaceState(navStav(),'');
 renderModalRoot();render();
