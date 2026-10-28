@@ -2201,9 +2201,9 @@ Designérka: „dnešek dát na dashboard a tady zobrazit celý týden od dnešk
 - **Listování týdny jen v úpravách** (kuchyň, hospodářka): zadávají dopředu a svačinářka plánuje
   z toho, co bylo. Rozepsaný týden se při listování nezahodí – „Nejdřív ulož, nebo zruš úpravy".
 
-## Přehled: jiné vzory k porovnání (28. 10. 2026)
+## Přehled: zůstává soupis dne (28. 10. 2026)
 
-Designérka chce jiný vzor přehledu. V URL `?dbv=` (srovnání: `docs/prehled-varianty.html`):
-A soupis dne (výchozí), B **den shora dolů** (části dne podle provozu – 8:30, 13:00, 15:00 –
-probíhající otevřená), C **co řešit teď** (úkoly nahoře, pod nimi „Ke čtení"), D **dlaždice**
-(jeden údaj na dlaždici). Hlavička je všude stejná. Po rozhodnutí zůstane jeden vzor.
+Porovnány čtyři vzory přehledu: soupis dne, den shora dolů, co řešit teď, dlaždice (commit 7e7564e,
+vrácený). Designérka: „původní varianta mi přijde dobrá vzhledem k výzkumu" – ranní trojice
+(docházka, vzkazy, kdo nepřijde) odpovídá tomu, co průvodce ráno řeší, a nic se neschovává
+pod rozbalení. Varianty i srovnávací stránka jsou pryč.

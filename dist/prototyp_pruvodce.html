@@ -1380,68 +1380,6 @@ button.chk.ro{cursor:default}
 .tile>.tr-add{margin:4px 0 6px}
 .tr-hotove-h{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;margin-top:6px;padding:0;border:none;border-top:1px solid var(--color-border);
   background:none;cursor:pointer;font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;color:var(--color-text-muted);text-align:left}
-
-/* ---------- Přehled: jiné vzory k porovnání (?dbv=den | resit | dlazdice, 28. 10. 2026) ---------- */
-#content > .db-den,#content > .db-dlazdice,#content > .db-cist,#content > .db-resit,#content > .db-cist-h{column-span:all}
-/* den shora dolů: části dne podél svislé čáry, probíhající otevřená */
-.db-den{position:relative;padding-left:26px;margin-bottom:20px}
-.db-den::before{content:"";position:absolute;left:8px;top:26px;bottom:26px;width:2px;border-radius:2px;background:var(--color-border-strong)}
-.db-faze{position:relative;margin-bottom:12px}
-.db-faze-h{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;padding:10px 18px;border:none;border-radius:var(--radius-card);
-  background:rgba(249,247,241,.92);box-shadow:var(--shadow-card);cursor:pointer;text-align:left;font-family:var(--font-sans)}
-.db-faze.on .db-faze-h{background:none;box-shadow:none;padding-left:0}
-.db-bod{position:absolute;left:-24px;top:24px;width:14px;height:14px;border-radius:50%;background:var(--color-bg);border:2px solid var(--color-border-strong)}
-.db-faze.bylo .db-bod{background:var(--color-border-strong)}
-.db-faze.ted .db-bod{background:var(--color-primary-strong);border-color:var(--color-primary-strong);box-shadow:0 0 0 4px var(--tint-green)}
-.db-faze-t{flex:none;font-family:var(--font-serif);font-weight:500;font-size:20px;color:var(--color-text)}
-.db-faze.on .db-faze-t{font-size:24px;color:var(--color-primary-strong)}
-.db-faze-t .bdg{font-family:var(--font-sans);vertical-align:middle;margin-left:4px}
-.db-faze-s{flex:1;min-width:0;font-size:var(--text-note);color:var(--color-text-muted);line-height:var(--leading-snug)}
-.db-faze.bylo .db-faze-t{color:var(--color-text-muted)}
-.db-faze-a{margin-left:auto;flex:none;color:var(--color-text-muted)}
-.db-faze-b>.tile{margin-bottom:12px}
-@media (max-width:899px){.db-faze-s{display:none}}
-@media (min-width:900px){
-  .db-faze-b{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start}
-  .db-faze-b>.tile{margin:0}
-  .db-faze-b .dash-scroll{max-height:320px}
-}
-/* co řešit teď: seznam úkolů nahoře, pod ním klidné čtení */
-.db-ukol{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:9px 0;border:none;border-top:1px solid var(--color-border);
-  background:none;cursor:pointer;text-align:left;font-family:var(--font-sans)}
-.db-resit>.ch+.db-ukol{border-top:none}
-.db-tecka{flex:none;width:12px;height:12px;border-radius:50%}
-.db-tecka.s-danger{background:var(--state-danger-ink)}.db-tecka.s-warn{background:var(--state-warn-ink)}.db-tecka.s-info{background:var(--state-info-ink)}
-.db-ukol-t{flex:1;min-width:0;font-size:var(--text-body);color:var(--color-text);line-height:var(--leading-snug)}
-.db-ukol-d{display:block;font-size:var(--text-note);color:var(--color-text-muted)}
-.db-ukol-a{flex:none;color:var(--color-text-muted)}
-.db-cist-h{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--color-text-muted);margin:22px 2px 10px}
-.db-cist>.tile,.db-cist>div>.tile{margin-bottom:12px}
-@media (min-width:900px){
-  .db-resit{max-width:760px}
-  .db-cist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
-  .db-cist>.tile,.db-cist>div>.tile{margin:0}
-  .db-cist .dash-scroll{max-height:320px}
-}
-/* dlaždice na jeden pohled: skvrny jako u docházky, jeden údaj na dlaždici */
-.db-dlazdice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:20px}
-.db-dl{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:4px;min-height:112px;padding:14px 18px;border:none;
-  border-radius:var(--blob-r);cursor:pointer;text-align:left;font-family:var(--font-sans);color:var(--color-text)}
-.db-dl-l{font-size:var(--text-note);font-weight:600;color:var(--color-text-muted)}
-.db-dl-v{font-family:var(--font-serif);font-weight:700;font-size:var(--text-number);line-height:1.05}
-.db-txt .db-dl-v{font-weight:500;font-size:19px;line-height:var(--leading-snug)}
-.db-hand .db-dl-v{font-family:var(--font-hand);font-weight:400}
-.db-dl-p{font-size:var(--text-note);color:var(--color-text-muted);margin-top:auto}
-.db-wide{grid-column:1/-1}
-.db-dl.t-green{background:var(--tint-green)}.db-dl.t-rose{background:var(--tint-rose)}.db-dl.t-blue{background:var(--tint-blue)}
-.db-dl.t-ochre{background:var(--tint-ochre)}.db-dl.t-neutral{background:var(--state-neutral-bg)}
-.db-dl.t-spi{background:rgba(249,247,241,.55);border:1.5px dashed var(--color-border-strong)}
-.db-dl.t-rose.db-num .db-dl-v{color:var(--state-danger-ink)}
-@media (min-width:900px){
-  .db-dlazdice{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-  .db-dl{min-height:140px}
-  .db-wide{grid-column:span 2}
-}
 </style>
 </head>
 <body>
@@ -2707,90 +2645,9 @@ function renderPrehled(){
 
   /* Ranní trojice: na mobilu tři karty pod sebou, na desktopu jedna plocha přes celou šířku
      (je to jeden okamžik dne). Pod ní zbytek dne v pořadí mobilu; desktop ho skládá mřížkou. */
-  const bloky={blkDochazka,blkZpravy,blkNeprijde,blkTridnice,blkAkce,blkJidlo,blkBasnicka,blkPruvodci};
-  if(DB_VAR==='den')return dbDenShoraDolu(bloky,{spici,absent,otevrene,c});
-  if(DB_VAR==='resit')return dbCoResit(bloky,{absent,otevrene,nedopl,vcera});
-  if(DB_VAR==='dlazdice')return dbDlazdice({c,spici,absent,otevrene,nedopl,todays,prvni,wk});
   let h=`<div class="dash-row">${blkDochazka}${blkZpravy}${blkNeprijde}</div>`;
   h+=`<div class="dash-c">${blkTridnice}${blkAkce}${blkJidlo}${blkBasnicka}${blkPruvodci}</div>`;
   return h;
-}
-
-/* PRŮZKUM VZORU (28. 10. 2026) – jiné vzory přehledu k porovnání, přepínají se v URL:
-   ?dbv=den | resit | dlazdice (srovnávací stránka docs/prehled-varianty.html). Bez parametru
-   současný „soupis dne". Hlavička (datum, kdo otevírá, program) je ve všech stejná. */
-const DB_VAR=(new URLSearchParams(location.search).get('dbv')||'soupis');
-const dbMin=s=>{const [h,m]=String(s).split(':').map(Number);return h*60+(m||0);};
-
-/* Varianta „den": den shora dolů po částech. Hranice jsou známé časy provozu, ne vymyšlené časy
-   jídel: program začíná 8:30, dopolední docházka končí 13:00, odpolední 15:00. Probíhající část
-   je otevřená a zvýrazněná, ostatní sbalené s jednou větou shrnutí. */
-const DB_FAZE=[['rano','Ráno',0,510],['dopo','Dopoledne',510,780],['odpo','Odpoledne',780,900],['konec','Konec dne',900,1440]];
-let dbOtevreneFaze=null;   // null = jen probíhající část
-window.dbFaze=k=>{const s=dbOtevreneFaze||new Set([dbTedFaze()]);s.has(k)?s.delete(k):s.add(k);dbOtevreneFaze=s;render();};
-const dbTedFaze=()=>{const t=dbMin(TEDCAS);return (DB_FAZE.find(f=>t>=f[2]&&t<f[3])||DB_FAZE[0])[0];};
-function dbDenShoraDolu(b,x){
-  const ted=dbTedFaze(), otevr=dbOtevreneFaze||new Set([ted]), ti=DB_FAZE.findIndex(f=>f[0]===ted);
-  const den=jidelnicekDen(TODAYD,6)||[], chod=re=>den.filter(it=>re.test(it[0])&&it[1]);
-  const jidlo=(nadpis,its)=>its.length?`<div class="tile"><div class="ch">${nadpis}</div>${its.map(it=>jidChodHTML(it,false)).join('')}</div>`:'';
-  const nZpr=zpravyDnes().length, nOtevr=x.absent.filter(x.otevrene).length;
-  const obsah={
-    rano:{shrnuti:`Přítomno ${x.c.pres} dětí, nepřijde ${x.absent.length}${nOtevr?` (${nOtevr} neomluveno)`:''}. Vzkazy od rodičů: ${nZpr}.`,
-      html:b.blkDochazka+b.blkZpravy+b.blkNeprijde},
-    dopo:{shrnuti:[b.blkAkce?'Dnešní akce':'',chod(/dopolední|polévka|hlavní/i).length?'svačina a oběd':'','básnička'].filter(Boolean).join(', ').replace(/^./,m=>m.toUpperCase())+'.',
-      html:b.blkAkce+jidlo('Svačina a oběd',chod(/dopolední|polévka|hlavní/i))+b.blkBasnicka},
-    odpo:{shrnuti:`Odpoledne spí ${x.spici.length} dětí, odpolední docházka ${x.c.odpoledni}.`,
-      html:`<div class="tile"><div class="ch">Odpoledne</div><div class="c-counts">`
-        +`<button class="c-tile t-odp" onclick="goDochTab('odpoledni')"><span class="num">${x.c.odpoledni}</span><span class="lab">Odpolední</span></button>`
-        +`<button class="c-tile t-spi" onclick="goDochTab('spi')"><span class="num">☾ ${x.spici.length}</span><span class="lab">Odpoledne spí</span></button></div></div>`
-        +jidlo('Odpolední svačina',chod(/odpolední/i))},
-    konec:{shrnuti:`Třídnici dnes píše ${TR_ZAPISUJE[trInfo(TR_DNES).dow]}.`,html:b.blkTridnice+b.blkPruvodci}
-  };
-  return `<div class="db-den">`+DB_FAZE.map(([k,lab],i)=>{const on=otevr.has(k), o=obsah[k];
-    return `<section class="db-faze${k===ted?' ted':''}${i<ti?' bylo':''}${on?' on':''}">`
-      +`<button class="db-faze-h" onclick="dbFaze('${k}')" aria-expanded="${on}"><span class="db-bod" aria-hidden="true"></span>`
-      +`<span class="db-faze-t">${lab}${k===ted?' <span class="bdg st-ok">teď</span>':''}</span>`
-      +(on?'':`<span class="db-faze-s">${o.shrnuti}</span>`)+`<span class="db-faze-a" aria-hidden="true">${on?'⌃':'›'}</span></button>`
-      +(on?`<div class="db-faze-b">${o.html}</div>`:'')+`</section>`;}).join('')+`</div>`;
-}
-
-/* Varianta „řešit": nahoře jen to, co čeká na průvodce (každá položka jedním klepnutím),
-   pod tím klidné informace ke čtení. Když není co řešit, je to tam napsané. */
-function dbCoResit(b,x){
-  const ukoly=[];
-  x.absent.filter(x.otevrene).forEach(d=>ukoly.push({t:`<b>${kratke(d)}</b>: neomluvená absence`,d:'zjistit u rodičů',on:"goDochTab('neprit')",s:'danger'}));
-  const nZpr=zpravyDnes().reduce((n,{c})=>n+c.zpravy.filter(z=>z.den===TODAYD).length,0);
-  if(nZpr)ukoly.push({t:`<b>${nZpr}</b> ${nZpr===1?'informace':nZpr<5?'informace':'informací'} od rodičů na dnešek`,d:'přečíst',on:"dbSkok('db-zpr')",s:'info'});
-  const den=jidelnicekDen(TODAYD,6)||[];
-  den.forEach(it=>porceBez(it[2]).forEach(([n,k])=>ukoly.push({t:`${it[0]}: <b>${porceBezLbl(n,k)}</b>`,d:'ohlídat při výdeji',on:"go('jidelnicek')",s:'warn'})));
-  x.nedopl.slice(0,2).forEach(k=>ukoly.push({t:`Třídnice ${k===x.vcera?'včera – ':''}${trDenLbl(k)}: ${trStav(k).k==='chybi'?'chybí celý zápis':'chybí '+trChybi(k).join(', ')}`,d:'doplnit',on:`trOtevrit(${k})`,s:'warn'}));
-  let h=`<div class="tile db-resit"><div class="ch">Co řešit teď${ukoly.length?`<span class="c-badge">${ukoly.length}</span>`:''}</div>`;
-  h+=ukoly.length?ukoly.map(u=>`<button class="db-ukol" onclick="${u.on}"><span class="db-tecka s-${u.s}" aria-hidden="true"></span><span class="db-ukol-t">${u.t}<span class="db-ukol-d">${u.d}</span></span><span class="db-ukol-a" aria-hidden="true">›</span></button>`).join('')
-    :`<div class="empty" style="text-align:left;padding:6px 0">Všechno je vyřízené.</div>`;
-  h+=`</div><div class="db-cist-h">Ke čtení</div><div class="db-cist">${b.blkDochazka}${b.blkZpravy?`<div id="db-zpr">${b.blkZpravy}</div>`:''}${b.blkAkce}${b.blkJidlo}${b.blkBasnicka}${b.blkPruvodci}</div>`;
-  return h;
-}
-window.dbSkok=id=>{const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth',block:'start'});};
-
-/* Varianta „dlaždice": celý den na jeden pohled – každá dlaždice nese jeden údaj, klepnutím detail. */
-function dbDlazdice(x){
-  const den=jidelnicekDen(TODAYD,6)||[], hl=den.find(it=>/hlavní/i.test(it[0])), nOtevr=x.absent.filter(x.otevrene).length;
-  const nZpr=zpravyDnes().reduce((n,{c})=>n+c.zpravy.filter(z=>z.den===TODAYD).length,0);
-  const ak=[...AKCE].find(a=>a.day<=TODAYD&&(a.dayEnd?a.dayEnd>=TODAYD:a.day===TODAYD));
-  const alg=den.reduce((n,it)=>n+porceBez(it[2]).length,0);
-  const otv=x.todays.filter(t=>minOf(t.g.days[TODAY])===x.prvni).map(t=>t.g.n);
-  const dl=(cls,velke,lab,on,pozn='')=>`<button class="db-dl ${cls}" onclick="${on}"><span class="db-dl-l">${lab}</span><span class="db-dl-v">${velke}</span>${pozn?`<span class="db-dl-p">${pozn}</span>`:''}</button>`;
-  return `<div class="db-dlazdice">`
-    +dl('t-green db-num',x.c.pres,'Přítomni',"goDochTab('rano')",`z ${data.length} dětí`)
-    +dl((x.absent.length?'t-rose':'t-neutral')+' db-num',x.absent.length,'Nepřijde',"goDochTab('neprit')",nOtevr?`${nOtevr} neomluveno`:'všichni omluveni')
-    +dl('t-blue db-num',nZpr,'Vzkazy od rodičů',"go('dochazka')",nZpr?'na dnešek':'nic nového')
-    +dl('t-spi db-num','☾ '+x.spici.length,'Odpoledne spí',"goDochTab('spi')")
-    +(hl?dl('t-ochre db-txt db-wide',esc(hl[1]),'Oběd',"go('jidelnicek')",alg?`porce bez alergenu: ${alg}`:''):'')
-    +(ak?dl('t-green db-txt',esc(ak.name),'Dnešní akce',`openAkceDetail('${ak.id}')`,[ak.time,ak.place].filter(Boolean).join(', ')):'')
-    +(x.wk&&x.wk.b?dl('t-blue db-txt db-hand',esc(x.wk.b.split(/[.!?]/)[0])+'…','Básnička týdne',"go('priprava')"):'')
-    +dl((x.nedopl.length?'t-ochre':'t-green')+' db-txt',x.nedopl.length?`Chybí ${x.nedopl.length} ${x.nedopl.length===1?'den':x.nedopl.length<5?'dny':'dní'}`:'Hotovo','Třídnice',`trOtevrit(${x.nedopl[0]||TR_DNES})`,`dnes píše ${TR_ZAPISUJE[trInfo(TR_DNES).dow]}`)
-    +dl('t-rose db-txt',jmena(otv)||'nikdo',otv.length>1?'Otevírají':'Otevírá',"go('pruvodci')",`ve službě ${x.todays.length}`)
-    +`</div>`;
 }
 window.goDochTab=k=>{tab=k;view='den';denDay=TODAYD;open=-1;query='';go('dochazka');};
 </script>
