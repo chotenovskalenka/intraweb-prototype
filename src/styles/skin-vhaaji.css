@@ -208,5 +208,5 @@ body{font-family:var(--font-sans)}
    Lišta a .scroll se na přehledu nepozicují, takže se kresba měří od .screen. */
 @media (min-width:900px){
   .screen:has(.c-head) .scroll,.screen:has(.c-head) .scroll>.topbar{position:static}
-  .c-head .c-bird{right:28px;top:10px;width:clamp(170px,15vw,250px);z-index:2}
+  .c-head .c-bird{right:0;top:10px;width:clamp(170px,15vw,250px);z-index:2}
 }
