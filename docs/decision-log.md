@@ -2131,3 +2131,11 @@ Teď stejně jako Docházka: **přepínač Den | Týden a listování**.
   otevřený den, budoucnost na dnešek.
 - **Záložka „Děti" zrušena** – týdenní přehled poznámek k dětem je sbalená část pohledu Týden
   („Tento týden poznámka u 8 z 25 dětí" + Zobrazit děti). Poznámky ke dni zůstávají v „K dětem" pod zápisem.
+
+## Třídnice: zápis dne jako časová osa – rozhodnuto (28. 10. 2026)
+
+Ze tří variant zápisu dne (formulář s kartami, seznam k odškrtání, časová osa) designérka vybrala
+**časovou osu** („třetí varianta, potvrzeno"). Den se čte jako deník podél svislé čáry: vyplněné
+pole má plný bod a čte se jako text s podpisem, prázdné má prázdný bod a „+ napsat" / „+ doplnit".
+Formulář a seznam jsou z kódu pryč i se srovnávací stránkou `docs/tridnice-varianty.html`
+a parametrem `?trv=`; datový model (`dop`, každý svůj příspěvek) zůstává beze změny.

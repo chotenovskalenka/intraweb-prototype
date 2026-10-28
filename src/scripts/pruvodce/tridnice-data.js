@@ -25,7 +25,7 @@ const TR_POLE=[
   {k:'odpocinek',lab:'Odpočinek',ph:'Co jsme četli, jak proběhl klid.'},
   {k:'predskolaci',lab:'Předškoláci',ph:'Jen když měli vlastní program.',volitelne:true},
   {k:'pocasi',lab:'Počasí',ph:'např. slunečno, 22 °C',kratke:true},
-  {k:'evaluace',lab:'Evaluace dne',ph:'Jak den plynul jako celek.',siroke:true},
+  {k:'evaluace',lab:'Evaluace dne',ph:'Jak den plynul jako celek.'},
 ];
 const TR_POVINNE=TR_POLE.filter(p=>!p.volitelne).length;
 // Sady pravidel bezpečnosti – Jaata je má ve třídnici jako číslované seznamy podle místa.

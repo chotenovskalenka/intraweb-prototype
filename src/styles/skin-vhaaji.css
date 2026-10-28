@@ -302,41 +302,26 @@ button.chk.ro{cursor:default}
 .tr-meta-r{align-items:flex-start}
 .tr-meta-r .tval{flex:1;min-width:0}
 /* psací pole: měkčí rohy, plocha karty */
-.tr-f .pin,.tr-f .pta,.tr .pta,.tr .pin{border-radius:14px}
+.tr .pta,.tr .pin{border-radius:14px}
 /* interní zóna „K dětem" / „Poznámky k dětem": čárkovaně dál znamená „jen pro tým", rohy jako karty */
 .zona-int{border-radius:var(--radius-card)}
 .zona-int>.tile,.zona-int .tile{box-shadow:none}
-/* poučení o pravidlech: popisek nad volbami jako ostatní popisky formulářů */
-.tr-f .pl{margin-top:12px}
 /* „Celý rok v profilu dítěte" – sekundární pilulka s vlastním odsazením (základní styl ho nuloval) */
 .tr-dite-act .tr-rok-link{padding:10px 18px;margin:0}
 
-/* ---------- Třídnice: varianty zápisu dne k porovnání (?trv=seznam | osa, 28. 10. 2026) ---------- */
-/* seznam k odškrtání */
-.trv-seznam{padding:6px 18px}
-.trv-r{border-top:1px solid var(--color-border)}
-.trv-r:first-child{border-top:none}
-.trv-h{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 0;border:none;background:none;cursor:pointer;text-align:left;font-family:var(--font-sans)}
-.trv-st{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px dashed var(--color-border-strong);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--color-on-primary)}
-.trv-r.ok .trv-st{border:none;background:var(--color-primary-strong)}
-.trv-l{flex:none;font-size:var(--text-body);font-weight:600;color:var(--color-text)}
-.trv-n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--text-note);color:var(--color-text-muted);text-align:right}
-.trv-r:not(.ok) .trv-n{color:var(--state-warn-ink);font-weight:600}
-.trv-arr{flex:none;color:var(--color-text-muted)}
-.trv-b{padding:0 0 16px 38px}
-.trv-b .tr-kdo{display:block;margin-bottom:8px}
-/* časová osa (deník) */
-.trv-osa{position:relative;padding:18px 18px 8px 46px}
-.trv-osa::before{content:"";position:absolute;left:25px;top:28px;bottom:28px;width:2px;border-radius:2px;background:var(--color-border-strong)}
-.trv-u{position:relative;padding-bottom:20px}
-.trv-bod{position:absolute;left:-27px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--color-bg);border:2px solid var(--color-border-strong)}
-.trv-u.ok .trv-bod{background:var(--color-primary-strong);border-color:var(--color-primary-strong)}
-.trv-u.on .trv-bod{background:var(--color-bg);border-color:var(--color-primary-strong)}
-.trv-oh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px}
-.trv-plus{min-height:44px;padding:0;border:none;background:none;cursor:pointer;font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;color:var(--color-primary)}
+/* ---------- Třídnice: zápis dne jako časová osa (deník), vybráno 28. 10. 2026 ---------- */
+.tr-osa{position:relative;padding:18px 18px 8px 46px}
+.tr-osa::before{content:"";position:absolute;left:25px;top:28px;bottom:28px;width:2px;border-radius:2px;background:var(--color-border-strong)}
+.tr-u{position:relative;padding-bottom:20px}
+.tr-bod{position:absolute;left:-27px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--color-bg);border:2px solid var(--color-border-strong)}
+.tr-u.ok .tr-bod{background:var(--color-primary-strong);border-color:var(--color-primary-strong)}
+.tr-u.on .tr-bod{background:var(--color-bg);border-color:var(--color-primary-strong)}
+.tr-oh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.tr-plus{min-height:44px;padding:0;border:none;background:none;cursor:pointer;font-family:var(--font-sans);font-size:var(--text-small);font-weight:600;color:var(--color-primary)}
+.tr-osa .pl{margin-top:12px}   /* poučení o pravidlech pod „Kam jsme šli" */
 @media (min-width:900px){
-  /* na desktopu jeden sloupec do čitelné šířky, ať se dá porovnat s mobilem */
-  .trv-seznam,.trv-osa{max-width:760px}
+  /* na desktopu jeden sloupec do čitelné šířky – deník se čte shora dolů */
+  .tr-osa{max-width:760px}
 }
 
 /* ---------- Třídnice: příspěvky více průvodců, návod pod „?" (28. 10. 2026) ---------- */
@@ -344,10 +329,8 @@ button.chk.ro{cursor:default}
 .tr-pr{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:var(--wash-primary)}
 .tr-pr-t{font-size:var(--text-body);line-height:var(--leading-normal);color:var(--color-text);white-space:pre-wrap}
 .tr-pr .tr-kdo{display:block;margin-top:4px}
-/* v deníku (osa) bez podkladu – příspěvky pod sebou jako zápisy v sešitě */
-.trv-osa .tr-pr{background:none;padding:0;margin:0 0 12px}
-/* seznam: počet zápisů u pole, které dopisovalo víc lidí */
-.trv-pocet{flex:none;min-width:22px;padding:2px 7px;border-radius:var(--radius-full);background:var(--tint-green);color:var(--color-primary-strong);font-size:var(--text-chip);font-weight:600;text-align:center}
+/* v deníku bez podkladu – příspěvky pod sebou jako zápisy v sešitě */
+.tr-osa .tr-pr{background:none;padding:0;margin:0 0 12px}
 /* „?" u karty dne – návod se ukáže klepnutím */
 .tr-info{position:relative;flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--color-border-strong);background:none;cursor:pointer;
   font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--color-text-muted);line-height:1}
@@ -365,7 +348,7 @@ button.chk.ro{cursor:default}
 .tr-upravit{min-height:44px;margin:-10px -4px -10px 0;padding:0 4px;border:none;background:none;cursor:pointer;
   font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;color:var(--color-primary)}
 .tr-pr-muj{background:var(--tint-green)}
-.trv-osa .tr-pr-muj{background:none}
+.tr-osa .tr-pr-muj{background:none}
 /* Třídnice: datum v listování otevře kalendář telefonu (průhledné pole přes popisek) */
 .tr-datum{position:relative;display:inline-block;cursor:pointer;text-decoration:underline dotted;text-underline-offset:4px}
 .tr-dpick{position:absolute;inset:-12px -8px;width:calc(100% + 16px);height:calc(100% + 24px);opacity:0;cursor:pointer;border:none;padding:0}

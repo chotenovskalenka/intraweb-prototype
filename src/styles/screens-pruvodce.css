@@ -187,7 +187,6 @@
 .tr-fh .tlab,.tr-fh .ch{margin:0}
 .tr-kdo{font-size:var(--text-note);color:var(--color-text-hint)}
 .tr-vol{text-transform:none;letter-spacing:0;color:var(--color-text-hint)}
-.tr-f .pchips{margin-top:2px}
 .tr-den{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;text-align:left;background:none;border:none;border-top:1px solid var(--color-border);padding:9px 0;cursor:pointer;font-family:var(--font-sans)}
 .tr-den:first-of-type{border-top:none}
 .tr-den:disabled{cursor:default}
@@ -237,8 +236,6 @@
 @media (max-width:899px){.tr-dite-b{padding-left:0}}
 @media (min-width:900px){
   #content > .tr{column-span:all}   /* třídnice mimo masonry sloupce, jako docházka */
-  .tr-pole{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 var(--space-md);align-items:start}
-  .tr-f-wide{grid-column:1/-1}   /* evaluace dne uzavírá den – přes celou šířku */
   .tr-tyden{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-md);align-items:start}
   .tr-deti,.tr-kdetem{display:block}
 }
