@@ -2240,3 +2240,4 @@ Karta básničky a písničky na přehledu: **Verše týdne** (designérka 28. 1
 Kresby designérky „jídlo" a „sestava" (podklady/icon/) doplněny do kresby.js a na karty K jídlu a Sestava na přehledu (28. 10. 2026).
 
 Kresby v rohu karet mají stejnou plochu (80 × 80 px), ne stejný čtverec – šířka a výška podle poměru stran, svisle vystředěné (designérka 28. 10. 2026: srovnat velikost a poměry; široké jídlo a sestava jinak vycházely menší).
+Třídnice (sešit) optický ořez na 90 % – je hutná a vyplní celé plátno, na oko působila větší.

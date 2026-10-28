@@ -6,10 +6,12 @@ const KRESBY={"ptacek_jaro":{"vb":"0 0 1462 1076","svg":"<g> <path d=\"M855.25,6
    široké kresby (jídlo, sestava) by jinak vyšly menší. Šířka a výška podle poměru stran, svisle
    vystředěné na stejnou osu (designérka 28. 10. 2026: srovnat velikost a poměry). */
 const KRESBA_K=80;
+// optické doladění: třídnice (sešit) je hutná a vyplní celé plátno, na oko působila větší
+const KRESBA_OPT={tridnice:.9};
 function kresba(k,cls){const x=KRESBY[k];if(!x)return '';
   let st='';
-  if((cls||'').includes('kresba-k')){const [,,w,h]=x.vb.split(' ').map(Number),r=Math.sqrt(w/h);
-    st=` style="width:${Math.round(KRESBA_K*r)}px;height:${Math.round(KRESBA_K/r)}px;margin-top:${Math.round((KRESBA_K-KRESBA_K/r)/2)}px"`;}
+  if((cls||'').includes('kresba-k')){const [,,w,h]=x.vb.split(' ').map(Number),r=Math.sqrt(w/h),z=KRESBA_K*(KRESBA_OPT[k]||1);
+    st=` style="width:${Math.round(z*r)}px;height:${Math.round(z/r)}px;margin-top:${Math.round((KRESBA_K-z/r)/2)}px"`;}
   return `<svg class="kresba ${cls||''}" viewBox="${x.vb}"${st} aria-hidden="true" focusable="false">${x.svg}</svg>`;}
 /* Roční období podle měsíce (školní rok začíná podzimem): jaro 3–5, léto 6–8, podzim 9–11, zima 12–2. */
 function kresbaPtacek(m,cls){const o=m>=3&&m<=5?'jaro':m>=6&&m<=8?'leto':m>=9&&m<=11?'podzim':'zima';return kresba('ptacek_'+o,cls);}
