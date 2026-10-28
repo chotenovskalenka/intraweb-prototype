@@ -3339,7 +3339,8 @@ function startMin(d){return serving(d)?(+d.s.split(':')[0])*60+(+d.s.split(':')[
 function shiftCell(d){
   if(!d)return '<span class="sh-off">neslouží</span>';
   if(d.off)return `<span class="sh-off sh-duvod">${d.off}</span>`;
-  return `<div style="line-height:1.25"><div style="color:var(--color-primary);font-weight:600;font-size:10.5px">${fmt(d.s)}</div><div style="color:var(--color-text-muted);font-size:10px">${fmt(d.e)}</div></div>`;
+  // časy aspoň 11,5 px (--text-chip) – čte se venku na slunci; dřív 10–10,5 px (UX revize 28. 10. 2026)
+  return `<div style="line-height:1.25"><div style="color:var(--color-primary);font-weight:600;font-size:var(--text-chip)">${fmt(d.s)}</div><div style="color:var(--color-text-muted);font-size:var(--text-chip)">${fmt(d.e)}</div></div>`;
 }
 function renderPruvodci(){
   const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
