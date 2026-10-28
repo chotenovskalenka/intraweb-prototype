@@ -7,7 +7,7 @@
   --color-surface-2:#E7E4DA;
   --color-text:#1F2A2E;
   --color-text-muted:#5C6560;
-  --color-text-hint:#767B74;
+  --color-text-hint:#676C65;    /* nejsvětlejší šedá textu: 4,6 : 1 na pozadí, 5,0 : 1 na kartě (AA). Dřív #767B74 = 3,7 : 1 (UX revize 28. 10. 2026) */
   /* Značkové barvy */
   --color-primary:#2B7059;
   --color-primary-strong:#1F5344;
