@@ -146,3 +146,9 @@ body{font-family:var(--font-sans)}
   .c-tile{padding-right:28px}
   .c-tile .lab{white-space:nowrap}
 }
+/* desktop: ptáček úplně vpravo v liště, za přihlášeným (ladění 27. 10. 2026) */
+@media (min-width:900px){
+  .topbar:has(.c-head){padding-right:190px}
+  .dash-head.c-head{position:static;padding-right:0}
+  .c-head .c-bird{right:0;top:-6px}
+}
