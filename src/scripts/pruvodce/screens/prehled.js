@@ -120,7 +120,7 @@ function renderPrehled(){
 
   // básnička celá (do ranního kruhu), písnička jen prvním veršem – celá je v tématickém plánu
   const wk=TEMA.tydny[Math.floor((TODAYD-1)/7)];
-  let blkBasnicka=`<div class="tile has-kresba t-bas">${kresba('basnicka','kresba-k')}<div class="ch">Básnička a písnička týdne</div>`;
+  let blkBasnicka=`<div class="tile has-kresba t-bas">${kresba('basnicka','kresba-k')}<div class="ch">Verše týdne</div>`;
   if(wk&&(wk.b||wk.p)){
     if(wk.b)blkBasnicka+=`<div class="pa-cap">Básnička</div><div class="c-basen">${wk.b}</div>`;
     if(wk.p){const vers=(wk.p.match(/^[^.!?]*?,[^,.!?]*/)||[wk.p])[0];

@@ -2234,3 +2234,5 @@ Třídnice na přehledu: nadpis „Třídnici píše Honza" místo „Třídnice
 Karta jídla na přehledu: „Co je dnes k jídlu" místo „Dnes se jí" (designérka 28. 10. 2026 – zkusit jinak).
 
 **Bez „dnes" v nadpisech (28. 10. 2026):** přehled je celý o dnešku a datum je nahoře – „dnes" se opakovalo. Nadpisy: Děti, Vzkazy od rodičů, Nepřijdou, Akce / Probíhá, K jídlu, Sestava (kolegové; dřív Kdo je tu), Třídnici píše: Honza. „Dnes je Pohyb" v hlavičce zůstává.
+
+Karta básničky a písničky na přehledu: **Verše týdne** (designérka 28. 10. 2026 – jedno slovo pro obojí, „týdne" zůstává). Uvnitř dál popisky Básnička a Písnička.
