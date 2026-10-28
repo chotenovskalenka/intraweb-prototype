@@ -2238,3 +2238,5 @@ Karta jídla na přehledu: „Co je dnes k jídlu" místo „Dnes se jí" (desig
 Karta básničky a písničky na přehledu: **Verše týdne** (designérka 28. 10. 2026 – jedno slovo pro obojí, „týdne" zůstává). Uvnitř dál popisky Básnička a Písnička.
 
 Kresby designérky „jídlo" a „sestava" (podklady/icon/) doplněny do kresby.js a na karty K jídlu a Sestava na přehledu (28. 10. 2026).
+
+Kresby v rohu karet mají stejnou plochu (80 × 80 px), ne stejný čtverec – šířka a výška podle poměru stran, svisle vystředěné (designérka 28. 10. 2026: srovnat velikost a poměry; široké jídlo a sestava jinak vycházely menší).
