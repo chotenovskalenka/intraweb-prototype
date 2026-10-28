@@ -147,10 +147,12 @@ function renderPrehled(){
        +`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček →</button></div>`;
    }}
 
-  // průvodci dnes podle příchodu; kdo otevírá (první vlna) zeleně, kdo uspává = ☾
+  // průvodci dnes podle příchodu; kdo otevírá (první vlna) a kdo uspává, drobně pod jménem
   let blkPruvodci=`<div class="tile t-pru"><div class="ch">Průvodci dnes</div>`;
   if(todays.length){
-    todays.forEach(x=>{const d=x.g.days[TODAY];blkPruvodci+=`<div class="np"><span>${x.g.n}${x.i===usIdx?' ☾':''}${minOf(d)===prvni?' <b style="color:var(--color-primary)">(otevírá)</b>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
+    // role pod jménem drobně, čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" a ☾ lámaly do času
+    todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');
+      blkPruvodci+=`<div class="np"><span class="np-n">${x.g.n}${role?`<span class="np-r">${role}</span>`:''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
   }else{blkPruvodci+=`<div class="empty" style="padding:6px">Dnes nikdo nemá službu.</div>`;}
   blkPruvodci+=`<button class="cardlink" onclick="go('pruvodci')">Služby a rozpis →</button></div>`;
 
