@@ -2075,3 +2075,15 @@ jen obrys fokusu z `base.css` při ovládání klávesnicí. Hledání se na už
 **Otevřené (rozhodne designérka):** v obrazovce je 9 velikostí písma (11,5–34 px, z toho pět mezi
 11,5 a 14) a 9 zaoblení (6–34 px). Šlo by je stáhnout na škálu 12 / 14 / 16 / 19 / 26 / 34
 a zaoblení 12 (vnitřní) / 22 (plochy) / plná pilulka.
+
+## UX revize celé průvodcovské appky – rychlé opravy (28. 10. 2026)
+
+Průchod všech 13 obrazovek (mobil + desktop) podle priorit skillu ui-ux-pro-max. Opraveno hned:
+1. **Klávesnice:** dny v kalendáři, karty novinek a buňky rozpisu služeb (`KLAV` ve `shared.js`).
+2. **Kontrast:** `--color-text-hint` #767B74 → #676C65 (3,7 → 4,6 : 1 na pozadí; platí pro všechny appky).
+3. **Písmo:** časy v rozpisu služeb 10–10,5 px → 11,5 px (minimum z UX revize).
+4. **Dotykové cíle:** šipky kalendáře a „Nahlásit chybu" 44 px (sdílené styly – i rodič a admin).
+
+Zbývá na převod obrazovek do C: různé vzory filtrů a přepínačů (Docházka dlaždice, Děti záložky,
+Třídnice tři řádky ovládání), nesjednocené akce v hlavičce, 69 teček „·" na 9 obrazovkách,
+drobné verzálky s prostrkáním. Kalendář drží barvy Googlu záměrně.

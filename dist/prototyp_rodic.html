@@ -342,7 +342,7 @@ table.wt tfoot td{position:sticky;bottom:0;background:var(--color-surface-2);fon
 }
 /* Patička (jeden řádek, všechny appky) + SOS modal (nahlášení chyby na IS) */
 .appfoot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;margin-top:20px;padding:14px 0 4px;border-top:1px solid var(--color-border);font-size:var(--text-note);color:var(--color-text-muted)}
-.appfoot .sos-link{background:none;border:none;font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;color:var(--color-primary);cursor:pointer;padding:4px 2px}
+.appfoot .sos-link{background:none;border:none;font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;color:var(--color-primary);cursor:pointer;padding:4px 2px;min-height:44px}
 .sos-scrim{position:fixed;inset:0;background:rgba(31,42,46,.5);z-index:40;display:none;align-items:center;justify-content:center;padding:16px}
 .sos-scrim.on{display:flex}
 .sos-modal{max-width:420px;border-radius:18px}
@@ -554,7 +554,8 @@ table.wt td.pastc{opacity:.45}
 .gnone{font-size:var(--text-meta);color:#9aa0a6;font-style:italic;padding:8px 4px}
 .gcalnav{display:flex;justify-content:space-between;align-items:center;margin:0 2px 12px}
 .gstep{display:flex;align-items:center;gap:2px}
-.gstep button{border:none;background:none;color:#5f6368;font-size:var(--text-title);cursor:pointer;padding:2px 8px;line-height:1}
+.gstep button{border:none;background:none;color:#5f6368;font-size:var(--text-title);cursor:pointer;padding:2px 8px;line-height:1;
+  min-width:44px;min-height:44px;border-radius:var(--radius-full)}   /* dotykový cíl 44 px (UX revize 28. 10. 2026) */
 .gstep .gmo{font-size:var(--text-heading);font-weight:600;color:#3c4043;min-width:64px;text-align:center;text-transform:capitalize}
 .gstep .gyr{font-size:var(--text-heading);font-weight:600;color:#3c4043;min-width:42px;text-align:center}
 .gcell.gempty{cursor:default;background:transparent}
