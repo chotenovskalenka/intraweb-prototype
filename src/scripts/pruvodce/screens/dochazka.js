@@ -186,7 +186,7 @@ function renderDen(){
     :(minuly?'Proběhlý den – jako vedoucí ho můžeš opravit.':'Budoucí den – jako vedoucí můžeš docházku naplánovat.');
   if(tip)main+=`<div class="sectip">${tip}</div>`;
   // zvláštní den na mobilu nad soupisem (na desktopu je v panelu)
-  const spec=specialBar(d);
+  const spec=specialKarta(d);
   if(spec)main+=`<div class="doch-spec-m">${spec}</div>`;
   main+=`<div class="rosterbox"><div id="roster">${rosterHTML(d)}</div></div>`;
   /* Porce stejným výpočtem jako přehled kuchyně (porceDne), za celou školku – pro libovolný den. */
@@ -203,6 +203,15 @@ function renderDen(){
   aside+=spec;
   aside+=`<div class="tile doch-panel"><div class="ch">Porce pro kuchyň</div><div class="dp-porce"><div><b>${pk.dop}</b><span>dop. svačina</span></div><div><b>${pk.obed}</b><span>oběd</span></div><div><b>${pk.odpN}</b><span>odp. svačina</span></div></div></div>`;
   return `<div class="doch-today">${side}<div class="doch-body"><div class="doch-main">${main}</div><aside class="doch-aside">${aside}</aside></div></div>`;
+}
+/* Zvláštní den (výprava předškoláků, horolezení) jako karta ve stejné řeči jako „Porce pro kuchyň":
+   nadpis a čísla v dlaždičkách. Oběd vynechává – je v porcích hned pod ní. */
+function specialKarta(d){
+  if(!SPECIAL[d])return '';
+  const kind=SPECIAL[d], lab=kind==='pred'?'předškoláci':'lezci', name=kind==='pred'?'Výjezd předškoláků':'Horolezení';
+  const pres=data.filter(c=>{const k=getCode(c,d);return k&&k!=='OM';});
+  const vyp=pres.filter(c=>kind==='pred'?c.predskolak:c.lez).length;
+  return `<div class="tile doch-panel doch-spec"><div class="ch">${name}</div><div class="dp-porce dp-2"><div><b>${vyp}</b><span>${lab}</span></div><div><b>${pres.length-vyp}</b><span>ve školce</span></div></div></div>`;
 }
 function specialBar(d){
   if(!SPECIAL[d])return '';

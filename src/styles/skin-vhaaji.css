@@ -277,9 +277,11 @@ body{font-family:var(--font-sans)}
 .row.absent .p-abs{text-decoration:none}
 /* tečka vzkazu u jména (desktop – na mobilu je vzkaz rovnou pod řádkem) */
 .r-tecka{display:none}
-.doch-spec-m>.specbar{margin:0 0 10px}
+.doch-spec-m>.doch-spec{margin:0 0 10px}
 @media (min-width:900px){
   .r-tecka{display:inline-block;flex:none;width:9px;height:9px;border-radius:50%;background:var(--color-primary);margin-left:-2px}
   .doch-spec-m{display:none}
-  .doch-aside>.specbar{margin:0}
 }
+/* karta zvláštního dne: dvě čísla, zelené dlaždičky (okrová patří odpolední docházce) */
+.dp-porce.dp-2{grid-template-columns:repeat(2,1fr)}
+.doch-spec .dp-porce div{background:var(--tint-green)}
