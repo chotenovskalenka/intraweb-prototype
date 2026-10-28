@@ -210,3 +210,10 @@ body{font-family:var(--font-sans)}
   .screen:has(.c-head) .scroll,.screen:has(.c-head) .scroll>.topbar{position:static}
   .c-head .c-bird{right:0;top:10px;width:clamp(170px,15vw,250px);z-index:2}
 }
+/* desktop: vzkazy a nepřítomní se rolují do výšky dlaždice docházky – bez pevného čísla.
+   Dřív --dash-h:274px sedělo na starou dlaždici; nová je vyšší, seznam se usekl nad prázdnem.
+   Rolovací část má nulový základ, takže výšku řady určuje jen docházka a ostatní ji dorostou. */
+@media (min-width:900px){
+  .dash-row>.tile{display:flex;flex-direction:column}
+  .dash-row .dash-scroll{flex:1 1 0;height:0;min-height:0;max-height:none}
+}
