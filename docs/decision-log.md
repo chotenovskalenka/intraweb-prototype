@@ -2183,3 +2183,8 @@ A dnes nahoře (výchozí), B **den po dni** (pás pěti dnů, pod ním jeden de
 C **dnes a zítra** (dvě celé karty, na desktopu vedle sebe, zbytek týdne v řádcích),
 D **dlaždice** (dnešní chody jako barevné skvrny jako na přehledu). Časová osa dne podle hodin
 není – skutečné časy svačin a oběda v datech nejsou a vymýšlet je nechceme.
+
+**Rozhodnuto (28. 10. 2026): „Den po dni" (varianta B).** Pás pěti dnů nahoře, pod ním jeden den –
+výchozí dnešek, nadpis karty podle dne („Dnes se jí", „Zítra", „Bylo", „V plánu"); proběhlé dny
+v pásu tlumeně. V jiném týdnu se otevře pondělí. Úpravy týdne zůstávají v kartách dnů.
+Dnes nahoře, dnes a zítra, dlaždice, parametr `?jdv=` i srovnávací stránka jsou pryč.
