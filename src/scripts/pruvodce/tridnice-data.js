@@ -67,8 +67,6 @@ const trDenLbl=k=>{const x=trInfo(k);return `${DOW[x.dow]} ${x.d}. ${x.m}.`;};
 const trDatum=k=>{const x=trInfo(k);return `${x.d}. ${x.m}. ${x.y}`;};
 const trTydenLbl=po=>{const ds=trDnyTydne(po).map(trInfo),a=ds[0],b=ds[ds.length-1];
   return a.m===b.m?`${a.d}.–${b.d}. ${b.m}.`:`${a.d}. ${a.m}.–${b.d}. ${b.m}.`;};
-// měsíce školního roku pro rychlý skok (jen ty, které už začaly)
-const TR_MESICE=[...new Set(TR_DNY.map(k=>Math.floor(k/100)))].map(ym=>({ym,lab:MONTHS[ym%100-1].replace(/^./,c=>c.toUpperCase())+' '+Math.floor(ym/100)}));
 
 /* ---- Zásobníky textů pro vygenerovanou minulost ---- */
 // deterministický generátor (Park–Miller) – každé načtení dá stejná data

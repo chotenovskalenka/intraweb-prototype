@@ -16,7 +16,7 @@ let trNoteForm=false, trNoteChild=-1, trNoteDraft='';
 let trUprava=null, trUpravaDraft='', trMazani=null;
 // průzkum vzoru zápisu dne: ?trv=seznam | osa (bez parametru formulář) a právě rozbalené pole
 const TR_VAR=(new URLSearchParams(location.search).get('trv')||'pole');
-let trOtevrenePole=null, trPisu=null, trInfoOtevreno=false;
+let trOtevrenePole=null, trPisu=null, trInfoOtevreno=false, trDetiOtevrene=false;
 // otevřené dny školního roku, které už začaly, a jejich týdny (kalendář je v tridnice-data.js)
 const trDny=()=>TR_DNY;
 const trTydny=()=>TR_TYDNY_SEZ;
@@ -28,24 +28,32 @@ const trBdg=s=>`<span class="bdg st-${s.cls}">${s.lab}</span>`;
 const trSluzba=k=>{const x=trInfo(k);
   return (x.y===2026&&x.m===6?shiftProDen(x.d):SHIFT_ROTA).filter(g=>serving(g.days[x.dow])).map(g=>g.n);};
 
-/* Přepínač Den/Týden/Děti, listování a skok na měsíc – v řádku nadpisu jako u Docházky
-   (core.js render). Dřív tři řádky ovládání nad obsahem (převod do vzhledu C, 28. 10. 2026). */
+/* Hlavička stejná jako u Docházky: přepínač Den/Týden a listování (core.js render).
+   Klepnutí na datum otevře kalendář telefonu – skok kamkoli ve školním roce (dřív zvláštní výběr měsíce).
+   Poznámky k dětem za týden jsou v pohledu Týden (dřív třetí záložka „Děti"). Zjednodušeno 28. 10. 2026. */
+const trIso=k=>`${String(k).slice(0,4)}-${String(k).slice(4,6)}-${String(k).slice(6,8)}`;
 function trHlavicka(){
-  const nav=trView==='den'
-    ? trNav(trDenLbl(trDay)+(trDay===TR_DNES?'<i class="dn-cur"> (dnes)</i>':''),'trStepDay',trDny().indexOf(trDay),trDny().length)
-    : trNav(trTydenLbl(trWeek)+(trWeek===trTydenOd(TR_DNES)?'<i class="dn-cur"> (tento týden)</i>':''),'trStepWeek',trTydny().indexOf(trWeek),trTydny().length);
-  // skok na měsíc – školní rok má přes 180 dnů, po jednom se k září nikdo nedoklikne
-  const ym=Math.floor((trView==='den'?trDay:trWeek)/100);
-  const mesic=`<select class="pin tr-mesic" aria-label="Přejít na měsíc" onchange="trMesic(+this.value)">`
-    // jen název měsíce – školní rok (září–červen) má každý měsíc jednou, rok by jen zabíral místo
-    +TR_MESICE.map(x=>`<option value="${x.ym}"${x.ym===ym?' selected':''}>${x.lab.replace(/ \d{4}$/,'')}</option>`).join('')+`</select>`;
+  const den=trView==='den';
+  const lbl=den?trDenLbl(trDay)+(trDay===TR_DNES?'<i class="dn-cur"> (dnes)</i>':'')
+    :trTydenLbl(trWeek)+(trWeek===trTydenOd(TR_DNES)?'<i class="dn-cur"> (tento týden)</i>':'');
+  // datum je zároveň tlačítko kalendáře: průhledné pole přes popisek, showPicker pro desktop
+  const datum=`<span class="tr-datum">${lbl}<input type="date" class="tr-dpick" aria-label="${den?'Vybrat den':'Vybrat týden'} v kalendáři"`
+    +` min="${trIso(trDny()[0])}" max="${trIso(TR_DNES)}" value="${trIso(den?trDay:trWeek)}"`
+    +` onclick="try{this.showPicker()}catch(e){}" onchange="trSkok(this.value)"></span>`;
+  const nav=den?trNav(datum,'trStepDay',trDny().indexOf(trDay),trDny().length)
+    :trNav(datum,'trStepWeek',trTydny().indexOf(trWeek),trTydny().length);
   return `<div class="dfield"><div class="switch dsw">`
-    +[['den','Den'],['tyden','Týden'],['deti','Děti']].map(v=>`<button class="${trView===v[0]?'on':''}" onclick="trSetView('${v[0]}')">${v[1]}</button>`).join('')
-    +`</div>${nav}${mesic}</div>`;
+    +[['den','Den'],['tyden','Týden']].map(v=>`<button class="${trView===v[0]?'on':''}" onclick="trSetView('${v[0]}')">${v[1]}</button>`).join('')
+    +`</div>${nav}</div>`;
 }
+// skok z kalendáře: na zvolený den, nebo nejbližší předchozí otevřený (víkend, prázdniny); do budoucna ne
+window.trSkok=v=>{if(!v)return;const k=Math.min(+v.replace(/-/g,''),TR_DNES);
+  const d=[...trDny()].reverse().find(x=>x<=k)||trDny()[0];
+  trDay=d;trWeek=trTydenOd(d);trOpenDite=-1;trNoteReset();render();};
 function renderTridnice(){
+  if(trView==='deti')trView='tyden';
   let h=`<div class="tr">`;
-  h+=trView==='den'?trRenderDen():trView==='tyden'?trRenderTyden():trRenderDeti();
+  h+=trView==='den'?trRenderDen():trRenderTyden()+trRenderDeti();
   return h+`</div>`;
 }
 function trNav(lbl,fn,i,n){
@@ -281,8 +289,11 @@ function trRenderDeti(){
   const sPoz=data.filter((c,i)=>(poz[i]||[]).length).length;
   let h=`<div class="zona zona-int tr-deti"><div class="zona-h"><span class="zona-t">Poznámky k dětem</span>`
     +`<span class="zona-s">Jen pro tým – rodiče je nevidí a do tisku třídnice nejdou.</span></div>`;
+  // v pohledu Týden sbalené – počet je vidět hned, seznam dětí po rozbalení
   h+=`<div class="tile"><div class="tval">Tento týden poznámka u <b>${sPoz} z ${data.length}</b> dětí.</div>`
-    +`<div class="note2">Dítě bez poznámky je vidět hned – ať za týden nikdo nezapadne.</div></div>`;
+    +`<div class="note2">Dítě bez poznámky je vidět hned – ať za týden nikdo nezapadne.</div>`
+    +`<button class="cardlink" onclick="trDetiToggle()" aria-expanded="${trDetiOtevrene}">${trDetiOtevrene?'Skrýt děti ⌃':'Zobrazit děti ›'}</button></div>`;
+  if(!trDetiOtevrene)return h+`</div>`;
   h+=`<div class="tile tr-dlist">`;
   data.map((c,i)=>({c,i})).sort(byAlpha).forEach(({c,i})=>{
     const n=poz[i]||[], open=trOpenDite===i;
@@ -300,6 +311,7 @@ function trRenderDeti(){
   return h+`</div></div>`;
 }
 window.trDite=i=>{trOpenDite=trOpenDite===i?-1:i;render();};
+window.trDetiToggle=()=>{trDetiOtevrene=!trDetiOtevrene;trOpenDite=-1;render();};
 // z týdenního přehledu do zápisu dne s předvybraným dítětem
 window.trNapsat=(i,d)=>{trDay=d;trWeek=trTydenOd(d);trView='den';if(section!=='tridnice')go('tridnice');trNoteOtevri(i);};
 window.trRok=i=>{go('deti');openDite(i);
@@ -311,8 +323,5 @@ const trNoteReset=()=>{trOtevrenePole=null;trPisu=null;trNoteForm=false;trNoteCh
 window.trSetView=v=>{if(v!=='den')trWeek=trTydenOd(trDay);trView=v;trOpenDite=-1;trNoteReset();render();};
 window.trStepDay=dir=>{const ds=trDny(),i=ds.indexOf(trDay)+dir;if(i>=0&&i<ds.length){trDay=ds[i];trWeek=trTydenOd(trDay);trNoteReset();render();}};
 window.trStepWeek=dir=>{const ws=trTydny(),i=ws.indexOf(trWeek)+dir;if(i>=0&&i<ws.length){trWeek=ws[i];trOpenDite=-1;render();}};
-// skok na měsíc: den = první otevřený den měsíce, týden = jeho týden
-window.trMesic=ym=>{const k=TR_DNY.find(x=>Math.floor(x/100)===ym);if(!k)return;
-  trDay=k;trWeek=trTydenOd(k);trOpenDite=-1;trNoteReset();render();};
 // vstup z přehledu: rovnou na daný den
 window.trOtevrit=d=>{trDay=d;trWeek=trTydenOd(d);trView='den';trNoteReset();go('tridnice');};

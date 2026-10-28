@@ -2121,3 +2121,13 @@ potvrzení dopsaného a úprava. Teď mají všechny tři varianty stejný obsah
 cizí příspěvky ke čtení, vlastní jako hotový zápis s „Upravit", při psaní podpis, „✓ Uloženo"
 a „Hotovo"; prázdné pole „+ napsat", jinak „+ doplnit". Varianty se liší jen obalem
 (karty / rozbalovací řádky / osa).
+
+## Třídnice: hlavička jako u Docházky (28. 10. 2026)
+
+Designérka: tři ovládací prvky v hlavičce („Den/Týden/Děti", listování, výběr měsíce) jsou složité.
+Teď stejně jako Docházka: **přepínač Den | Týden a listování**.
+- **Výběr měsíce zrušen** – klepnutí na datum v listování otevře kalendář telefonu (`<input type=date>`
+  přes popisek, `showPicker` na desktopu). Zvolený víkend nebo prázdniny vedou na nejbližší předchozí
+  otevřený den, budoucnost na dnešek.
+- **Záložka „Děti" zrušena** – týdenní přehled poznámek k dětem je sbalená část pohledu Týden
+  („Tento týden poznámka u 8 z 25 dětí" + Zobrazit děti). Poznámky ke dni zůstávají v „K dětem" pod zápisem.

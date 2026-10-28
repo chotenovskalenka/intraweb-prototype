@@ -301,8 +301,6 @@ button.chk.ro{cursor:default}
 .tr-fh{align-items:baseline;margin-bottom:9px}
 .tr-meta-r{align-items:flex-start}
 .tr-meta-r .tval{flex:1;min-width:0}
-/* skok na měsíc jako pilulka vedle listování (stejná plocha jako přepínač a datum) */
-.dfield .tr-mesic{width:auto;min-height:52px;border:none;border-radius:var(--radius-full);background-color:rgba(249,247,241,.92);box-shadow:var(--shadow-card);padding-left:18px}
 /* psací pole: měkčí rohy, plocha karty */
 .tr-f .pin,.tr-f .pta,.tr .pta,.tr .pin{border-radius:14px}
 /* interní zóna „K dětem" / „Poznámky k dětem": čárkovaně dál znamená „jen pro tým", rohy jako karty */
@@ -310,10 +308,6 @@ button.chk.ro{cursor:default}
 .zona-int>.tile,.zona-int .tile{box-shadow:none}
 /* poučení o pravidlech: popisek nad volbami jako ostatní popisky formulářů */
 .tr-f .pl{margin-top:12px}
-/* mobil: listování a skok na měsíc v jednom řádku pod přepínačem (dřív tři řádky ovládání) */
-@media (max-width:899px){
-  .dfield .tr-mesic{padding:0 34px 0 14px}
-}
 /* „Celý rok v profilu dítěte" – sekundární pilulka s vlastním odsazením (základní styl ho nuloval) */
 .tr-dite-act .tr-rok-link{padding:10px 18px;margin:0}
 
@@ -372,3 +366,8 @@ button.chk.ro{cursor:default}
   font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;color:var(--color-primary)}
 .tr-pr-muj{background:var(--tint-green)}
 .trv-osa .tr-pr-muj{background:none}
+/* Třídnice: datum v listování otevře kalendář telefonu (průhledné pole přes popisek) */
+.tr-datum{position:relative;display:inline-block;cursor:pointer;text-decoration:underline dotted;text-underline-offset:4px}
+.tr-dpick{position:absolute;inset:-12px -8px;width:calc(100% + 16px);height:calc(100% + 24px);opacity:0;cursor:pointer;border:none;padding:0}
+.tr-dpick::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+.dfield .dnav .tr-datum{min-width:0;padding:0}   /* vnořený span nedědí šířku a odsazení popisku data */
