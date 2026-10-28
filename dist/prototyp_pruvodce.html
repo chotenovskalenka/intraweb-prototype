@@ -1218,6 +1218,18 @@ body{font-family:var(--font-sans)}
   .dash-row>.tile{display:flex;flex-direction:column}
   .dash-row .dash-scroll{flex:1 1 0;height:0;min-height:0;max-height:none}
 }
+
+/* ---------- Docházka: hlavička v jednom řádku, kompaktní dlaždice (28. 10. 2026) ---------- */
+/* Přepínač Den/Týden a listování data mají stejnou pilulku: plocha karty, bez linky, měkký stín. */
+.dfield .dsw,.dfield .dnav{background:rgba(249,247,241,.92);border:none;box-shadow:var(--shadow-card);padding:4px;min-height:52px;align-items:center}
+.dfield .dsw button.on{background:var(--color-primary-strong)}
+.dashhead>.dfield{margin:0}
+@media (min-width:900px){
+  .dashhead>.dfield{margin-left:auto}
+  /* dlaždice se neroztahují přes celou šířku – drží velikost jako na přehledu */
+  .doch-today>.doch-counts{flex-wrap:nowrap}
+  .doch-today>.doch-counts .tab{flex:1 1 0;max-width:200px}
+}
 </style>
 </head>
 <body>
@@ -2590,7 +2602,7 @@ function rosterHTML(){
 function renderDochazka(){
   // Desktop: hlavička (nadpis + sloučené pole datum+Den/Týden) + dva panely (styl Přehledu). Mobil: stoh.
   // Měsíc záměrně jen v rodičovské/admin appce (přehled, hromadné omluvy, statistiky) – průvodce řeší den a týden.
-  let h=`<div class="doch">${renderDochNav()}`;
+  let h=`<div class="doch">`;   // přepínač Den/Týden + datum je v hlavičce (core.js render)
   h+=(view==='tyden')?renderTydenD():renderDen();
   return h+`</div>`;
 }
@@ -4165,6 +4177,8 @@ function render(){
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-ghost" onclick="openVzkaz(-1)" title="Vzkaz rodičům jednoho dítěte">Vzkaz rodiči</button><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
     : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1>${jeHospodar()?'<button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>':''}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
+    // Docházka: přepínač Den/Týden a listování data v řádku nadpisu, ne pod ním (ladění C, 28. 10. 2026)
+    : section==='dochazka' ? `<h1 class="dh-t">Docházka</h1>${renderDochNav()}`
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';

@@ -115,7 +115,7 @@ function rosterHTML(){
 function renderDochazka(){
   // Desktop: hlavička (nadpis + sloučené pole datum+Den/Týden) + dva panely (styl Přehledu). Mobil: stoh.
   // Měsíc záměrně jen v rodičovské/admin appce (přehled, hromadné omluvy, statistiky) – průvodce řeší den a týden.
-  let h=`<div class="doch">${renderDochNav()}`;
+  let h=`<div class="doch">`;   // přepínač Den/Týden + datum je v hlavičce (core.js render)
   h+=(view==='tyden')?renderTydenD():renderDen();
   return h+`</div>`;
 }
