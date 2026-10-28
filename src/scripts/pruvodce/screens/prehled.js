@@ -1,8 +1,8 @@
 /* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce, vzhled C · Deník z háje
    (Figma „Vhaaji – design systém" → „C · původní rozložení" a „C · desktop", decision-log
    27. 10. 2026). Pořadí v DOM = pořadí na mobilu: docházka → informace od rodičů → kdo
-   nepřijde (ranní řada, na desktopu jedna plocha) → třídnice → akce → básnička → průvodci.
-   Na desktopu skládá spodní část mřížka (.dash-c): průvodci + akce | básnička | třídnice. */
+   nepřijde (ranní řada, na desktopu jedna plocha) → třídnice → akce → jídlo → básnička → průvodci.
+   Na desktopu skládá spodní část mřížka (.dash-c): průvodci + akce | básnička + jídlo | třídnice. */
 /* Dlouhé vzkazy se krátí na tři řádky. Jeden ukecaný rodič jinak zdvojnásobí výšku celé
    ranní řady (měřeno: 287 → 550 px) a průvodce při předávání dítěte potřebuje hlavně vědět,
    že něco přišlo a od koho. Práh je na délce textu, ne na změřeném přetečení – render()
@@ -139,6 +139,14 @@ function renderPrehled(){
      blkAkce+=`<button class="cardlink" onclick="go('akce')">Všechny akce →</button></div>`;
    }}
 
+  // dnešní jídlo – na přehledu, ne v jídelníčku (designérka 28. 10. 2026); porce bez alergenu u jídla
+  let blkJidlo='';
+  {const den=jidelnicekDen(TODAYD,6);
+   if(den&&den.some(it=>it[1])){
+     blkJidlo=`<div class="tile t-jid"><div class="ch">Dnes se jí</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
+       +`<button class="cardlink" onclick="go('jidelnicek')">Jídelníček na další dny →</button></div>`;
+   }}
+
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) zeleně, kdo uspává = ☾
   let blkPruvodci=`<div class="tile t-pru"><div class="ch">Průvodci dnes</div>`;
   if(todays.length){
@@ -149,7 +157,7 @@ function renderPrehled(){
   /* Ranní trojice: na mobilu tři karty pod sebou, na desktopu jedna plocha přes celou šířku
      (je to jeden okamžik dne). Pod ní zbytek dne v pořadí mobilu; desktop ho skládá mřížkou. */
   let h=`<div class="dash-row">${blkDochazka}${blkZpravy}${blkNeprijde}</div>`;
-  h+=`<div class="dash-c">${blkTridnice}${blkAkce}${blkBasnicka}${blkPruvodci}</div>`;
+  h+=`<div class="dash-c">${blkTridnice}${blkAkce}${blkJidlo}${blkBasnicka}${blkPruvodci}</div>`;
   return h;
 }
 window.goDochTab=k=>{tab=k;view='den';denDay=TODAYD;open=-1;query='';go('dochazka');};
