@@ -2101,3 +2101,17 @@ drobné verzálky s prostrkáním. Kalendář drží barvy Googlu záměrně.
   „(upraveno: Míša)", „Út 2. 6. – Gabča".
 - Popisky formulářových polí `.pl` („TÉMA TÝDNE", „SEZNAM") zůstávají verzálkami – sdílený prvek
   napříč appkou, rozhodne se při sjednocení škály písma.
+
+## Třídnice: dopisuje víc průvodců – každý svůj příspěvek (28. 10. 2026)
+
+**Proč:** designérka – „u třídnice se stává, že tam často další průvodci dopisují". Pole mělo jednoho
+autora; když druhý připsal větu, podpis se přepsal a nebylo vidět, kdo co napsal.
+
+**Rozhodnutí:** dopsat = **přidat vlastní příspěvek**, cizí text se nepřepisuje. Pole je první zápis
+a volitelně doplňky `dop` (tridnice-data.js); stav dne a čtení `.t`/`.kdo` dál berou první zápis,
+takže přehled ani vedení se nemění. Každý vidí cizí příspěvky jako text s podpisem a píše/upravuje
+jen svůj (`trSet`); smazáním textu svůj příspěvek odebere. Platí pro všechny tři varianty zápisu:
+formulář (cizí nad psacím polem), seznam (počet zápisů u řádku, v rozbalení příspěvky), osa
+(příspěvky pod sebou jako v sešitě, „+ doplnit"). Seed: doplňky Táni (2. 6.) a Darči (3. 6.).
+
+**Návod k psaní pod „?"** u karty dne (designérka) – ukáže se klepnutím, ne najetím (na mobilu není hover).

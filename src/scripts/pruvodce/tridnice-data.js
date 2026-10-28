@@ -186,7 +186,10 @@ const trZena=c=>/á$/.test(c.sur);
 const trRod=(c,t)=>{const z=trZena(c);return t.replace(/\{a\}/g,z?'a':'').replace(/\{ý\}/g,z?'á':'ý').replace(/\{sam\}/g,z?'sama':'sám').replace('mu/jí',z?'jí':'mu');};
 
 /* ---- Ručně psaný týden 1.–5. 6. (sedí s adminem a s demem) ---- */
-const trPole=(t,kdo,cas,den)=>({t,kdo,cas,den});
+/* Pole = první zápis {t,kdo,cas,den} a volitelně doplňky dalších průvodců `dop` (stejný tvar).
+   Třídnici dopisuje víc lidí – každý svůj příspěvek, cizí text se nepřepisuje (designérka 28. 10. 2026).
+   Stav dne (trStav) i čtení `.t`/`.kdo` dál berou první zápis. */
+const trPole=(t,kdo,cas,den,dop)=>dop?{t,kdo,cas,den,dop}:{t,kdo,cas,den};
 let TRIDNICE={
   20260601:{pouceni:['skolka','les'],pole:{
     prichod:trPole('Klidné ráno, předání u branky bez slz. Dvě děti přišly až po deváté (hlášeno).','Darča','15:20',20260601),
@@ -202,14 +205,16 @@ let TRIDNICE={
     prichod:trPole('Vše v pořádku, jedno delší loučení s maminkou – pomohlo krmení slepic.','Gabča','16:05',20260602),
     kruh:trPole('Básnička týdne, pohybová hra „Na medvěda".','Gabča','16:05',20260602),
     aktivita:trPole('Putování k Ďáblické hvězdárně, cestou sbírání šišek na výrobu ježků.','Gabča','16:08',20260602),
-    jakslo:trPole('Cesta tam v pohodě, zpátky únava – příště kratší okruh nebo delší svačinová pauza.','Gabča','16:10',20260602),
+    jakslo:trPole('Cesta tam v pohodě, zpátky únava – příště kratší okruh nebo delší svačinová pauza.','Gabča','16:10',20260602,
+      [trPole('Doplňuji z odpoledne: po přeháňce došlo suché oblečení, příště přibalit náhradní ponožky.','Táňa','18:10',20260602)]),
     kde:trPole('Les, hvězdárna a zpět. Svačina na louce.','Gabča','16:06',20260602),
     predskolaci:trPole('Počítali šišky do desíti a třídili podle velikosti.','Táňa','16:30',20260602),
     pocasi:trPole('polojasno, odpoledne přeháňka','Gabča','16:06',20260602),
   }},
   20260603:{pouceni:['skolka'],pole:{
     prichod:trPole('Klidné, jen jedno dítě přišlo s rodičem až v 9:30 (hlášeno ráno).','Honza','9:40',20260603),
-    kruh:trPole('Narozeninový kruh – svíčka, přání, písnička „Šel zahradník".','Honza','9:42',20260603),
+    kruh:trPole('Narozeninový kruh – svíčka, přání, písnička „Šel zahradník".','Honza','9:42',20260603,
+      [trPole('Přání vyrobily děti samy z vylisovaných kytek, zpívali i nejmenší.','Darča','9:55',20260603)]),
   }},
 };
 /* Týdenní část: téma, pohádka týdne (Jaata ji píše jednou týdně), uzavření týdne a úkoly

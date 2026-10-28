@@ -1348,6 +1348,25 @@ button.chk.ro{cursor:default}
   /* na desktopu jeden sloupec do čitelné šířky, ať se dá porovnat s mobilem */
   .trv-seznam,.trv-osa{max-width:760px}
 }
+
+/* ---------- Třídnice: příspěvky více průvodců, návod pod „?" (28. 10. 2026) ---------- */
+/* cizí příspěvek: čte se jako text s podpisem, nepíše se do něj */
+.tr-pr{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:var(--wash-primary)}
+.tr-pr-t{font-size:var(--text-body);line-height:var(--leading-normal);color:var(--color-text);white-space:pre-wrap}
+.tr-pr .tr-kdo{display:block;margin-top:4px}
+.tr-muj{display:block;min-height:1em;margin-top:4px}
+/* v deníku (osa) bez podkladu – příspěvky pod sebou jako zápisy v sešitě */
+.trv-osa .tr-pr{background:none;padding:0;margin:0 0 12px}
+.trv-osa button.tr-pr{display:block;width:100%;text-align:left;border:none;cursor:text;font-family:var(--font-sans)}
+/* seznam: počet zápisů u pole, které dopisovalo víc lidí */
+.trv-pocet{flex:none;min-width:22px;padding:2px 7px;border-radius:var(--radius-full);background:var(--tint-green);color:var(--color-primary-strong);font-size:var(--text-chip);font-weight:600;text-align:center}
+/* „?" u karty dne – návod se ukáže klepnutím */
+.tr-info{position:relative;flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--color-border-strong);background:none;cursor:pointer;
+  font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--color-text-muted);line-height:1}
+.tr-info::before{content:"";position:absolute;inset:-8px}
+.tr-info[aria-expanded="true"]{background:var(--color-primary-strong);border-color:var(--color-primary-strong);color:var(--color-on-primary)}
+.tr-info-t{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--tint-green);font-size:var(--text-note);line-height:var(--leading-normal);color:var(--color-text)}
+.tr-meta-r{align-items:center}
 </style>
 </head>
 <body>
@@ -2278,7 +2297,10 @@ const trZena=c=>/á$/.test(c.sur);
 const trRod=(c,t)=>{const z=trZena(c);return t.replace(/\{a\}/g,z?'a':'').replace(/\{ý\}/g,z?'á':'ý').replace(/\{sam\}/g,z?'sama':'sám').replace('mu/jí',z?'jí':'mu');};
 
 /* ---- Ručně psaný týden 1.–5. 6. (sedí s adminem a s demem) ---- */
-const trPole=(t,kdo,cas,den)=>({t,kdo,cas,den});
+/* Pole = první zápis {t,kdo,cas,den} a volitelně doplňky dalších průvodců `dop` (stejný tvar).
+   Třídnici dopisuje víc lidí – každý svůj příspěvek, cizí text se nepřepisuje (designérka 28. 10. 2026).
+   Stav dne (trStav) i čtení `.t`/`.kdo` dál berou první zápis. */
+const trPole=(t,kdo,cas,den,dop)=>dop?{t,kdo,cas,den,dop}:{t,kdo,cas,den};
 let TRIDNICE={
   20260601:{pouceni:['skolka','les'],pole:{
     prichod:trPole('Klidné ráno, předání u branky bez slz. Dvě děti přišly až po deváté (hlášeno).','Darča','15:20',20260601),
@@ -2294,14 +2316,16 @@ let TRIDNICE={
     prichod:trPole('Vše v pořádku, jedno delší loučení s maminkou – pomohlo krmení slepic.','Gabča','16:05',20260602),
     kruh:trPole('Básnička týdne, pohybová hra „Na medvěda".','Gabča','16:05',20260602),
     aktivita:trPole('Putování k Ďáblické hvězdárně, cestou sbírání šišek na výrobu ježků.','Gabča','16:08',20260602),
-    jakslo:trPole('Cesta tam v pohodě, zpátky únava – příště kratší okruh nebo delší svačinová pauza.','Gabča','16:10',20260602),
+    jakslo:trPole('Cesta tam v pohodě, zpátky únava – příště kratší okruh nebo delší svačinová pauza.','Gabča','16:10',20260602,
+      [trPole('Doplňuji z odpoledne: po přeháňce došlo suché oblečení, příště přibalit náhradní ponožky.','Táňa','18:10',20260602)]),
     kde:trPole('Les, hvězdárna a zpět. Svačina na louce.','Gabča','16:06',20260602),
     predskolaci:trPole('Počítali šišky do desíti a třídili podle velikosti.','Táňa','16:30',20260602),
     pocasi:trPole('polojasno, odpoledne přeháňka','Gabča','16:06',20260602),
   }},
   20260603:{pouceni:['skolka'],pole:{
     prichod:trPole('Klidné, jen jedno dítě přišlo s rodičem až v 9:30 (hlášeno ráno).','Honza','9:40',20260603),
-    kruh:trPole('Narozeninový kruh – svíčka, přání, písnička „Šel zahradník".','Honza','9:42',20260603),
+    kruh:trPole('Narozeninový kruh – svíčka, přání, písnička „Šel zahradník".','Honza','9:42',20260603,
+      [trPole('Přání vyrobily děti samy z vylisovaných kytek, zpívali i nejmenší.','Darča','9:55',20260603)]),
   }},
 };
 /* Týdenní část: téma, pohádka týdne (Jaata ji píše jednou týdně), uzavření týdne a úkoly
@@ -2909,7 +2933,7 @@ let trNoteForm=false, trNoteChild=-1, trNoteDraft='';
 let trUprava=null, trUpravaDraft='', trMazani=null;
 // průzkum vzoru zápisu dne: ?trv=seznam | osa (bez parametru formulář) a právě rozbalené pole
 const TR_VAR=(new URLSearchParams(location.search).get('trv')||'pole');
-let trOtevrenePole=null;
+let trOtevrenePole=null, trInfoOtevreno=false;
 // otevřené dny školního roku, které už začaly, a jejich týdny (kalendář je v tridnice-data.js)
 const trDny=()=>TR_DNY;
 const trTydny=()=>TR_TYDNY_SEZ;
@@ -2948,58 +2972,72 @@ function trNav(lbl,fn,i,n){
 /* ---- Den ---- */
 function trRenderDen(){
   const d=trDay, x=trInfo(d), z=trDen(d), sl=trSluzba(d);
-  // datum nese listování v hlavičce – karta dne říká jen stav, kdo slouží a kdo píše
-  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b>. Píše <b>${TR_ZAPISUJE[x.dow]}</b>.</div><span id="tr-stav">${trBdg(trStav(d))}</span></div>`
-    +`<div class="note2">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do části <a class="tr-inl" href="#tr-kdetem">K dětem</a> pod zápisem, kterou vidí jen tým.</div></div>`;
+  // datum nese listování v hlavičce – karta dne říká jen stav, kdo slouží a kdo píše.
+  // Návod k psaní je schovaný pod „?" (designérka 28. 10. 2026) – klepnutím, ne najetím: na mobilu hover není.
+  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b>. Píše <b>${TR_ZAPISUJE[x.dow]}</b>.</div>`
+    +`<span id="tr-stav">${trBdg(trStav(d))}</span><button class="tr-info" onclick="trInfoToggle()" aria-expanded="${trInfoOtevreno}" aria-controls="tr-info-t" aria-label="Jak se třídnice píše">?</button></div>`
+    +(trInfoOtevreno?`<div class="tr-info-t" id="tr-info-t" role="note">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do části <a class="tr-inl" href="#tr-kdetem">K dětem</a> pod zápisem, kterou vidí jen tým.</div>`:'')+`</div>`;
   h+=TR_VAR==='seznam'?trDenSeznam(z):TR_VAR==='osa'?trDenOsa(z):trDenPole(z);
   return h+trRenderKDetem(d);
 }
-/* Psací pole jednoho údaje (+ poučení o pravidlech u „Kam jsme šli") – sdílí ho všechny varianty. */
+window.trInfoToggle=()=>{trInfoOtevreno=!trInfoOtevreno;render();const b=document.querySelector('.tr-info');if(b)b.focus({preventScroll:true});};
+/* Příspěvky pole: první zápis a doplňky dalších průvodců (`dop`, viz tridnice-data.js).
+   Každý píše a upravuje jen svůj příspěvek – cizí text se čte, nepřepisuje. */
+const trPrisp=(z,k)=>{const v=z.pole[k];return v?[v,...(v.dop||[])]:[];};
+const trMuj=(z,k)=>trPrisp(z,k).find(x=>x.kdo===ja().n);
+const trCizi=(z,k)=>trPrisp(z,k).filter(x=>x.kdo!==ja().n);
+const trPrispHTML=x=>`<div class="tr-pr"><div class="tr-pr-t">${escTa(x.t)}</div><div class="tr-kdo">${trKdyLbl(x)}</div></div>`;
+/* Psací pole pro MŮJ příspěvek (+ poučení o pravidlech u „Kam jsme šli") – sdílí ho všechny varianty.
+   Když už někdo psal, pole je „doplnit"; vlastní podpis se ukazuje pod ním (trk-…). */
 function trPoleVstup(p,z){
-  const v=z.pole[p.k];
+  const muj=trMuj(z,p.k), doplnek=trCizi(z,p.k).length>0, ph=doplnek?'Doplnit…':p.ph;
   let h=p.kratke
-    ? `<input class="pin" id="trf-${p.k}" value="${esc(v?v.t:'')}" placeholder="${p.ph}" aria-label="${p.lab}" oninput="trSet('${p.k}',this.value)">`
-    : `<textarea class="pta" id="trf-${p.k}" placeholder="${p.ph}" aria-label="${p.lab}" oninput="trSet('${p.k}',this.value)">${escTa(v?v.t:'')}</textarea>`;
+    ? `<input class="pin" id="trf-${p.k}" value="${esc(muj?muj.t:'')}" placeholder="${ph}" aria-label="${p.lab}${doplnek?' – doplnit':''}" oninput="trSet('${p.k}',this.value)">`
+    : `<textarea class="pta" id="trf-${p.k}" placeholder="${ph}" aria-label="${p.lab}${doplnek?' – doplnit':''}" oninput="trSet('${p.k}',this.value)">${escTa(muj?muj.t:'')}</textarea>`;
+  h+=`<div class="tr-kdo tr-muj" id="trk-${p.k}">${muj?trKdyLbl(muj):''}</div>`;
   // poučení o pravidlech patří k místu, kam se šlo – sada podle místa, jako v Jaatě
   if(p.k==='kde')h+=`<div class="pl">Poučení o pravidlech</div><div class="pchips">`
     +TR_POUCENI.map(([k,l])=>`<button class="${z.pouceni.includes(k)?'on':''}" aria-pressed="${z.pouceni.includes(k)}" onclick="trPouceni('${k}')">${l}</button>`).join('')+`</div>`;
   return h;
 }
 const trPoleLbl=p=>`${p.lab}${p.volitelne?' <span class="tr-vol">nepovinné</span>':''}`;
-/* Varianta „pole" (výchozí): všechna pole jako karty pod sebou. */
+/* Varianta „pole" (výchozí): všechna pole jako karty pod sebou; nad psacím polem příspěvky ostatních. */
 function trDenPole(z){
   let h=`<div class="tr-pole">`;
   TR_POLE.forEach(p=>{
-    h+=`<div class="tile tr-f${p.siroke?' tr-f-wide':''}"><div class="tr-fh"><label class="tr-fl" for="trf-${p.k}">${trPoleLbl(p)}</label>`
-      +`<span class="tr-kdo" id="trk-${p.k}">${trKdyLbl(z.pole[p.k])}</span></div>`+trPoleVstup(p,z)+`</div>`;
+    h+=`<div class="tile tr-f${p.siroke?' tr-f-wide':''}"><div class="tr-fh"><label class="tr-fl" for="trf-${p.k}">${trPoleLbl(p)}</label></div>`
+      +trCizi(z,p.k).map(trPrispHTML).join('')+trPoleVstup(p,z)+`</div>`;
   });
   return h+`</div>`;
 }
 /* PRŮZKUM VZORU (28. 10. 2026) – varianty zápisu dne k porovnání, přepínají se v URL: ?trv=seznam | ?trv=osa
    (srovnávací stránka docs/tridnice-varianty.html). Rozhodne designérka, pak zůstane jedna. */
-/* Varianta „seznam": osm řádků se stavem (hotovo / chybí) a náhledem textu; klepnutím se řádek rozbalí. */
+/* Varianta „seznam": řádek na pole se stavem, náhledem prvního zápisu a počtem doplňků; klepnutím se rozbalí. */
 function trDenSeznam(z){
   let h=`<div class="tile trv-seznam">`;
   TR_POLE.forEach(p=>{
-    const v=z.pole[p.k],on=trOtevrenePole===p.k;
-    h+=`<div class="trv-r${on?' on':''}${v?' ok':''}"><button class="trv-h" onclick="trPoleOtevri('${p.k}')" aria-expanded="${on}">`
-      +`<span class="trv-st" aria-hidden="true">${v?'✓':''}</span><span class="trv-l">${trPoleLbl(p)}</span>`
-      +`<span class="trv-n">${v?escTa(v.t):p.volitelne?'':'chybí'}</span><span class="trv-arr" aria-hidden="true">${on?'⌃':'›'}</span></button>`;
-    if(on)h+=`<div class="trv-b"><div class="tr-kdo" id="trk-${p.k}">${trKdyLbl(v)}</div>${trPoleVstup(p,z)}</div>`;
+    const pr=trPrisp(z,p.k),on=trOtevrenePole===p.k;
+    h+=`<div class="trv-r${on?' on':''}${pr.length?' ok':''}"><button class="trv-h" onclick="trPoleOtevri('${p.k}')" aria-expanded="${on}">`
+      +`<span class="trv-st" aria-hidden="true">${pr.length?'✓':''}</span><span class="trv-l">${trPoleLbl(p)}</span>`
+      +`<span class="trv-n">${pr.length?escTa(pr[0].t):p.volitelne?'':'chybí'}</span>`
+      +(pr.length>1?`<span class="trv-pocet" aria-label="${pr.length} zápisy">${pr.length}</span>`:'')
+      +`<span class="trv-arr" aria-hidden="true">${on?'⌃':'›'}</span></button>`;
+    if(on)h+=`<div class="trv-b">${trCizi(z,p.k).map(trPrispHTML).join('')}${trPoleVstup(p,z)}</div>`;
     h+=`</div>`;
   });
   return h+`</div>`;
 }
-/* Varianta „osa": den jako deník podél svislé čáry. Vyplněné části se čtou jako text (klepnutím se
-   upraví), prázdné jsou jen „+ doplnit". */
+/* Varianta „osa": den jako deník podél svislé čáry. Příspěvky se čtou jako text s podpisem; vlastní
+   se klepnutím upraví, „+ doplnit" přidá vlastní k tomu, co napsali ostatní. */
 function trDenOsa(z){
   let h=`<div class="tile trv-osa">`;
   TR_POLE.forEach(p=>{
-    const v=z.pole[p.k],ed=trOtevrenePole===p.k;
-    h+=`<div class="trv-u${v?' ok':''}${ed?' on':''}"><span class="trv-bod" aria-hidden="true"></span><div class="trv-obs">`
-      +`<div class="trv-oh"><span class="tr-fl">${trPoleLbl(p)}</span><span class="tr-kdo" id="trk-${p.k}">${trKdyLbl(v)}</span></div>`;
+    const pr=trPrisp(z,p.k),muj=trMuj(z,p.k),ed=trOtevrenePole===p.k;
+    h+=`<div class="trv-u${pr.length?' ok':''}${ed?' on':''}"><span class="trv-bod" aria-hidden="true"></span><div class="trv-obs">`
+      +`<div class="trv-oh"><span class="tr-fl">${trPoleLbl(p)}</span></div>`
+      +trCizi(z,p.k).map(trPrispHTML).join('');
     if(ed)h+=trPoleVstup(p,z)+`<button class="cardlink trv-hotovo" onclick="trPoleOtevri(null)">Hotovo</button>`;
-    else if(v)h+=`<button class="trv-text" onclick="trPoleOtevri('${p.k}')" aria-label="Upravit: ${p.lab}">${escTa(v.t)}</button>`;
+    else if(muj)h+=`<button class="trv-text tr-pr" onclick="trPoleOtevri('${p.k}')" aria-label="Upravit svůj zápis: ${p.lab}"><div class="tr-pr-t">${escTa(muj.t)}</div><div class="tr-kdo">${trKdyLbl(muj)}</div></button>`;
     else h+=`<button class="trv-plus" onclick="trPoleOtevri('${p.k}')">+ doplnit</button>`;
     h+=`</div></div>`;
   });
@@ -3077,10 +3115,21 @@ window.trNoteUloz=()=>{
   trNoteChild=-1;trNoteDraft='';render();showToast('Poznámka k '+jm+' uložena ✓');
   const s=document.getElementById('trn-dite');if(s)s.focus();
 };
+/* Píše se vždy MŮJ příspěvek: první zápis pole, nebo můj doplněk k cizímu. Smazáním textu příspěvek
+   zmizí; když zmizí první zápis, nastoupí za něj nejstarší doplněk. */
 window.trSet=(k,v)=>{
-  const z=trDen(trDay);
-  if(v.trim())z.pole[k]={t:v,kdo:ja().n,cas:TEDCAS,den:TR_DNES};else delete z.pole[k];
-  const kdo=document.getElementById('trk-'+k);if(kdo)kdo.textContent=trKdyLbl(z.pole[k]);
+  const z=trDen(trDay),me=ja().n,prvni=z.pole[k],novy={t:v,kdo:me,cas:TEDCAS,den:TR_DNES};
+  if(!prvni){if(v.trim())z.pole[k]=novy;}
+  else if(prvni.kdo===me){
+    if(v.trim())Object.assign(prvni,{t:v,cas:TEDCAS,den:TR_DNES});
+    else{const [dalsi,...zbytek]=prvni.dop||[];if(dalsi)z.pole[k]=zbytek.length?Object.assign(dalsi,{dop:zbytek}):dalsi;else delete z.pole[k];}
+  }else{
+    const dop=prvni.dop||(prvni.dop=[]),i=dop.findIndex(x=>x.kdo===me);
+    if(v.trim()){if(i>=0)Object.assign(dop[i],{t:v,cas:TEDCAS,den:TR_DNES});else dop.push(novy);}
+    else if(i>=0)dop.splice(i,1);
+    if(!dop.length)delete prvni.dop;
+  }
+  const kdo=document.getElementById('trk-'+k);if(kdo)kdo.textContent=v.trim()?trKdyLbl(novy):'';
   const st=document.getElementById('tr-stav');if(st)st.innerHTML=trBdg(trStav(trDay));
 };
 window.trPouceni=k=>{const z=trDen(trDay),i=z.pouceni.indexOf(k);i>=0?z.pouceni.splice(i,1):z.pouceni.push(k);render();};
