@@ -2115,3 +2115,9 @@ formulář (cizí nad psacím polem), seznam (počet zápisů u řádku, v rozba
 (příspěvky pod sebou jako v sešitě, „+ doplnit"). Seed: doplňky Táni (2. 6.) a Darči (3. 6.).
 
 **Návod k psaní pod „?"** u karty dne (designérka) – ukáže se klepnutím, ne najetím (na mobilu není hover).
+
+**Doplněk – psaní jako v ose (28. 10. 2026):** designérce se líbí osa; ve formuláři a seznamu chybělo
+potvrzení dopsaného a úprava. Teď mají všechny tři varianty stejný obsah pole (`trPrispevky`):
+cizí příspěvky ke čtení, vlastní jako hotový zápis s „Upravit", při psaní podpis, „✓ Uloženo"
+a „Hotovo"; prázdné pole „+ napsat", jinak „+ doplnit". Varianty se liší jen obalem
+(karty / rozbalovací řádky / osa).
