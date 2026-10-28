@@ -2195,7 +2195,7 @@ Odkaz „Kdo má jakou alergii" je až pod jídlem dne, ne nad pásem dnů – n
 
 Designérka: „dnešek dát na dashboard a tady zobrazit celý týden od dneška dál. Minulost je asi nezajímá."
 - **Přehled:** karta „Dnes se jí" (chody a porce bez alergenu), odkaz „Jídelníček na další dny".
-  Mobil: po akci, před básničkou; desktop: pod básničkou (mřížka „akc jid tri").
+  Mobil: po akci, před básničkou; desktop: celá šířka pod mřížkou, čtyři chody vedle sebe (pod básničkou rozhodilo řádky).
 - **Jídelníček:** pět školních dnů od dneška, i přes víkend do dalšího týdne (St–Pá, Po–Út),
   karty se štítkem „dnes" / „zítra"; pás dnů a listování pryč.
 - **Listování týdny jen v úpravách** (kuchyň, hospodářka): zadávají dopředu a svačinářka plánuje
