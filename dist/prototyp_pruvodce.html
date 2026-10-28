@@ -1126,10 +1126,10 @@ body{font-family:var(--font-sans)}
 @media (min-width:900px){
   .dash-row>.tile{border-radius:0;box-shadow:none;background:none}
   .dash-row{border-radius:var(--radius-card);background:rgba(249,247,241,.92);box-shadow:var(--shadow-card)}
-  /* Průvodci + akce | básnička | třídnice (Figma „C · desktop") */
-  .dash-c{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"pru bas tri" "akc bas tri";
+  /* Průvodci + akce | básnička + dnešní jídlo | třídnice (Figma „C · desktop", jídlo 28. 10. 2026) */
+  .dash-c{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"pru bas tri" "akc jid tri";
     grid-template-rows:auto 1fr;gap:20px;align-items:start}
-  .dash-c>.t-pru{grid-area:pru}.dash-c>.t-akc{grid-area:akc}.dash-c>.t-bas{grid-area:bas}.dash-c>.t-tri{grid-area:tri}
+  .dash-c>.t-pru{grid-area:pru}.dash-c>.t-akc{grid-area:akc}.dash-c>.t-bas{grid-area:bas}.dash-c>.t-tri{grid-area:tri}.dash-c>.t-jid{grid-area:jid}
   .dash-c>.tile{margin:0}
 }
 /* štítek role → blok přihlášeného (přepíná roli v prototypu, viz core.js) */
@@ -1375,23 +1375,6 @@ button.chk.ro{cursor:default}
 .tile>.tr-add{margin:4px 0 6px}
 .tr-hotove-h{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;margin-top:6px;padding:0;border:none;border-top:1px solid var(--color-border);
   background:none;cursor:pointer;font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;color:var(--color-text-muted);text-align:left}
-
-/* ---------- Jídelníček: den po dni – pás pěti dnů a pod ním jeden den (vybráno 28. 10. 2026) ---------- */
-.jid-dnes .ch{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.jid-dnes-d{font-family:var(--font-sans);font-size:var(--text-small);font-weight:500;color:var(--color-text-muted)}
-/* pás pěti dnů: vybraný den tmavě, dnešek s popiskem, proběhlé dny tlumeně */
-.jid-pas{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0 0 12px}
-.jid-pas button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:64px;padding:6px 2px;border:none;
-  border-radius:18px;background:rgba(249,247,241,.92);box-shadow:var(--shadow-card);cursor:pointer;font-family:var(--font-sans);color:var(--color-text)}
-.jid-pas-w{font-size:var(--text-note);color:var(--color-text-muted)}
-.jid-pas-d{font-size:var(--text-body);font-weight:600}
-.jid-pas-t{font-size:var(--text-chip);font-weight:600;color:var(--state-ok-ink)}
-.jid-pas button.bylo .jid-pas-d{color:var(--color-text-hint);font-weight:500}
-.jid-pas button.on{background:var(--color-primary-strong);color:var(--color-on-primary)}
-.jid-pas button.on .jid-pas-w,.jid-pas button.on .jid-pas-t,.jid-pas button.on .jid-pas-d{color:var(--color-on-primary)}
-@media (min-width:900px){
-  .jid-pas,#content > .jid .jid-dnes{max-width:760px}
-}
 </style>
 </head>
 <body>
@@ -2502,8 +2485,8 @@ const trChybi=k=>TR_POLE.filter(p=>!p.volitelne&&!((TRIDNICE[k]||{pole:{}}).pole
 /* SCREEN: PRUVODCE_PREHLED – „soupis dne" dle priorit průvodce, vzhled C · Deník z háje
    (Figma „Vhaaji – design systém" → „C · původní rozložení" a „C · desktop", decision-log
    27. 10. 2026). Pořadí v DOM = pořadí na mobilu: docházka → informace od rodičů → kdo
-   nepřijde (ranní řada, na desktopu jedna plocha) → třídnice → akce → básnička → průvodci.
-   Na desktopu skládá spodní část mřížka (.dash-c): průvodci + akce | básnička | třídnice. */
+   nepřijde (ranní řada, na desktopu jedna plocha) → třídnice → akce → jídlo → básnička → průvodci.
+   Na desktopu skládá spodní část mřížka (.dash-c): průvodci + akce | básnička + jídlo | třídnice. */
 /* Dlouhé vzkazy se krátí na tři řádky. Jeden ukecaný rodič jinak zdvojnásobí výšku celé
    ranní řady (měřeno: 287 → 550 px) a průvodce při předávání dítěte potřebuje hlavně vědět,
    že něco přišlo a od koho. Práh je na délce textu, ne na změřeném přetečení – render()
@@ -2640,6 +2623,14 @@ function renderPrehled(){
      blkAkce+=`<button class="cardlink" onclick="go('akce')">Všechny akce →</button></div>`;
    }}
 
+  // dnešní jídlo – na přehledu, ne v jídelníčku (designérka 28. 10. 2026); porce bez alergenu u jídla
+  let blkJidlo='';
+  {const den=jidelnicekDen(TODAYD,6);
+   if(den&&den.some(it=>it[1])){
+     blkJidlo=`<div class="tile t-jid"><div class="ch">Dnes se jí</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
+       +`<button class="cardlink" onclick="go('jidelnicek')">Jídelníček na další dny →</button></div>`;
+   }}
+
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) zeleně, kdo uspává = ☾
   let blkPruvodci=`<div class="tile t-pru"><div class="ch">Průvodci dnes</div>`;
   if(todays.length){
@@ -2650,7 +2641,7 @@ function renderPrehled(){
   /* Ranní trojice: na mobilu tři karty pod sebou, na desktopu jedna plocha přes celou šířku
      (je to jeden okamžik dne). Pod ní zbytek dne v pořadí mobilu; desktop ho skládá mřížkou. */
   let h=`<div class="dash-row">${blkDochazka}${blkZpravy}${blkNeprijde}</div>`;
-  h+=`<div class="dash-c">${blkTridnice}${blkAkce}${blkBasnicka}${blkPruvodci}</div>`;
+  h+=`<div class="dash-c">${blkTridnice}${blkAkce}${blkJidlo}${blkBasnicka}${blkPruvodci}</div>`;
   return h;
 }
 window.goDochTab=k=>{tab=k;view='den';denDay=TODAYD;open=-1;query='';go('dochazka');};
@@ -3988,16 +3979,16 @@ function tydenSkolky(ti){
   return {...t,dny:t.dny.map((den,i)=>den.map(it=>it[0]==='Dopolední svačina'?sv[i][0]:it[0]==='Odpolední svačina'?sv[i][1]:it))};
 }
 
-/* Hlavička: listování týdnem a úpravy v řádku nadpisu, jako u Docházky a Třídnice
-   (ladění C, 28. 10. 2026) – dřív pod H1 samostatný řádek „Týden" se stepperem na druhém konci. */
+/* Hlavička: úpravy v řádku nadpisu, jako u Docházky a Třídnice. Čtení nemá listování – ukazuje
+   pět dnů od dneška, minulost průvodce nezajímá (designérka 28. 10. 2026). Listování týdny je jen
+   v úpravách: kuchyň a hospodářka zadávají dopředu a svačinářka plánuje z toho, co bylo. */
 function jidHlavicka(){
-  const t=tydenSkolky(jidTyden);
   // jídelníček zadává kuchyň a hospodářka; ostatní ho jen čtou
-  const akce=!smiJidelnicek()?''
-    :jidEdit
-      ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
-      : `<button class="btn-ghost" onclick="jidEditOn()">Upravit</button>`;
-  return `<div class="dfield">${akce}<div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`
+  if(!smiJidelnicek())return '';
+  if(!jidEdit)return `<div class="dfield"><button class="btn-ghost" onclick="jidEditOn()">Upravit</button></div>`;
+  const t=tydenSkolky(jidTyden);
+  return `<div class="dfield"><button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
+    +`<div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`
     +`<span>${jidTydenLabel(t)}</span>`
     +`<button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div></div>`;
 }
@@ -4029,33 +4020,39 @@ function jidChodHTML(it,jinaSkolka){
 const jidJeDnes=(t,i)=>t.od+i===TODAYD&&t.m===6;
 const jidDenLbl=(t,i)=>`${DOW[i]} ${t.od+i}. ${t.m}.${jidJeDnes(t,i)?' <span class="bdg st-ok">dnes</span>':''}`;
 
-/* Čtení jídelníčku: pás pěti dnů nahoře (zkratka + datum), pod ním jen vybraný den – výchozí dnešek.
-   Průvodce i kuchyň zajímá hlavně dnešek, týden je o klepnutí vedle (designérka 28. 10. 2026 –
-   vybráno z variant: karty dnů, tabulka, po chodech, dnes nahoře, dnes a zítra, dlaždice). */
-let jidVybranyDen=null;   // vybraný den v pásu; null = dnešek (v jiném týdnu pondělí)
-const jidDnesIdx=t=>t.dny.findIndex((_,i)=>jidJeDnes(t,i));
-const jidNadpis=(t,i)=>{const di=jidDnesIdx(t);return i===di?'Dnes se jí':di>=0&&i===di+1?'Zítra':di>=0&&i<di?'Bylo':'V plánu';};
-function jidDenPoDni(t,jinaSkolka){
-  const di=jidDnesIdx(t), vyb=jidVybranyDen??(di<0?0:di);
-  return `<div class="jid-pas" role="group" aria-label="Den v týdnu">`+t.dny.map((_,i)=>`<button class="${i===vyb?'on':''}${i===di?' dnes':''}${di>=0&&i<di?' bylo':''}" onclick="jidDen(${i})" aria-pressed="${i===vyb}">`
-      +`<span class="jid-pas-w">${DOW[i]}</span><span class="jid-pas-d">${t.od+i}.</span>${i===di?'<span class="jid-pas-t">dnes</span>':''}</button>`).join('')+`</div>`
-    +`<div class="tile jid-dnes"><div class="ch">${jidNadpis(t,vyb)} <span class="jid-dnes-d">${DOW[vyb]} ${t.od+vyb}. ${t.m}.</span></div>${t.dny[vyb].map(it=>jidChodHTML(it,jinaSkolka)).join('')}</div>`;
+/* Čtení jídelníčku: pět školních dnů od dneška, i přes víkend do dalšího týdne – minulost
+   průvodce nezajímá a dnešek je i na přehledu (designérka 28. 10. 2026; předtím pás dnů týdne). */
+const JID_DNU=5;
+function jidDnyOdDneska(){
+  const out=[];
+  for(let d=TODAYD;d<=30&&out.length<JID_DNU;d++){
+    const t=jidelnicekTyden(d,6); if(!t)continue;      // víkend nebo mimo dodané týdny
+    out.push({d,m:t.m,dow:wd(d),den:tydenSkolky(JIDELNICEK.indexOf(t)).dny[d-t.od]});
+  }
+  return out;
 }
-window.jidDen=i=>{jidVybranyDen=i;render();};
+const jidKdyLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':'';
+function jidOdDneska(jinaSkolka){
+  const dny=jidDnyOdDneska();
+  if(!dny.length)return `<div class="empty">Na další dny zatím jídelníček není.</div>`;
+  return `<div class="jid-tyden">`+dny.map(x=>{const k=jidKdyLbl(x.d);
+    return `<div class="tile jid-den${x.d===TODAYD?' dnes':''}"><div class="ch">${DOW[x.dow]} ${x.d}. ${x.m}.${k?` <span class="bdg ${x.d===TODAYD?'st-ok':'st-muted'}">${k}</span>`:''}</div>`
+      +x.den.map(it=>jidChodHTML(it,jinaSkolka)).join('')+`</div>`;}).join('')+`</div>`;
+}
 
 function renderJidelnicek(){
   const t=tydenSkolky(jidTyden), jinaSkolka=jidSkolka!=='vhaaji';
   let h=`<div class="doch jid">`;
   if(role==='kuchyn')h+=`<div class="filters jid-sk">`+JID_SKOLKY.map(([k,l])=>`<button class="${jidSkolka===k?'on':''}" onclick="setJidSkolka('${k}')" aria-pressed="${jidSkolka===k}">${l}</button>`).join('')+`</div>`;
-  // úpravy celého týdne v kartách, čtení po dnech
-  h+=jidEdit?jidKarty(t,jinaSkolka):jidDenPoDni(t,jinaSkolka);
+  // úpravy po týdnech v kartách, čtení od dneška
+  h+=jidEdit?jidKarty(t,jinaSkolka):jidOdDneska(jinaSkolka);
   // odkaz na alergie až pod jídlem – není to to hlavní (designérka 28. 10. 2026);
   // kuchyň Děti nevidí – alergie na výdej má na svém přehledu
   h+=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
     :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
   return h+`</div>`;
 }
-window.jidEditOn=()=>{jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
+window.jidEditOn=()=>{jidTyden=jidIndex(TODAYD,6);jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
 window.jidCancel=()=>{jidEdit=false;jidDraft=null;render();};
 window.setJid=(i,k,pole,v)=>{jidDraft[i][k][pole]=v;};   // bez render() – kurzor v poli musí zůstat
 window.jidSave=()=>{const ciste=jidDraft.map(den=>den.map(it=>[it[0],it[1].trim(),it[2].trim()]));
@@ -4066,7 +4063,10 @@ window.jidSave=()=>{const ciste=jidDraft.map(den=>den.map(it=>[it[0],it[1].trim(
   jidEdit=false;jidDraft=null;render();showToast(jidSkolka==='vhaaji'?'Jídelníček uložen ✓':`Uloženo: svačiny ${JID_SKOLKY.find(x=>x[0]===jidSkolka)[1]}, obědy pro všechny ✓`);};
 window.setJidSkolka=k=>{if(jidEdit){showToast('Nejdřív ulož, nebo zruš úpravy');return;}jidSkolka=k;render();};
 window.goAlergici=()=>{detiFilter='al';detiOpen=-1;go('deti');};
-window.stepJidTyden=d=>{jidVybranyDen=null;jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};
+// listování jen v úpravách: rozepsaný týden se nezahodí potichu
+window.stepJidTyden=d=>{
+  if(JSON.stringify(jidDraft)!==JSON.stringify(tydenSkolky(jidTyden).dny)){showToast('Nejdřív ulož, nebo zruš úpravy');return;}
+  jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));render();};
 </script>
 <script>
 /* SCREEN: PRUVODCE_KONTAKTY – stejné karty jako u rodičů (komponenta .gcard* v components.css).
