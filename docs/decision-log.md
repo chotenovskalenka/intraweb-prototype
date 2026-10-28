@@ -2219,3 +2219,12 @@ pod rozbalení. Varianty i srovnávací stránka jsou pryč.
 Designérka: básnička a písnička byly „fontem na nadpisy a větší" (ruční Itim 17 px) – sjednotit s textem
 přehledu. Teď Lexend v základní velikosti jako názvy jídel. Itim se jinde nepoužíval, proto je pryč
 i z načítání písem a token `--font-hand` zrušen.
+
+## Přehled: texty z pohledu průvodce (28. 10. 2026)
+
+Designérka: „přetextovat více pro průvodce". Děti dnes (dřív Docházka dnes), „Z nich", Zapsat docházku,
+Vzkazy od rodičů, Dnes nepřijdou, „zatím bez omluvy" / „omluva od rodiče" / „omluva zapsaná vedoucí"
+(bez „bez náhrady" – náhrady řeší vedení a rodiče), Probíhá (vícedenní akce) / Dnes je akce,
+Do kruhu (podnadpis básnička a písnička týdne), Celý plán týdne, Chybí doplnit, Kdo je dnes ve službě,
+Celý rozpis. U jídla průvodce vidí děti („bez mléka: 5 dětí"), kuchyň dál porce. Popisky skupin bez verzálek.
+Neověřeno: jestli průvodci říkají „kruh" a jestli u jídla chtějí počet, nebo jména.

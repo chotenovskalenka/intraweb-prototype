@@ -26,7 +26,9 @@ function porceBez(kody,deti){
 }
 const porcePl=k=>k===1?'porce':(k>=2&&k<=4?'porce':'porcí');
 // „5 porcí bez mléka" – věta místo „bez mléka · 5 porcí" (žádné tečky jako oddělovač)
-const porceBezLbl=(n,k)=>`${k} ${porcePl(k)} bez ${ALERGEN_BEZ[n]||n}`;
+// kuchyň chystá porce, průvodce u výdeje hlídá děti (designérka 28. 10. 2026): „bez mléka: 5 dětí"
+const detiPl=k=>k===1?'dítě':(k>=2&&k<=4?'děti':'dětí');
+const porceBezLbl=(n,k)=>role==='kuchyn'?`${k} ${porcePl(k)} bez ${ALERGEN_BEZ[n]||n}`:`bez ${ALERGEN_BEZ[n]||n}: ${k} ${detiPl(k)}`;
 
 /* Kolikrát se totéž jídlo objeví napříč všemi týdny v datech. Počítá se jen u svačin –
    ty svačinářka plánuje; u obědů skladbu určuje dodavatel. */
