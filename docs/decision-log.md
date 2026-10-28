@@ -2154,7 +2154,7 @@ Designérka: „opět hodně roztahané". Na desktopu bylo pět karet přes celo
 řádku a různě široké verzálkové popisky chodů posouvaly začátek jídla.
 - **Listování týdnem a „Upravit" v řádku nadpisu** (`jidHlavicka()`), jako u Docházky a Třídnice;
   samostatný řádek „Týden" pod nadpisem zrušen.
-- **Dny v mřížce** na desktopu (tři vedle sebe, šestá buňka je poznámka o Mamafoodu), na mobilu pod sebou.
+- **Dny v mřížce** na desktopu (tři vedle sebe, šestá buňka je poznámka o Mamafoodu), všechny karty stejně vysoké; na mobilu pod sebou.
 - **Chod jako popisek nad jídlem** (bez verzálek), porce bez alergenu jako štítky pod jídlem.
 - **Tečky pryč:** „5 porcí bez mléka" místo „bez mléka · 5 porcí" (i na přehledu kuchyně),
   dnešek štítkem „dnes", toast „Uloženo: svačiny Jaata, obědy pro všechny".

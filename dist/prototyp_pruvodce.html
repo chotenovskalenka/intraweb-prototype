@@ -854,9 +854,11 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .jid-algs .jid-alerg{margin-top:0}
 .jid-den .ch .bdg{margin-left:6px;vertical-align:middle}
 @media (min-width:900px){
-  .jid-tyden{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;align-items:start;margin-bottom:16px}
+  /* všechny karty stejně vysoké (designérka 28. 10. 2026) – řádky mřížky mají výšku nejvyšší karty;
+     poznámka v šesté buňce zůstává nahoře */
+  .jid-tyden{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));grid-auto-rows:1fr;gap:20px;align-items:stretch;margin-bottom:16px}
   .jid-tyden>.tile{margin:0}
-  .jid-tyden>.jid-pozn{margin:0;padding:6px 4px}
+  .jid-tyden>.jid-pozn{margin:0;padding:6px 4px;align-self:start}
 }
 /* P4 – seznamy dětí. „+ Nový seznam" sedí na konci řady filtrů, ale nesmí vypadat jako filtr:
    bez podtržení, barvou akce. */
