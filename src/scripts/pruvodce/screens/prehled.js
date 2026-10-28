@@ -149,7 +149,7 @@ function renderPrehled(){
 
   // „dnes" je jen v hlavičce u data – v nadpisech karet se opakovalo (designérka 28. 10. 2026)
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) a kdo uspává, drobně pod jménem
-  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Kdo je tu</div>`;
+  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Sestava</div>`;
   if(todays.length){
     // role pod jménem drobně, čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" a ☾ lámaly do času
     todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');
