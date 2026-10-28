@@ -199,6 +199,8 @@
 .tr-ukol-t{flex:1;font-size:var(--text-body);color:var(--color-text);line-height:var(--leading-snug)}
 .tr-ukol.done .tr-ukol-t{color:var(--color-text-hint);text-decoration:line-through}
 .tr-ukol-k{font-size:var(--text-note);color:var(--color-text-muted)}
+/* přenesený nehotový úkol z dřívějšího týdne */
+.tr-ukol-z{display:block;margin-top:2px;font-size:var(--text-note);color:var(--state-warn-ink)}
 .tr-add{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .tr-add #tru-t{flex:1 1 200px}
 .tr-add #tru-k{flex:0 0 auto;width:auto}

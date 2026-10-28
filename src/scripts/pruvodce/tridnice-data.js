@@ -220,7 +220,7 @@ let TRIDNICE={
 let TR_TYDNY={
   20260601:{tema:'Kytičky a věneček',pohadka:'O Budulínkovi (divadýlko s loutkami)',uzavreni:null,ukoly:[
     {t:'Dokoupit čtvrtky A3 na kreslení',kdo:'Míša',done:true},
-    {t:'Opravit povolené lano mezi stromy v lese',kdo:'Honza',done:false},
+    // „Opravit povolené lano v lese" (Honza) sem není potřeba psát – zůstal nehotový z týdne 25.–29. 5. a přenáší se
     {t:'Na poradu: kdo hlídá hranici u potoka',kdo:'Táňa',done:false},
   ]},
 };
@@ -302,7 +302,9 @@ const TR_DETI_RUCNE=[
     const posl=otevrene[otevrene.length-1];
     const uz=rw()<.88?{t:pickW(TRG.uzavreni),kdo:rw()<.6?'Táňa':TR_ZAPISUJE[trInfo(posl).dow],cas:'16:'+String(10+Math.floor(rw()*40)),den:rw()<.75?posl:(trDalsi(posl)||posl)}:null;
     const ukoly=[];const n=1+Math.floor(rw()*3);
-    for(let i=0;i<n;i++){const [t,kdo]=pickW(TRG.ukoly);if(!ukoly.some(u=>u.t===t))ukoly.push({t,kdo,done:rw()<.9});}
+    // nehotové úkoly se přenášejí do dalších týdnů – starší než tři týdny jsou v seedu vždy hotové,
+    // jinak by se do června navršily úkoly z celého roku
+    for(let i=0;i<n;i++){const [t,kdo]=pickW(TRG.ukoly);if(!ukoly.some(u=>u.t===t))ukoly.push({t,kdo,done:rw()<.9||po<20260511});}
     TR_TYDNY[po]={tema,pohadka,uzavreni:uz,ukoly};
     // ---- poznámky k dětem (asi u 19 z 25 dětí týdně) ----
     const sZapisem=otevrene.filter(k=>Object.keys(TRIDNICE[k].pole).length);

@@ -903,6 +903,8 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .tr-ukol-t{flex:1;font-size:var(--text-body);color:var(--color-text);line-height:var(--leading-snug)}
 .tr-ukol.done .tr-ukol-t{color:var(--color-text-hint);text-decoration:line-through}
 .tr-ukol-k{font-size:var(--text-note);color:var(--color-text-muted)}
+/* přenesený nehotový úkol z dřívějšího týdne */
+.tr-ukol-z{display:block;margin-top:2px;font-size:var(--text-note);color:var(--state-warn-ink)}
 .tr-add{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .tr-add #tru-t{flex:1 1 200px}
 .tr-add #tru-k{flex:0 0 auto;width:auto}
@@ -2321,7 +2323,7 @@ let TRIDNICE={
 let TR_TYDNY={
   20260601:{tema:'Kytičky a věneček',pohadka:'O Budulínkovi (divadýlko s loutkami)',uzavreni:null,ukoly:[
     {t:'Dokoupit čtvrtky A3 na kreslení',kdo:'Míša',done:true},
-    {t:'Opravit povolené lano mezi stromy v lese',kdo:'Honza',done:false},
+    // „Opravit povolené lano v lese" (Honza) sem není potřeba psát – zůstal nehotový z týdne 25.–29. 5. a přenáší se
     {t:'Na poradu: kdo hlídá hranici u potoka',kdo:'Táňa',done:false},
   ]},
 };
@@ -2403,7 +2405,9 @@ const TR_DETI_RUCNE=[
     const posl=otevrene[otevrene.length-1];
     const uz=rw()<.88?{t:pickW(TRG.uzavreni),kdo:rw()<.6?'Táňa':TR_ZAPISUJE[trInfo(posl).dow],cas:'16:'+String(10+Math.floor(rw()*40)),den:rw()<.75?posl:(trDalsi(posl)||posl)}:null;
     const ukoly=[];const n=1+Math.floor(rw()*3);
-    for(let i=0;i<n;i++){const [t,kdo]=pickW(TRG.ukoly);if(!ukoly.some(u=>u.t===t))ukoly.push({t,kdo,done:rw()<.9});}
+    // nehotové úkoly se přenášejí do dalších týdnů – starší než tři týdny jsou v seedu vždy hotové,
+    // jinak by se do června navršily úkoly z celého roku
+    for(let i=0;i<n;i++){const [t,kdo]=pickW(TRG.ukoly);if(!ukoly.some(u=>u.t===t))ukoly.push({t,kdo,done:rw()<.9||po<20260511});}
     TR_TYDNY[po]={tema,pohadka,uzavreni:uz,ukoly};
     // ---- poznámky k dětem (asi u 19 z 25 dětí týdně) ----
     const sZapisem=otevrene.filter(k=>Object.keys(TRIDNICE[k].pole).length);
@@ -3141,19 +3145,20 @@ function trRenderTyden(){
   const lidi=[...guides,...ZAZEMI].map(g=>g.n);
   /* Nejnovější nahoře a přidávání nad seznamem – nový úkol se objeví hned pod polem. Hotové se sbalí
      do „Hotovo (n)": v záznamu týdne zůstávají, jen nepřekážejí (designérka 28. 10. 2026).
-     Index i drží pořadí v datech (trUkol), zobrazení je obrácené. */
-  const ukolHTML=(u,i)=>`<div class="tr-ukol${u.done?' done':''}"><button class="chk${u.done?' on':''}" onclick="trUkol(${i})" aria-pressed="${u.done}" aria-label="${u.done?'Označit jako nehotové':'Označit jako hotové'}: ${esc(u.t)}">${u.done?'✓':''}</button>`
-    +`<span class="tr-ukol-t">${esc(u.t)}</span><span class="tr-ukol-k">${esc(u.kdo)}</span></div>`;
-  const vse=t.ukoly.map((u,i)=>({u,i})).reverse(), otevrene=vse.filter(x=>!x.u.done), hotove=vse.filter(x=>x.u.done);
+     Nehotové úkoly z dřívějších týdnů se přenášejí sem, dokud je někdo neodškrtne (trUkolyTydne). */
+  const ukolHTML=x=>{const {u,od}=x,hot=trUkolHotovy(x,po);
+    return `<div class="tr-ukol${hot?' done':''}"><button class="chk${hot?' on':''}" onclick="trUkol(${od},${x.i})" aria-pressed="${hot}" aria-label="${hot?'Označit jako nehotové':'Označit jako hotové'}: ${esc(u.t)}">${hot?'✓':''}</button>`
+    +`<span class="tr-ukol-t">${esc(u.t)}${od!==po?`<span class="tr-ukol-z">Z týdne ${trTydenLbl(od)}</span>`:''}</span><span class="tr-ukol-k">${esc(u.kdo)}</span></div>`;};
+  const vse=trUkolyTydne(po), otevrene=vse.filter(x=>!trUkolHotovy(x,po)), hotove=vse.filter(x=>trUkolHotovy(x,po));
   h+=`<div class="tile"><div class="ch">Je třeba zařídit</div>`
     +`<div class="tr-add"><input class="pin" id="tru-t" placeholder="Co je potřeba zařídit…" aria-label="Nový úkol" onkeydown="if(event.key==='Enter')trUkolAdd()">`
     +`<select class="pin" id="tru-k" aria-label="Kdo to udělá">${lidi.map(n=>`<option${n===ja().n?' selected':''}>${n}</option>`).join('')}</select>`
     +`<button class="btn-ghost" onclick="trUkolAdd()">Přidat</button></div>`;
-  h+=otevrene.length?otevrene.map(x=>ukolHTML(x.u,x.i)).join('')
+  h+=otevrene.length?otevrene.map(ukolHTML).join('')
     :`<div class="empty" style="padding:8px 0 4px;text-align:left">${hotove.length?'Všechno je zařízené.':'Zatím nic.'}</div>`;
   if(hotove.length){
     h+=`<button class="tr-hotove-h" onclick="trHotoveToggle()" aria-expanded="${trHotoveOtevrene}">Hotovo (${hotove.length}) <span aria-hidden="true">${trHotoveOtevrene?'⌃':'›'}</span></button>`;
-    if(trHotoveOtevrene)h+=hotove.map(x=>ukolHTML(x.u,x.i)).join('');
+    if(trHotoveOtevrene)h+=hotove.map(ukolHTML).join('');
   }
   h+=`</div></div></div>`;
   return h;
@@ -3161,7 +3166,19 @@ function trRenderTyden(){
 window.trSetT=(k,v)=>{trTyden(trWeek)[k]=v;};
 window.trSetUz=v=>{const t=trTyden(trWeek);t.uzavreni=v.trim()?{t:v,kdo:ja().n,cas:TEDCAS,den:TR_DNES}:null;
   const k=document.getElementById('trk-uz');if(k)k.textContent=trKdyLbl(t.uzavreni);};
-window.trUkol=i=>{const u=trTyden(trWeek).ukoly[i];u.done=!u.done;render();if(u.done)showToast('Úkol hotový ✓');};
+/* Úkoly týdne: jeho vlastní (nejnovější nahoře) a pod nimi přenesené z dřívějších týdnů, které
+   tehdy zůstaly nehotové. `hotovo` = pondělí týdne, ve kterém se úkol odškrtl – starší týden ho
+   tak dál ukazuje jako přenesený dál, ne jako hotový. */
+function trUkolyTydne(po){
+  const vlastni=trTyden(po).ukoly.map((u,i)=>({u,i,od:po})).reverse();
+  const prenesene=Object.keys(TR_TYDNY).map(Number).filter(p=>p<po).sort((a,b)=>b-a)
+    .flatMap(p=>TR_TYDNY[p].ukoly.map((u,i)=>({u,i,od:p})).reverse())
+    .filter(({u})=>!u.done||(u.hotovo||0)>=po);
+  return [...vlastni,...prenesene];
+}
+const trUkolHotovy=({u,od},po)=>u.done&&(od===po||(u.hotovo||0)<=po);
+window.trUkol=(od,i)=>{const u=trTyden(od).ukoly[i],hot=trUkolHotovy({u,od},trWeek);
+  u.done=!hot;u.hotovo=u.done?trWeek:null;render();if(u.done)showToast('Úkol hotový ✓');};
 window.trHotoveToggle=()=>{trHotoveOtevrene=!trHotoveOtevrene;render();};
 window.trUkolAdd=()=>{const t=document.getElementById('tru-t'),k=document.getElementById('tru-k');
   if(!t.value.trim()){t.focus();return;}

@@ -2139,3 +2139,11 @@ Ze tří variant zápisu dne (formulář s kartami, seznam k odškrtání, časo
 pole má plný bod a čte se jako text s podpisem, prázdné má prázdný bod a „+ napsat" / „+ doplnit".
 Formulář a seznam jsou z kódu pryč i se srovnávací stránkou `docs/tridnice-varianty.html`
 a parametrem `?trv=`; datový model (`dop`, každý svůj příspěvek) zůstává beze změny.
+
+## Třídnice: nehotové úkoly se přenášejí do dalšího týdne (28. 10. 2026)
+
+Designérka: nehotový úkol „Je třeba zařídit" se **přenáší do dalších týdnů, dokud ho někdo
+neodškrtne**. V novém týdnu je pod vlastními úkoly s poznámkou „Z týdne 25.–29. 5.", úkol se
+nepřepisuje znovu. Úkol dál patří týdnu, kde vznikl; odškrtnutím se zapíše `hotovo` = pondělí týdne,
+ve kterém se udělal (`trUkolyTydne`, `trUkolHotovy`). Seed: úkoly starší tří týdnů jsou vždy hotové
+(jinak by se do června navršil celý rok), „Opravit povolené lano" se přenáší z 25. 5. do 1. 6.

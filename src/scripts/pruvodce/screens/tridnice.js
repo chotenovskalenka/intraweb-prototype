@@ -236,19 +236,20 @@ function trRenderTyden(){
   const lidi=[...guides,...ZAZEMI].map(g=>g.n);
   /* Nejnovější nahoře a přidávání nad seznamem – nový úkol se objeví hned pod polem. Hotové se sbalí
      do „Hotovo (n)": v záznamu týdne zůstávají, jen nepřekážejí (designérka 28. 10. 2026).
-     Index i drží pořadí v datech (trUkol), zobrazení je obrácené. */
-  const ukolHTML=(u,i)=>`<div class="tr-ukol${u.done?' done':''}"><button class="chk${u.done?' on':''}" onclick="trUkol(${i})" aria-pressed="${u.done}" aria-label="${u.done?'Označit jako nehotové':'Označit jako hotové'}: ${esc(u.t)}">${u.done?'✓':''}</button>`
-    +`<span class="tr-ukol-t">${esc(u.t)}</span><span class="tr-ukol-k">${esc(u.kdo)}</span></div>`;
-  const vse=t.ukoly.map((u,i)=>({u,i})).reverse(), otevrene=vse.filter(x=>!x.u.done), hotove=vse.filter(x=>x.u.done);
+     Nehotové úkoly z dřívějších týdnů se přenášejí sem, dokud je někdo neodškrtne (trUkolyTydne). */
+  const ukolHTML=x=>{const {u,od}=x,hot=trUkolHotovy(x,po);
+    return `<div class="tr-ukol${hot?' done':''}"><button class="chk${hot?' on':''}" onclick="trUkol(${od},${x.i})" aria-pressed="${hot}" aria-label="${hot?'Označit jako nehotové':'Označit jako hotové'}: ${esc(u.t)}">${hot?'✓':''}</button>`
+    +`<span class="tr-ukol-t">${esc(u.t)}${od!==po?`<span class="tr-ukol-z">Z týdne ${trTydenLbl(od)}</span>`:''}</span><span class="tr-ukol-k">${esc(u.kdo)}</span></div>`;};
+  const vse=trUkolyTydne(po), otevrene=vse.filter(x=>!trUkolHotovy(x,po)), hotove=vse.filter(x=>trUkolHotovy(x,po));
   h+=`<div class="tile"><div class="ch">Je třeba zařídit</div>`
     +`<div class="tr-add"><input class="pin" id="tru-t" placeholder="Co je potřeba zařídit…" aria-label="Nový úkol" onkeydown="if(event.key==='Enter')trUkolAdd()">`
     +`<select class="pin" id="tru-k" aria-label="Kdo to udělá">${lidi.map(n=>`<option${n===ja().n?' selected':''}>${n}</option>`).join('')}</select>`
     +`<button class="btn-ghost" onclick="trUkolAdd()">Přidat</button></div>`;
-  h+=otevrene.length?otevrene.map(x=>ukolHTML(x.u,x.i)).join('')
+  h+=otevrene.length?otevrene.map(ukolHTML).join('')
     :`<div class="empty" style="padding:8px 0 4px;text-align:left">${hotove.length?'Všechno je zařízené.':'Zatím nic.'}</div>`;
   if(hotove.length){
     h+=`<button class="tr-hotove-h" onclick="trHotoveToggle()" aria-expanded="${trHotoveOtevrene}">Hotovo (${hotove.length}) <span aria-hidden="true">${trHotoveOtevrene?'⌃':'›'}</span></button>`;
-    if(trHotoveOtevrene)h+=hotove.map(x=>ukolHTML(x.u,x.i)).join('');
+    if(trHotoveOtevrene)h+=hotove.map(ukolHTML).join('');
   }
   h+=`</div></div></div>`;
   return h;
@@ -256,7 +257,19 @@ function trRenderTyden(){
 window.trSetT=(k,v)=>{trTyden(trWeek)[k]=v;};
 window.trSetUz=v=>{const t=trTyden(trWeek);t.uzavreni=v.trim()?{t:v,kdo:ja().n,cas:TEDCAS,den:TR_DNES}:null;
   const k=document.getElementById('trk-uz');if(k)k.textContent=trKdyLbl(t.uzavreni);};
-window.trUkol=i=>{const u=trTyden(trWeek).ukoly[i];u.done=!u.done;render();if(u.done)showToast('Úkol hotový ✓');};
+/* Úkoly týdne: jeho vlastní (nejnovější nahoře) a pod nimi přenesené z dřívějších týdnů, které
+   tehdy zůstaly nehotové. `hotovo` = pondělí týdne, ve kterém se úkol odškrtl – starší týden ho
+   tak dál ukazuje jako přenesený dál, ne jako hotový. */
+function trUkolyTydne(po){
+  const vlastni=trTyden(po).ukoly.map((u,i)=>({u,i,od:po})).reverse();
+  const prenesene=Object.keys(TR_TYDNY).map(Number).filter(p=>p<po).sort((a,b)=>b-a)
+    .flatMap(p=>TR_TYDNY[p].ukoly.map((u,i)=>({u,i,od:p})).reverse())
+    .filter(({u})=>!u.done||(u.hotovo||0)>=po);
+  return [...vlastni,...prenesene];
+}
+const trUkolHotovy=({u,od},po)=>u.done&&(od===po||(u.hotovo||0)<=po);
+window.trUkol=(od,i)=>{const u=trTyden(od).ukoly[i],hot=trUkolHotovy({u,od},trWeek);
+  u.done=!hot;u.hotovo=u.done?trWeek:null;render();if(u.done)showToast('Úkol hotový ✓');};
 window.trHotoveToggle=()=>{trHotoveOtevrene=!trHotoveOtevrene;render();};
 window.trUkolAdd=()=>{const t=document.getElementById('tru-t'),k=document.getElementById('tru-k');
   if(!t.value.trim()){t.focus();return;}
