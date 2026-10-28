@@ -133,7 +133,7 @@ function rosterHTML(d=denDay){
     const chk=`<button type="button" class="chk${pr?' on':''}${zapis?'':' ro'}" role="checkbox" aria-checked="${pr}"${zapis?'':' disabled'} aria-label="${full(c)} ${pr?'je':'není'} ve školce"`
       +(zapis?` title="${pr?'Ve školce – odškrtnutím zapíšeš absenci':'Absence – zaškrtnutím vrátíš do školky'}" onclick="event.stopPropagation();${dnes?`presence(${i})`:`presenceD(${i},${d})`}"`:'')
       +`>${pr?'✓':''}</button>`;
-    out+=`<div class="row${pr?'':' absent'}${dnes&&open===i?' open':''}" id="r${i}"><div class="rmain"${klik?` onclick="${klik}" tabindex="0" role="button"${dnes?` aria-expanded="${open===i}"`:''} onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();this.click()}"`:' style="cursor:default"'}>`
+    out+=`<div class="row${pr?'':' absent'}${dnes&&open===i?' open':''}" id="r${i}"><div class="rmain"${klik?` onclick="${klik}" role="button"${dnes?` aria-expanded="${open===i}"`:''} ${KLAV}`:' style="cursor:default"'}>`
       +`${avatar(c,30)}<span class="nm">${full(c)}</span>`
       +(noteLine?'<span class="r-tecka" role="img" aria-label="má vzkaz od rodiče" title="Vzkaz od rodiče"></span>':'')
       +rezimPill(c,d)+doplnek(c,d)+chk+`</div>`

@@ -9,7 +9,7 @@ function renderNovinky(){
   let h=`<div class="doch">`;
   h+=`<div class="news-grid">`;
   NEWS.forEach(n=>{
-    h+=`<div class="newscard${n.urgent?' urgent':''}" onclick="openNov('${n.id}')">`;
+    h+=`<div class="newscard${n.urgent?' urgent':''}" onclick="openNov('${n.id}')" ${KLAV}>`;
     if(n.img)h+=photoBox('nc-hero',n.img);
     h+=`<div class="nc-body">${n.urgent?'<span class="newsurg">Důležité</span>':''}<div class="nc-t">${n.t}</div>`;
     h+=`<div class="newsmeta" style="margin-top:3px">${n.from} · ${n.date} · ${n.time} · platí do ${n.until}. 6.</div>`;

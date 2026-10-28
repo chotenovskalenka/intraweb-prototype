@@ -21,11 +21,11 @@ function renderKalendar(){
   for(let d=1;d<=dim;d++){
     const bars=kalUdalosti(d,jeCerven).slice(0,3).map(e=>`<span class="gbar g-${e.type}"></span>`).join('');
     const we=wdLocal(kalY,kalM,d)>=5, today=jeCerven&&d===TODAYD;
-    h+=`<div class="gcell${today?' gtoday':''}${d===kalSel?' gsel':''}${we?' gwe':''}" onclick="kalPick(${d})"><span class="gn">${d}</span><span class="gbars">${bars}</span></div>`;}
+    h+=`<div class="gcell${today?' gtoday':''}${d===kalSel?' gsel':''}${we?' gwe':''}" onclick="kalPick(${d})" ${KLAV} role="button" aria-pressed="${d===kalSel}" aria-label="${d}. ${kalM+1}. ${kalY}"><span class="gn" aria-hidden="true">${d}</span><span class="gbars">${bars}</span></div>`;}
   h+=`</div></div><div class="kal-side">`;
   const evs=kalUdalosti(kalSel,jeCerven), we=wdLocal(kalY,kalM,kalSel)>=5;
   h+=`<div class="gday">${DOW[wdLocal(kalY,kalM,kalSel)]} ${kalSel}. ${MONTHS_G[kalM]}</div>`;
-  h+= evs.length? evs.map(e=>`<div class="gev"${e.id?` style="cursor:pointer" onclick="openAkceDetail('${e.id}')"`:''}><span class="gvbar g-${e.type}"></span><span>${e.t}${e.id?' ›':''}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
+  h+= evs.length? evs.map(e=>`<div class="gev"${e.id?` style="cursor:pointer" onclick="openAkceDetail('${e.id}')" ${KLAV} role="button"`:''}><span class="gvbar g-${e.type}"></span><span>${e.t}${e.id?' ›':''}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
   // rozpis služeb – to rodiče nevidí, průvodce ano
   if(jeCerven&&!we){
     const gws=shiftProDen(kalSel).filter(g=>serving(g.days[wd(kalSel)]));
@@ -34,5 +34,6 @@ function renderKalendar(){
   h+=`</div></div>`;
   return h+`</div>`;
 }
-window.kalPick=d=>{kalSel=d;render();};
+// po překreslení zůstane fokus na vybraném dni (ovládání klávesnicí)
+window.kalPick=d=>{kalSel=d;render();const e=document.querySelector('.gcell.gsel');if(e)e.focus({preventScroll:true});};
 window.kalStep=(dm,dy)=>{kalM+=dm;if(kalM>11){kalM=0;kalY++;}if(kalM<0){kalM=11;kalY--;}kalY+=dy;render();};

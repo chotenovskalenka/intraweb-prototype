@@ -1164,6 +1164,10 @@ const CODES={
 const norm=s=>s.toLowerCase();
 const esc=s=>(s||'').replace(/"/g,'&quot;');
 const escTa=s=>(s||'').replace(/</g,'&lt;');
+/* Klikací prvek, který není tlačítko (karta, buňka tabulky, den v kalendáři): atributy, díky
+   kterým na něj dosáhne i klávesnice – Tab ho vybere, Enter nebo mezerník ho spustí.
+   Vkládá se do šablony vedle onclick: `<div onclick="…" ${KLAV}>`. */
+const KLAV=`tabindex="0" onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();this.click()}"`;
 const fmt=t=>t?t.replace(/^0(\d:)/,'$1'):t;
 const DOW=['Po','Út','St','Čt','Pá','So','Ne'];
 const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;

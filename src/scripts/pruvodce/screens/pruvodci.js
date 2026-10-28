@@ -32,7 +32,7 @@ function renderPruvodci(){
       const jeDnes=shiftT===SHIFT_AKT&&di===TODAY;
       if(t.od+di>t.do)return `<td class="pastc"></td>`;
       return minuly? `<td class="pastc">${shiftCell(d)}</td>`
-        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})">${shiftCell(d)}</td>`;
+        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})" ${KLAV}>${shiftCell(d)}</td>`;
     }).join('')+`</tr>`;});
   h+=`</tbody></table></div><div class="hint">${minuly?'Minulý týden – jen k nahlédnutí.':'Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).'}</div>`;
   return h;

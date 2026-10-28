@@ -1332,6 +1332,10 @@ const CODES={
 const norm=s=>s.toLowerCase();
 const esc=s=>(s||'').replace(/"/g,'&quot;');
 const escTa=s=>(s||'').replace(/</g,'&lt;');
+/* Klikací prvek, který není tlačítko (karta, buňka tabulky, den v kalendáři): atributy, díky
+   kterým na něj dosáhne i klávesnice – Tab ho vybere, Enter nebo mezerník ho spustí.
+   Vkládá se do šablony vedle onclick: `<div onclick="…" ${KLAV}>`. */
+const KLAV=`tabindex="0" onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();this.click()}"`;
 const fmt=t=>t?t.replace(/^0(\d:)/,'$1'):t;
 const DOW=['Po','Út','St','Čt','Pá','So','Ne'];
 const wd=d=>(d-1)%7, isWE=d=>wd(d)>=5;
@@ -2685,7 +2689,7 @@ function rosterHTML(d=denDay){
     const chk=`<button type="button" class="chk${pr?' on':''}${zapis?'':' ro'}" role="checkbox" aria-checked="${pr}"${zapis?'':' disabled'} aria-label="${full(c)} ${pr?'je':'není'} ve školce"`
       +(zapis?` title="${pr?'Ve školce – odškrtnutím zapíšeš absenci':'Absence – zaškrtnutím vrátíš do školky'}" onclick="event.stopPropagation();${dnes?`presence(${i})`:`presenceD(${i},${d})`}"`:'')
       +`>${pr?'✓':''}</button>`;
-    out+=`<div class="row${pr?'':' absent'}${dnes&&open===i?' open':''}" id="r${i}"><div class="rmain"${klik?` onclick="${klik}" tabindex="0" role="button"${dnes?` aria-expanded="${open===i}"`:''} onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();this.click()}"`:' style="cursor:default"'}>`
+    out+=`<div class="row${pr?'':' absent'}${dnes&&open===i?' open':''}" id="r${i}"><div class="rmain"${klik?` onclick="${klik}" role="button"${dnes?` aria-expanded="${open===i}"`:''} ${KLAV}`:' style="cursor:default"'}>`
       +`${avatar(c,30)}<span class="nm">${full(c)}</span>`
       +(noteLine?'<span class="r-tecka" role="img" aria-label="má vzkaz od rodiče" title="Vzkaz od rodiče"></span>':'')
       +rezimPill(c,d)+doplnek(c,d)+chk+`</div>`
@@ -3081,7 +3085,7 @@ function renderNovinky(){
   let h=`<div class="doch">`;
   h+=`<div class="news-grid">`;
   NEWS.forEach(n=>{
-    h+=`<div class="newscard${n.urgent?' urgent':''}" onclick="openNov('${n.id}')">`;
+    h+=`<div class="newscard${n.urgent?' urgent':''}" onclick="openNov('${n.id}')" ${KLAV}>`;
     if(n.img)h+=photoBox('nc-hero',n.img);
     h+=`<div class="nc-body">${n.urgent?'<span class="newsurg">Důležité</span>':''}<div class="nc-t">${n.t}</div>`;
     h+=`<div class="newsmeta" style="margin-top:3px">${n.from} · ${n.date} · ${n.time} · platí do ${n.until}. 6.</div>`;
@@ -3361,7 +3365,7 @@ function renderPruvodci(){
       const jeDnes=shiftT===SHIFT_AKT&&di===TODAY;
       if(t.od+di>t.do)return `<td class="pastc"></td>`;
       return minuly? `<td class="pastc">${shiftCell(d)}</td>`
-        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})">${shiftCell(d)}</td>`;
+        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})" ${KLAV}>${shiftCell(d)}</td>`;
     }).join('')+`</tr>`;});
   h+=`</tbody></table></div><div class="hint">${minuly?'Minulý týden – jen k nahlédnutí.':'Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).'}</div>`;
   return h;
@@ -3393,11 +3397,11 @@ function renderKalendar(){
   for(let d=1;d<=dim;d++){
     const bars=kalUdalosti(d,jeCerven).slice(0,3).map(e=>`<span class="gbar g-${e.type}"></span>`).join('');
     const we=wdLocal(kalY,kalM,d)>=5, today=jeCerven&&d===TODAYD;
-    h+=`<div class="gcell${today?' gtoday':''}${d===kalSel?' gsel':''}${we?' gwe':''}" onclick="kalPick(${d})"><span class="gn">${d}</span><span class="gbars">${bars}</span></div>`;}
+    h+=`<div class="gcell${today?' gtoday':''}${d===kalSel?' gsel':''}${we?' gwe':''}" onclick="kalPick(${d})" ${KLAV} role="button" aria-pressed="${d===kalSel}" aria-label="${d}. ${kalM+1}. ${kalY}"><span class="gn" aria-hidden="true">${d}</span><span class="gbars">${bars}</span></div>`;}
   h+=`</div></div><div class="kal-side">`;
   const evs=kalUdalosti(kalSel,jeCerven), we=wdLocal(kalY,kalM,kalSel)>=5;
   h+=`<div class="gday">${DOW[wdLocal(kalY,kalM,kalSel)]} ${kalSel}. ${MONTHS_G[kalM]}</div>`;
-  h+= evs.length? evs.map(e=>`<div class="gev"${e.id?` style="cursor:pointer" onclick="openAkceDetail('${e.id}')"`:''}><span class="gvbar g-${e.type}"></span><span>${e.t}${e.id?' ›':''}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
+  h+= evs.length? evs.map(e=>`<div class="gev"${e.id?` style="cursor:pointer" onclick="openAkceDetail('${e.id}')" ${KLAV} role="button"`:''}><span class="gvbar g-${e.type}"></span><span>${e.t}${e.id?' ›':''}</span><span class="gevt">${TYPELAB[e.type]}</span></div>`).join('') : `<div class="gnone">Žádná událost.</div>`;
   // rozpis služeb – to rodiče nevidí, průvodce ano
   if(jeCerven&&!we){
     const gws=shiftProDen(kalSel).filter(g=>serving(g.days[wd(kalSel)]));
@@ -3406,7 +3410,8 @@ function renderKalendar(){
   h+=`</div></div>`;
   return h+`</div>`;
 }
-window.kalPick=d=>{kalSel=d;render();};
+// po překreslení zůstane fokus na vybraném dni (ovládání klávesnicí)
+window.kalPick=d=>{kalSel=d;render();const e=document.querySelector('.gcell.gsel');if(e)e.focus({preventScroll:true});};
 window.kalStep=(dm,dy)=>{kalM+=dm;if(kalM>11){kalM=0;kalY++;}if(kalM<0){kalM=11;kalY--;}kalY+=dy;render();};
 </script>
 <script>
