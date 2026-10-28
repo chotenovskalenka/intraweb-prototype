@@ -2225,8 +2225,8 @@ i z načítání písem a token `--font-hand` zrušen.
 Designérka: „přetextovat více pro průvodce". Děti dnes (dřív Docházka dnes), „Z nich", Zapsat docházku,
 Vzkazy od rodičů, Dnes nepřijdou, „zatím bez omluvy" / „omluva od rodiče" / „omluva zapsaná vedoucí"
 (bez „bez náhrady" – náhrady řeší vedení a rodiče), Probíhá (vícedenní akce) / Dnes je akce,
-Celý plán týdne, Chybí doplnit, Celý rozpis. Nadpisy „Básnička a písnička týdne" a „Průvodci dnes"
-zůstávají (designérka: „Do kruhu" ne, „ve službě" zní divně). U jídla průvodce vidí děti („bez mléka: 5 dětí"), kuchyň dál porce. Popisky skupin bez verzálek.
+Celý plán týdne, Chybí doplnit, Celý rozpis. Nadpis „Básnička a písnička týdne" zůstává („Do kruhu" ne);
+karta kolegů se jmenuje **Dnes jsme tu** – tým se má rád a o sobě nemluví jako o „průvodcích" („ve službě" zní divně). U jídla průvodce vidí děti („bez mléka: 5 dětí"), kuchyň dál porce. Popisky skupin bez verzálek.
 Neověřeno: jestli průvodci u jídla chtějí počet, nebo jména.
 
 Třídnice na přehledu: nadpis „Třídnici dnes píše Honza" místo „Třídnice" + samostatného řádku „Dnes píše Honza" (designérka 28. 10. 2026).

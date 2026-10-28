@@ -148,7 +148,7 @@ function renderPrehled(){
    }}
 
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) a kdo uspává, drobně pod jménem
-  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Průvodci dnes</div>`;
+  let blkPruvodci=`<div class="tile t-pru"><div class="ch">Dnes jsme tu</div>`;
   if(todays.length){
     // role pod jménem drobně, čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" a ☾ lámaly do času
     todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');
