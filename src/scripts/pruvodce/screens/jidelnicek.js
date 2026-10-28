@@ -100,12 +100,11 @@ function jidChodHTML(it,jinaSkolka){
 const jidJeDnes=(t,i)=>t.od+i===TODAYD&&t.m===6;
 const jidDenLbl=(t,i)=>`${DOW[i]} ${t.od+i}. ${t.m}.${jidJeDnes(t,i)?' <span class="bdg st-ok">dnes</span>':''}`;
 
-/* Čtení jídelníčku: pět školních dnů od dneška, i přes víkend do dalšího týdne – minulost
-   průvodce nezajímá a dnešek je i na přehledu (designérka 28. 10. 2026; předtím pás dnů týdne). */
-const JID_DNU=5;
+/* Čtení jídelníčku: od dneška nahoře dolů až do konce měsíce (co je dodané), po týdnech –
+   minulost průvodce nezajímá a dnešek je i na přehledu (designérka 28. 10. 2026). */
 function jidDnyOdDneska(){
   const out=[];
-  for(let d=TODAYD;d<=30&&out.length<JID_DNU;d++){
+  for(let d=TODAYD;d<=30;d++){
     const t=jidelnicekTyden(d,6); if(!t)continue;      // víkend nebo mimo dodané týdny
     out.push({d,m:t.m,dow:wd(d),den:tydenSkolky(JIDELNICEK.indexOf(t)).dny[d-t.od]});
   }
@@ -115,9 +114,12 @@ const jidKdyLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':'';
 function jidOdDneska(jinaSkolka){
   const dny=jidDnyOdDneska();
   if(!dny.length)return `<div class="empty">Na další dny zatím jídelníček není.</div>`;
-  return `<div class="jid-tyden">`+dny.map(x=>{const k=jidKdyLbl(x.d);
+  // po týdnech: nadpis nad každým dalším týdnem (v dlouhém seznamu se jinak ztratí, kde je pondělí),
+  // každý týden vlastní mřížka – karty v týdnu stejně vysoké
+  const tydny=[];dny.forEach(x=>{const t=jidelnicekTyden(x.d,6);if(!tydny.length||tydny[tydny.length-1].t!==t)tydny.push({t,dny:[]});tydny[tydny.length-1].dny.push(x);});
+  return tydny.map((w,wi)=>(wi?`<div class="jid-tyd-h">Týden ${jidTydenLabel(w.t)}</div>`:'')+`<div class="jid-tyden">`+w.dny.map(x=>{const k=jidKdyLbl(x.d);
     return `<div class="tile jid-den${x.d===TODAYD?' dnes':''}"><div class="ch">${DOW[x.dow]} ${x.d}. ${x.m}.${k?` <span class="bdg ${x.d===TODAYD?'st-ok':'st-muted'}">${k}</span>`:''}</div>`
-      +x.den.map(it=>jidChodHTML(it,jinaSkolka)).join('')+`</div>`;}).join('')+`</div>`;
+      +x.den.map(it=>jidChodHTML(it,jinaSkolka)).join('')+`</div>`;}).join('')+`</div>`).join('');
 }
 
 function renderJidelnicek(){

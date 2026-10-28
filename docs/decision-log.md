@@ -2207,3 +2207,5 @@ Porovnány čtyři vzory přehledu: soupis dne, den shora dolů, co řešit teď
 vrácený). Designérka: „původní varianta mi přijde dobrá vzhledem k výzkumu" – ranní trojice
 (docházka, vzkazy, kdo nepřijde) odpovídá tomu, co průvodce ráno řeší, a nic se neschovává
 pod rozbalení. Varianty i srovnávací stránka jsou pryč.
+
+**Doplněk (28. 10. 2026):** místo pěti dnů od dneška seznam od dneška do konce měsíce (co je dodané – teď do 26. 6.), nejbližší nahoře; nad každým dalším týdnem nadpis „Týden 8.–12. 6.", každý týden vlastní mřížka.
