@@ -853,8 +853,29 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .jid-algs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .jid-algs .jid-alerg{margin-top:0}
 .jid-den .ch .bdg{margin-left:6px;vertical-align:middle}
-.jid-tyd-h{font-family:var(--font-serif);font-weight:500;font-size:var(--text-heading);color:var(--color-text-muted);margin:14px 2px 10px}
-@media (min-width:900px){.jid-tyd-h{margin:8px 2px 12px}}
+/* Jídelníček jako tabulka po týdnech (28. 10. 2026): desktop tabulka den × chod, mobil den jako blok */
+.jid-mx{display:none;width:100%;border-collapse:collapse;table-layout:fixed}
+.jid-mx th,.jid-mx td{padding:10px 12px;vertical-align:top;text-align:left;border-top:1px solid var(--color-border)}
+.jid-mx thead th{border-top:none;padding-top:2px;font-size:var(--text-note);font-weight:500;color:var(--color-text-muted)}
+.jid-mx tbody th{width:120px;font-weight:400}
+.jid-mx .jid-chod{padding:0;border:none}
+.jid-mx .jid-v{font-size:var(--text-small)}
+.jid-mx tr.dnes>*{background:var(--wash-primary)}
+.jid-mx tr.dnes>th{border-radius:12px 0 0 12px}.jid-mx tr.dnes>td:last-child{border-radius:0 12px 12px 0}
+.jid-td{display:block;font-size:var(--text-body);font-weight:600;color:var(--color-text)}
+.jid-mx .bdg,.jid-mdh .bdg{margin-top:3px}
+.jid-md{padding:12px 0;border-top:1px solid var(--color-border)}
+.jid-md:first-child{border-top:none;padding-top:2px}
+.jid-mdh{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.jid-mdh .jid-td{display:inline}
+.jid-md .jid-chod{padding:5px 0;border-top:none}
+.jid-md .jid-k{font-size:var(--text-chip)}
+.jid-md.dnes{margin:0 -10px;padding:12px 10px;border-radius:14px;background:var(--wash-primary);border-top-color:transparent}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (min-width:900px){
+  .jid-mx{display:table}
+  .jid-ml{display:none}
+}
 @media (min-width:900px){
   /* karty stejně vysoké (designérka 28. 10. 2026) – řádky mřížky mají výšku nejvyšší karty; mřížka je na týden */
   .jid-tyden{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));grid-auto-rows:1fr;gap:20px;align-items:stretch;margin-bottom:16px}
@@ -4042,15 +4063,24 @@ function jidDnyOdDneska(){
   return out;
 }
 const jidKdyLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':'';
+/* Po týdnech jako tabulka: řádky jsou dny, sloupce chody – popisek chodu je jednou v záhlaví,
+   ne u každého jídla (v kartách se 18 dní × 4 popisky četlo špatně, designérka 28. 10. 2026).
+   Dnešek je zvýrazněný řádek. Na mobilu se tabulka nevejde: den jako blok, jídla pod sebou. */
 function jidOdDneska(jinaSkolka){
   const dny=jidDnyOdDneska();
   if(!dny.length)return `<div class="empty">Na další dny zatím jídelníček není.</div>`;
-  // po týdnech: nadpis nad každým dalším týdnem (v dlouhém seznamu se jinak ztratí, kde je pondělí),
-  // každý týden vlastní mřížka – karty v týdnu stejně vysoké
   const tydny=[];dny.forEach(x=>{const t=jidelnicekTyden(x.d,6);if(!tydny.length||tydny[tydny.length-1].t!==t)tydny.push({t,dny:[]});tydny[tydny.length-1].dny.push(x);});
-  return tydny.map((w,wi)=>(wi?`<div class="jid-tyd-h">Týden ${jidTydenLabel(w.t)}</div>`:'')+`<div class="jid-tyden">`+w.dny.map(x=>{const k=jidKdyLbl(x.d);
-    return `<div class="tile jid-den${x.d===TODAYD?' dnes':''}"><div class="ch">${DOW[x.dow]} ${x.d}. ${x.m}.${k?` <span class="bdg ${x.d===TODAYD?'st-ok':'st-muted'}">${k}</span>`:''}</div>`
-      +x.den.map(it=>jidChodHTML(it,jinaSkolka)).join('')+`</div>`;}).join('')+`</div>`).join('');
+  const datum=x=>{const k=jidKdyLbl(x.d);return `<span class="jid-td">${DOW[x.dow]} ${x.d}. ${x.m}.</span>${k?`<span class="bdg ${x.d===TODAYD?'st-ok':'st-muted'}">${k}</span>`:''}`;};
+  const bunka=it=>jidChodHTML(it,jinaSkolka).replace(/<div class="jid-k">.*?<\/div>/,'');
+  return tydny.map((w,wi)=>{
+    const chody=w.dny[0].den.map(it=>it[0]);
+    let h=`<div class="tile jid-tw"><div class="ch">${wi?`Týden ${jidTydenLabel(w.t)}`:'Tento týden'}</div>`;
+    h+=`<table class="jid-mx"><thead><tr><th scope="col"><span class="vh">Den</span></th>${chody.map(c=>`<th scope="col">${c}</th>`).join('')}</tr></thead><tbody>`
+      +w.dny.map(x=>`<tr class="${x.d===TODAYD?'dnes':''}"><th scope="row">${datum(x)}</th>${x.den.map(it=>`<td>${bunka(it)}</td>`).join('')}</tr>`).join('')
+      +`</tbody></table>`;
+    h+=`<div class="jid-ml">`+w.dny.map(x=>`<div class="jid-md${x.d===TODAYD?' dnes':''}"><div class="jid-mdh">${datum(x)}</div>${x.den.map(it=>jidChodHTML(it,jinaSkolka)).join('')}</div>`).join('')+`</div>`;
+    return h+`</div>`;
+  }).join('');
 }
 
 function renderJidelnicek(){

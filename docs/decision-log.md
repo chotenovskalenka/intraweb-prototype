@@ -2211,3 +2211,5 @@ pod rozbalení. Varianty i srovnávací stránka jsou pryč.
 **Doplněk (28. 10. 2026):** místo pěti dnů od dneška seznam od dneška do konce měsíce (co je dodané – teď do 26. 6.), nejbližší nahoře; nad každým dalším týdnem nadpis „Týden 8.–12. 6.", každý týden vlastní mřížka.
 
 **Průvodci dnes (28. 10. 2026):** role pod jménem drobně („otevírá", „uspává" slovem místo ☾), čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" lámalo do času.
+
+**Tabulka po týdnech (28. 10. 2026):** karty dnů se špatně četly (18 dní × 4 popisky chodů, mřížka zleva doprava). Teď tabulka na týden – řádky dny, sloupce chody, popisek chodu jednou v záhlaví, dnešek zvýrazněný řádek. Mobil: týden jako jedna karta, dny jako bloky pod sebou. Úpravy zůstávají v kartách dnů.

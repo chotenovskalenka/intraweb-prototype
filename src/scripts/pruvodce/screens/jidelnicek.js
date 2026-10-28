@@ -111,15 +111,24 @@ function jidDnyOdDneska(){
   return out;
 }
 const jidKdyLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':'';
+/* Po týdnech jako tabulka: řádky jsou dny, sloupce chody – popisek chodu je jednou v záhlaví,
+   ne u každého jídla (v kartách se 18 dní × 4 popisky četlo špatně, designérka 28. 10. 2026).
+   Dnešek je zvýrazněný řádek. Na mobilu se tabulka nevejde: den jako blok, jídla pod sebou. */
 function jidOdDneska(jinaSkolka){
   const dny=jidDnyOdDneska();
   if(!dny.length)return `<div class="empty">Na další dny zatím jídelníček není.</div>`;
-  // po týdnech: nadpis nad každým dalším týdnem (v dlouhém seznamu se jinak ztratí, kde je pondělí),
-  // každý týden vlastní mřížka – karty v týdnu stejně vysoké
   const tydny=[];dny.forEach(x=>{const t=jidelnicekTyden(x.d,6);if(!tydny.length||tydny[tydny.length-1].t!==t)tydny.push({t,dny:[]});tydny[tydny.length-1].dny.push(x);});
-  return tydny.map((w,wi)=>(wi?`<div class="jid-tyd-h">Týden ${jidTydenLabel(w.t)}</div>`:'')+`<div class="jid-tyden">`+w.dny.map(x=>{const k=jidKdyLbl(x.d);
-    return `<div class="tile jid-den${x.d===TODAYD?' dnes':''}"><div class="ch">${DOW[x.dow]} ${x.d}. ${x.m}.${k?` <span class="bdg ${x.d===TODAYD?'st-ok':'st-muted'}">${k}</span>`:''}</div>`
-      +x.den.map(it=>jidChodHTML(it,jinaSkolka)).join('')+`</div>`;}).join('')+`</div>`).join('');
+  const datum=x=>{const k=jidKdyLbl(x.d);return `<span class="jid-td">${DOW[x.dow]} ${x.d}. ${x.m}.</span>${k?`<span class="bdg ${x.d===TODAYD?'st-ok':'st-muted'}">${k}</span>`:''}`;};
+  const bunka=it=>jidChodHTML(it,jinaSkolka).replace(/<div class="jid-k">.*?<\/div>/,'');
+  return tydny.map((w,wi)=>{
+    const chody=w.dny[0].den.map(it=>it[0]);
+    let h=`<div class="tile jid-tw"><div class="ch">${wi?`Týden ${jidTydenLabel(w.t)}`:'Tento týden'}</div>`;
+    h+=`<table class="jid-mx"><thead><tr><th scope="col"><span class="vh">Den</span></th>${chody.map(c=>`<th scope="col">${c}</th>`).join('')}</tr></thead><tbody>`
+      +w.dny.map(x=>`<tr class="${x.d===TODAYD?'dnes':''}"><th scope="row">${datum(x)}</th>${x.den.map(it=>`<td>${bunka(it)}</td>`).join('')}</tr>`).join('')
+      +`</tbody></table>`;
+    h+=`<div class="jid-ml">`+w.dny.map(x=>`<div class="jid-md${x.d===TODAYD?' dnes':''}"><div class="jid-mdh">${datum(x)}</div>${x.den.map(it=>jidChodHTML(it,jinaSkolka)).join('')}</div>`).join('')+`</div>`;
+    return h+`</div>`;
+  }).join('');
 }
 
 function renderJidelnicek(){
