@@ -1363,7 +1363,9 @@ function zpravaShrnuti(z){
   const hlava=p==='kdo'?`${ZPLAB[z.typ]}: <b>${esc(z.kdo)}</b>`
     :p==='cas'?`${ZPLAB[z.typ]} – <b>${esc(cas)}</b>`
     :`<b>${ZPLAB[z.typ]}</b>`;
-  return hlava+(z.text?` · ${esc(z.text)}`:'');
+  /* bez teček „·": samotný typ uvozuje text dvojtečkou, za údajem (kdo, čas) začíná text větou */
+  if(!z.text)return hlava;
+  return p?`${hlava}. ${esc(z.text)}`:`<b>${ZPLAB[z.typ]}:</b> ${esc(z.text)}`;
 }
 </script>
 <script>

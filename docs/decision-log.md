@@ -1985,3 +1985,21 @@ obrazovky si zatím drží svůj obsah včetně teček „·" (mění se při p�
 
 **Vědomě nesedí:** tabulky a seznamy (docházka, týden, služby) mají dál tenké linky a menší
 zaoblení – jsou to pracovní plochy, ne karty; v Figmě pro ně předloha není.
+
+## Docházka ve vzhledu C (28. 10. 2026)
+
+Docházka je první obrazovka po přehledu (přehled na ni vede „Otevřít dnešní docházku"),
+proto se převádí jako první.
+
+- **Počty jako na přehledu:** stejné skvrny ve stejných barvách stavu (absence růžová,
+  dopolední modrá, odpolední okrová, celodenní světle okrová, spí čárkovaně) a **stejné pořadí**:
+  přítomni, absence, „Z přítomných" dopolední, odpolední, (celodenní), spí. Dřív stálo Spí
+  hned za Přítomnými – jinak než na přehledu, ze kterého průvodce přichází.
+- Dlaždice jsou tady **filtry soupisu**: vybraná dostane tmavý prstenec, barvu stavu si drží.
+- Soupis: každé dítě jako karta bez linky, rámeček kolem celého soupisu zmizel. Štítek režimu
+  (dopolední / odpolední / celodenní) má barvu své dlaždice.
+- **Tečky „·" pryč** podle pravidla: „St 3. 6. (dnes)", „Spáči v maringotce", „Nemoc: …",
+  kuchyň výčtem s čárkami. Ve sdíleném `zpravaShrnuti` (vzkazy od rodičů, i v rodičovské appce):
+  samotný typ uvozuje text dvojtečkou („Jiné: Dobrý den…"), za údajem začíná text větou
+  („Přijdeme později – 9:30. Jdeme na kontrolu…").
+- Týdenní tabulka zůstává pracovní plochou s linkami (viz výše).

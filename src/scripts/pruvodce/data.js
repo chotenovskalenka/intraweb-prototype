@@ -47,13 +47,13 @@ function parentExcuseLine(c){return c.parentExcuse?'omluveno rodičem':'';}
 function guideExcuseDetail(c){
   const e=c.guideExcuse; if(!e)return '';
   const d=(e.reason||'').replace(/^./,m=>m.toUpperCase());
-  return `<b>${d}</b>`+(e.pozn?` · ${esc(e.pozn)}`:'')
+  return `<b>${d}${e.pozn?':':''}</b>`+(e.pozn?` ${esc(e.pozn)}`:'')
     +` <span class="rn-cas">zapsala ${esc(e.by)} ${e.time}</span> <span class="rn-bez">bez náhrady</span>`;
 }
 function parentExcuseDetail(c){
   const e=c.parentExcuse; if(!e)return '';
   const d=(e.reason||'').replace(/^./,m=>m.toUpperCase());
-  return `<b>${d}</b>`+(e.pozn?` · ${esc(e.pozn)}`:'')+` <span class="rn-cas">${e.time}</span>`;
+  return `<b>${d}${e.pozn?':':''}</b>`+(e.pozn?` ${esc(e.pozn)}`:'')+` <span class="rn-cas">${e.time}</span>`;
 }
 data.forEach((c,i)=>{const dd=((i*7)%27)+1,mm=((i*5)%12)+1,yy=c.predskolak?2020:2021;c.nar=`${dd}. ${mm}. ${yy}`;c.vek=2026-yy;});
 /* P1 z testování (3 ze 3): interní záznamy musí být oddělené od toho, co vidí rodič.
