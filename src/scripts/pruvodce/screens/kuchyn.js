@@ -85,7 +85,7 @@ function renderKuchyn(){
     const alg=[...new Map(jidla.flatMap(it=>porceBez(it[2],deti[k]))).entries()];
     return `<div class="dcol"><div class="tile"><div class="ch">${nazev}</div>`
       +(jidla.length?jidla.map(it=>`<div class="kuch-jidlo">${it[1]}</div>`).join(''):`<div class="kuch-jidlo kuch-nic">V jídelníčku zatím chybí.</div>`)
-      +(alg.length?`<div class="kuch-alg">${alg.map(([n,c])=>`<span class="jid-alerg">bez ${ALERGEN_BEZ[n]||n} · ${c} ${porcePl(c)}</span>`).join('')}</div>`:'')
+      +(alg.length?`<div class="kuch-alg">${alg.map(([n,c])=>`<span class="jid-alerg">${porceBezLbl(n,c)}</span>`).join('')}</div>`:'')
       +`</div></div>`;
   }).join('')+`</div>`;
   h+=`<div class="dash3 kuch-dole">`;

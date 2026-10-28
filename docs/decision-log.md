@@ -2147,3 +2147,16 @@ neodškrtne**. V novém týdnu je pod vlastními úkoly s poznámkou „Z týdne
 nepřepisuje znovu. Úkol dál patří týdnu, kde vznikl; odškrtnutím se zapíše `hotovo` = pondělí týdne,
 ve kterém se udělal (`trUkolyTydne`, `trUkolHotovy`). Seed: úkoly starší tří týdnů jsou vždy hotové
 (jinak by se do června navršil celý rok), „Opravit povolené lano" se přenáší z 25. 5. do 1. 6.
+
+## Jídelníček ve vzhledu C (28. 10. 2026)
+
+Designérka: „opět hodně roztahané". Na desktopu bylo pět karet přes celou šířku, jídlo v dlouhém
+řádku a různě široké verzálkové popisky chodů posouvaly začátek jídla.
+- **Listování týdnem a „Upravit" v řádku nadpisu** (`jidHlavicka()`), jako u Docházky a Třídnice;
+  samostatný řádek „Týden" pod nadpisem zrušen.
+- **Dny v mřížce** na desktopu (tři vedle sebe, šestá buňka je poznámka o Mamafoodu), na mobilu pod sebou.
+- **Chod jako popisek nad jídlem** (bez verzálek), porce bez alergenu jako štítky pod jídlem.
+- **Tečky pryč:** „5 porcí bez mléka" místo „bez mléka · 5 porcí" (i na přehledu kuchyně),
+  dnešek štítkem „dnes", toast „Uloženo: svačiny Jaata, obědy pro všechny".
+- Tlačítko v řádku nadpisu (`.dfield .btn-ghost`) má plochu jako listování – šedý obrys na
+  akvarelu vypadal jako vypnutý.

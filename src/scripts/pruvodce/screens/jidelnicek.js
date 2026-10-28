@@ -25,6 +25,8 @@ function porceBez(kody,deti){
     .filter(([,k])=>k>0);
 }
 const porcePl=k=>k===1?'porce':(k>=2&&k<=4?'porce':'porcí');
+// „5 porcí bez mléka" – věta místo „bez mléka · 5 porcí" (žádné tečky jako oddělovač)
+const porceBezLbl=(n,k)=>`${k} ${porcePl(k)} bez ${ALERGEN_BEZ[n]||n}`;
 
 /* Kolikrát se totéž jídlo objeví napříč všemi týdny v datech. Počítá se jen u svačin –
    ty svačinářka plánuje; u obědů skladbu určuje dodavatel. */
@@ -57,27 +59,32 @@ function tydenSkolky(ti){
   return {...t,dny:t.dny.map((den,i)=>den.map(it=>it[0]==='Dopolední svačina'?sv[i][0]:it[0]==='Odpolední svačina'?sv[i][1]:it))};
 }
 
+/* Hlavička: listování týdnem a úpravy v řádku nadpisu, jako u Docházky a Třídnice
+   (ladění C, 28. 10. 2026) – dřív pod H1 samostatný řádek „Týden" se stepperem na druhém konci. */
+function jidHlavicka(){
+  const t=tydenSkolky(jidTyden);
+  // jídelníček zadává kuchyň a hospodářka; ostatní ho jen čtou
+  const akce=!smiJidelnicek()?''
+    :jidEdit
+      ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
+      : `<button class="btn-ghost" onclick="jidEditOn()">Upravit</button>`;
+  return `<div class="dfield">${akce}<div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`
+    +`<span>${jidTydenLabel(t)}</span>`
+    +`<button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div></div>`;
+}
 function renderJidelnicek(){
   const t=tydenSkolky(jidTyden), jinaSkolka=jidSkolka!=='vhaaji';
-  // Týden i jeho listování patří k sobě: stepper sedí v řádku s nadpisem vedle akcí,
-  // ne nahoře u H1 – jinak byl týden napsaný dvakrát a ovládání na dvou místech.
-  let h=`<div class="doch"><div class="vhead-row"><div class="vhead">Týden</div><div class="vhead-act">`+
-    // jídelníček zadává kuchyň a hospodářka; ostatní ho jen čtou
-    (!smiJidelnicek()?''
-      :jidEdit
-        ? `<button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
-        : `<button class="btn-ghost" onclick="jidEditOn()">Upravit jídelníček</button>`)+
-    `<div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`+
-    `<span>${jidTydenLabel(t)}</span>`+
-    `<button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`+
-    `</div></div>`;
+  let h=`<div class="doch jid">`;
   if(role==='kuchyn')h+=`<div class="filters jid-sk">`+JID_SKOLKY.map(([k,l])=>`<button class="${jidSkolka===k?'on':''}" onclick="setJidSkolka('${k}')" aria-pressed="${jidSkolka===k}">${l}</button>`).join('')+`</div>`;
   // kuchyň Děti nevidí – alergie na výdej má na svém přehledu
   h+=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
     :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
+  /* Dny jako karty: na mobilu pod sebou, na desktopu v mřížce vedle sebe (dřív pět karet přes
+     celou šířku, jídlo v dlouhém řádku a popisky chodů různě široké). Chod je popisek nad jídlem. */
+  h+=`<div class="jid-tyden">`;
   t.dny.forEach((den,i)=>{
     const d=t.od+i, dnes=(d===TODAYD&&t.m===6);
-    h+=`<div class="tile"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' · dnes':''}</div>`;
+    h+=`<div class="tile jid-den${dnes?' dnes':''}"><div class="ch">${DOW[i]} ${d}. ${t.m}.${dnes?' <span class="bdg st-ok">dnes</span>':''}</div>`;
     den.forEach((it,k)=>{
       if(jidEdit&&smiJidelnicek()){
         const dr=jidDraft[i][k];
@@ -87,14 +94,15 @@ function renderJidelnicek(){
       }else{
         const bez=jinaSkolka?[]:porceBez(it[2]);
         // pod názvem jídla, ne vedle něj – vedle textu si štítek ukousl šířku a název se lámal
-        h+=`<div class="mrow"><span class="mk2">${it[0]}</span><span class="mv">${it[1]}`;
-        if(bez.length)h+=`<span class="jid-alerg">${bez.map(([n,k])=>`bez ${ALERGEN_BEZ[n]||n} · ${k} ${porcePl(k)}`).join(' · ')}</span>`;
-        h+=`</span></div>`;
+        h+=`<div class="jid-chod"><div class="jid-k">${it[0]}</div><div class="jid-v">${it[1]}</div>`;
+        if(bez.length)h+=`<div class="jid-algs">${bez.map(([n,k])=>`<span class="jid-alerg">${porceBezLbl(n,k)}</span>`).join('')}</div>`;
+        h+=`</div>`;
       }
     });
     h+=`</div>`;
   });
-  h+=`<div class="note2">Obědy dodává Mamafood – jsou společné pro všechny školky. Svačiny chystá každá školka sama, proto má každá vlastní.${jinaSkolka?' V prototypu má děti (a tedy porce bez alergenu) jen Vhaaji.':' U jídla je vidět, kolik porcí musí být bez kterého alergenu – počítá se z karet dětí.'}</div>`;
+  // poznámka o dodavateli jako šestá buňka – na desktopu vyplní volné místo vedle pátku
+  h+=`<div class="note2 jid-pozn">Obědy dodává Mamafood – jsou společné pro všechny školky. Svačiny chystá každá školka sama, proto má každá vlastní.${jinaSkolka?' V prototypu má děti (a tedy porce bez alergenu) jen Vhaaji.':' U jídla je vidět, kolik porcí musí být bez kterého alergenu – počítá se z karet dětí.'}</div></div>`;
   return h+`</div>`;
 }
 window.jidEditOn=()=>{jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
@@ -105,7 +113,7 @@ window.jidSave=()=>{const ciste=jidDraft.map(den=>den.map(it=>[it[0],it[1].trim(
   else{// obědy do společného jídelníčku, svačiny do jídelníčku školky
     JIDELNICEK[jidTyden].dny.forEach((den,i)=>den.forEach((it,k)=>{if(!jeSvacina(it))den[k]=ciste[i][k];}));
     SVACINY[jidSkolka][jidTyden]=ciste.map(den=>[den.find(it=>it[0]==='Dopolední svačina'),den.find(it=>it[0]==='Odpolední svačina')]);}
-  jidEdit=false;jidDraft=null;render();showToast(jidSkolka==='vhaaji'?'Jídelníček uložen ✓':`Uloženo · svačiny ${JID_SKOLKY.find(x=>x[0]===jidSkolka)[1]}, obědy pro všechny ✓`);};
+  jidEdit=false;jidDraft=null;render();showToast(jidSkolka==='vhaaji'?'Jídelníček uložen ✓':`Uloženo: svačiny ${JID_SKOLKY.find(x=>x[0]===jidSkolka)[1]}, obědy pro všechny ✓`);};
 window.setJidSkolka=k=>{if(jidEdit){showToast('Nejdřív ulož, nebo zruš úpravy');return;}jidSkolka=k;render();};
 window.goAlergici=()=>{detiFilter='al';detiOpen=-1;go('deti');};
 window.stepJidTyden=d=>{jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};

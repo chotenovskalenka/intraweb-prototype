@@ -77,11 +77,11 @@ function render(){
     // Novinka jde všem rodičům; vzkaz jednomu rodiči je vedle, protože ho tu respondentka hledala (P6)
     : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-ghost" onclick="openVzkaz(-1)" title="Vzkaz rodičům jednoho dítěte">Vzkaz rodiči</button><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
     : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1>${jeHospodar()?'<button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>':''}`
-    // Listování týdny jídelníčku – i do minulosti (svačinářka hlídá, jak často se svačiny opakují)
     // Docházka: přepínač Den/Týden a listování data v řádku nadpisu, ne pod ním (ladění C, 28. 10. 2026)
     : section==='dochazka' ? `<h1 class="dh-t">Docházka</h1>${renderDochNav()}`
     : section==='tridnice' ? `<h1 class="dh-t">Třídnice</h1>${trHlavicka()}`
-    : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>`
+    // Listování týdny jídelníčku – i do minulosti (svačinářka plánuje z toho, co bylo)
+    : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>${jidHlavicka()}`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
   document.getElementById('ttl').textContent='';
   const rc=document.getElementById('rolechip');

@@ -223,6 +223,8 @@ body{font-family:var(--font-sans)}
 /* Přepínač Den/Týden a listování data mají stejnou pilulku: plocha karty, bez linky, měkký stín. */
 .dfield .dsw,.dfield .dnav{background:rgba(249,247,241,.92);border:none;box-shadow:var(--shadow-card);padding:4px;min-height:52px;align-items:center}
 .dfield .dsw button.on{background:var(--color-primary-strong)}
+/* akce v řádku nadpisu (Jídelníček: Upravit) na stejné ploše jako listování – šedá obrys na akvarelu vypadala jako vypnutá */
+.dfield .btn-ghost{min-height:52px;padding:0 20px;border:none;background:rgba(249,247,241,.92);box-shadow:var(--shadow-card);color:var(--color-primary-strong);font-weight:600}
 .dashhead>.dfield{margin:0}
 @media (min-width:900px){
   .dashhead>.dfield{margin-left:auto}
