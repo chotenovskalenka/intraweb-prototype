@@ -108,7 +108,7 @@ function renderPrehled(){
      tři + „a další", pak kdo píše dnes. Bez štítků „rozepsáno N z 8" – „Chybí: …" řekne víc. */
   const nedopl=[];{let k=TR_DNES;for(let i=0;i<15;i++){k=trPredchozi(k);if(!k)break;const st=trStav(k).k;if(st==='rozepsano'||st==='chybi')nedopl.push(k);}}
   const vcera=trPredchozi(TR_DNES);
-  let blkTridnice=`<div class="tile has-kresba t-tri">${kresba('tridnice','kresba-k')}<div class="ch">Třídnici píše: ${TR_ZAPISUJE[trInfo(TR_DNES).dow]}</div>`;   // kdo píše rovnou v nadpisu (designérka 28. 10. 2026)
+  let blkTridnice=`<div class="tile has-kresba t-tri">${kresba('tridnice','kresba-k')}<div class="ch">Třídnici píše: <span class="ch-jm">${TR_ZAPISUJE[trInfo(TR_DNES).dow]}</span></div>`;   // kdo píše rovnou v nadpisu (designérka 28. 10. 2026)
   if(nedopl.length){
     blkTridnice+=`<div class="tr-dash-cap">Chybí doplnit</div>`;
     nedopl.slice(0,3).forEach(k=>{const ch=trChybi(k);

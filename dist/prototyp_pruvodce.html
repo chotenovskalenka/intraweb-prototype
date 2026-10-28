@@ -1156,7 +1156,13 @@ body{font-family:var(--font-sans)}
   /* Průvodci + akce | básnička | třídnice (Figma „C · desktop") | dnešní jídlo jako sloupec úplně
      vpravo přes obě řady (designérka 28. 10. 2026; předtím řádek přes celou šířku dole) */
   .dash-c{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"pru bas tri jid" "akc bas tri jid";
-    grid-template-rows:auto 1fr;gap:20px;align-items:start}
+    grid-template-rows:auto 1fr;gap:20px;align-items:stretch}
+  /* karty natažené na výšku mřížky a patička dole – konce karet v jedné řadě (designérka 28. 10. 2026) */
+  .dash-c>.tile{display:flex;flex-direction:column}
+  .dash-c>.tile>:nth-last-child(2){margin-bottom:16px}
+  .dash-c:not(:has(.t-akc))>.t-pru{grid-row:1/3}   /* bez akce průvodci přes obě řady */
+  /* úzký sloupec: jméno toho, kdo píše třídnici, záměrně na druhém řádku – zalomení je pak stejné pro každé jméno */
+  .t-tri .ch-jm{display:block}
   .dash-c>.t-pru{grid-area:pru}.dash-c>.t-akc{grid-area:akc}.dash-c>.t-bas{grid-area:bas}.dash-c>.t-tri{grid-area:tri}.dash-c>.t-jid{grid-area:jid}
   .dash-c>.tile{margin:0}
 }
@@ -1260,6 +1266,10 @@ body{font-family:var(--font-sans)}
 @media (min-width:900px){
   .dash-row>.tile{display:flex;flex-direction:column}
   .dash-row .dash-scroll{flex:1 1 0;height:0;min-height:0;max-height:none}
+  /* rolovací seznam končí měkkým přechodem, ne useknutým řádkem („celý vzkaz ›" byl uříznutý napůl);
+     odsazení dole, aby poslední položka po dorolování vyjela z přechodu celá */
+  .dash-row .dash-scroll{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent);
+    mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent);padding-bottom:24px}
 }
 
 /* ---------- Docházka: hlavička v jednom řádku, kompaktní dlaždice (28. 10. 2026) ---------- */
@@ -1417,6 +1427,8 @@ button.chk.ro{cursor:default}
   border-radius:0 0 var(--radius-card) var(--radius-card);background:none;text-align:left}
 .dash-c .tile>.cardlink:hover{background:var(--wash-primary)}
 .cardlink .cl-sip{margin-left:12px}
+/* desktop: patička dole v natažené kartě (konce karet v jedné řadě) */
+@media (min-width:900px){.dash-c .tile>.cardlink{margin-top:auto}}
 </style>
 </head>
 <body>
@@ -2644,7 +2656,7 @@ function renderPrehled(){
      tři + „a další", pak kdo píše dnes. Bez štítků „rozepsáno N z 8" – „Chybí: …" řekne víc. */
   const nedopl=[];{let k=TR_DNES;for(let i=0;i<15;i++){k=trPredchozi(k);if(!k)break;const st=trStav(k).k;if(st==='rozepsano'||st==='chybi')nedopl.push(k);}}
   const vcera=trPredchozi(TR_DNES);
-  let blkTridnice=`<div class="tile has-kresba t-tri">${kresba('tridnice','kresba-k')}<div class="ch">Třídnici píše: ${TR_ZAPISUJE[trInfo(TR_DNES).dow]}</div>`;   // kdo píše rovnou v nadpisu (designérka 28. 10. 2026)
+  let blkTridnice=`<div class="tile has-kresba t-tri">${kresba('tridnice','kresba-k')}<div class="ch">Třídnici píše: <span class="ch-jm">${TR_ZAPISUJE[trInfo(TR_DNES).dow]}</span></div>`;   // kdo píše rovnou v nadpisu (designérka 28. 10. 2026)
   if(nedopl.length){
     blkTridnice+=`<div class="tr-dash-cap">Chybí doplnit</div>`;
     nedopl.slice(0,3).forEach(k=>{const ch=trChybi(k);

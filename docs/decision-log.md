@@ -2244,3 +2244,5 @@ Třídnice (sešit) optický ořez na 90 % – je hutná a vyplní celé plátno
 Desktop přehled: mezera pod ranní trojicí 32 px (dřív 12 px – menší než mezi kartami a kresby přečnívaly nad kartu).
 
 Přehled: odkaz na konci karty jako patička – pod dělicí čarou přes celou spodní plochu karty, text vlevo, šipka vpravo, výška 52 px (designérka 28. 10. 2026; dřív pilulka). Zatím jen na přehledu, jinde zůstávají pilulky.
+
+Doladění přehledu na desktopu (28. 10. 2026): karty natažené na výšku mřížky a patičky v jedné řadě dole; jméno v „Třídnici píše:" záměrně na druhém řádku (stejné zalomení pro každé jméno, na mobilu jeden řádek); rolovací vzkazy a nepřítomní končí měkkým přechodem místo useknutého řádku.
