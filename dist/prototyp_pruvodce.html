@@ -1151,6 +1151,8 @@ body{font-family:var(--font-sans)}
 @media (min-width:900px){
   .dash-row>.tile{border-radius:0;box-shadow:none;background:none}
   .dash-row{border-radius:var(--radius-card);background:rgba(249,247,241,.92);box-shadow:var(--shadow-card)}
+  /* mezera k mřížce pod ní: mezera mezi kartami (20 px) + místo na kresby, které přečnívají nad kartu */
+  #content>.dash-row{margin-bottom:32px}
   /* Průvodci + akce | básnička | třídnice (Figma „C · desktop") | dnešní jídlo jako sloupec úplně
      vpravo přes obě řady (designérka 28. 10. 2026; předtím řádek přes celou šířku dole) */
   .dash-c{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"pru bas tri jid" "akc bas tri jid";
