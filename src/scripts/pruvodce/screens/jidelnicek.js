@@ -72,8 +72,7 @@ function jidHlavicka(){
     +`<span>${jidTydenLabel(t)}</span>`
     +`<button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div></div>`;
 }
-/* Varianta „karty" (výchozí): dny jako karty – na mobilu pod sebou, na desktopu v mřížce vedle sebe
-   (dřív pět karet přes celou šířku, jídlo v dlouhém řádku a popisky chodů různě široké). */
+/* Úprava jídelníčku: dny jako karty – na mobilu pod sebou, na desktopu v mřížce vedle sebe. */
 function jidKarty(t,jinaSkolka){
   let h=`<div class="jid-tyden">`;
   t.dny.forEach((den,i)=>{
@@ -92,41 +91,20 @@ function jidKarty(t,jinaSkolka){
   return h+`</div>`;
 }
 /* Jeden chod: popisek nad jídlem, porce bez alergenu jako štítky pod ním (vedle textu si štítek
-   ukousl šířku a název se lámal). bezPopisku = chod nese řádek/sloupec (tabulka, po chodech). */
-function jidChodHTML(it,jinaSkolka,bezPopisku){
+   ukousl šířku a název se lámal). */
+function jidChodHTML(it,jinaSkolka){
   const bez=jinaSkolka?[]:porceBez(it[2]);
-  return `<div class="jid-chod">${bezPopisku?'':`<div class="jid-k">${it[0]}</div>`}<div class="jid-v">${it[1]||'–'}</div>`
+  return `<div class="jid-chod"><div class="jid-k">${it[0]}</div><div class="jid-v">${it[1]||'–'}</div>`
     +(bez.length?`<div class="jid-algs">${bez.map(([n,k])=>`<span class="jid-alerg">${porceBezLbl(n,k)}</span>`).join('')}</div>`:'')+`</div>`;
 }
 const jidJeDnes=(t,i)=>t.od+i===TODAYD&&t.m===6;
 const jidDenLbl=(t,i)=>`${DOW[i]} ${t.od+i}. ${t.m}.${jidJeDnes(t,i)?' <span class="bdg st-ok">dnes</span>':''}`;
 const jidPocetBez=(den,jinaSkolka)=>jinaSkolka?0:den.reduce((n,it)=>n+porceBez(it[2]).length,0);
 
-/* PRŮZKUM VZORU (28. 10. 2026) – varianty jídelníčku k porovnání, přepínají se v URL:
-   ?jdv=tabulka | dnes | chody (srovnávací stránka docs/jidelnicek-varianty.html). Rozhodne designérka. */
-const JID_VAR=(new URLSearchParams(location.search).get('jdv')||'karty');
-let jidVybranyDen=null, jidOtevreno=null;   // tabulka na mobilu: vybraný den; dnes: rozbalený den
-const jidVychoziDen=t=>{const i=t.dny.findIndex((_,i)=>jidJeDnes(t,i));return i<0?0:i;};
-
-/* Varianta „tabulka": týden jako mřížka chod × den (jako jídelníček na nástěnce). Na desktopu celá
-   tabulka, dnešek zvýrazněný sloupec; na mobilu se nevejde – přepínač dnů Po–Pá a jeden den. */
-function jidTabulka(t,jinaSkolka){
-  const chody=t.dny[0].map(it=>it[0]), vyb=jidVybranyDen??jidVychoziDen(t);
-  let h=`<div class="tile jid-mx-w"><table class="jid-mx"><thead><tr><th></th>`
-    +t.dny.map((_,i)=>`<th class="${jidJeDnes(t,i)?'dnes':''}" scope="col">${jidDenLbl(t,i)}</th>`).join('')+`</tr></thead><tbody>`;
-  chody.forEach((ch,k)=>{
-    h+=`<tr><th scope="row">${ch}</th>`+t.dny.map((den,i)=>`<td class="${jidJeDnes(t,i)?'dnes':''}">${jidChodHTML(den[k],jinaSkolka,true)}</td>`).join('')+`</tr>`;
-  });
-  h+=`</tbody></table></div>`;
-  // mobil
-  h+=`<div class="jid-mx-m"><div class="switch jid-dny">`+t.dny.map((_,i)=>`<button class="${i===vyb?'on':''}" onclick="jidDen(${i})" aria-pressed="${i===vyb}">${DOW[i]}${jidJeDnes(t,i)?'<i class="jid-dot" aria-label=" (dnes)"></i>':''}</button>`).join('')+`</div>`
-    +`<div class="tile"><div class="ch">${jidDenLbl(t,vyb)}</div>${t.dny[vyb].map(it=>jidChodHTML(it,jinaSkolka)).join('')}</div></div>`;
-  return h;
-}
-window.jidDen=i=>{jidVybranyDen=i;render();};
-
-/* Varianta „dnes": co se vaří dnes nahoře celé, ostatní dny jako řádky s hlavním jídlem
-   a počtem porcí bez alergenu; klepnutím se den rozbalí. Telefon je pro „co je dnes". */
+/* Čtení jídelníčku: co se jí dnes nahoře celé, ostatní dny jako řádky s hlavním jídlem a počtem
+   jídel s porcemi bez alergenu; klepnutím se den rozbalí. Průvodce i kuchyň zajímá hlavně dnešek
+   (designérka 28. 10. 2026 – vybráno ze čtyř variant: karty dnů, tabulka, dnes nahoře, po chodech). */
+let jidOtevreno=null;   // rozbalený den v „Ostatní dny týdne"
 function jidDnes(t,jinaSkolka){
   const di=t.dny.findIndex((_,i)=>jidJeDnes(t,i));
   let h='';
@@ -146,19 +124,6 @@ function jidDnes(t,jinaSkolka){
 }
 window.jidOtevri=i=>{jidOtevreno=jidOtevreno===i?null:i;render();};
 
-/* Varianta „po chodech": karta na chod (dopolední svačina, polévka, …) a v ní pět dnů pod sebou.
-   Svačinářka plánuje svačiny přes týden („když je jejich vaření sladké, druhá svačina slaná") –
-   tady vidí celý týden svačin najednou. */
-function jidChody(t,jinaSkolka){
-  const chody=t.dny[0].map(it=>it[0]);
-  let h=`<div class="jid-chody">`;
-  chody.forEach((ch,k)=>{
-    h+=`<div class="tile"><div class="ch">${ch}</div>`
-      +t.dny.map((den,i)=>`<div class="jid-cr${jidJeDnes(t,i)?' dnes':''}"><span class="jid-cd">${DOW[i]} ${t.od+i}. ${t.m}.</span>${jidChodHTML(den[k],jinaSkolka,true)}</div>`).join('')+`</div>`;
-  });
-  return h+`</div>`;
-}
-
 function renderJidelnicek(){
   const t=tydenSkolky(jidTyden), jinaSkolka=jidSkolka!=='vhaaji';
   let h=`<div class="doch jid">`;
@@ -166,9 +131,8 @@ function renderJidelnicek(){
   // kuchyň Děti nevidí – alergie na výdej má na svém přehledu
   h+=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
     :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
-  // úpravy jsou vždy v kartách – varianty jsou jen pro čtení
-  if(jidEdit||JID_VAR==='karty')h+=jidKarty(t,jinaSkolka);
-  else h+=(JID_VAR==='tabulka'?jidTabulka:JID_VAR==='dnes'?jidDnes:jidChody)(t,jinaSkolka);
+  // úpravy celého týdne v kartách, čtení s dneškem nahoře
+  h+=jidEdit?jidKarty(t,jinaSkolka):jidDnes(t,jinaSkolka);
   return h+`</div>`;
 }
 window.jidEditOn=()=>{jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
@@ -182,4 +146,4 @@ window.jidSave=()=>{const ciste=jidDraft.map(den=>den.map(it=>[it[0],it[1].trim(
   jidEdit=false;jidDraft=null;render();showToast(jidSkolka==='vhaaji'?'Jídelníček uložen ✓':`Uloženo: svačiny ${JID_SKOLKY.find(x=>x[0]===jidSkolka)[1]}, obědy pro všechny ✓`);};
 window.setJidSkolka=k=>{if(jidEdit){showToast('Nejdřív ulož, nebo zruš úpravy');return;}jidSkolka=k;render();};
 window.goAlergici=()=>{detiFilter='al';detiOpen=-1;go('deti');};
-window.stepJidTyden=d=>{jidVybranyDen=null;jidOtevreno=null;jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};
+window.stepJidTyden=d=>{jidOtevreno=null;jidTyden=Math.max(0,Math.min(JIDELNICEK.length-1,jidTyden+d));render();};

@@ -2170,3 +2170,8 @@ D **po chodech** (karta na chod a v ní pět dnů – svačinářka vidí svači
 Úpravy jídelníčku jsou ve všech variantách v kartách (A). Po rozhodnutí zůstane jedna.
 
 Poznámka pod jídelníčkem („Obědy dodává Mamafood… počítá se z karet dětí") smazána – designérka 28. 10. 2026.
+
+**Rozhodnuto (28. 10. 2026): „Dnes nahoře".** Designérka: „nejvíce je bude zajímat aktuální den".
+Dnešní jídla celá nahoře, ostatní dny jako rozbalovací řádky (hlavní jídlo, „alergeny (N)"),
+proběhlé dny šedě; v týdnu bez dneška jsou všechny dny řádky. Úpravy týdne zůstávají v kartách
+dnů. Tabulka, po chodech, parametr `?jdv=` a `docs/jidelnicek-varianty.html` jsou pryč.
