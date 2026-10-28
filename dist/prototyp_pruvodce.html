@@ -1128,14 +1128,12 @@ body{font-family:var(--font-sans)}
 @media (min-width:900px){
   .dash-row>.tile{border-radius:0;box-shadow:none;background:none}
   .dash-row{border-radius:var(--radius-card);background:rgba(249,247,241,.92);box-shadow:var(--shadow-card)}
-  /* Průvodci + akce | básnička | třídnice (Figma „C · desktop"); dnešní jídlo pod tím přes celou
-     šířku, čtyři chody vedle sebe – vklíněné pod básničku rozhodilo řádky (28. 10. 2026) */
-  .dash-c{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"pru bas tri" "akc bas tri" "jid jid jid";
-    grid-template-rows:auto 1fr auto;gap:20px;align-items:start}
-  .t-jid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:24px}
-  .t-jid>.ch,.t-jid>.cardlink{grid-column:1/-1}
-  .t-jid>.cardlink{justify-self:start}
-  .t-jid>.jid-chod,.t-jid>.jid-chod:first-of-type{border-top:none;padding-top:2px}
+  /* Průvodci + akce | básnička | třídnice (Figma „C · desktop") | dnešní jídlo jako sloupec úplně
+     vpravo přes obě řady (designérka 28. 10. 2026; předtím řádek přes celou šířku dole) */
+  .dash-c{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"pru bas tri jid" "akc bas tri jid";
+    grid-template-rows:auto 1fr;gap:20px;align-items:start}
+  /* ve čtyřech sloupcích je karta úzká: jméno a čas služby se smí zalomit, ne slepit */
+  .dash-c .t-pru .np{gap:4px 10px;flex-wrap:wrap}
   .dash-c>.t-pru{grid-area:pru}.dash-c>.t-akc{grid-area:akc}.dash-c>.t-bas{grid-area:bas}.dash-c>.t-tri{grid-area:tri}.dash-c>.t-jid{grid-area:jid}
   .dash-c>.tile{margin:0}
 }
@@ -2635,7 +2633,7 @@ function renderPrehled(){
   {const den=jidelnicekDen(TODAYD,6);
    if(den&&den.some(it=>it[1])){
      blkJidlo=`<div class="tile t-jid"><div class="ch">Dnes se jí</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
-       +`<button class="cardlink" onclick="go('jidelnicek')">Jídelníček na další dny →</button></div>`;
+       +`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček →</button></div>`;
    }}
 
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) zeleně, kdo uspává = ☾

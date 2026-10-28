@@ -144,7 +144,7 @@ function renderPrehled(){
   {const den=jidelnicekDen(TODAYD,6);
    if(den&&den.some(it=>it[1])){
      blkJidlo=`<div class="tile t-jid"><div class="ch">Dnes se jí</div>${den.map(it=>jidChodHTML(it,false)).join('')}`
-       +`<button class="cardlink" onclick="go('jidelnicek')">Jídelníček na další dny →</button></div>`;
+       +`<button class="cardlink" onclick="go('jidelnicek')">Celý jídelníček →</button></div>`;
    }}
 
   // průvodci dnes podle příchodu; kdo otevírá (první vlna) zeleně, kdo uspává = ☾
