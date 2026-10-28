@@ -371,3 +371,7 @@ button.chk.ro{cursor:default}
 .tr-dpick{position:absolute;inset:-12px -8px;width:calc(100% + 16px);height:calc(100% + 24px);opacity:0;cursor:pointer;border:none;padding:0}
 .tr-dpick::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
 .dfield .dnav .tr-datum{min-width:0;padding:0}   /* vnořený span nedědí šířku a odsazení popisku data */
+/* Třídnice – úkoly: přidávání nahoře, hotové sbalené pod „Hotovo (n)" */
+.tile>.tr-add{margin:4px 0 6px}
+.tr-hotove-h{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;margin-top:6px;padding:0;border:none;border-top:1px solid var(--color-border);
+  background:none;cursor:pointer;font-family:var(--font-sans);font-size:var(--text-note);font-weight:600;color:var(--color-text-muted);text-align:left}
