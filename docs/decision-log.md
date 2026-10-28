@@ -2056,3 +2056,8 @@ tak bylo dnes „celodenní" a zítra „odpolední" (plán × kód dne – zmat
 - „po obědě domů" a „nespí" zmizely (říká to „dopolední", resp. je to výchozí stav);
 - **vzkaz jako tečka** u jména (desktop; text je v panelu „Dnes k řešení", na mobilu pod řádkem);
 - panel: dnes „Dnes k řešení", jiný den zvláštní den; vždy „Porce pro kuchyň" toho dne.
+
+**Doplněk (28. 10. 2026):** porce pro kuchyň z Docházky pryč (panel i patička na mobilu).
+Vedoucího průvodce nezajímají – řeší je kuchyň (Ksenia) na svém přehledu v roli `kuchyn`.
+Panel vpravo má tak dnes „Dnes k řešení", v den výpravy či horolezení kartu zvláštního dne,
+jinak je prázdný (soupis drží stejnou šířku).
