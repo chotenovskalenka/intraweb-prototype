@@ -275,3 +275,17 @@ body{font-family:var(--font-sans)}
   .r-vzkaz{display:inline-block;padding:2px 9px;border-radius:var(--radius-full);border:1px solid var(--edge-primary);color:var(--color-primary-strong);font-size:var(--text-chip);font-weight:600;flex-shrink:0}
   .doch-main>.doch-mealsfoot{display:none}
 }
+/* listování dny bez poskakování: datum má pevnou šířku (šipky zůstanou pod kurzorem)
+   a jiný den má stejnou kostru jako dnešek – panel se souhrnem dne je vidět i na mobilu, nad soupisem */
+.dfield .dnav span{min-width:104px;text-align:center}
+@media (min-width:900px){.dfield .dnav span{min-width:118px}}
+.doch-jiny .doch-aside{display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
+.doch-jiny .doch-aside>*{margin:0}
+@media (min-width:900px){
+  .doch-jiny .doch-aside{margin-bottom:0}
+}
+@media (max-width:899px){
+  .doch-jiny .doch-body{display:flex;flex-direction:column}
+  .doch-jiny .doch-aside{order:-1}
+}
+.specbar{border:none;border-radius:var(--radius-card);background:var(--tint-ochre)}

@@ -2030,3 +2030,11 @@ vážených řádků nepomáhalo najít, co je dnes potřeba řešit; filtry ve 
 
 **Mobil** zůstává: poznámky pod řádky, porce v patičce, panel skrytý.
 Menu vlevo „končící v půlce" byl jen snímek celé stránky – sidebar je přilepený a drží výšku okna.
+
+## Listování dny v docházce bez poskakování (28. 10. 2026)
+
+Designérka: „docházka na další dny divně přeskakuje". Dvě příčiny: pole s datem měnilo šířku
+podle textu („St 3. 6. (dnes)" je o 43 px širší než „Čt 4. 6.") a šipky uskakovaly zpod kurzoru;
+jiný den měl zrcadlové rozložení (souhrn vlevo, soupis vpravo) proti dnešku (soupis vlevo,
+panel vpravo). Teď má datum pevnou šířku a jiný den stejnou kostru – soupis vlevo stejně široký,
+zvláštní den a počet přítomných v panelu vpravo (na mobilu nad soupisem).
