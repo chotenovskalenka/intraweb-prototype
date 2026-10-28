@@ -1291,6 +1291,8 @@ body{font-family:var(--font-sans)}
 .doch-counts .tab .num,.doch-counts .tab .lab{display:block}
 button.chk{padding:0;font:inherit;color:var(--color-on-primary);cursor:pointer}
 button.chk.ro{cursor:default}
+/* co s jiným dnem role smí – pokračování nadpisu soupisu, tlumeně */
+.ctxhead .t-pozn{font-family:var(--font-sans);font-size:var(--text-small);font-weight:400;color:var(--color-text-muted)}
 </style>
 </head>
 <body>
@@ -2720,19 +2722,22 @@ function renderDen(){
   const side=`<div class="tabs wrap doch-counts">`+tabs.map(([k,l])=>((!dnes||mode==='bezny')&&k==='poobede'?'<div class="c-cap">Z přítomných</div>':'')
     +`<button type="button" class="tab k-${k}${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}${k==='neprit'&&!cnt[k]?' zero':''}" aria-pressed="${tab===k}" onclick="setTab('${k}')"><span class="num">${cnt[k]}</span><span class="lab">${l}</span></button>`).join('')+`</div>`;
   const titul=tab==='rano'?(dnes?'Kdo dnes přišel':d<TODAYD?'Kdo přišel':'Kdo přijde'):CTX[tab][0];
-  let main=`<div class="ctxhead"><span class="t">${titul}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` (${nazevSeznamu(dochSeznam).toLowerCase()})`}</span></div>`;
+  /* Jiný den: co s ním role smí, rovnou za nadpisem („Kdo přijde – jako vedoucí můžeš docházku
+     naplánovat"). Zvlášť řádek „Budoucí den – …" opakoval, co říká už nadpis (designérka 28. 10. 2026). */
+  const locked=!denEditovatelny(d),minuly=d<TODAYD;
+  const pozn=dnes||!smiZapisovat()?''
+    :locked?(minuly?'opravit ho může vedoucí průvodce':'plánuje ho vedoucí průvodce')
+    :(minuly?'jako vedoucí ji můžeš opravit':'jako vedoucí můžeš docházku naplánovat');
+  let main=`<div class="ctxhead"><span class="t">${titul}${pozn?`<span class="t-pozn"> – ${pozn}</span>`:''}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` (${nazevSeznamu(dochSeznam).toLowerCase()})`}</span></div>`;
   /* P4: seznam jako druhý filtr k dlaždici – „Absence" × „Předškoláci" odpoví na otázku
      z testování, kdo z nepřítomných je předškolák. */
   main+=`<div class="doch-filtry"><div class="dsez"><label class="pl" for="dsez">Seznam</label><select class="pin" id="dsez" onchange="setDochSeznam(this.value)">`
     +`<option value="all"${dochSeznam==='all'?' selected':''}>Všechny děti</option>`
     +SEZNAMY.map(s=>`<option value="${s.id}"${dochSeznam===s.id?' selected':''}>${s.nazev}</option>`).join('')+`</select></div>`
     +`<input class="search" id="search" placeholder="Najít dítě…" value="${esc(query)}" oninput="onSearch(this.value)"></div>`;
-  // vysvětlivka: dnes jen zapisující roli (k záložce), jiný den kdo ho smí měnit
-  const locked=!denEditovatelny(d),minuly=d<TODAYD;
+  // vysvětlivka: dnes k záložce (jen zapisující role); jiný den jen roli, která docházku nezapisuje
   const tip=dnes?(smiZapisovat()?(CTX[tab][1]||''):'')
-    :!smiZapisovat()?'Docházku zapisuje vedoucí průvodce – tady ji jen kontroluješ.'
-    :locked?(minuly?'Proběhlý den – jen ke čtení. Opravit ho může vedoucí průvodce.':'Budoucí den – jen ke čtení. Plánuje ho vedoucí průvodce.')
-    :(minuly?'Proběhlý den – jako vedoucí ho můžeš opravit.':'Budoucí den – jako vedoucí můžeš docházku naplánovat.');
+    :!smiZapisovat()?'Docházku zapisuje vedoucí průvodce – tady ji jen kontroluješ.':'';
   if(tip)main+=`<div class="sectip">${tip}</div>`;
   // zvláštní den na mobilu nad soupisem (na desktopu je v panelu)
   const spec=specialKarta(d);
