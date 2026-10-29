@@ -1438,6 +1438,14 @@ button.chk.ro{cursor:default}
 .vz .vz-den{margin-bottom:var(--space-md)}
 .zprow .vz-smer{font-size:var(--text-note);color:var(--color-text-muted)}
 .zprow .vz-smer.vz-pro{color:var(--color-primary)}
+.vz .vz-starsi{margin-top:var(--space-sm)}
+/* Týdenní rytmus: tři různá písma (verzálkový den, Alegreya program, okrový kroužek) působila
+   rozházeně. Jako na přehledu: den jako malý popisek, program textovým písmem (jako jídla),
+   kroužek hned pod ním (designérka 29. 10. 2026). */
+.ryt .pd{font-size:var(--text-small);text-transform:none;letter-spacing:0;color:var(--color-text-muted)}
+.ryt .pp{font-family:var(--font-sans);font-size:var(--text-body);font-weight:500;line-height:var(--leading-snug);color:var(--color-text)}
+.ryt .psub{font-size:var(--text-small);color:var(--color-text-muted)}
+@media (min-width:900px){.ryt .psub{margin-top:0;padding-top:0}}
 </style>
 </head>
 <body>
@@ -1711,7 +1719,7 @@ const ICON_SVG={
 };
 /* klíč sekce (napříč appkami) → ikona */
 const ICON_KEY={prehled:'prehled',aktuality:'news',novinky:'news',dochazka:'dochazka',profil:'profil',
-  platby:'platby',kalendar:'kalendar',plan:'plan',akce:'clipboard',priprava:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
+  platby:'platby',kalendar:'kalendar',plan:'plan',akce:'kalendar',priprava:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
   pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh',tridnice:'kniha',vzkazy:'vzkaz'};
 function icon(key){const k=ICON_KEY[key];return k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_SVG[k]}</svg>`:'';}
 </script>
@@ -2159,6 +2167,8 @@ data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po rá
 data[12].zpravy.push({id:'zp4',den:TODAYD,typ:'jine',kdo:'',cas:'',text:'Dobrý den, chtěla jsem vás poprosit – Kubík od víkendu hodně řeší, že se mu kluci smějí kvůli tomu, jak mluví. Doma o tom mluví každý večer a ráno se mu do školky nechce, dnes jsme šli asi dvacet minut od auta. Nechci z toho dělat velkou věc a vůbec netvrdím, že se něco stalo ve školce, jen jsem chtěla, abyste o tom věděli a případně se na to v kruhu nenápadně podívali. Kdyby to vydrželo do konce týdne, ozvu se a domluvíme se na schůzce.',odeslano:'6:38'});
 // starší vzkaz od rodičů – v sekci Vzkazy je vidět i historie, ne jen dnešek
 data[9].zpravy.push({id:'zp5',den:2,typ:'driv',kdo:'',cas:'13:00',text:'Jedeme k babičce.',odeslano:'1. 6. 19:20'});
+data[4].zpravy.push({id:'zp6',den:-9,typ:'vyzvednuti',kdo:'teta Petra',cas:'',text:'Bude čekat u brány kolem 15:00.',odeslano:'22. 5. 7:05'});
+data[11].zpravy.push({id:'zp7',den:-20,typ:'zdravi',kdo:'',cas:'',text:'Je po antibiotikách, ať prosím hodně pije.',odeslano:'11. 5. 6:50'});
 /* P4 z testování (2 ze 3): vlastní seznamy dětí. Průvodce v docházce nepoznal, kdo z dětí
    je předškolák; druhá respondentka to zobecnila – „můžete si přidat jakýkoliv seznam,
    který řešíte" (horolezci, kroužky). Předškoláci a Horolezci se odvozují z karet dětí,
@@ -2181,9 +2191,15 @@ let VZKAZY={
   3:[{den:4,text:'Zítra jdeme k potoku. Prosíme přibalit holínky a náhradní ponožky.',kdo:'Táňa',cas:'včera 17:30'}],
   5:[{den:2,text:'Dnes jsme se hodně umazali v jílu. Prosíme náhradní kalhoty do batohu.',kdo:'Honza',cas:'2. 6. 15:10'}],
   9:[{den:1,text:'Lahev na pití zůstala ve školce, je v šatně na poličce.',kdo:'Darča',cas:'1. 6. 16:05'}],
+  // květen – starší než 14 dní se v sekci Vzkazy načítá až tlačítkem „Starší vzkazy"
+  2:[{den:-3,text:'Ve čtvrtek fotíme třídu. Prosíme oblečení, ve kterém se dá i válet v trávě.',kdo:'Táňa',cas:'26. 5. 16:40'}],
+  14:[{den:-17,text:'Našli jsme v lese čepici s liškou. Je u nás v šatně, kdyby se hledala.',kdo:'Honza',cas:'14. 5. 15:20'}],
+  7:[{den:-24,text:'Ve čtvrtek jdeme celý den do Divoké Šárky. Prosíme větší svačinu a pláštěnku.',kdo:'Darča',cas:'6. 5. 17:05'}],
 };
 const vzkazyFor=i=>VZKAZY[i]||(VZKAZY[i]=[]);
-const denLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':`${DOW[wd(d)]} ${d}. 6.`;
+/* Datum dne v červnu; vzkazy sahají i do května – den ≤ 0 je květen (0 = 31. 5.). */
+const denDatum=d=>`${DOW[((d-1)%7+7)%7]} ${d>=1?d:31+d}. ${d>=1?6:5}.`;
+const denLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':denDatum(d);
 /* Kuchyň napříč školkami sítě (rozhodnutí 10. 10. 2026; Kouzlo lesa je cizí provozovatel – mimo): porce počítá jeden člověk pro všechny
    školky podle jejich docházky. Průvodcovská appka má jména jen pro Vhaaji – ta se počítá
    živě z `data`; ostatní školky jsou v prototypu souhrnná čísla (obsazenost sedí s adminem).
@@ -3405,8 +3421,10 @@ window.saveNov=()=>{const f=novForm;
    Novinka jde všem rodičům, vzkaz jedné rodině – proto vlastní sekce, ne záložka v Novinkách.
    Obě strany na jednom místě: od rodičů (c.zpravy, zakládá rodič ve své appce) i rodičům
    (VZKAZY, píše průvodce). Řazeno po dnech, na které vzkaz platí – od nejvzdálenějšího
-   nadcházejícího po nejstarší, aby šlo dohledat, co se komu kdy psalo. */
-let vzSmer='vse';
+   nadcházejícího po nejstarší, aby šlo dohledat, co se komu kdy psalo.
+   Za celý rok by toho byly stovky: ukazuje se nadcházející + posledních 14 dní, starší po
+   týdnech tlačítkem; hledání podle dítěte prochází všechno (designérka 29. 10. 2026). */
+let vzSmer='vse', vzOd=TODAYD-13, vzQuery='';
 function vzVse(){
   const a=[];
   data.forEach((c,i)=>{
@@ -3428,36 +3446,50 @@ function vzRadek(x){
     +`<span class="zp-who">${esc(v.text)}</span></span></div>`;
 }
 function renderVzkazy(){
-  const vse=vzVse(), n=k=>vse.filter(x=>k==='vse'||x.smer===k).length;
+  const hledam=!!vzQuery.trim();
+  const vse=vzVse().filter(x=>hledam?norm(full(x.c)).includes(norm(vzQuery.trim())):x.den>=vzOd);
+  const starsi=!hledam&&vzVse().some(x=>x.den<vzOd&&(vzSmer==='vse'||x.smer===vzSmer));
+  const n=k=>vse.filter(x=>k==='vse'||x.smer===k).length;
   let h=`<div class="doch vz">`;
+  h+=`<div class="deti-bar"><input class="search" placeholder="Najít dítě…" value="${esc(vzQuery)}" oninput="onVzSearch(this.value)" aria-label="Najít vzkazy podle dítěte"></div>`;
   h+=`<div class="filters">`+[['vse','Všechny'],['od','Od rodičů'],['pro','Rodičům']].map(([k,l])=>
     `<button class="${vzSmer===k?'on':''}" aria-pressed="${vzSmer===k}" onclick="setVzSmer('${k}')">${l}<span class="cnt">${n(k)}</span></button>`).join('')+`</div>`;
   const vyber=vse.filter(x=>vzSmer==='vse'||x.smer===vzSmer);
-  if(!vyber.length)h+=`<div class="empty">${vzSmer==='pro'?'Rodičům zatím žádný vzkaz neodešel.':'Zatím žádné vzkazy.'}</div>`;
+  if(!vyber.length)h+=`<div class="empty">${hledam?'Nic nenalezeno.':vzSmer==='pro'?'Za poslední dva týdny rodičům žádný vzkaz neodešel.':'Za poslední dva týdny žádné vzkazy.'}</div>`;
   const dny=[...new Set(vyber.map(x=>x.den))].sort((a,b)=>b-a);
   dny.forEach(d=>{
     const den=vyber.filter(x=>x.den===d).sort((a,b)=>(a.smer==='od'?0:1)-(b.smer==='od'?0:1));
-    const nad=d===TODAYD||d===TODAYD+1?`${denLbl(d).replace(/^./,m=>m.toUpperCase())} (${DOW[wd(d)]} ${d}. 6.)`:`${DOW[wd(d)]} ${d}. 6.`;
+    const nad=d===TODAYD||d===TODAYD+1?`${denLbl(d).replace(/^./,m=>m.toUpperCase())} (${denDatum(d)})`:denDatum(d);
     h+=`<div class="tile vz-den"><div class="ch">${nad}</div>${den.map(vzRadek).join('')}</div>`;
   });
-  h+=`<div class="hint">Vzkaz rodičům uvidí jen rodiče daného dítěte, na přehledu ve své appce. Vzkazy od rodičů píšou rodiče ve své appce.</div>`;
+  if(starsi)h+=`<button class="btn-ghost btn-block vz-starsi" onclick="vzStarsi()">Starší vzkazy (do ${denDatum(vzOd-7).replace(/^\S+ /,'')})</button>`;
   return h+`</div>`;
 }
 window.setVzSmer=k=>{vzSmer=k;render();};
+window.vzStarsi=()=>{vzOd-=7;render();};
+window.onVzSearch=v=>{vzQuery=v;renderKeepFocus();};
 </script>
 <script>
 /* SCREEN: PRUVODCE_AKCE – datované jednorázové události (výlety, divadla, focení).
    Listuje se po měsících: zpět do loňska (odkud se plány přebírají) i dopředu na plánování.
    Minulé měsíce jsou jen ke čtení a řádek z nich jde jedním klepnutím převzít do běžícího
-   měsíce – to nahradilo dřívější přepínač „Zobrazit loňské akce". */
+   měsíce – to nahradilo dřívější přepínač „Zobrazit loňské akce".
+   Od 29. 10. 2026 jedna sekce s Kalendářem (překrývaly se): přepínač Seznam / Měsíc v hlavičce,
+   Měsíc je sdílený kalendář školky (screens/kalendar.js). */
+let akceView='seznam';
+function akceHlavicka(){
+  const tog=`<div class="switch dsw">`+[['seznam','Seznam'],['mesic','Měsíc']].map(v=>`<button class="${akceView===v[0]?'on':''}" onclick="setAkceView('${v[0]}')">${v[1]}</button>`).join('')+`</div>`;
+  const o=AKCE_MESICE[akceM];
+  const nav=akceView==='seznam'?`<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`
+    +`<span>${o.label}${akceM===AKCE_AKT?' (aktuální)':''}</span>`
+    +`<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`:'';
+  return `<div class="dfield">${tog}${nav}</div><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`;
+}
+window.setAkceView=v=>{akceView=v;render();};
 function renderAkce(){
   const o=AKCE_MESICE[akceM], rows=[...akceMesic(akceM)].sort((a,b)=>a.day-b.day), minuly=akceM<AKCE_AKT;
-  // bez nadpisu sekce – H1 v topbaru už říká „Akce", řádek nese jen listování měsíci
-  let h=`<div class="akce-sec"><div class="vhead-row"><div class="vhead-act">`+
-    `<button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`+
-    `<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`+
-    `<span>${o.label}${akceM===AKCE_AKT?'<i class="dn-cur"> · aktuální</i>':''}</span>`+
-    `<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div></div></div>`;
+  // listování měsíci, přepínač Seznam / Měsíc a „+ Nová akce" jsou v hlavičce (akceHlavicka)
+  let h=`<div class="akce-sec">`;
   if(minuly)h+=`<div class="note2">Minulý měsíc – klepnutím na akci ji založíš znovu do června 2026 s předvyplněnými údaji.</div>`;
   if(!rows.length)return h+`<div class="empty">V ${o.label.toLowerCase()} zatím žádné akce.</div></div>`;
   const klik=minuly?(a,i)=>`akceZnovu('${o.key}',${i})`:(a)=>`openAkce('${a.id}')`;
@@ -4593,10 +4625,9 @@ const SECTIONS=[
   ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
   ['vzkazy','Vzkazy','✉'],
-  ['akce','Akce','✎'],
+  ['akce','Kalendář a akce','✎'],
   ['priprava','Příprava','▤'],
   ['pruvodci','Docházka průvodců','◷'],
-  ['kalendar','Kalendář','▦'],
   ['deti','Děti','☺'],
   ['fotky','Fotky','▣'],
   ['fond','Kulturní fond','₵'],
@@ -4646,7 +4677,7 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,vzkazy:renderVzkazy,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
+const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,vzkazy:renderVzkazy,jidelnicek:renderJidelnicek,akce:()=>akceView==='mesic'?renderKalendar():renderAkce(),priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -4670,6 +4701,7 @@ function render(){
     // Docházka: přepínač Den/Týden a listování data v řádku nadpisu, ne pod ním (ladění C, 28. 10. 2026)
     : section==='dochazka' ? `<h1 class="dh-t">Docházka</h1>${renderDochNav()}`
     : section==='tridnice' ? `<h1 class="dh-t">Třídnice</h1>${trHlavicka()}`
+    : section==='akce' ? `<h1 class="dh-t">Kalendář a akce</h1>${akceHlavicka()}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka plánuje z toho, co bylo)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>${jidHlavicka()}`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
@@ -4681,6 +4713,7 @@ function render(){
     rc.classList.toggle('role-ro',role==='pruvodce');
     rc.disabled=ROLE_PINNED;rc.title=ROLE_PINNED?'Role je daná odkazem':'Přepnout roli (prototyp)';}
   renderDrawer();
+  if(section==='kalendar'){section='akce';akceView='mesic';}   // Kalendář je od 29. 10. 2026 pohled v Akcích
   if(!sekceVidi(section))section='prehled';
   document.getElementById('content').innerHTML=RENDER[section]();
 }

@@ -6,10 +6,9 @@ const SECTIONS=[
   ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
   ['vzkazy','Vzkazy','✉'],
-  ['akce','Akce','✎'],
+  ['akce','Kalendář a akce','✎'],
   ['priprava','Příprava','▤'],
   ['pruvodci','Docházka průvodců','◷'],
-  ['kalendar','Kalendář','▦'],
   ['deti','Děti','☺'],
   ['fotky','Fotky','▣'],
   ['fond','Kulturní fond','₵'],
@@ -59,7 +58,7 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,vzkazy:renderVzkazy,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
+const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,vzkazy:renderVzkazy,jidelnicek:renderJidelnicek,akce:()=>akceView==='mesic'?renderKalendar():renderAkce(),priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -83,6 +82,7 @@ function render(){
     // Docházka: přepínač Den/Týden a listování data v řádku nadpisu, ne pod ním (ladění C, 28. 10. 2026)
     : section==='dochazka' ? `<h1 class="dh-t">Docházka</h1>${renderDochNav()}`
     : section==='tridnice' ? `<h1 class="dh-t">Třídnice</h1>${trHlavicka()}`
+    : section==='akce' ? `<h1 class="dh-t">Kalendář a akce</h1>${akceHlavicka()}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka plánuje z toho, co bylo)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>${jidHlavicka()}`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;
@@ -94,6 +94,7 @@ function render(){
     rc.classList.toggle('role-ro',role==='pruvodce');
     rc.disabled=ROLE_PINNED;rc.title=ROLE_PINNED?'Role je daná odkazem':'Přepnout roli (prototyp)';}
   renderDrawer();
+  if(section==='kalendar'){section='akce';akceView='mesic';}   // Kalendář je od 29. 10. 2026 pohled v Akcích
   if(!sekceVidi(section))section='prehled';
   document.getElementById('content').innerHTML=RENDER[section]();
 }

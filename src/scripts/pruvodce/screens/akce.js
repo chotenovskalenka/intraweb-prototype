@@ -1,15 +1,23 @@
 /* SCREEN: PRUVODCE_AKCE – datované jednorázové události (výlety, divadla, focení).
    Listuje se po měsících: zpět do loňska (odkud se plány přebírají) i dopředu na plánování.
    Minulé měsíce jsou jen ke čtení a řádek z nich jde jedním klepnutím převzít do běžícího
-   měsíce – to nahradilo dřívější přepínač „Zobrazit loňské akce". */
+   měsíce – to nahradilo dřívější přepínač „Zobrazit loňské akce".
+   Od 29. 10. 2026 jedna sekce s Kalendářem (překrývaly se): přepínač Seznam / Měsíc v hlavičce,
+   Měsíc je sdílený kalendář školky (screens/kalendar.js). */
+let akceView='seznam';
+function akceHlavicka(){
+  const tog=`<div class="switch dsw">`+[['seznam','Seznam'],['mesic','Měsíc']].map(v=>`<button class="${akceView===v[0]?'on':''}" onclick="setAkceView('${v[0]}')">${v[1]}</button>`).join('')+`</div>`;
+  const o=AKCE_MESICE[akceM];
+  const nav=akceView==='seznam'?`<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`
+    +`<span>${o.label}${akceM===AKCE_AKT?' (aktuální)':''}</span>`
+    +`<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`:'';
+  return `<div class="dfield">${tog}${nav}</div><button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`;
+}
+window.setAkceView=v=>{akceView=v;render();};
 function renderAkce(){
   const o=AKCE_MESICE[akceM], rows=[...akceMesic(akceM)].sort((a,b)=>a.day-b.day), minuly=akceM<AKCE_AKT;
-  // bez nadpisu sekce – H1 v topbaru už říká „Akce", řádek nese jen listování měsíci
-  let h=`<div class="akce-sec"><div class="vhead-row"><div class="vhead-act">`+
-    `<button class="btn-primary" onclick="openAkce(null)">+ Nová akce</button>`+
-    `<div class="dnav"><button onclick="stepAkceM(-1)" ${akceM<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button>`+
-    `<span>${o.label}${akceM===AKCE_AKT?'<i class="dn-cur"> · aktuální</i>':''}</span>`+
-    `<button onclick="stepAkceM(1)" ${akceM>=AKCE_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div></div></div>`;
+  // listování měsíci, přepínač Seznam / Měsíc a „+ Nová akce" jsou v hlavičce (akceHlavicka)
+  let h=`<div class="akce-sec">`;
   if(minuly)h+=`<div class="note2">Minulý měsíc – klepnutím na akci ji založíš znovu do června 2026 s předvyplněnými údaji.</div>`;
   if(!rows.length)return h+`<div class="empty">V ${o.label.toLowerCase()} zatím žádné akce.</div></div>`;
   const klik=minuly?(a,i)=>`akceZnovu('${o.key}',${i})`:(a)=>`openAkce('${a.id}')`;

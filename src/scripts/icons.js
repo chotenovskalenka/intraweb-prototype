@@ -25,6 +25,6 @@ const ICON_SVG={
 };
 /* klíč sekce (napříč appkami) → ikona */
 const ICON_KEY={prehled:'prehled',aktuality:'news',novinky:'news',dochazka:'dochazka',profil:'profil',
-  platby:'platby',kalendar:'kalendar',plan:'plan',akce:'clipboard',priprava:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
+  platby:'platby',kalendar:'kalendar',plan:'plan',akce:'kalendar',priprava:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
   pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh',tridnice:'kniha',vzkazy:'vzkaz'};
 function icon(key){const k=ICON_KEY[key];return k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_SVG[k]}</svg>`:'';}

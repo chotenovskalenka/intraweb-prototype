@@ -2273,3 +2273,12 @@ Den verzálkami, program v Alegreya a kroužek okrovým písmem působily jako t
 Jako na přehledu: den malým tlumeným popiskem, program textovým písmem (jako jídla), kroužek
 hned pod ním, tlumeně.
 
+## Kalendář a akce v jedné sekci (29. 10. 2026)
+
+Designérka: „není to zbytečné… neuvidí to v kalendáři?" Akce i Kalendář ukazovaly tytéž akce.
+Výzkum k tomu: majitelka zvažuje kalendář úplně zrušit, protože neví, k čemu je
+(vyzkum-zjisteni.md). Rozhodnutí: jedna sekce **Kalendář a akce** (klíč `akce`), v hlavičce
+přepínač **Seznam / Měsíc**, listování měsíci a „+ Nová akce". Seznam je výchozí (nese čas,
+místo, cenu z fondu a převzetí z loňska), Měsíc je sdílený kalendář školky se službami.
+Samostatná položka Kalendář z menu zmizela; `go('kalendar')` otevře pohled Měsíc. Ovládání
+měsíců se přesunulo z obsahu do hlavičky jako u ostatních obrazovek, „· aktuální" → „(aktuální)".
