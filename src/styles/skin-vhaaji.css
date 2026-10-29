@@ -393,3 +393,5 @@ button.chk.ro{cursor:default}
 @media (min-width:900px){.dash-c .tile>.cardlink{margin-top:auto}}
 /* celkový počet dětí u první dlaždice docházky („21/25") – menší a tlumený, ať číslo přítomných vede */
 .doch-counts .tab .num .num-z{font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);margin-left:2px}
+/* odkaz na alergie v hlavičce jídelníčku vedle Upravit – stejná výška jako tlačítko */
+#dashhead .jid-kdo{margin:0;min-height:52px;padding:0 20px}

@@ -139,7 +139,7 @@
 .rozh-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
 .rozh-top .zsdil{margin:-12px 0}   /* dotykový cíl zůstává 44 px, řádek se nenafoukne */
 .rozh-chybi{margin-top:4px;font-size:var(--text-note);color:var(--state-warn-ink)}
-.jid-kdo{margin:4px 0 var(--space-md);border-top:none;padding-top:0}
+.jid-kdo{border-top:none}
 /* Den jídelníčku: chod jako popisek nad jídlem (dřív vlevo – různě široké popisky rozhodily
    začátek jídla), porce bez alergenu jako štítky pod jídlem. Na desktopu dny v mřížce. */
 .jid-chod{padding:9px 0;border-top:1px solid var(--color-border)}

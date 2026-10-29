@@ -2190,6 +2190,7 @@ v pásu tlumeně. V jiném týdnu se otevře pondělí. Úpravy týdne zůstáva
 Dnes nahoře, dnes a zítra, dlaždice, parametr `?jdv=` i srovnávací stránka jsou pryč.
 
 Odkaz „Kdo má jakou alergii" je až pod jídlem dne, ne nad pásem dnů – není to to hlavní (designérka 28. 10. 2026).
+29. 10. 2026 se odkaz přesunul do hlavičky vpravo nahoře vedle „Upravit" (stejná výška pilulky) – pod dlouhým seznamem týdnů ho nikdo nenašel.
 
 ## Jídelníček: dnešek na přehledu, v jídelníčku dny od dneška (28. 10. 2026)
 

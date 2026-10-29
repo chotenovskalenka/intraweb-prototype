@@ -65,9 +65,13 @@ function tydenSkolky(ti){
    pět dnů od dneška, minulost průvodce nezajímá (designérka 28. 10. 2026). Listování týdny je jen
    v úpravách: kuchyň a hospodářka zadávají dopředu a svačinářka plánuje z toho, co bylo. */
 function jidHlavicka(){
+  /* odkaz na alergie nahoře vpravo vedle Upravit (designérka 29. 10. 2026; dřív pod jídlem);
+     kuchyň Děti nevidí – alergie na výdej má na svém přehledu */
+  const alg=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
+    :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
   // jídelníček zadává kuchyň a hospodářka; ostatní ho jen čtou
-  if(!smiJidelnicek())return '';
-  if(!jidEdit)return `<div class="dfield"><button class="btn-ghost" onclick="jidEditOn()">Upravit</button></div>`;
+  if(!smiJidelnicek())return `<div class="dfield">${alg}</div>`;
+  if(!jidEdit)return `<div class="dfield">${alg}<button class="btn-ghost" onclick="jidEditOn()">Upravit</button></div>`;
   const t=tydenSkolky(jidTyden);
   return `<div class="dfield"><button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
     +`<div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`
@@ -139,10 +143,6 @@ function renderJidelnicek(){
   if(role==='kuchyn')h+=`<div class="filters jid-sk">`+JID_SKOLKY.map(([k,l])=>`<button class="${jidSkolka===k?'on':''}" onclick="setJidSkolka('${k}')" aria-pressed="${jidSkolka===k}">${l}</button>`).join('')+`</div>`;
   // úpravy po týdnech v kartách, čtení od dneška
   h+=jidEdit?jidKarty(t,jinaSkolka):jidOdDneska(jinaSkolka);
-  // odkaz na alergie až pod jídlem – není to to hlavní (designérka 28. 10. 2026);
-  // kuchyň Děti nevidí – alergie na výdej má na svém přehledu
-  h+=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
-    :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
   return h+`</div>`;
 }
 window.jidEditOn=()=>{jidTyden=jidIndex(TODAYD,6);jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
