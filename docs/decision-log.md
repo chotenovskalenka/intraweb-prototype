@@ -2259,3 +2259,11 @@ vzkazy od rodičů (`c.zpravy`) i rodičům (`VZKAZY`), po dnech, na které plat
 nadcházejícího po nejstarší; filtr Všechny / Od rodičů / Rodičům. Tlačítko „+ Vzkaz rodiči" se
 přesunulo sem; karta „Vzkazy od rodičů" na přehledu má patičku „Všechny vzkazy". Karta dítěte
 svůj seznam vzkazů rodičům drží dál. Seed má pár starších vzkazů, ať je vidět historie.
+
+## Vzkazy: posledních 14 dní, starší po týdnech, hledání (29. 10. 2026)
+
+Za celý školní rok by vzkazů byly stovky. Sekce Vzkazy ukazuje nadcházející dny a posledních
+14 dní; tlačítko „Starší vzkazy" přidává po týdnu. Hledání podle jména dítěte prochází všechny
+vzkazy bez ohledu na okno. Seed má kvůli ukázce i květnové vzkazy (`den` ≤ 0 = květen,
+`denDatum`). Vysvětlující věta pod seznamem pryč (designérka).
+

@@ -318,6 +318,8 @@ data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po rá
 data[12].zpravy.push({id:'zp4',den:TODAYD,typ:'jine',kdo:'',cas:'',text:'Dobrý den, chtěla jsem vás poprosit – Kubík od víkendu hodně řeší, že se mu kluci smějí kvůli tomu, jak mluví. Doma o tom mluví každý večer a ráno se mu do školky nechce, dnes jsme šli asi dvacet minut od auta. Nechci z toho dělat velkou věc a vůbec netvrdím, že se něco stalo ve školce, jen jsem chtěla, abyste o tom věděli a případně se na to v kruhu nenápadně podívali. Kdyby to vydrželo do konce týdne, ozvu se a domluvíme se na schůzce.',odeslano:'6:38'});
 // starší vzkaz od rodičů – v sekci Vzkazy je vidět i historie, ne jen dnešek
 data[9].zpravy.push({id:'zp5',den:2,typ:'driv',kdo:'',cas:'13:00',text:'Jedeme k babičce.',odeslano:'1. 6. 19:20'});
+data[4].zpravy.push({id:'zp6',den:-9,typ:'vyzvednuti',kdo:'teta Petra',cas:'',text:'Bude čekat u brány kolem 15:00.',odeslano:'22. 5. 7:05'});
+data[11].zpravy.push({id:'zp7',den:-20,typ:'zdravi',kdo:'',cas:'',text:'Je po antibiotikách, ať prosím hodně pije.',odeslano:'11. 5. 6:50'});
 /* P4 z testování (2 ze 3): vlastní seznamy dětí. Průvodce v docházce nepoznal, kdo z dětí
    je předškolák; druhá respondentka to zobecnila – „můžete si přidat jakýkoliv seznam,
    který řešíte" (horolezci, kroužky). Předškoláci a Horolezci se odvozují z karet dětí,
@@ -340,9 +342,15 @@ let VZKAZY={
   3:[{den:4,text:'Zítra jdeme k potoku. Prosíme přibalit holínky a náhradní ponožky.',kdo:'Táňa',cas:'včera 17:30'}],
   5:[{den:2,text:'Dnes jsme se hodně umazali v jílu. Prosíme náhradní kalhoty do batohu.',kdo:'Honza',cas:'2. 6. 15:10'}],
   9:[{den:1,text:'Lahev na pití zůstala ve školce, je v šatně na poličce.',kdo:'Darča',cas:'1. 6. 16:05'}],
+  // květen – starší než 14 dní se v sekci Vzkazy načítá až tlačítkem „Starší vzkazy"
+  2:[{den:-3,text:'Ve čtvrtek fotíme třídu. Prosíme oblečení, ve kterém se dá i válet v trávě.',kdo:'Táňa',cas:'26. 5. 16:40'}],
+  14:[{den:-17,text:'Našli jsme v lese čepici s liškou. Je u nás v šatně, kdyby se hledala.',kdo:'Honza',cas:'14. 5. 15:20'}],
+  7:[{den:-24,text:'Ve čtvrtek jdeme celý den do Divoké Šárky. Prosíme větší svačinu a pláštěnku.',kdo:'Darča',cas:'6. 5. 17:05'}],
 };
 const vzkazyFor=i=>VZKAZY[i]||(VZKAZY[i]=[]);
-const denLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':`${DOW[wd(d)]} ${d}. 6.`;
+/* Datum dne v červnu; vzkazy sahají i do května – den ≤ 0 je květen (0 = 31. 5.). */
+const denDatum=d=>`${DOW[((d-1)%7+7)%7]} ${d>=1?d:31+d}. ${d>=1?6:5}.`;
+const denLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':denDatum(d);
 /* Kuchyň napříč školkami sítě (rozhodnutí 10. 10. 2026; Kouzlo lesa je cizí provozovatel – mimo): porce počítá jeden člověk pro všechny
    školky podle jejich docházky. Průvodcovská appka má jména jen pro Vhaaji – ta se počítá
    živě z `data`; ostatní školky jsou v prototypu souhrnná čísla (obsazenost sedí s adminem).
