@@ -167,10 +167,10 @@ function renderDen(){
   // počty se počítají ze stejného výběru jako soupis (celá školka, nebo seznam)
   const vSez=data.map((x,i)=>({x,i})).filter(({x,i})=>dochSeznam==='all'||veSeznamu(x,i,dochSeznam));
   const cnt={};tabs.forEach(([k])=>cnt[k]=vSez.filter(({x})=>inTabD(x,k,d)).length);
-  const presS=vSez.filter(({x})=>{const k=getCode(x,d);return k&&k!=='OM';}).length;
+  // celkový počet („21/25") nese první dlaždice – samostatné „přítomno 21 / 25" nad seznamem ho jen opakovalo
   // dlaždice nesou barvu stavu (k-…) a rozpad přítomných uvozuje „Z přítomných" – stejně jako na přehledu
   const side=`<div class="tabs wrap doch-counts">`+tabs.map(([k,l])=>((!dnes||mode==='bezny')&&k==='poobede'?'<div class="c-cap">Z přítomných</div>':'')
-    +`<button type="button" class="tab k-${k}${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}${k==='neprit'&&!cnt[k]?' zero':''}" aria-pressed="${tab===k}" onclick="setTab('${k}')"><span class="num">${cnt[k]}</span><span class="lab">${l}</span></button>`).join('')+`</div>`;
+    +`<button type="button" class="tab k-${k}${tab===k?' on':''}${(k==='rano'||k==='skolka')?' lead':''}${k==='neprit'&&!cnt[k]?' zero':''}" aria-pressed="${tab===k}" onclick="setTab('${k}')"><span class="num">${cnt[k]}${(k==='rano'||k==='skolka')?`<span class="num-z">/${vSez.length}</span>`:''}</span><span class="lab">${l}</span></button>`).join('')+`</div>`;
   const titul=tab==='rano'?(dnes?'Kdo dnes přišel':d<TODAYD?'Kdo přišel':'Kdo přijde'):CTX[tab][0];
   /* Jiný den: co s ním role smí, rovnou za nadpisem („Kdo přijde – jako vedoucí můžeš docházku
      naplánovat"). Zvlášť řádek „Budoucí den – …" opakoval, co říká už nadpis (designérka 28. 10. 2026). */
@@ -178,7 +178,7 @@ function renderDen(){
   const pozn=dnes||!smiZapisovat()?''
     :locked?(minuly?'opravit ho může vedoucí průvodce':'plánuje ho vedoucí průvodce')
     :(minuly?'jako vedoucí ji můžeš opravit':'jako vedoucí můžeš docházku naplánovat');
-  let main=`<div class="ctxhead"><span class="t">${titul}${pozn?`<span class="t-pozn"> – ${pozn}</span>`:''}</span><span class="pres">přítomno <b>${presS}</b> / ${vSez.length}${dochSeznam==='all'?'':` (${nazevSeznamu(dochSeznam).toLowerCase()})`}</span></div>`;
+  let main=`<div class="ctxhead"><span class="t">${titul}${pozn?`<span class="t-pozn"> – ${pozn}</span>`:''}</span></div>`;
   /* P4: seznam jako druhý filtr k dlaždici – „Absence" × „Předškoláci" odpoví na otázku
      z testování, kdo z nepřítomných je předškolák. */
   main+=`<div class="doch-filtry"><div class="dsez"><label class="pl" for="dsez">Seznam</label><select class="pin" id="dsez" onchange="setDochSeznam(this.value)">`

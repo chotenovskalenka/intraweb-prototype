@@ -391,3 +391,5 @@ button.chk.ro{cursor:default}
 .cardlink .cl-sip{margin-left:12px}
 /* desktop: patička dole v natažené kartě (konce karet v jedné řadě) */
 @media (min-width:900px){.dash-c .tile>.cardlink{margin-top:auto}}
+/* celkový počet dětí u první dlaždice docházky („21/25") – menší a tlumený, ať číslo přítomných vede */
+.doch-counts .tab .num .num-z{font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);margin-left:2px}
