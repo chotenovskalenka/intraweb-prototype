@@ -2267,3 +2267,9 @@ Za celý školní rok by vzkazů byly stovky. Sekce Vzkazy ukazuje nadcházejíc
 vzkazy bez ohledu na okno. Seed má kvůli ukázce i květnové vzkazy (`den` ≤ 0 = květen,
 `denDatum`). Vysvětlující věta pod seznamem pryč (designérka).
 
+## Týdenní rytmus: sjednocená typografie (29. 10. 2026)
+
+Den verzálkami, program v Alegreya a kroužek okrovým písmem působily jako tři různé styly.
+Jako na přehledu: den malým tlumeným popiskem, program textovým písmem (jako jídla), kroužek
+hned pod ním, tlumeně.
+

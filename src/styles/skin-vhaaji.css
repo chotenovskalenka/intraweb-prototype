@@ -401,3 +401,10 @@ button.chk.ro{cursor:default}
 .zprow .vz-smer{font-size:var(--text-note);color:var(--color-text-muted)}
 .zprow .vz-smer.vz-pro{color:var(--color-primary)}
 .vz .vz-starsi{margin-top:var(--space-sm)}
+/* Týdenní rytmus: tři různá písma (verzálkový den, Alegreya program, okrový kroužek) působila
+   rozházeně. Jako na přehledu: den jako malý popisek, program textovým písmem (jako jídla),
+   kroužek hned pod ním (designérka 29. 10. 2026). */
+.ryt .pd{font-size:var(--text-small);text-transform:none;letter-spacing:0;color:var(--color-text-muted)}
+.ryt .pp{font-family:var(--font-sans);font-size:var(--text-body);font-weight:500;line-height:var(--leading-snug);color:var(--color-text)}
+.ryt .psub{font-size:var(--text-small);color:var(--color-text-muted)}
+@media (min-width:900px){.ryt .psub{margin-top:0;padding-top:0}}
