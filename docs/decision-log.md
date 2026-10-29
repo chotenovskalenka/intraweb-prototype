@@ -2247,3 +2247,15 @@ Desktop přehled: mezera pod ranní trojicí 32 px (dřív 12 px – menší ne�
 Přehled: odkaz na konci karty jako patička – pod dělicí čarou přes celou spodní plochu karty, text vlevo, šipka vpravo, výška 52 px (designérka 28. 10. 2026; dřív pilulka). Zatím jen na přehledu, jinde zůstávají pilulky.
 
 Doladění přehledu na desktopu (28. 10. 2026): karty natažené na výšku mřížky a patičky v jedné řadě dole; jméno v „Třídnici píše:" záměrně na druhém řádku (stejné zalomení pro každé jméno, na mobilu jeden řádek); rolovací vzkazy a nepřítomní končí měkkým přechodem místo useknutého řádku.
+
+## Vzkazy: vlastní sekce s evidencí (29. 10. 2026)
+
+Designérka: „když pošlu vzkaz rodiči, měla bych někde mít jeho evidenci". Odeslaný vzkaz se dřív
+ukládal jen do karty dítěte (Děti), tlačítko „Vzkaz rodiči" bylo v hlavičce Novinek.
+
+Rozhodnutí: **samostatná sekce Vzkazy** (v menu hned pod Novinkami), ne záložka v Novinkách.
+Novinka jde všem rodičům, vzkaz jedné rodině – míchat je by mátlo. V sekci jsou obě strany:
+vzkazy od rodičů (`c.zpravy`) i rodičům (`VZKAZY`), po dnech, na které platí, od nejvzdálenějšího
+nadcházejícího po nejstarší; filtr Všechny / Od rodičů / Rodičům. Tlačítko „+ Vzkaz rodiči" se
+přesunulo sem; karta „Vzkazy od rodičů" na přehledu má patičku „Všechny vzkazy". Karta dítěte
+svůj seznam vzkazů rodičům drží dál. Seed má pár starších vzkazů, ať je vidět historie.

@@ -5,6 +5,7 @@ const SECTIONS=[
   ['tridnice','Třídnice','▤'],
   ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
+  ['vzkazy','Vzkazy','✉'],
   ['akce','Akce','✎'],
   ['priprava','Příprava','▤'],
   ['pruvodci','Docházka průvodců','◷'],
@@ -58,7 +59,7 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
+const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,vzkazy:renderVzkazy,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -75,7 +76,9 @@ function render(){
   // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     // Novinka jde všem rodičům; vzkaz jednomu rodiči je vedle, protože ho tu respondentka hledala (P6)
-    : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-ghost" onclick="openVzkaz(-1)" title="Vzkaz rodičům jednoho dítěte">Vzkaz rodiči</button><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
+    : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
+    // vzkaz jedné rodině má vlastní sekci s evidencí (dřív tlačítko v Novinkách)
+    : section==='vzkazy' ? `<h1 class="dh-t">Vzkazy</h1><button class="btn-primary" onclick="openVzkaz(-1)">+ Vzkaz rodiči</button>`
     : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1>${jeHospodar()?'<button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>':''}`
     // Docházka: přepínač Den/Týden a listování data v řádku nadpisu, ne pod ním (ladění C, 28. 10. 2026)
     : section==='dochazka' ? `<h1 class="dh-t">Docházka</h1>${renderDochNav()}`

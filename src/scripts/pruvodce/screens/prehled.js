@@ -80,7 +80,7 @@ function renderPrehled(){
          +(dlouhy?`<button class="zp-vic" onclick="zpToggle('${z.id}')">${open?'zkrátit ›':'celý vzkaz ›'}</button>`:'')
          +`</span></div>`;
      });
-     blkZpravy+=`</div></div>`;
+     blkZpravy+=`</div><button class="cardlink" onclick="go('vzkazy')">Všechny vzkazy<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
    }}
 
   /* Kdo dnes nepřijde – nevyřešené (neomluveno) nahoře, omluvené pod nimi.

@@ -843,7 +843,7 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
 .rozh-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
 .rozh-top .zsdil{margin:-12px 0}   /* dotykový cíl zůstává 44 px, řádek se nenafoukne */
 .rozh-chybi{margin-top:4px;font-size:var(--text-note);color:var(--state-warn-ink)}
-.jid-kdo{margin:4px 0 var(--space-md);border-top:none;padding-top:0}
+.jid-kdo{border-top:none}
 /* Den jídelníčku: chod jako popisek nad jídlem (dřív vlevo – různě široké popisky rozhodily
    začátek jídla), porce bez alergenu jako štítky pod jídlem. Na desktopu dny v mřížce. */
 .jid-chod{padding:9px 0;border-top:1px solid var(--color-border)}
@@ -1431,6 +1431,13 @@ button.chk.ro{cursor:default}
 @media (min-width:900px){.dash-c .tile>.cardlink{margin-top:auto}}
 /* celkový počet dětí u první dlaždice docházky („21/25") – menší a tlumený, ať číslo přítomných vede */
 .doch-counts .tab .num .num-z{font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);margin-left:2px}
+/* odkaz na alergie v hlavičce jídelníčku vedle Upravit – stejná výška jako tlačítko */
+#dashhead .jid-kdo{margin:0;min-height:52px;padding:0 20px}
+/* Vzkazy: evidence po dnech v jednom sloupci (řádky jsou text, na šířku by se špatně četly) */
+.vz{max-width:760px}
+.vz .vz-den{margin-bottom:var(--space-md)}
+.zprow .vz-smer{font-size:var(--text-note);color:var(--color-text-muted)}
+.zprow .vz-smer.vz-pro{color:var(--color-primary)}
 </style>
 </head>
 <body>
@@ -1697,13 +1704,15 @@ const ICON_SVG={
   clipboard:'<rect x="5.5" y="5" width="13" height="16" rx="2.5"/><path d="M9 5V3.5h6V5"/><path d="M8.5 10.5h.01"/><path d="M11 10.5h4"/><path d="M8.5 14h.01"/><path d="M11 14h4"/><path d="M8.5 17.5h.01"/><path d="M11 17.5h3"/>',
   refresh:'<path d="M20 11.5A8 8 0 0 0 6.3 6L4 8"/><path d="M4 4.5V8h3.5"/><path d="M4 12.5A8 8 0 0 0 17.7 18L20 16"/><path d="M20 19.5V16h-3.5"/>',
   jidelnicek:'<circle cx="12" cy="12" r="5.25"/><path d="M4.5 4.5v5.25"/><path d="M3 4.5v3.25a1.5 1.5 0 0 0 3 0V4.5"/><path d="M4.5 9.75v9.75"/><path d="M19.5 4.5v15"/><path d="M19.5 4.5c-1.6 1.1-2.5 2.8-2.5 4.75 0 1.35.85 2.25 2.5 2.25"/>',
+  // vzkazy – bublina (dokresleno ve stejném stylu)
+  vzkaz:'<path d="M5.5 5h13A2 2 0 0 1 20.5 7v8a2 2 0 0 1-2 2H11l-4.5 3.5V17h-1a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M8.5 10h7"/><path d="M8.5 13h4.5"/>',
   // třídnice – otevřená kniha (dokresleno ve stejném stylu)
   kniha:'<path d="M12 6.5c-1.8-1.4-4.3-2-7.5-2v13c3.2 0 5.7.6 7.5 2 1.8-1.4 4.3-2 7.5-2v-13c-3.2 0-5.7.6-7.5 2Z"/><path d="M12 6.5v13"/>'
 };
 /* klíč sekce (napříč appkami) → ikona */
 const ICON_KEY={prehled:'prehled',aktuality:'news',novinky:'news',dochazka:'dochazka',profil:'profil',
   platby:'platby',kalendar:'kalendar',plan:'plan',akce:'clipboard',priprava:'plan',fotky:'fotky',kontakty:'kontakty',jidelnicek:'jidelnicek',
-  pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh',tridnice:'kniha'};
+  pruvodci:'clock',deti:'smile',fond:'coins',porady:'clipboard',nahrady:'refresh',tridnice:'kniha',vzkazy:'vzkaz'};
 function icon(key){const k=ICON_KEY[key];return k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_SVG[k]}</svg>`:'';}
 </script>
 <script>
@@ -2148,6 +2157,8 @@ data[0].zpravy.push({id:'zp2',den:TODAYD,typ:'pozdeji',kdo:'',cas:'09:30',text:'
 data[7].zpravy.push({id:'zp3',den:TODAYD,typ:'zdravi',kdo:'',cas:'',text:'Po ránu kapky do očí, má je v batohu.',odeslano:'7:40'});
 // Záměrně dlouhý vzkaz – rodiče píšou do skupin celé odstavce a přehled to musí unést.
 data[12].zpravy.push({id:'zp4',den:TODAYD,typ:'jine',kdo:'',cas:'',text:'Dobrý den, chtěla jsem vás poprosit – Kubík od víkendu hodně řeší, že se mu kluci smějí kvůli tomu, jak mluví. Doma o tom mluví každý večer a ráno se mu do školky nechce, dnes jsme šli asi dvacet minut od auta. Nechci z toho dělat velkou věc a vůbec netvrdím, že se něco stalo ve školce, jen jsem chtěla, abyste o tom věděli a případně se na to v kruhu nenápadně podívali. Kdyby to vydrželo do konce týdne, ozvu se a domluvíme se na schůzce.',odeslano:'6:38'});
+// starší vzkaz od rodičů – v sekci Vzkazy je vidět i historie, ne jen dnešek
+data[9].zpravy.push({id:'zp5',den:2,typ:'driv',kdo:'',cas:'13:00',text:'Jedeme k babičce.',odeslano:'1. 6. 19:20'});
 /* P4 z testování (2 ze 3): vlastní seznamy dětí. Průvodce v docházce nepoznal, kdo z dětí
    je předškolák; druhá respondentka to zobecnila – „můžete si přidat jakýkoliv seznam,
    který řešíte" (horolezci, kroužky). Předškoláci a Horolezci se odvozují z karet dětí,
@@ -2166,7 +2177,11 @@ const nazevSeznamu=sid=>(SEZNAMY.find(x=>x.id===sid)||{}).nazev||'';
 /* P6 z testování: vzkaz jednomu rodiči („Můžu přiřadit zprávu k tomu dni konkrétnímu rodiči?").
    Novinka jde všem, tohle je adresné – na jedno dítě a jeden den. Zrcadlo vzkazů od rodičů;
    appky data nesdílejí, rodičovská strana má týž vzkaz v seedu. */
-let VZKAZY={3:[{den:4,text:'Prosíme zítra přibalit spacák do kočárku – po obědě spíme venku.',kdo:'Táňa',cas:'včera 17:30'}]};
+let VZKAZY={
+  3:[{den:4,text:'Prosíme zítra přibalit spacák do kočárku – po obědě spíme venku.',kdo:'Táňa',cas:'včera 17:30'}],
+  5:[{den:2,text:'Dnes jsme se hodně umazali v jílu. Prosíme náhradní kalhoty do batohu.',kdo:'Honza',cas:'2. 6. 15:10'}],
+  9:[{den:1,text:'Lahev na pití zůstala ve školce, je v šatně na poličce.',kdo:'Darča',cas:'1. 6. 16:05'}],
+};
 const vzkazyFor=i=>VZKAZY[i]||(VZKAZY[i]=[]);
 const denLbl=d=>d===TODAYD?'dnes':d===TODAYD+1?'zítra':`${DOW[wd(d)]} ${d}. 6.`;
 /* Kuchyň napříč školkami sítě (rozhodnutí 10. 10. 2026; Kouzlo lesa je cizí provozovatel – mimo): porce počítá jeden člověk pro všechny
@@ -2630,7 +2645,7 @@ function renderPrehled(){
          +(dlouhy?`<button class="zp-vic" onclick="zpToggle('${z.id}')">${open?'zkrátit ›':'celý vzkaz ›'}</button>`:'')
          +`</span></div>`;
      });
-     blkZpravy+=`</div></div>`;
+     blkZpravy+=`</div><button class="cardlink" onclick="go('vzkazy')">Všechny vzkazy<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
    }}
 
   /* Kdo dnes nepřijde – nevyřešené (neomluveno) nahoře, omluvené pod nimi.
@@ -3386,6 +3401,51 @@ window.saveNov=()=>{const f=novForm;
   novForm=null;renderModalRoot();render();showToast('Novinka odeslána rodičům ✓');};
 </script>
 <script>
+/* SCREEN: VZKAZY – evidence adresných vzkazů mezi školkou a jednou rodinou (designérka 29. 10. 2026).
+   Novinka jde všem rodičům, vzkaz jedné rodině – proto vlastní sekce, ne záložka v Novinkách.
+   Obě strany na jednom místě: od rodičů (c.zpravy, zakládá rodič ve své appce) i rodičům
+   (VZKAZY, píše průvodce). Řazeno po dnech, na které vzkaz platí – od nejvzdálenějšího
+   nadcházejícího po nejstarší, aby šlo dohledat, co se komu kdy psalo. */
+let vzSmer='vse';
+function vzVse(){
+  const a=[];
+  data.forEach((c,i)=>{
+    (c.zpravy||[]).forEach(z=>a.push({c,i,smer:'od',den:z.den,z}));
+    vzkazyFor(i).forEach(v=>a.push({c,i,smer:'pro',den:v.den,v}));
+  });
+  return a;
+}
+function vzRadek(x){
+  const {c}=x;
+  if(x.smer==='od'){
+    const z=x.z, dlouhy=(z.text||'').length>ZP_DELKA, open=zpRozbalene.has(z.id);
+    return `<div class="zprow">${avatar(c,28)}<span class="zp-txt"><span class="zp-head"><b>${kratke(c)}</b><span class="vz-smer">od rodičů</span><span class="zp-cas">${z.odeslano}</span></span>`
+      +`<span class="zp-who${dlouhy&&!open?' zp-clamp':''}">${zpravaShrnuti(z)}</span>`
+      +(dlouhy?`<button class="zp-vic" onclick="zpToggle('${z.id}')">${open?'zkrátit ›':'celý vzkaz ›'}</button>`:'')+`</span></div>`;
+  }
+  const v=x.v;
+  return `<div class="zprow">${avatar(c,28)}<span class="zp-txt"><span class="zp-head"><b>${kratke(c)}</b><span class="vz-smer vz-pro">rodičům – ${esc(v.kdo)}</span><span class="zp-cas">${v.cas}</span></span>`
+    +`<span class="zp-who">${esc(v.text)}</span></span></div>`;
+}
+function renderVzkazy(){
+  const vse=vzVse(), n=k=>vse.filter(x=>k==='vse'||x.smer===k).length;
+  let h=`<div class="doch vz">`;
+  h+=`<div class="filters">`+[['vse','Všechny'],['od','Od rodičů'],['pro','Rodičům']].map(([k,l])=>
+    `<button class="${vzSmer===k?'on':''}" aria-pressed="${vzSmer===k}" onclick="setVzSmer('${k}')">${l}<span class="cnt">${n(k)}</span></button>`).join('')+`</div>`;
+  const vyber=vse.filter(x=>vzSmer==='vse'||x.smer===vzSmer);
+  if(!vyber.length)h+=`<div class="empty">${vzSmer==='pro'?'Rodičům zatím žádný vzkaz neodešel.':'Zatím žádné vzkazy.'}</div>`;
+  const dny=[...new Set(vyber.map(x=>x.den))].sort((a,b)=>b-a);
+  dny.forEach(d=>{
+    const den=vyber.filter(x=>x.den===d).sort((a,b)=>(a.smer==='od'?0:1)-(b.smer==='od'?0:1));
+    const nad=d===TODAYD||d===TODAYD+1?`${denLbl(d).replace(/^./,m=>m.toUpperCase())} (${DOW[wd(d)]} ${d}. 6.)`:`${DOW[wd(d)]} ${d}. 6.`;
+    h+=`<div class="tile vz-den"><div class="ch">${nad}</div>${den.map(vzRadek).join('')}</div>`;
+  });
+  h+=`<div class="hint">Vzkaz rodičům uvidí jen rodiče daného dítěte, na přehledu ve své appce. Vzkazy od rodičů píšou rodiče ve své appce.</div>`;
+  return h+`</div>`;
+}
+window.setVzSmer=k=>{vzSmer=k;render();};
+</script>
+<script>
 /* SCREEN: PRUVODCE_AKCE – datované jednorázové události (výlety, divadla, focení).
    Listuje se po měsících: zpět do loňska (odkud se plány přebírají) i dopředu na plánování.
    Minulé měsíce jsou jen ke čtení a řádek z nich jde jedním klepnutím převzít do běžícího
@@ -4054,9 +4114,13 @@ function tydenSkolky(ti){
    pět dnů od dneška, minulost průvodce nezajímá (designérka 28. 10. 2026). Listování týdny je jen
    v úpravách: kuchyň a hospodářka zadávají dopředu a svačinářka plánuje z toho, co bylo. */
 function jidHlavicka(){
+  /* odkaz na alergie nahoře vpravo vedle Upravit (designérka 29. 10. 2026; dřív pod jídlem);
+     kuchyň Děti nevidí – alergie na výdej má na svém přehledu */
+  const alg=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
+    :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
   // jídelníček zadává kuchyň a hospodářka; ostatní ho jen čtou
-  if(!smiJidelnicek())return '';
-  if(!jidEdit)return `<div class="dfield"><button class="btn-ghost" onclick="jidEditOn()">Upravit</button></div>`;
+  if(!smiJidelnicek())return `<div class="dfield">${alg}</div>`;
+  if(!jidEdit)return `<div class="dfield">${alg}<button class="btn-ghost" onclick="jidEditOn()">Upravit</button></div>`;
   const t=tydenSkolky(jidTyden);
   return `<div class="dfield"><button class="btn-ghost" onclick="jidCancel()">Zrušit</button><button class="btn-primary" onclick="jidSave()">Uložit</button>`
     +`<div class="dnav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`
@@ -4128,10 +4192,6 @@ function renderJidelnicek(){
   if(role==='kuchyn')h+=`<div class="filters jid-sk">`+JID_SKOLKY.map(([k,l])=>`<button class="${jidSkolka===k?'on':''}" onclick="setJidSkolka('${k}')" aria-pressed="${jidSkolka===k}">${l}</button>`).join('')+`</div>`;
   // úpravy po týdnech v kartách, čtení od dneška
   h+=jidEdit?jidKarty(t,jinaSkolka):jidOdDneska(jinaSkolka);
-  // odkaz na alergie až pod jídlem – není to to hlavní (designérka 28. 10. 2026);
-  // kuchyň Děti nevidí – alergie na výdej má na svém přehledu
-  h+=role==='kuchyn'?`<button class="cardlink jid-kdo" onclick="go('prehled')">Alergie na výdej jsou na přehledu ›</button>`
-    :`<button class="cardlink jid-kdo" onclick="goAlergici()">Kdo má jakou alergii ›</button>`;
   return h+`</div>`;
 }
 window.jidEditOn=()=>{jidTyden=jidIndex(TODAYD,6);jidDraft=tydenSkolky(jidTyden).dny.map(den=>den.map(it=>[...it]));jidEdit=true;render();};
@@ -4503,7 +4563,7 @@ function vzkazModalHTML(){
     +`<option value="-1"${m.i<0?' selected':''}>Vyber dítě…</option>`
     +data.map((x,i)=>({x,i})).sort((a,b)=>a.x.n.localeCompare(b.x.n,'cs')).map(({x,i})=>`<option value="${i}"${m.i===i?' selected':''}>${full(x)}</option>`).join('')+`</select>`;
   return `<div class="modal-scrim" onclick="if(event.target===this)closeVzkaz()"><div class="modal">
-    <h3>Vzkaz rodičům${c&&m.pevne?` · ${kratke(c)}`:''}</h3><div class="abs-sub">Uvidí ho jen rodiče tohoto dítěte, na přehledu v aplikaci.</div>
+    <h3>Vzkaz rodičům${c&&m.pevne?` – ${kratke(c)}`:''}</h3><div class="abs-sub">Uvidí ho jen rodiče tohoto dítěte, na přehledu v aplikaci.</div>
     ${vyber}
     <label class="pl" style="margin-top:10px">Na který den</label><input class="pin" type="date" value="${vzISO(m.den)}" min="${vzISO(TODAYD)}" max="${vzISO(30)}" onchange="vzkazDen(this.value)">
     <label class="pl" style="margin-top:10px">Vzkaz</label><textarea class="pta" id="vzk-text" placeholder="např. prosíme přibalit spacák do kočárku" oninput="vzkazM.text=this.value">${esc(m.text)}</textarea>
@@ -4521,7 +4581,7 @@ window.ulozVzkaz=()=>{const m=vzkazM,t=(m.text||'').trim();
   if(!t){showToast('Napiš vzkaz');return;}
   vzkazyFor(m.i).unshift({den:m.den,text:t,kdo:ja().n,cas:'dnes '+TEDCAS});
   const c=data[m.i];vzkazM=null;renderModalRoot();render();
-  showToast(`Odesláno · rodiče ${kratke(c)} ho uvidí na ${denLbl(m.den)}`);};
+  showToast(`Odesláno. Rodiče ${kratke(c)} ho uvidí na ${denLbl(m.den)}.`);};
 
 </script>
 <script>
@@ -4532,6 +4592,7 @@ const SECTIONS=[
   ['tridnice','Třídnice','▤'],
   ['jidelnicek','Jídelníček','▯'],
   ['novinky','Novinky','✉'],
+  ['vzkazy','Vzkazy','✉'],
   ['akce','Akce','✎'],
   ['priprava','Příprava','▤'],
   ['pruvodci','Docházka průvodců','◷'],
@@ -4585,7 +4646,7 @@ let shiftT=SHIFT_AKT;
 let akceM=AKCE_AKT;   // listovaný měsíc akcí   // listovaný týden rozpisu služeb
 let detiFilter='all', detiQuery='', detiOpen=-1, odQuery='', kalSel=3, kalY=2026, kalM=5, cellM=null, detailA=null, monthDay=-1, denDay=3, weekStart=1;
 
-const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
+const RENDER={prehled:()=>role==='kuchyn'?renderKuchyn():renderPrehled(),dochazka:renderDochazka,tridnice:renderTridnice,novinky:renderNovinky,vzkazy:renderVzkazy,jidelnicek:renderJidelnicek,akce:renderAkce,priprava:renderPriprava,pruvodci:renderPruvodci,kalendar:renderKalendar,deti:renderDeti,fotky:renderFotky,fond:renderFond,kontakty:renderKontakty,mujprofil:renderMujProfil};
 
 function renderDrawer(){
   const d=document.getElementById('drawer');
@@ -4602,7 +4663,9 @@ function render(){
   // Nadpis sekce (H1) do topbaru – v řádku s rolí, ne pod ním v obsahu.
   document.getElementById('dashhead').innerHTML = section==='prehled' ? renderPrehledHead()
     // Novinka jde všem rodičům; vzkaz jednomu rodiči je vedle, protože ho tu respondentka hledala (P6)
-    : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-ghost" onclick="openVzkaz(-1)" title="Vzkaz rodičům jednoho dítěte">Vzkaz rodiči</button><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
+    : section==='novinky' ? `<h1 class="dh-t">Novinky</h1><button class="btn-primary" onclick="openNovForm()">+ Nová novinka</button>`
+    // vzkaz jedné rodině má vlastní sekci s evidencí (dřív tlačítko v Novinkách)
+    : section==='vzkazy' ? `<h1 class="dh-t">Vzkazy</h1><button class="btn-primary" onclick="openVzkaz(-1)">+ Vzkaz rodiči</button>`
     : section==='fond' ? `<h1 class="dh-t">Kulturní fond</h1>${jeHospodar()?'<button class="btn-primary" onclick="togFond()">+ Přidat čerpání</button>':''}`
     // Docházka: přepínač Den/Týden a listování data v řádku nadpisu, ne pod ním (ladění C, 28. 10. 2026)
     : section==='dochazka' ? `<h1 class="dh-t">Docházka</h1>${renderDochNav()}`

@@ -187,7 +187,7 @@ function vzkazModalHTML(){
     +`<option value="-1"${m.i<0?' selected':''}>Vyber dítě…</option>`
     +data.map((x,i)=>({x,i})).sort((a,b)=>a.x.n.localeCompare(b.x.n,'cs')).map(({x,i})=>`<option value="${i}"${m.i===i?' selected':''}>${full(x)}</option>`).join('')+`</select>`;
   return `<div class="modal-scrim" onclick="if(event.target===this)closeVzkaz()"><div class="modal">
-    <h3>Vzkaz rodičům${c&&m.pevne?` · ${kratke(c)}`:''}</h3><div class="abs-sub">Uvidí ho jen rodiče tohoto dítěte, na přehledu v aplikaci.</div>
+    <h3>Vzkaz rodičům${c&&m.pevne?` – ${kratke(c)}`:''}</h3><div class="abs-sub">Uvidí ho jen rodiče tohoto dítěte, na přehledu v aplikaci.</div>
     ${vyber}
     <label class="pl" style="margin-top:10px">Na který den</label><input class="pin" type="date" value="${vzISO(m.den)}" min="${vzISO(TODAYD)}" max="${vzISO(30)}" onchange="vzkazDen(this.value)">
     <label class="pl" style="margin-top:10px">Vzkaz</label><textarea class="pta" id="vzk-text" placeholder="např. prosíme přibalit spacák do kočárku" oninput="vzkazM.text=this.value">${esc(m.text)}</textarea>
@@ -205,5 +205,5 @@ window.ulozVzkaz=()=>{const m=vzkazM,t=(m.text||'').trim();
   if(!t){showToast('Napiš vzkaz');return;}
   vzkazyFor(m.i).unshift({den:m.den,text:t,kdo:ja().n,cas:'dnes '+TEDCAS});
   const c=data[m.i];vzkazM=null;renderModalRoot();render();
-  showToast(`Odesláno · rodiče ${kratke(c)} ho uvidí na ${denLbl(m.den)}`);};
+  showToast(`Odesláno. Rodiče ${kratke(c)} ho uvidí na ${denLbl(m.den)}.`);};
 

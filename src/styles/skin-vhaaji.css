@@ -395,3 +395,8 @@ button.chk.ro{cursor:default}
 .doch-counts .tab .num .num-z{font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);margin-left:2px}
 /* odkaz na alergie v hlavičce jídelníčku vedle Upravit – stejná výška jako tlačítko */
 #dashhead .jid-kdo{margin:0;min-height:52px;padding:0 20px}
+/* Vzkazy: evidence po dnech v jednom sloupci (řádky jsou text, na šířku by se špatně četly) */
+.vz{max-width:760px}
+.vz .vz-den{margin-bottom:var(--space-md)}
+.zprow .vz-smer{font-size:var(--text-note);color:var(--color-text-muted)}
+.zprow .vz-smer.vz-pro{color:var(--color-primary)}
