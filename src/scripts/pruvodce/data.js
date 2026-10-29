@@ -337,7 +337,7 @@ const nazevSeznamu=sid=>(SEZNAMY.find(x=>x.id===sid)||{}).nazev||'';
    Novinka jde všem, tohle je adresné – na jedno dítě a jeden den. Zrcadlo vzkazů od rodičů;
    appky data nesdílejí, rodičovská strana má týž vzkaz v seedu. */
 let VZKAZY={
-  3:[{den:4,text:'Prosíme zítra přibalit spacák do kočárku – po obědě spíme venku.',kdo:'Táňa',cas:'včera 17:30'}],
+  3:[{den:4,text:'Zítra jdeme k potoku. Prosíme přibalit holínky a náhradní ponožky.',kdo:'Táňa',cas:'včera 17:30'}],
   5:[{den:2,text:'Dnes jsme se hodně umazali v jílu. Prosíme náhradní kalhoty do batohu.',kdo:'Honza',cas:'2. 6. 15:10'}],
   9:[{den:1,text:'Lahev na pití zůstala ve školce, je v šatně na poličce.',kdo:'Darča',cas:'1. 6. 16:05'}],
 };

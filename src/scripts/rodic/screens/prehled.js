@@ -49,7 +49,7 @@ function renderDashboard(){
      docházku to nemění. Vzkazy se vážou na vybraný den, ne jen na dnešek. */
   const zpr=zpravyProDen(c,dashDay);
   /* Vzkaz od průvodců jen pro toto dítě (P6). Dnes ukazuje i vzkazy na další dny – vzkaz
-     „na zítra" má rodič vidět už dnes, ne až ráno, kdy je pozdě shánět spacák. */
+     „na zítra" má rodič vidět už dnes, ne až ráno, kdy je pozdě shánět holínky. */
   const vzk=(c.vzkazy||[]).filter(v=>today?v.den>=dashDay:v.den===dashDay).sort((a,b)=>a.den-b.den);
   let blkVzkazy='';
   if(vzk.length)blkVzkazy=`<div class="tile vzk-tile"><div class="ch">Vzkaz od průvodců</div>`

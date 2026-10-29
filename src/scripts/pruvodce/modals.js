@@ -190,7 +190,7 @@ function vzkazModalHTML(){
     <h3>Vzkaz rodičům${c&&m.pevne?` – ${kratke(c)}`:''}</h3><div class="abs-sub">Uvidí ho jen rodiče tohoto dítěte, na přehledu v aplikaci.</div>
     ${vyber}
     <label class="pl" style="margin-top:10px">Na který den</label><input class="pin" type="date" value="${vzISO(m.den)}" min="${vzISO(TODAYD)}" max="${vzISO(30)}" onchange="vzkazDen(this.value)">
-    <label class="pl" style="margin-top:10px">Vzkaz</label><textarea class="pta" id="vzk-text" placeholder="např. prosíme přibalit spacák do kočárku" oninput="vzkazM.text=this.value">${esc(m.text)}</textarea>
+    <label class="pl" style="margin-top:10px">Vzkaz</label><textarea class="pta" id="vzk-text" placeholder="např. zítra prosíme holínky a náhradní ponožky" oninput="vzkazM.text=this.value">${esc(m.text)}</textarea>
     <div class="mbtns"><button class="btn-ghost" onclick="closeVzkaz()">Zrušit</button><button class="btn-primary" onclick="ulozVzkaz()">Odeslat rodičům</button></div>
   </div></div>`;
 }
