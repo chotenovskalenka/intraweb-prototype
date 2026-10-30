@@ -88,18 +88,19 @@ let worksMap={3:2,9:3}, dopoMap={};
 
 /* Tým školky. `n` je krátké jméno, kterým se průvodce dohledá v rozpisu služeb (GUIDESHIFT).
    `fce` = funkce navíc; kdo ji nemá, je řadový průvodce. Zázemí (vedení, obědy, účetnictví)
-   je oddělené – nemá službu u dětí, ale průvodci ho potřebují po ruce. */
+   je oddělené – nemá službu u dětí, ale průvodci ho potřebují po ruce. Pracovní e-maily tým
+   nemá (designérka 30. 10. 2026), kontakt je jen telefon. */
 const guides=[
-  {n:'Táňa',sur:'Kynclová',fce:'vedoucí průvodce',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
-  {n:'Gabča',sur:'Vašíčková',phone:'+420 604 553 246',email:'gabca@vhaaji.cz'},
-  {n:'Darča',sur:'Mikolášová',phone:'+420 603 290 593',email:'darina@vhaaji.cz'},
-  {n:'Honza',sur:'Kolář',phone:'+420 605 426 333',email:'honza@vhaaji.cz'},
-  {n:'Míša',sur:'Hrubínová',fce:'hospodářka',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
+  {n:'Táňa',sur:'Kynclová',fce:'vedoucí průvodce',phone:'+420 775 241 758'},
+  {n:'Gabča',sur:'Vašíčková',phone:'+420 604 553 246'},
+  {n:'Darča',sur:'Mikolášová',phone:'+420 603 290 593'},
+  {n:'Honza',sur:'Kolář',phone:'+420 605 426 333'},
+  {n:'Míša',sur:'Hrubínová',phone:'+420 733 142 437'},
 ];
 const ZAZEMI=[
-  {n:'Tereza',sur:'Vavrečková',fce:'vedení',phone:'+420 603 200 512',email:'tereza@vhaaji.cz'},
-  {n:'Ksenia',sur:'Andramanova',fce:'obědy a svačiny',phone:'+420 721 472 219',email:'ksenia@vhaaji.cz'},
-  {n:'Eva',sur:'Sionová',fce:'účetnictví',phone:'+420 777 752 533',email:'eva@vhaaji.cz'},
+  {n:'Tereza',sur:'Vavrečková',fce:'vedení',phone:'+420 603 200 512'},
+  {n:'Ksenia',sur:'Andramanova',fce:'obědy a svačiny',phone:'+420 721 472 219'},
+  {n:'Eva',sur:'Sionová',fce:'účetnictví',phone:'+420 777 752 533'},
 ];
 const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@vhaaji.cz',phone:'+420 720 000 111',adresa:'Ďáblický háj, Praha 8'};
 

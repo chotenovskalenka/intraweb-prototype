@@ -2321,7 +2321,10 @@ Slovo „slouží" designérce zní divně: dialog má Přijde / Nepřijde, kale
 ## Kontakty: tabulka místo karet (30. 10. 2026)
 
 Designérka: „je to hodně boxů, buď větší fotky, nebo spíš tabulka". Desktop: jedna tabulka
-(Průvodci a Zázemí jako skupiny) – kdo s fotkou a funkcí, kdy je ve školce, telefon a e-mail
-jako odkazy (klepnutím volá / píše), na konci „Napsat" (SMS). Mobil: seznam řádků s větší fotkou
-(52 px) a třemi akcemi pod jménem. „Po, St, Pá (7:30–16:00)" místo teček. Rodičovská appka má
+(Průvodci a Zázemí jako skupiny) – kdo s fotkou a funkcí, kdy je ve školce, telefon jako
+odkaz (klepnutím volá), na konci „Napsat" (SMS). Mobil: seznam řádků s větší fotkou (52 px)
+a akcemi Zavolat / Napsat pod jménem. Pracovní e-maily tým nemá („zruš maily, nebudou") – pryč
+z kontaktů i z Můj profil. Míša je průvodkyně, ne hospodářka – štítek u ní zmizel; kdo je
+v prototypu za rolí `?role=hospodarka`, je zatím otevřené. „Po, St, Pá (7:30–16:00)" místo teček. Rodičovská appka má
 karty dál.
+

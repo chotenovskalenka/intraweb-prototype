@@ -10,7 +10,7 @@ const fmtH=h=>(Math.round(h*10)/10).toLocaleString('cs-CZ')+' h';
 function renderMujProfil(){
   const g=ja();
   let h=`<div class="dite-head"><div class="pav">${avatar(g,72)}</div><div class="pname">${g.n} ${g.sur}</div><div class="pfull">${!g.fce?'průvodce':/průvodce/.test(g.fce)?g.fce:'průvodce · '+g.fce}</div></div>`;
-  h+=`<div class="tile"><div class="ch">Kontakt</div><div class="np"><span>Telefon</span><b>${g.phone}</b></div><div class="np"><span>E-mail</span><b>${g.email}</b></div></div>`;
+  h+=`<div class="tile"><div class="ch">Kontakt</div><div class="np"><span>Telefon</span><b>${g.phone}</b></div></div>`;
   // Výkaz: týdny června z rozpisu služeb. Minulé a běžný týden = odpracováno, další = plán.
   let odpr=0, plan=0;
   const radky=SHIFT_TYDNY.map((t,ti)=>({t,ti})).filter(({t})=>t.m===6).map(({t,ti})=>{
