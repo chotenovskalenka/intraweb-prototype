@@ -2299,3 +2299,11 @@ přestavěno na sedm skutečných bloků ze ŠVP Vhaaji 2023 (veřejný, kap. 6.
 dotace, vzdělávací nabídka a dílčí cíle. Vymyšlené oblasti a kompetence u bloků pryč – ŠVP 2023
 je ještě podle starého RVP a nemá je; doplní je až přepis ŠVP. Týdenní rytmus a verše týdne (TEMA, čte je
 přehled i rodiče) zůstávají. Bez parametru je Příprava beze změny.
+
+## Příprava: bez týdenního rytmu, plán ke čtení s „Upravit" (30. 10. 2026)
+
+Týdenní rytmus z Přípravy zmizel – „asi ho dáme samostatně" (designérka). Kód zůstává
+v `rytmusHTML()`, přehled dál čte dnešní program z `RYTMUS`. Tématický plán byl u běžícího
+a připravovaného měsíce rovnou formulář; teď se čte a upravuje až po „Upravit" (Zrušit vrátí
+stav před úpravou, Uložit). Ovládání – převzetí loňského plánu, Upravit a listování měsíci – je
+v hlavičce jako u ostatních obrazovek; „· aktuální" → „(aktuální)", spodní tlačítko Uložit pryč.

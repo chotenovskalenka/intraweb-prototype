@@ -8,10 +8,11 @@
    až Uložit – proto oninput jen plní draft a nevolá render() (jinak by utekl kurzor). */
 let rytEdit=false, rytDraft=null;
 
-function renderPriprava(){
+/* Týdenní rytmus z Přípravy zmizel (designérka 30. 10. 2026) – „asi ho dáme samostatně".
+   Kód zůstává v rytmusHTML() pro budoucí vlastní místo; přehled dál čte dnešní den z RYTMUS. */
+function rytmusHTML(){
   // Rytmus je jeden týden – na desktopu se vysazuje z masonry (.ryt-sec) a kreslí jako
   // rozvrh: 5 dnů vedle sebe. Na mobilu zůstává stoh řádků pod sebou (viz screens-pruvodce.css).
-  // akce sekce sedí vpravo vedle nadpisu a nestěhují se mezi režimy (viz .vhead-row)
   const akce=rytEdit
     ? `<button class="btn-ghost" onclick="rytCancel()">Zrušit</button><button class="btn-primary" onclick="rytSaveAll()">Uložit</button>`
     : `<button class="btn-ghost" onclick="rytEditOn()">Upravit rozvrh</button>`;
@@ -33,11 +34,23 @@ function renderPriprava(){
   h+=`</div>`;
   // nabídka programů pro pole – datalist necháva napsat i vlastní text
   if(rytEdit)h+=`<datalist id="progopts">${PROGOPTS.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
-  h+=`</div>`;
-  // varianty podle nového RVP PV (?ppv=a|b|c) – rytmus zůstává, místo tématického plánu bloky
-  if(PPV)return h+renderPripravaVarianta();
-  h+=`<div class="tema-sec"><div class="vhead-row"><div class="vhead">Tématický plán</div><div class="vhead-act">${temaLoniBtn()}${temaNav()}</div></div>`+temaBlock()+`</div>`;
-  return h;
+  return h+`</div>`;
+}
+/* Tématický plán se čte, upravuje se až po „Upravit" (dřív byl běžící i připravovaný měsíc
+   rovnou formulář). Ovládání – převzetí, Upravit / Zrušit + Uložit a listování měsíci – je
+   v hlavičce jako u ostatních obrazovek. Zrušit vrací plán do stavu před úpravou (temaSnap). */
+let temaEdit=false, temaSnap=null;
+function temaHlavicka(){
+  if(PPV)return '';
+  const o=temaObdobi(), lze=o.stav!=='archiv';
+  const akce=temaEdit?`<button class="btn-ghost" onclick="temaCancel()">Zrušit</button><button class="btn-primary" onclick="temaSave()">Uložit</button>`
+    :(lze?`<button class="btn-ghost" onclick="temaEditOn()">Upravit</button>`:'');
+  return `<div class="dfield">${temaEdit?'':temaLoniBtn()}${akce}${temaNav()}</div>`;
+}
+function renderPriprava(){
+  // varianty podle nového RVP PV (?ppv=a|b|c) – místo tématického plánu bloky
+  if(PPV)return renderPripravaVarianta();
+  return `<div class="tema-sec">`+temaBlock()+`</div>`;
 }
 /* Období tématického plánu, od nejnovějšího: připravované měsíce příštího školního roku,
    běžící červen 2026 a archiv zpět. Budoucí měsíce jsou prázdné a editovatelné stejně jako
@@ -82,13 +95,13 @@ function temaLoniBtn(){
 function temaNav(){
   const ps=temaPeriods(),i=Math.max(0,ps.findIndex(p=>p.key===temaMonth)),cur=ps[i];
   // stepper ‹ starší · novější › – prochází připravované měsíce dopředu i archiv zpět
-  return `<div class="dnav"><button onclick="temaStep(1)" ${i>=ps.length-1?'disabled':''} aria-label="Starší plán">‹</button><span>${cur.label}${cur.stav==='bezi'?'<i class="dn-cur"> · aktuální</i>':''}</span><button onclick="temaStep(-1)" ${i<=0?'disabled':''} aria-label="Novější plán">›</button></div>`;
+  return `<div class="dnav"><button onclick="temaStep(1)" ${i>=ps.length-1?'disabled':''} aria-label="Starší plán">‹</button><span>${cur.label}${cur.stav==='bezi'?' (aktuální)':''}</span><button onclick="temaStep(-1)" ${i<=0?'disabled':''} aria-label="Novější plán">›</button></div>`;
 }
 /* Jedna struktura pro všechny tři stavy: vlevo text (téma + týdny), vpravo plakát.
    Pravý sloupec zůstává i bez plakátu – rozložení se nesmí měnit podle toho, jestli je
    nahraný rastr. Minulé měsíce jsou jen ke čtení, běžící i připravované se editují. */
 function temaBlock(){
-  const o=temaObdobi(),t=temaPlan(),ro=o.stav==='archiv',plakaty=o.stav==='bezi'?TEMA_POSTERS:[];
+  const o=temaObdobi(),t=temaPlan(),ro=o.stav==='archiv'||!temaEdit,plakaty=o.stav==='bezi'?TEMA_POSTERS:[];
   let h=`<div class="tema-cols"><div class="tema-plakat"><div class="tile"><div class="ch">Tématický plán v designu</div>`;
   if(plakaty.length){
     h+=`<div class="note2">Aktuální plán vyvěšený ve školce (tiskne se na nástěnku):</div>`+
@@ -124,9 +137,6 @@ function temaBlock(){
     h+=`</div>`;
   });
   h+=`</div></div>`;
-  // uložení zůstává dole pod formulářem – potvrzuje se až po vyplnění
-  // archiv je jen ke čtení – jeho jediná akce („Použít pro…") sedí nahoře u nadpisu
-  if(!ro)h+=`<button class="btn-primary btn-block tema-save" onclick="showToast('Tématický plán uložen ✓')">Uložit ${o.stav==='bezi'?'tématický plán':'plán na '+o.label.toLowerCase()}</button>`;
   return h;
 }
 window.rytEditOn=()=>{rytDraft=RYTMUS.map(r=>({prog:r.prog,krouzek:r.krouzek}));rytEdit=true;render();};
@@ -140,7 +150,10 @@ window.setTemaP=(i,v)=>{temaPlan().tydny[i].p=v;};
 window.setTemaYt=(i,v)=>{temaPlan().tydny[i].yt=v;};
 window.setTemaByt=(i,v)=>{temaPlan().tydny[i].byt=v;};
 window.setTemaFile=inp=>{const f=inp.files&&inp.files[0];if(f){temaPlan().file=f.name;render();showToast('Nahráno ✓');}};
-window.temaStep=dir=>{const ps=temaPeriods();let i=ps.findIndex(p=>p.key===temaMonth);i=Math.min(ps.length-1,Math.max(0,i+dir));temaMonth=ps[i].key;render();};
+window.temaEditOn=()=>{temaSnap=JSON.stringify(temaPlan());temaEdit=true;render();};
+window.temaCancel=()=>{Object.assign(temaPlan(),JSON.parse(temaSnap));temaEdit=false;temaSnap=null;render();};
+window.temaSave=()=>{temaEdit=false;temaSnap=null;render();showToast('Tématický plán uložen ✓');};
+window.temaStep=dir=>{if(temaEdit){showToast('Nejdřív ulož, nebo zruš úpravy');return;}const ps=temaPeriods();let i=ps.findIndex(p=>p.key===temaMonth);i=Math.min(ps.length-1,Math.max(0,i+dir));temaMonth=ps[i].key;render();};
 window.temaAdopt=(fromKey,toKey)=>{
   const ps=temaPeriods(),src=ps.find(p=>p.key===fromKey),cil=ps.find(p=>p.key===toKey);
   if(!src||!cil)return;
