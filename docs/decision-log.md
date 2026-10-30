@@ -2332,7 +2332,8 @@ karty dál.
 
 Nadpis karty byl celá věta s tečkou v tučné zelené Alegreya a úryvek pod ním ji opakoval.
 Nadpisy v seedu (průvodce i rodič) jsou krátké titulky bez tečky („Roupy ve třídě"), v kartě
-průvodce textovým písmem jako jídla a verše na přehledu. Meta řádek bez teček:
+průvodce stejným stylem jako nadpisy karet na přehledu (Alegreya 500, barva textu – designérka:
+„nadpisy stejné jako třeba Sestava"), ne tučnou zelenou. Meta řádek bez teček:
 „Táňa, 2. 6. (7:40). Platí do 5. 6."
 
 ## Role hospodářky bez jména (30. 10. 2026)
@@ -2346,6 +2347,6 @@ a bez řádku v rozpisu sestavy. Záznamy, které role vytvoří (poznámka k d�
 
 Modal byl šedý (`--color-bg`), nadpis v Alegreya a dole dvě velká tlačítka Zavřít / Sdílet –
 s kartou nesouhlasil (designérka: „modal je divný a UI neodpovídá"). Ve skinu mají modaly
-plochu a zaoblení karet. Detail novinky: nadpis textovým písmem jako v kartě, zavírá se křížkem
+plochu a zaoblení karet. Detail novinky: nadpis stejně jako v kartě, zavírá se křížkem
 v rohu (nebo klepnutím vedle), jediná akce „Sdílet do WhatsAppu" vpravo pod čarou. Tlačítko
 „Sdílet do WhatsAppu" je v kartě i v detailu pilulka jako ostatní tlačítka skinu.
