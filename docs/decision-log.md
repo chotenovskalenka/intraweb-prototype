@@ -2282,3 +2282,18 @@ přepínač **Seznam / Měsíc**, listování měsíci a „+ Nová akce". Sezna
 místo, cenu z fondu a převzetí z loňska), Měsíc je sdílený kalendář školky se službami.
 Samostatná položka Kalendář z menu zmizela; `go('kalendar')` otevře pohled Měsíc. Ovládání
 měsíců se přesunulo z obsahu do hlavičky jako u ostatních obrazovek, „· aktuální" → „(aktuální)".
+
+## Příprava: varianty podle nového RVP PV (29. 10. 2026, k porovnání)
+
+Podnět: designérce Příprava „nesedí". Z testování: Honza má přípravu v sešitě a plán v appce
+je pro něj zbytečný (1 hlas); Míša drží plán na Google Disku; Táňa chce zásobník nápadů,
+převzetí z loňska a upozorňuje na nový ŠVP – „tématické bloky, integrované celky… přidá se
+podkolonka, abychom věděli, že si vše plníme. Pro rodiče to zachovat." Oficiální text RVP PV
+(znění 15. 5. 2025): čtyři vzdělávací oblasti, osm klíčových kompetencí, integrované bloky
+„nejsou ukotveny v čase" (pořadí a délku volí učitel), každý blok má název, smysl a očekávané
+výsledky učení. Opatření MŠMT č. j. MSMT-4294/2026: podle starého ŠVP lze do 31. 8. 2027.
+
+Tři varianty za `?ppv=a|b|c` (`screens/priprava-bloky.js`, ukázková data `IB_ZASOBNIK`),
+srovnání v `docs/priprava-varianty.html`: A běžící blok, B zásobník bloků s filtrem oblastí,
+C co plníme (bloky × oblasti, kompetence a mezery). Týdenní rytmus a verše týdne (TEMA, čte je
+přehled i rodiče) zůstávají. Bez parametru je Příprava beze změny.

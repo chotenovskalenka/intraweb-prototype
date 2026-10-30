@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Příprava – varianty</title>
+<link rel="stylesheet" href="../src/styles/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Srovnávací stránka: varianty Přípravy podle nového RVP PV, každá jako živá appka
+     na telefonu a na desktopu (dist/prototyp_pruvodce.html?ppv=…; sestavená appka – zdrojové skripty si prohlížeč drží v mezipaměti). Desktop je zmenšený na dvě třetiny. */
+  body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:"Lexend",system-ui,sans-serif}
+  header{max-width:1500px;margin:0 auto;padding:28px 24px 0}
+  h1{font-family:"Alegreya",Georgia,serif;font-weight:700;font-size:30px;margin:0 0 6px;color:var(--color-primary-strong)}
+  header p{margin:0;max-width:75ch;color:var(--color-text-muted);line-height:1.5}
+  nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  nav a{padding:8px 16px;border-radius:999px;background:var(--color-surface);color:var(--color-primary-strong);text-decoration:none;font-weight:500}
+  section{max-width:1500px;margin:0 auto;padding:28px 24px 8px;border-bottom:1px solid var(--color-border)}
+  h2{font-family:"Alegreya",Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+  section>p{margin:0 0 16px;color:var(--color-text-muted);max-width:75ch;line-height:1.5}
+  .pair{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+  .phone{width:390px;height:800px;border:none;border-radius:34px;background:var(--color-surface);
+    box-shadow:0 0 0 10px var(--color-text),0 18px 40px rgba(31,42,46,.18);margin:10px}
+  .desk{width:960px;height:600px;overflow:hidden;border-radius:14px;box-shadow:0 0 0 1px var(--color-border),0 18px 40px rgba(31,42,46,.12);background:var(--color-surface)}
+  .desk iframe{width:1440px;height:900px;border:none;transform:scale(.6667);transform-origin:0 0}
+  @media (max-width:1100px){.desk{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Příprava – podle nového RVP PV</h1>
+  <p>Nový RVP PV (od 1. 9. 2027) plánuje v integrovaných blocích, které nejsou vázané na měsíc: pořadí i délku volí průvodci. Tři varianty se stejnými daty, každá s jiným důrazem. Týdenní rytmus nahoře zůstává všude stejný. Každá je živá appka. Desktop je zmenšený na dvě třetiny.</p>
+  <nav><a href="#dnes">Současná</a><a href="#a">A</a><a href="#b">B</a><a href="#c">C</a></nav>
+</header>
+<section id="dnes">
+  <h2>Současná</h2>
+  <p>Měsíc s hodnotou a týdny s básničkou a písničkou. Takhle to vypadá dnes.</p>
+  <div class="pair"><iframe class="phone" src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=priprava" title="Současná mobil"></iframe>
+  <div class="desk"><iframe src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=priprava" title="Současná desktop"></iframe></div></div>
+</section>
+<section id="a">
+  <h2>A: Běžící blok</h2>
+  <p>Nahoře blok, kterým třída teď žije: název, smysl, oblasti a nápady. Vedle verše týdne a co vidí rodiče, pod tím co je další na řadě a co letos zůstalo nepoužité. Délka bloku podle dětí, ne podle kalendáře.</p>
+  <div class="pair"><iframe class="phone" src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=priprava&ppv=a" title="A: Běžící blok mobil"></iframe>
+  <div class="desk"><iframe src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=priprava&ppv=a" title="A: Běžící blok desktop"></iframe></div></div>
+</section>
+<section id="b">
+  <h2>B: Zásobník</h2>
+  <p>Knihovna integrovaných bloků ze ŠVP pro celou školku, filtr podle vzdělávací oblasti. U každého bloku je vidět, jestli letos běžel, nebo zůstal nepoužitý, a jde zařadit jako další. Běžící blok je jen proužek nahoře.</p>
+  <div class="pair"><iframe class="phone" src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=priprava&ppv=b" title="B: Zásobník mobil"></iframe>
+  <div class="desk"><iframe src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=priprava&ppv=b" title="B: Zásobník desktop"></iframe></div></div>
+</section>
+<section id="c">
+  <h2>C: Co plníme</h2>
+  <p>Rok jako tabulka: letošní bloky a které ze čtyř oblastí pokryly, pod tím osm klíčových kompetencí a kde jsou mezery. Táňina „podkolonka, abychom věděli, že si vše plníme“.</p>
+  <div class="pair"><iframe class="phone" src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=priprava&ppv=c" title="C: Co plníme mobil"></iframe>
+  <div class="desk"><iframe src="../dist/prototyp_pruvodce.html?role=vedouci&sekce=priprava&ppv=c" title="C: Co plníme desktop"></iframe></div></div>
+</section>
+</body>
+</html>

@@ -34,6 +34,8 @@ function renderPriprava(){
   // nabídka programů pro pole – datalist necháva napsat i vlastní text
   if(rytEdit)h+=`<datalist id="progopts">${PROGOPTS.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
   h+=`</div>`;
+  // varianty podle nového RVP PV (?ppv=a|b|c) – rytmus zůstává, místo tématického plánu bloky
+  if(PPV)return h+renderPripravaVarianta();
   h+=`<div class="tema-sec"><div class="vhead-row"><div class="vhead">Tématický plán</div><div class="vhead-act">${temaLoniBtn()}${temaNav()}</div></div>`+temaBlock()+`</div>`;
   return h;
 }

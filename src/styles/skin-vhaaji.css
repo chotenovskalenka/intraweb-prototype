@@ -408,3 +408,45 @@ button.chk.ro{cursor:default}
 .ryt .pp{font-family:var(--font-sans);font-size:var(--text-body);font-weight:500;line-height:var(--leading-snug);color:var(--color-text)}
 .ryt .psub{font-size:var(--text-small);color:var(--color-text-muted)}
 @media (min-width:900px){.ryt .psub{margin-top:0;padding-top:0}}
+/* Příprava – varianty podle nového RVP PV (?ppv=a|b|c, k porovnání 29. 10. 2026) */
+#content>.ib,#content>.ib-osa{column-span:all}
+.ib-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ib-chip{font-size:var(--text-note);padding:3px 10px;border-radius:999px;background:var(--wash-primary);color:var(--color-primary-strong)}
+.ib-nazev{font-family:var(--font-serif);font-size:var(--text-display);line-height:var(--leading-tight);color:var(--color-text);margin:2px 0 4px}
+.ib-kdy{display:block;font-size:var(--text-small);color:var(--color-text-muted);margin-bottom:8px;font-weight:400}
+.ib-akce{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.ib-napad{padding:9px 0;border-top:1px solid var(--color-border);font-size:var(--text-body)}
+.ib-napad:first-of-type{border-top:none}
+.ib-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ib-osa{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 16px}
+.ib-osa .tlab{margin:0 4px 0 0}
+.ib-osa-b{font-size:var(--text-small);padding:6px 12px;border-radius:999px;background:rgba(249,247,241,.92);box-shadow:var(--shadow-card);color:var(--color-text-muted)}
+.ib-osa-b b{color:var(--color-text);font-weight:600}
+.ib-osa-b.on{background:var(--color-primary-strong);color:var(--color-on-primary)}.ib-osa-b.on b{color:var(--color-on-primary)}
+.ib-pruh{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;margin-bottom:12px}
+.ib-pruh .tlab{margin-right:6px}
+.ib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:16px}
+.ib-karta{display:flex;flex-direction:column;margin:0}
+.ib-karta .ch{margin:8px 0 4px}
+.ib-k-nap{font-size:var(--text-small);color:var(--color-text-muted);margin-top:10px}
+.ib-karta>.cardlink{margin-top:auto;padding-top:10px}
+.ib-k-top{min-height:22px}
+.ib-tab-wrap{overflow-x:auto}
+.ib-tab{width:100%;border-collapse:collapse;font-size:var(--text-small)}
+.ib-tab th,.ib-tab td{padding:9px 8px;border-top:1px solid var(--color-border);text-align:center;vertical-align:top}
+.ib-tab thead th{border-top:none;font-weight:500;color:var(--color-text-muted);font-size:var(--text-note)}
+.ib-tab th[scope=row]{text-align:left;font-weight:400;min-width:170px}
+.ib-tab th[scope=row] .ib-kdy{margin:2px 0 0}
+.ib-tab tr.on{background:var(--wash-primary)}
+.ib-tab .ib-tecka{color:var(--color-primary)}
+.ib-tab .ib-sum th,.ib-tab .ib-sum td{font-weight:600}
+.ib-komp{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--color-border);font-size:var(--text-body)}
+.ib-komp:first-of-type{border-top:none}
+.ib-komp>span:last-child{color:var(--color-text-muted);font-size:var(--text-small);white-space:nowrap}
+.ib-komp.mezera>span:last-child{color:var(--state-warn-ink);font-weight:600}
+@media (min-width:900px){
+  .ib-a,.ib-c{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px;align-items:start}
+  .ib-a .tile,.ib-c .tile{margin:0 0 16px}
+  .ib-b-dole{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  .ib-b-dole>.tile{margin:0}
+}
