@@ -1,20 +1,38 @@
-/* SCREEN: PRUVODCE_KONTAKTY – stejné karty jako u rodičů (komponenta .gcard* v components.css).
-   Průvodce navíc vidí u kolegy, kdy je ve školce – vyplývá to z rozpisu služeb. */
+/* SCREEN: PRUVODCE_KONTAKTY – průvodce u kolegy vidí i to, kdy je ve školce (z rozpisu sestavy).
+   Rodičovská appka má dál karty .gcard*. */
 const SKOLNI_DOKUMENTY=['Školní vzdělávací program','Školní a provozní řád'];
-function guideCard(g){
+/* Kontakty jako tabulka (designérka 30. 10. 2026: „je to hodně boxů"). Desktop: jeden řádek na
+   člověka – kdo, kdy je ve školce, telefon, e-mail a akce. Mobil: seznam řádků s větší fotkou
+   a třemi akcemi pod jménem. Obojí v DOM, přepíná CSS (jako Akce). Bez „·": kdy je ve školce
+   jako „Po, St, Pá (7:30–16:00)". */
+function ktKdy(g){
   const gs=GUIDESHIFT.find(x=>x.n===g.n);
-  const days=gs?gs.days.map((d,i)=>serving(d)?DAYS[i]:null).filter(Boolean).join(', '):'';
-  const fd=gs?gs.days.find(d=>serving(d)):null;
-  // podřádek: funkce (má-li ji) + kdy je ve školce, což plyne z rozpisu služeb
-  const kdy=days?`${days}${fd?` · ${fmt(fd.s)}–${fmt(fd.e)}`:''}`:'';
-  const sched=[g.fce,kdy].filter(Boolean).join(' · ')||'ve školce podle potřeby';
-  return `<div class="gcard"><div class="gcard-top">${avatar(g,42)}<div class="gcard-id"><div class="gcard-n">${g.n} ${g.sur||''}${g.uspava?' <span class="moon">☾</span>':''}</div><div class="gcard-sch">${sched}</div></div></div>
-    <div class="contact"><a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a></div>
-    <div class="cinfo">${g.phone} · ${g.email}</div></div>`;
+  if(!gs)return '';
+  const days=gs.days.map((d,i)=>serving(d)?DAYS[i]:null).filter(Boolean).join(', ');
+  const fd=gs.days.find(d=>serving(d));
+  return days?`${days}${fd?` <span class="kt-nw">(${fmt(fd.s)}–${fmt(fd.e)})</span>`:''}`:'';
+}
+const ktJmeno=g=>`${g.n} ${g.sur||''}${g.uspava?' <span class="moon">☾</span>':''}`;
+const ktAkce=g=>`<a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a>`;
+function ktTabulka(nazev,lide,skupina){
+  let h=`<tr class="kt-skup"><th colspan="5" scope="colgroup">${nazev}</th></tr>`;
+  lide.forEach(g=>{const kdy=skupina==='pru'?ktKdy(g):'';
+    h+=`<tr><th scope="row"><span class="kt-kdo">${avatar(g,44)}<span><b>${ktJmeno(g)}</b>${g.fce?`<span class="kt-fce">${g.fce}</span>`:''}</span></span></th>`
+      +`<td>${kdy||'<span class="dt-no">–</span>'}</td><td><a class="kt-link" href="tel:${telnum(g.phone)}">${g.phone}</a></td>`
+      +`<td><a class="kt-link" href="mailto:${g.email}">${g.email}</a></td><td class="kt-akce"><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a></td></tr>`;});
+  return h;
+}
+function ktSeznam(nazev,lide,skupina){
+  return `<div class="k-sec">${nazev}</div><div class="tile kt-list">`+lide.map(g=>{const kdy=skupina==='pru'?ktKdy(g):'';
+    return `<div class="kt-r">${avatar(g,52)}<div class="kt-r-t"><b>${ktJmeno(g)}</b>`
+      +[g.fce,kdy].filter(Boolean).map(x=>`<span class="kt-fce">${x}</span>`).join('')
+      +`<div class="contact">${ktAkce(g)}</div></div></div>`;}).join('')+`</div>`;
 }
 function renderKontakty(){
-  let h=`<div class="doch"><div class="k-sec">Průvodci</div><div class="gcards">`+guides.map(guideCard).join('')+`</div>`;
-  h+=`<div class="k-sec">Zázemí</div><div class="gcards">`+ZAZEMI.map(guideCard).join('')+`</div>`;
+  let h=`<div class="doch kt">`;
+  h+=`<div class="kt-desk tile"><table class="kt-tab"><thead><tr><th scope="col">Kdo</th><th scope="col">Ve školce</th><th scope="col">Telefon</th><th scope="col">E-mail</th><th scope="col"><span class="vh">Napsat zprávu</span></th></tr></thead><tbody>`
+    +ktTabulka('Průvodci',guides,'pru')+ktTabulka('Zázemí',ZAZEMI,'zaz')+`</tbody></table></div>`;
+  h+=`<div class="kt-mob">${ktSeznam('Průvodci',guides,'pru')}${ktSeznam('Zázemí',ZAZEMI,'zaz')}</div>`;
   h+=`<div class="k-bottom">`;
   h+=`<div class="tile k-docs"><div class="ch">Dokumenty ke stažení</div>`+SKOLNI_DOKUMENTY.map((t,i)=>`<button class="doc doc-dl" onclick="downloadSkolniDoc(${i})"><span>${t}</span><span class="pdf">PDF ↓</span></button>`).join('')+`</div>`;
   h+=`</div>`;

@@ -2317,3 +2317,11 @@ pod tabulkou. Den bez směny je tlumená „–" místo „neslouží" v půlce 
 výplně (dnešek v ní zanikal). Listování týdny v hlavičce, bez mezinadpisu „Týden · služby".
 Slovo „slouží" designérce zní divně: dialog má Přijde / Nepřijde, kalendář a třídnice píšou
 „sestava" (jako karta na přehledu), nápověda „kdy kdo přijde a odejde, nebo že nepřijde".
+
+## Kontakty: tabulka místo karet (30. 10. 2026)
+
+Designérka: „je to hodně boxů, buď větší fotky, nebo spíš tabulka". Desktop: jedna tabulka
+(Průvodci a Zázemí jako skupiny) – kdo s fotkou a funkcí, kdy je ve školce, telefon a e-mail
+jako odkazy (klepnutím volá / píše), na konci „Napsat" (SMS). Mobil: seznam řádků s větší fotkou
+(52 px) a třemi akcemi pod jménem. „Po, St, Pá (7:30–16:00)" místo teček. Rodičovská appka má
+karty dál.

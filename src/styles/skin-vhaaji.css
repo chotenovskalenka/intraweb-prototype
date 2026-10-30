@@ -486,3 +486,29 @@ button.chk.ro{cursor:default}
   .wt-sest table.wt td.who{padding-left:12px}
   .wt-sest .sh-otv{font-size:var(--text-chip)}
 }
+/* Kontakty (30. 10. 2026): desktop tabulka místo osmi karet, mobil seznam s větší fotkou */
+.kt-desk{display:none;padding:6px 18px}
+.kt-tab{width:100%;border-collapse:collapse;font-size:var(--text-body)}
+.kt-tab th,.kt-tab td{padding:12px 10px;text-align:left;vertical-align:middle;border-top:1px solid var(--color-border)}
+.kt-tab thead th{border-top:none;font-size:var(--text-small);font-weight:500;color:var(--color-text-muted);padding-top:14px}
+.kt-tab tr.kt-skup th{font-family:var(--font-serif);font-weight:500;font-size:var(--text-heading);color:var(--color-text);padding:22px 10px 8px;border-top:none}
+.kt-tab th[scope=row]{font-weight:400}
+.kt-kdo{display:flex;align-items:center;gap:14px}
+.kt-kdo b{font-weight:600}
+.kt-fce{display:block;font-size:var(--text-small);color:var(--color-text-muted);margin-top:2px}
+.kt-link{color:var(--color-text);text-decoration:none;white-space:nowrap}
+.kt-link:hover{color:var(--color-primary);text-decoration:underline}
+.kt-akce{text-align:right;width:1%}
+.kt-akce .cbtn{display:inline-flex;padding:0 18px;white-space:nowrap}
+.kt-list{padding:4px 18px}
+.kt-r{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--color-border)}
+.kt-r:first-child{border-top:none}
+.kt-r-t{flex:1;min-width:0}
+.kt-r-t b{font-weight:600;font-size:var(--text-body)}
+.kt-r .contact{margin-top:10px}
+@media (min-width:900px){
+  #content>.kt{column-span:all}
+  .kt-desk{display:block}
+  .kt-mob{display:none}
+}
+.kt-nw{white-space:nowrap}
