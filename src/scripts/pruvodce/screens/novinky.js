@@ -21,16 +21,19 @@ function renderNovinky(){
   h+=`<div class="note2">Novinky vidí rodiče ve své appce (bez tvého jména v ostré verzi s ním). Důležité novinky nasdílej i do WhatsApp skupiny. Po datu platnosti novinka rodičům zmizí.</div>`;
   return h+`</div>`;
 }
-// Detail novinky (modal)
+/* Detail novinky (modal). Stejná řeč jako karta: nadpis textovým písmem, zavírá se křížkem
+   v rohu (a klepnutím vedle), jediná akce je sdílení – dřív dvě velká tlačítka Zavřít / Sdílet
+   působila jako formulář (designérka 30. 10. 2026). */
 function novModalHTML(){
   const n=NEWS.find(x=>x.id===novM);if(!n)return '';
-  let h=`<div class="modal-scrim" onclick="if(event.target===this)closeNov()"><div class="modal">`;
+  let h=`<div class="modal-scrim" onclick="if(event.target===this)closeNov()"><div class="modal nd">`
+    +`<button class="nd-x" onclick="closeNov()" aria-label="Zavřít">✕</button>`;
   if(n.img)h+=photoBox('nd-hero',n.img);
-  h+=`${n.urgent?'<span class="newsurg">Důležité</span>':''}<h3>${n.t}</h3>`;
+  h+=`${n.urgent?'<span class="newsurg">Důležité</span>':''}<h3 class="nd-t">${n.t}</h3>`;
   h+=`<div class="newsmeta" style="margin:2px 0 10px">${n.from}, ${n.date} (${n.time}). Platí do ${n.until}. 6.</div>`;
   h+=(n.full||'').split('\n\n').map(p=>`<p class="nd-p">${p}</p>`).join('');
   if(n.imgs&&n.imgs.length)h+=`<div class="gal" style="margin-top:10px">`+n.imgs.map(c=>photoBox('ph',c)).join('')+`</div>`;
-  h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeNov()">Zavřít</button><a class="btn-primary" style="text-decoration:none;text-align:center" href="${waLink(n)}" target="_blank" rel="noopener">Sdílet do WhatsAppu</a></div>`;
+  h+=`<div class="nd-akce"><a class="wabtn" href="${waLink(n)}" target="_blank" rel="noopener">Sdílet do WhatsAppu</a></div>`;
   return h+`</div></div>`;
 }
 // Nová novinka (modal formuláře)

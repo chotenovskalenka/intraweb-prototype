@@ -2341,3 +2341,11 @@ Míša není hospodářka. Kdo hospodářku ve Vhaaji dělá, zatím nevíme, ta
 přihlašuje „Hospodářku" bez konkrétního člověka (`JA_HOSPODARKA` v mujprofil.js): bez telefonu
 a bez řádku v rozpisu sestavy. Záznamy, které role vytvoří (poznámka k dítěti, omluva), nesou
 „Hospodářka". Výkaz hodin a „tento týden" v Můj profil bez teček.
+
+## Detail novinky jako karta (30. 10. 2026)
+
+Modal byl šedý (`--color-bg`), nadpis v Alegreya a dole dvě velká tlačítka Zavřít / Sdílet –
+s kartou nesouhlasil (designérka: „modal je divný a UI neodpovídá"). Ve skinu mají modaly
+plochu a zaoblení karet. Detail novinky: nadpis textovým písmem jako v kartě, zavírá se křížkem
+v rohu (nebo klepnutím vedle), jediná akce „Sdílet do WhatsAppu" vpravo pod čarou. Tlačítko
+„Sdílet do WhatsAppu" je v kartě i v detailu pilulka jako ostatní tlačítka skinu.
