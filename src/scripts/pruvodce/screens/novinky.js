@@ -12,7 +12,7 @@ function renderNovinky(){
     h+=`<div class="newscard${n.urgent?' urgent':''}" onclick="openNov('${n.id}')" ${KLAV}>`;
     if(n.img)h+=photoBox('nc-hero',n.img);
     h+=`<div class="nc-body">${n.urgent?'<span class="newsurg">Důležité</span>':''}<div class="nc-t">${n.t}</div>`;
-    h+=`<div class="newsmeta" style="margin-top:3px">${n.from} · ${n.date} · ${n.time} · platí do ${n.until}. 6.</div>`;
+    h+=`<div class="newsmeta" style="margin-top:3px">${n.from}, ${n.date} (${n.time}). Platí do ${n.until}. 6.</div>`;
     h+=`<div class="nc-x">${novExcerpt(n)}</div>`;
     h+=`<div class="nc-foot nc-actions"><span>Celá novinka ›</span><a class="wabtn" href="${waLink(n)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Sdílet do WhatsAppu</a></div>`;
     h+=`</div></div>`;
@@ -27,7 +27,7 @@ function novModalHTML(){
   let h=`<div class="modal-scrim" onclick="if(event.target===this)closeNov()"><div class="modal">`;
   if(n.img)h+=photoBox('nd-hero',n.img);
   h+=`${n.urgent?'<span class="newsurg">Důležité</span>':''}<h3>${n.t}</h3>`;
-  h+=`<div class="newsmeta" style="margin:2px 0 10px">${n.from} · ${n.date} · ${n.time} · platí do ${n.until}. 6.</div>`;
+  h+=`<div class="newsmeta" style="margin:2px 0 10px">${n.from}, ${n.date} (${n.time}). Platí do ${n.until}. 6.</div>`;
   h+=(n.full||'').split('\n\n').map(p=>`<p class="nd-p">${p}</p>`).join('');
   if(n.imgs&&n.imgs.length)h+=`<div class="gal" style="margin-top:10px">`+n.imgs.map(c=>photoBox('ph',c)).join('')+`</div>`;
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeNov()">Zavřít</button><a class="btn-primary" style="text-decoration:none;text-align:center" href="${waLink(n)}" target="_blank" rel="noopener">Sdílet do WhatsAppu</a></div>`;

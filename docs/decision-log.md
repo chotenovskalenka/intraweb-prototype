@@ -2328,3 +2328,9 @@ z kontaktů i z Můj profil. Míša je průvodkyně, ne hospodářka – štíte
 v prototypu za rolí `?role=hospodarka`, je zatím otevřené. „Po, St, Pá (7:30–16:00)" místo teček. Rodičovská appka má
 karty dál.
 
+## Novinky: krátký nadpis textovým písmem (30. 10. 2026)
+
+Nadpis karty byl celá věta s tečkou v tučné zelené Alegreya a úryvek pod ním ji opakoval.
+Nadpisy v seedu (průvodce i rodič) jsou krátké titulky bez tečky („Roupy ve třídě"), v kartě
+průvodce textovým písmem jako jídla a verše na přehledu. Meta řádek bez teček:
+„Táňa, 2. 6. (7:40). Platí do 5. 6."

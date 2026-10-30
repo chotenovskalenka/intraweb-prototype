@@ -512,3 +512,6 @@ button.chk.ro{cursor:default}
   .kt-mob{display:none}
 }
 .kt-nw{white-space:nowrap}
+/* Novinky: nadpis karty textovým písmem jako jídla a verše na přehledu – zelená tučná Alegreya
+   působila jako odkaz a s větou s tečkou se opakovala v úryvku (designérka 30. 10. 2026) */
+.nc-t{font-family:var(--font-sans);font-size:var(--text-heading);font-weight:600;color:var(--color-text);line-height:var(--leading-snug)}

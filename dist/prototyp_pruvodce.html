@@ -1550,6 +1550,9 @@ button.chk.ro{cursor:default}
   .kt-mob{display:none}
 }
 .kt-nw{white-space:nowrap}
+/* Novinky: nadpis karty textovým písmem jako jídla a verše na přehledu – zelená tučná Alegreya
+   působila jako odkaz a s větou s tečkou se opakovala v úryvku (designérka 30. 10. 2026) */
+.nc-t{font-family:var(--font-sans);font-size:var(--text-heading);font-weight:600;color:var(--color-text);line-height:var(--leading-snug)}
 </style>
 </head>
 <body>
@@ -2041,18 +2044,19 @@ let worksMap={3:2,9:3}, dopoMap={};
 
 /* Tým školky. `n` je krátké jméno, kterým se průvodce dohledá v rozpisu služeb (GUIDESHIFT).
    `fce` = funkce navíc; kdo ji nemá, je řadový průvodce. Zázemí (vedení, obědy, účetnictví)
-   je oddělené – nemá službu u dětí, ale průvodci ho potřebují po ruce. */
+   je oddělené – nemá službu u dětí, ale průvodci ho potřebují po ruce. Pracovní e-maily tým
+   nemá (designérka 30. 10. 2026), kontakt je jen telefon. */
 const guides=[
-  {n:'Táňa',sur:'Kynclová',fce:'vedoucí průvodce',phone:'+420 775 241 758',email:'tana@vhaaji.cz'},
-  {n:'Gabča',sur:'Vašíčková',phone:'+420 604 553 246',email:'gabca@vhaaji.cz'},
-  {n:'Darča',sur:'Mikolášová',phone:'+420 603 290 593',email:'darina@vhaaji.cz'},
-  {n:'Honza',sur:'Kolář',phone:'+420 605 426 333',email:'honza@vhaaji.cz'},
-  {n:'Míša',sur:'Hrubínová',fce:'hospodářka',phone:'+420 733 142 437',email:'michaela@vhaaji.cz'},
+  {n:'Táňa',sur:'Kynclová',fce:'vedoucí průvodce',phone:'+420 775 241 758'},
+  {n:'Gabča',sur:'Vašíčková',phone:'+420 604 553 246'},
+  {n:'Darča',sur:'Mikolášová',phone:'+420 603 290 593'},
+  {n:'Honza',sur:'Kolář',phone:'+420 605 426 333'},
+  {n:'Míša',sur:'Hrubínová',phone:'+420 733 142 437'},
 ];
 const ZAZEMI=[
-  {n:'Tereza',sur:'Vavrečková',fce:'vedení',phone:'+420 603 200 512',email:'tereza@vhaaji.cz'},
-  {n:'Ksenia',sur:'Andramanova',fce:'obědy a svačiny',phone:'+420 721 472 219',email:'ksenia@vhaaji.cz'},
-  {n:'Eva',sur:'Sionová',fce:'účetnictví',phone:'+420 777 752 533',email:'eva@vhaaji.cz'},
+  {n:'Tereza',sur:'Vavrečková',fce:'vedení',phone:'+420 603 200 512'},
+  {n:'Ksenia',sur:'Andramanova',fce:'obědy a svačiny',phone:'+420 721 472 219'},
+  {n:'Eva',sur:'Sionová',fce:'účetnictví',phone:'+420 777 752 533'},
 ];
 const SCHOOL={name:'Lesní školka Vhaaji',email:'vhaaji@vhaaji.cz',phone:'+420 720 000 111',adresa:'Ďáblický háj, Praha 8'};
 
@@ -2080,15 +2084,15 @@ let AKCE=[
 /* Novinky pro rodiče – stejný obsah jako seed rodičovské appky (simulovaná konzistence,
    appky spolu nesdílejí data). Průvodce vidí i autora a čas; může přidávat nové. */
 let NEWS=[
-  {id:'nw1',t:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dítě.',from:'Táňa',time:'7:40',date:'2. 6.',until:5,urgent:true,
+  {id:'nw1',t:'Roupy ve třídě',from:'Táňa',time:'7:40',date:'2. 6.',until:5,urgent:true,
    full:'Ve třídě se vyskytly roupy. Prosíme, zkontrolujte dnes večer dítě – svědění, neklidný spánek. Pokud roupy najdete, nechte prosím dítě doma do přeléčení (přípravek poradí každá lékárna, léčba je rychlá).\n\nVe školce jsme vyměnili ručníky i povlečení a vše vyprali na 90 °C. Prosíme také o krátké ostříhání nehtíků. Kdybyste si nebyli jistí, ozvěte se Táně – děkujeme za spolupráci.'},
-  {id:'nw2',t:'V pátek 5. 6. končíme už ve 14:00 (pedagogická porada).',from:'Táňa',time:'16:12',date:'1. 6.',until:5,urgent:true,
+  {id:'nw2',t:'V pátek 5. 6. končíme už ve 14:00',from:'Táňa',time:'16:12',date:'1. 6.',until:5,urgent:true,
    full:'V pátek 5. 6. končí provoz školky už ve 14:00 – máme celotýmovou pedagogickou poradu.\n\nProsíme, vyzvedněte si děti nejpozději do 14:00. Odpolední svačinu dostanou děti s sebou v krabičce. Pokud by vyzvednutí do 14:00 bylo neřešitelné, napište nám prosím co nejdřív, domluvíme se individuálně. Děkujeme za pochopení.'},
-  {id:'nw3',t:'Sbíráme víčka od PET lahví na výtvarku.',from:'Darča',time:'9:05',date:'28. 5.',until:30,img:NEWSFOTO.VICKA,
+  {id:'nw3',t:'Sbíráme víčka od PET lahví',from:'Darča',time:'9:05',date:'28. 5.',until:30,img:NEWSFOTO.VICKA,
    full:'Od června sbíráme víčka od PET lahví – budeme z nich s dětmi tvořit velkou letní mozaiku na plot zahrady.\n\nSběrný koš najdete u vchodu do maringotky. Hodí se všechny barvy, čím pestřejší, tím lepší. Sbíráme do konce června; hotovou mozaiku pak slavnostně odhalíme na zahradní slavnosti.'},
-  {id:'nw4',t:'Fotky z výpravy na Okoř najdete ve složce Fotky.',from:'Honza',time:'18:30',date:'26. 5.',until:12,img:NEWSFOTO.OKOR,
+  {id:'nw4',t:'Fotky z výpravy na Okoř',from:'Honza',time:'18:30',date:'26. 5.',until:12,img:NEWSFOTO.OKOR,
    full:'Výprava na Okoř se vydařila – počasí nám přálo, děti zvládly celou trasu a zřícenina sklidila obrovský úspěch (stejně jako svačiny od vás, děkujeme!).\n\nFotky z celého dne najdete ve složce Fotky. Pokud byste některou chtěli v plném rozlišení, napište Honzovi.'},
-  {id:'nw5',t:'Brigáda na zahradě 13. 6. – hlaste se prosím v tabulce.',from:'Míša',time:'20:15',date:'25. 5.',until:13,img:NEWSFOTO.BRIGADA,
+  {id:'nw5',t:'Brigáda na zahradě 13. 6.',from:'Míša',time:'20:15',date:'25. 5.',until:13,img:NEWSFOTO.BRIGADA,
    full:'V sobotu 13. 6. od 9:00 chystáme brigádu na zahradě – čeká nás stavba nového záhonu, oprava vrbového tunelu a nátěr herních prvků.\n\nHlaste se prosím v tabulce (odkaz jsme posílali e-mailem), ať víme počty na občerstvení. Nářadí máme, hodí se ale vlastní rukavice. Děti jsou vítané – pro malé pomocníky bude připravený dětský koutek.'},
 ];
 const PREDEF=['Výlet','Výjezd předškoláků','Slavnost','Brigáda','Horolezení','Beseda','Divadlo','Narozeniny','Škola v přírodě'];
@@ -3472,7 +3476,7 @@ function renderNovinky(){
     h+=`<div class="newscard${n.urgent?' urgent':''}" onclick="openNov('${n.id}')" ${KLAV}>`;
     if(n.img)h+=photoBox('nc-hero',n.img);
     h+=`<div class="nc-body">${n.urgent?'<span class="newsurg">Důležité</span>':''}<div class="nc-t">${n.t}</div>`;
-    h+=`<div class="newsmeta" style="margin-top:3px">${n.from} · ${n.date} · ${n.time} · platí do ${n.until}. 6.</div>`;
+    h+=`<div class="newsmeta" style="margin-top:3px">${n.from}, ${n.date} (${n.time}). Platí do ${n.until}. 6.</div>`;
     h+=`<div class="nc-x">${novExcerpt(n)}</div>`;
     h+=`<div class="nc-foot nc-actions"><span>Celá novinka ›</span><a class="wabtn" href="${waLink(n)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Sdílet do WhatsAppu</a></div>`;
     h+=`</div></div>`;
@@ -3487,7 +3491,7 @@ function novModalHTML(){
   let h=`<div class="modal-scrim" onclick="if(event.target===this)closeNov()"><div class="modal">`;
   if(n.img)h+=photoBox('nd-hero',n.img);
   h+=`${n.urgent?'<span class="newsurg">Důležité</span>':''}<h3>${n.t}</h3>`;
-  h+=`<div class="newsmeta" style="margin:2px 0 10px">${n.from} · ${n.date} · ${n.time} · platí do ${n.until}. 6.</div>`;
+  h+=`<div class="newsmeta" style="margin:2px 0 10px">${n.from}, ${n.date} (${n.time}). Platí do ${n.until}. 6.</div>`;
   h+=(n.full||'').split('\n\n').map(p=>`<p class="nd-p">${p}</p>`).join('');
   if(n.imgs&&n.imgs.length)h+=`<div class="gal" style="margin-top:10px">`+n.imgs.map(c=>photoBox('ph',c)).join('')+`</div>`;
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeNov()">Zavřít</button><a class="btn-primary" style="text-decoration:none;text-align:center" href="${waLink(n)}" target="_blank" rel="noopener">Sdílet do WhatsAppu</a></div>`;
@@ -4474,8 +4478,8 @@ window.stepJidTyden=d=>{
    Rodičovská appka má dál karty .gcard*. */
 const SKOLNI_DOKUMENTY=['Školní vzdělávací program','Školní a provozní řád'];
 /* Kontakty jako tabulka (designérka 30. 10. 2026: „je to hodně boxů"). Desktop: jeden řádek na
-   člověka – kdo, kdy je ve školce, telefon, e-mail a akce. Mobil: seznam řádků s větší fotkou
-   a třemi akcemi pod jménem. Obojí v DOM, přepíná CSS (jako Akce). Bez „·": kdy je ve školce
+   člověka – kdo, kdy je ve školce, telefon a akce (e-maily tým nemá). Mobil: seznam řádků
+   s větší fotkou a dvěma akcemi pod jménem. Obojí v DOM, přepíná CSS (jako Akce). Bez „·": kdy je ve školce
    jako „Po, St, Pá (7:30–16:00)". */
 function ktKdy(g){
   const gs=GUIDESHIFT.find(x=>x.n===g.n);
@@ -4485,13 +4489,12 @@ function ktKdy(g){
   return days?`${days}${fd?` <span class="kt-nw">(${fmt(fd.s)}–${fmt(fd.e)})</span>`:''}`:'';
 }
 const ktJmeno=g=>`${g.n} ${g.sur||''}${g.uspava?' <span class="moon">☾</span>':''}`;
-const ktAkce=g=>`<a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a><a class="cbtn" href="mailto:${g.email}">E-mail</a>`;
+const ktAkce=g=>`<a class="cbtn" href="tel:${telnum(g.phone)}">Zavolat</a><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a>`;
 function ktTabulka(nazev,lide,skupina){
-  let h=`<tr class="kt-skup"><th colspan="5" scope="colgroup">${nazev}</th></tr>`;
+  let h=`<tr class="kt-skup"><th colspan="4" scope="colgroup">${nazev}</th></tr>`;
   lide.forEach(g=>{const kdy=skupina==='pru'?ktKdy(g):'';
     h+=`<tr><th scope="row"><span class="kt-kdo">${avatar(g,44)}<span><b>${ktJmeno(g)}</b>${g.fce?`<span class="kt-fce">${g.fce}</span>`:''}</span></span></th>`
-      +`<td>${kdy||'<span class="dt-no">–</span>'}</td><td><a class="kt-link" href="tel:${telnum(g.phone)}">${g.phone}</a></td>`
-      +`<td><a class="kt-link" href="mailto:${g.email}">${g.email}</a></td><td class="kt-akce"><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a></td></tr>`;});
+      +`<td>${kdy||'<span class="dt-no">–</span>'}</td><td><a class="kt-link" href="tel:${telnum(g.phone)}">${g.phone}</a></td><td class="kt-akce"><a class="cbtn" href="sms:${telnum(g.phone)}">Napsat</a></td></tr>`;});
   return h;
 }
 function ktSeznam(nazev,lide,skupina){
@@ -4502,7 +4505,7 @@ function ktSeznam(nazev,lide,skupina){
 }
 function renderKontakty(){
   let h=`<div class="doch kt">`;
-  h+=`<div class="kt-desk tile"><table class="kt-tab"><thead><tr><th scope="col">Kdo</th><th scope="col">Ve školce</th><th scope="col">Telefon</th><th scope="col">E-mail</th><th scope="col"><span class="vh">Napsat zprávu</span></th></tr></thead><tbody>`
+  h+=`<div class="kt-desk tile"><table class="kt-tab"><thead><tr><th scope="col">Kdo</th><th scope="col">Ve školce</th><th scope="col">Telefon</th><th scope="col"><span class="vh">Napsat zprávu</span></th></tr></thead><tbody>`
     +ktTabulka('Průvodci',guides,'pru')+ktTabulka('Zázemí',ZAZEMI,'zaz')+`</tbody></table></div>`;
   h+=`<div class="kt-mob">${ktSeznam('Průvodci',guides,'pru')}${ktSeznam('Zázemí',ZAZEMI,'zaz')}</div>`;
   h+=`<div class="k-bottom">`;
@@ -4525,7 +4528,7 @@ const fmtH=h=>(Math.round(h*10)/10).toLocaleString('cs-CZ')+' h';
 function renderMujProfil(){
   const g=ja();
   let h=`<div class="dite-head"><div class="pav">${avatar(g,72)}</div><div class="pname">${g.n} ${g.sur}</div><div class="pfull">${!g.fce?'průvodce':/průvodce/.test(g.fce)?g.fce:'průvodce · '+g.fce}</div></div>`;
-  h+=`<div class="tile"><div class="ch">Kontakt</div><div class="np"><span>Telefon</span><b>${g.phone}</b></div><div class="np"><span>E-mail</span><b>${g.email}</b></div></div>`;
+  h+=`<div class="tile"><div class="ch">Kontakt</div><div class="np"><span>Telefon</span><b>${g.phone}</b></div></div>`;
   // Výkaz: týdny června z rozpisu služeb. Minulé a běžný týden = odpracováno, další = plán.
   let odpr=0, plan=0;
   const radky=SHIFT_TYDNY.map((t,ti)=>({t,ti})).filter(({t})=>t.m===6).map(({t,ti})=>{
