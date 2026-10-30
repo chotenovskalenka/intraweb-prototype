@@ -2293,7 +2293,9 @@ podkolonka, abychom věděli, že si vše plníme. Pro rodiče to zachovat." Ofi
 „nejsou ukotveny v čase" (pořadí a délku volí učitel), každý blok má název, smysl a očekávané
 výsledky učení. Opatření MŠMT č. j. MSMT-4294/2026: podle starého ŠVP lze do 31. 8. 2027.
 
-Tři varianty za `?ppv=a|b|c` (`screens/priprava-bloky.js`, ukázková data `IB_ZASOBNIK`),
-srovnání v `docs/priprava-varianty.html`: A běžící blok, B zásobník bloků s filtrem oblastí,
-C co plníme (bloky × oblasti, kompetence a mezery). Týdenní rytmus a verše týdne (TEMA, čte je
+Tři varianty za `?ppv=a|b|c` (`screens/priprava-bloky.js`), srovnání v
+`docs/priprava-varianty.html`: A běžící blok, B zásobník činností, C co plníme. 30. 10. 2026
+přestavěno na sedm skutečných bloků ze ŠVP Vhaaji 2023 (veřejný, kap. 6.1): hodnoty, časová
+dotace, vzdělávací nabídka a dílčí cíle. Vymyšlené oblasti a kompetence u bloků pryč – ŠVP 2023
+je ještě podle starého RVP a nemá je; doplní je až přepis ŠVP. Týdenní rytmus a verše týdne (TEMA, čte je
 přehled i rodiče) zůstávají. Bez parametru je Příprava beze změny.
