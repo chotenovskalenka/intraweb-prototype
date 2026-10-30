@@ -64,7 +64,7 @@ function trRenderDen(){
   const d=trDay, x=trInfo(d), z=trDen(d), sl=trSluzba(d);
   // datum nese listování v hlavičce – karta dne říká jen stav, kdo slouží a kdo píše.
   // Návod k psaní je schovaný pod „?" (designérka 28. 10. 2026) – klepnutím, ne najetím: na mobilu hover není.
-  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b>. Píše <b>${TR_ZAPISUJE[x.dow]}</b>.</div>`
+  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><div class="tval">Sestava: <b>${sl.join(', ')||'nikdo'}</b>. Píše <b>${TR_ZAPISUJE[x.dow]}</b>.</div>`
     +`<span id="tr-stav">${trBdg(trStav(d))}</span><button class="tr-info" onclick="trInfoToggle()" aria-expanded="${trInfoOtevreno}" aria-controls="tr-info-t" aria-label="Jak se třídnice píše">?</button></div>`
     +(trInfoOtevreno?`<div class="tr-info-t" id="tr-info-t" role="note">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do části <a class="tr-inl" href="#tr-kdetem">K dětem</a> pod zápisem, kterou vidí jen tým.</div>`:'')+`</div>`;
   h+=trDenOsa(z);

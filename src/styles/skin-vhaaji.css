@@ -460,3 +460,29 @@ button.chk.ro{cursor:default}
    a dvě akvarelové plochy se přetahovaly. Na mobilu menu stránku překryje, tam akvarel zůstává
    (designérka 30. 10. 2026). */
 @media (min-width:900px){.drawer .dh{background:none}}
+/* Docházka průvodců (30. 10. 2026): dnešek celým sloupcem, buňky bez šedé výplně (dřív šedé
+   byly všechny editovatelné a dnešek v nich zanikal), úzký sloupec jmen, čas na jeden řádek. */
+.wt-sest{max-height:none;border:none;border-radius:var(--radius-card);box-shadow:var(--shadow-card);background:rgba(249,247,241,.92)}
+.wt-sest table.wt thead th{background:transparent;font-size:var(--text-small);padding:12px 6px}
+.wt-sest table.wt th,.wt-sest table.wt td{padding:12px 6px}
+.wt-sest table.wt td.ced{background:transparent}
+.wt-sest table.wt td.ced:hover{background:var(--wash-primary)}
+.wt-sest table.wt th.today,.wt-sest table.wt td.today{background:var(--wash-primary)}
+.wt-sest table.wt thead th.today{color:var(--color-primary-strong)}
+.wt-sest .wt-dnes{font-weight:500;color:var(--color-primary)}
+.wt-sest table.wt td.who{font-size:var(--text-body);padding-left:16px}
+.wt-sest .sh-cas{font-size:var(--text-small);font-weight:500;color:var(--color-text)}
+.wt-sest .sh-otv{display:block;font-size:var(--text-note);color:var(--color-primary);margin-top:2px}
+.wt-sest .sh-off{font-size:var(--text-small)}
+.sh-pata{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+.sh-pata .hint{margin:0}
+.sh-usp{display:flex;align-items:center;gap:10px;font-size:var(--text-body)}
+@media (min-width:900px){
+  #content>.wt-sest,#content>.sh-pata{column-span:all}
+  .wt-sest table.wt.wt-sm th.who,.wt-sest table.wt.wt-sm td.who{width:160px}
+}
+@media (max-width:899px){
+  .wt-sest table.wt th,.wt-sest table.wt td{padding:10px 2px}
+  .wt-sest table.wt td.who{padding-left:12px}
+  .wt-sest .sh-otv{font-size:var(--text-chip)}
+}

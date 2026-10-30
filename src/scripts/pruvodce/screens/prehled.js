@@ -28,7 +28,7 @@ function renderPrehledHead(){
   const ryt=RYTMUS[wd(TODAYD)];
   const radky=[];
   if(todays.length)radky.push(`${vlna1.length>1?'Otevírají':'Otevírá'} ${jmena(vlna1)}${dal.length?`, dál ${jmena(dal)}`:''}`);
-  else radky.push('Dnes nikdo nemá službu');
+  else radky.push('Dnes nikdo není v sestavě');
   if(ryt)radky.push(`Dnes je <b>${ryt.prog}</b>`);
   if(ryt&&ryt.krouzek)radky.push(esc(ryt.krouzek));
   return `<div class="dash-head c-head"><h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. 6. 2026</h1>`
@@ -154,7 +154,7 @@ function renderPrehled(){
     // role pod jménem drobně, čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" a ☾ lámaly do času
     todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');
       blkPruvodci+=`<div class="np"><span class="np-n">${x.g.n}${role?`<span class="np-r">${role}</span>`:''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
-  }else{blkPruvodci+=`<div class="empty" style="padding:6px">Nikdo nemá službu.</div>`;}
+  }else{blkPruvodci+=`<div class="empty" style="padding:6px">Nikdo není v sestavě.</div>`;}
   blkPruvodci+=`<button class="cardlink" onclick="go('pruvodci')">Celý rozpis<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
 
   /* Ranní trojice: na mobilu tři karty pod sebou, na desktopu jedna plocha přes celou šířku

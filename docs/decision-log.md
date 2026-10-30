@@ -2307,3 +2307,13 @@ v `rytmusHTML()`, přehled dál čte dnešní program z `RYTMUS`. Tématický pl
 a připravovaného měsíce rovnou formulář; teď se čte a upravuje až po „Upravit" (Zrušit vrátí
 stav před úpravou, Uložit). Ovládání – převzetí loňského plánu, Upravit a listování měsíci – je
 v hlavičce jako u ostatních obrazovek; „· aktuální" → „(aktuální)", spodní tlačítko Uložit pryč.
+
+## Docházka průvodců: doladění, bez „slouží" (30. 10. 2026)
+
+Karta „Dnes ve školce" pryč – zdvojovala dnešní sloupec tabulky i kartu Sestava na přehledu.
+Dnešek je zvýrazněný celým sloupcem („dnes" v hlavičce, „otevírá" v buňce), „Dnes uspává" je
+pod tabulkou. Den bez směny je tlumená „–" místo „neslouží" v půlce buněk; čas na jeden řádek
+(7:30–16:00, na mobilu se zalomí za pomlčkou); úzký sloupec jmen; editovatelné buňky bez šedé
+výplně (dnešek v ní zanikal). Listování týdny v hlavičce, bez mezinadpisu „Týden · služby".
+Slovo „slouží" designérce zní divně: dialog má Přijde / Nepřijde, kalendář a třídnice píšou
+„sestava" (jako karta na přehledu), nápověda „kdy kdo přijde a odejde, nebo že nepřijde".

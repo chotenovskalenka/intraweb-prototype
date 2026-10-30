@@ -84,6 +84,7 @@ function render(){
     : section==='tridnice' ? `<h1 class="dh-t">Třídnice</h1>${trHlavicka()}`
     : section==='akce' ? `<h1 class="dh-t">Kalendář a akce</h1>${akceHlavicka()}`
     : section==='priprava' ? `<h1 class="dh-t">Příprava</h1>${temaHlavicka()}`
+    : section==='pruvodci' ? `<h1 class="dh-t">Docházka průvodců</h1>${shiftHlavicka()}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka plánuje z toho, co bylo)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>${jidHlavicka()}`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;

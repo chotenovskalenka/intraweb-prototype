@@ -1,41 +1,45 @@
 /* SCREEN: PRUVODCE_PRUVODCI */
 function startMin(d){return serving(d)?(+d.s.split(':')[0])*60+(+d.s.split(':')[1]):9999;}
-/* P6 z testování: rozpis nevyznačoval, kdo neslouží – den bez služby byl jen tečka, k nerozeznání
-   od prázdné buňky, a nepřítomnost s důvodem se kreslila stylem alergie. Teď obojí slovem,
-   tlumeně (stavová paleta), aby služby zůstaly to nejvýraznější v tabulce. */
-function shiftCell(d){
-  if(!d)return '<span class="sh-off">neslouží</span>';
+/* P6 z testování: rozpis nevyznačoval, kdo ve škole není – den bez směny byl jen tečka. Slovo
+   „neslouží" v půlce buněk ale dělalo šum (designérka 30. 10. 2026: „slouží je divný"), takže
+   den bez směny je tlumená pomlčka, důvod nepřítomnosti zůstává slovem. Čas na jeden řádek
+   (7:30–16:00); na úzkém mobilu se sám zalomí za pomlčkou. */
+function shiftCell(d,otevira){
+  if(!d)return '<span class="sh-off" aria-label="není">–</span>';
   if(d.off)return `<span class="sh-off sh-duvod">${d.off}</span>`;
-  // časy aspoň 11,5 px (--text-chip) – čte se venku na slunci; dřív 10–10,5 px (UX revize 28. 10. 2026)
-  return `<div style="line-height:1.25"><div style="color:var(--color-primary);font-weight:600;font-size:var(--text-chip)">${fmt(d.s)}</div><div style="color:var(--color-text-muted);font-size:var(--text-chip)">${fmt(d.e)}</div></div>`;
+  return `<span class="sh-cas">${fmt(d.s)}–${fmt(d.e)}</span>`+(otevira?'<span class="sh-otv">otevírá</span>':'');
 }
+function shiftHlavicka(){
+  const t=SHIFT_TYDNY[shiftT];
+  return `<div class="dfield"><div class="dnav"><button onclick="stepShiftT(-1)" ${shiftT<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`+
+    `<span>${shiftLabel(t)}${shiftT===SHIFT_AKT?' (tento týden)':''}</span>`+
+    `<button onclick="stepShiftT(1)" ${shiftT>=SHIFT_TYDNY.length-1?'disabled':''} aria-label="Další týden">›</button></div></div>`;
+}
+/* Karta „Dnes ve školce" zmizela – zdvojovala dnešní sloupec tabulky i kartu Sestava na přehledu
+   (30. 10. 2026). Dnešek je zvýrazněný celým sloupcem, „otevírá" je v buňce, kdo uspává pod
+   tabulkou. Listování týdny je v hlavičce jako u Docházky. */
 function renderPruvodci(){
   const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
   const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
   if(todays.length&&!todays.some(x=>x.i===uspavaToday))uspavaToday=todays[0].i;
-  let h='';
-  h+=`<div class="tile"><div class="ch">Dnes ve školce · středa</div>`;
-  h+= todays.length? todays.map(x=>{const d=x.g.days[TODAY];return `<div class="np"><span>${x.g.n}${opener&&x.i===opener.i?' · <b style="color:var(--color-primary)">otevírá</b>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;}).join('') : '<div class="empty">Dnes nikdo nemá službu.</div>';
-  if(todays.length)h+=`<div class="np" style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:9px"><span>Dnes uspává</span><select class="selin" onchange="setUspava(this.value)">`+todays.map(x=>`<option value="${x.i}" ${x.i===uspavaToday?'selected':''}>${x.g.n}</option>`).join('')+`</select></div>`;
-  h+=`</div>`;
   // Týden rozpisu se listuje a je vždycky datovaný – jinak není poznat, na který týden
   // se člověk dívá. Minulé týdny jsou jen ke čtení, stejně jako minulé dny v docházce.
-  const t=SHIFT_TYDNY[shiftT], rows=shiftTyden(shiftT), minuly=shiftT<SHIFT_AKT;
-  h+=`<div class="vhead-row"><div class="vhead">Týden · služby</div><div class="vhead-act">`+
-    `<div class="dnav"><button onclick="stepShiftT(-1)" ${shiftT<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`+
-    `<span>${shiftLabel(t)}${shiftT===SHIFT_AKT?'<i class="dn-cur"> · tento týden</i>':''}</span>`+
-    `<button onclick="stepShiftT(1)" ${shiftT>=SHIFT_TYDNY.length-1?'disabled':''} aria-label="Další týden">›</button></div></div></div>`;
+  const t=SHIFT_TYDNY[shiftT], rows=shiftTyden(shiftT), minuly=shiftT<SHIFT_AKT, akt=shiftT===SHIFT_AKT;
   // wt-sm = tabulka s krátkými jmény → na mobilu užší první sloupec, aby buňky měly 44 px
-  h+=`<div class="weekbox"><table class="wt wt-sm"><thead><tr><th class="who">Průvodce</th>`+
-    DAYS.map((d,j)=>{const den=t.od+j, jeDnes=shiftT===SHIFT_AKT&&j===TODAY;
-      return den>t.do?`<th></th>`:`<th class="${jeDnes?'today':''}">${d} <span class="wt-dt">${den}.</span></th>`;}).join('')+`</tr></thead><tbody>`;
+  let h=`<div class="weekbox wt-sest"><table class="wt wt-sm"><thead><tr><th class="who">Průvodce</th>`+
+    DAYS.map((d,j)=>{const den=t.od+j, jeDnes=akt&&j===TODAY;
+      return den>t.do?`<th></th>`:`<th class="${jeDnes?'today':''}">${d} <span class="wt-dt">${den}.</span>${jeDnes?' <span class="wt-dnes">dnes</span>':''}</th>`;}).join('')+`</tr></thead><tbody>`;
   rows.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>{
-      const jeDnes=shiftT===SHIFT_AKT&&di===TODAY;
+      const jeDnes=akt&&di===TODAY;
       if(t.od+di>t.do)return `<td class="pastc"></td>`;
-      return minuly? `<td class="pastc">${shiftCell(d)}</td>`
-        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})" ${KLAV}>${shiftCell(d)}</td>`;
+      const bunka=shiftCell(d,jeDnes&&opener&&rows===GUIDESHIFT&&gi===opener.i);
+      return minuly? `<td class="pastc">${bunka}</td>`
+        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})" ${KLAV}>${bunka}</td>`;
     }).join('')+`</tr>`;});
-  h+=`</tbody></table></div><div class="hint">${minuly?'Minulý týden – jen k nahlédnutí.':'Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).'}</div>`;
+  h+=`</tbody></table></div>`;
+  h+=`<div class="sh-pata">`;
+  if(akt&&todays.length)h+=`<label class="sh-usp"><span>Dnes uspává</span><select class="selin" onchange="setUspava(this.value)">`+todays.map(x=>`<option value="${x.i}" ${x.i===uspavaToday?'selected':''}>${x.g.n}</option>`).join('')+`</select></label>`;
+  h+=`<div class="hint">${minuly?'Minulý týden – jen k nahlédnutí.':'Klepni na buňku a uprav, kdy kdo přijde a odejde, nebo že nepřijde.'}</div></div>`;
   return h;
 }
 window.stepShiftT=d=>{shiftT=Math.max(0,Math.min(SHIFT_TYDNY.length-1,shiftT+d));render();};

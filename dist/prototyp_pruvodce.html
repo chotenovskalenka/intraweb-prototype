@@ -1498,6 +1498,32 @@ button.chk.ro{cursor:default}
    a dvě akvarelové plochy se přetahovaly. Na mobilu menu stránku překryje, tam akvarel zůstává
    (designérka 30. 10. 2026). */
 @media (min-width:900px){.drawer .dh{background:none}}
+/* Docházka průvodců (30. 10. 2026): dnešek celým sloupcem, buňky bez šedé výplně (dřív šedé
+   byly všechny editovatelné a dnešek v nich zanikal), úzký sloupec jmen, čas na jeden řádek. */
+.wt-sest{max-height:none;border:none;border-radius:var(--radius-card);box-shadow:var(--shadow-card);background:rgba(249,247,241,.92)}
+.wt-sest table.wt thead th{background:transparent;font-size:var(--text-small);padding:12px 6px}
+.wt-sest table.wt th,.wt-sest table.wt td{padding:12px 6px}
+.wt-sest table.wt td.ced{background:transparent}
+.wt-sest table.wt td.ced:hover{background:var(--wash-primary)}
+.wt-sest table.wt th.today,.wt-sest table.wt td.today{background:var(--wash-primary)}
+.wt-sest table.wt thead th.today{color:var(--color-primary-strong)}
+.wt-sest .wt-dnes{font-weight:500;color:var(--color-primary)}
+.wt-sest table.wt td.who{font-size:var(--text-body);padding-left:16px}
+.wt-sest .sh-cas{font-size:var(--text-small);font-weight:500;color:var(--color-text)}
+.wt-sest .sh-otv{display:block;font-size:var(--text-note);color:var(--color-primary);margin-top:2px}
+.wt-sest .sh-off{font-size:var(--text-small)}
+.sh-pata{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+.sh-pata .hint{margin:0}
+.sh-usp{display:flex;align-items:center;gap:10px;font-size:var(--text-body)}
+@media (min-width:900px){
+  #content>.wt-sest,#content>.sh-pata{column-span:all}
+  .wt-sest table.wt.wt-sm th.who,.wt-sest table.wt.wt-sm td.who{width:160px}
+}
+@media (max-width:899px){
+  .wt-sest table.wt th,.wt-sest table.wt td{padding:10px 2px}
+  .wt-sest table.wt td.who{padding-left:12px}
+  .wt-sest .sh-otv{font-size:var(--text-chip)}
+}
 </style>
 </head>
 <body>
@@ -2661,7 +2687,7 @@ function renderPrehledHead(){
   const ryt=RYTMUS[wd(TODAYD)];
   const radky=[];
   if(todays.length)radky.push(`${vlna1.length>1?'Otevírají':'Otevírá'} ${jmena(vlna1)}${dal.length?`, dál ${jmena(dal)}`:''}`);
-  else radky.push('Dnes nikdo nemá službu');
+  else radky.push('Dnes nikdo není v sestavě');
   if(ryt)radky.push(`Dnes je <b>${ryt.prog}</b>`);
   if(ryt&&ryt.krouzek)radky.push(esc(ryt.krouzek));
   return `<div class="dash-head c-head"><h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. 6. 2026</h1>`
@@ -2787,7 +2813,7 @@ function renderPrehled(){
     // role pod jménem drobně, čas vpravo vždy na jednom řádku – v úzkém sloupci se „(otevírá)" a ☾ lámaly do času
     todays.forEach(x=>{const d=x.g.days[TODAY], role=[minOf(d)===prvni?'otevírá':'',x.i===usIdx?'uspává':''].filter(Boolean).join(', ');
       blkPruvodci+=`<div class="np"><span class="np-n">${x.g.n}${role?`<span class="np-r">${role}</span>`:''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;});
-  }else{blkPruvodci+=`<div class="empty" style="padding:6px">Nikdo nemá službu.</div>`;}
+  }else{blkPruvodci+=`<div class="empty" style="padding:6px">Nikdo není v sestavě.</div>`;}
   blkPruvodci+=`<button class="cardlink" onclick="go('pruvodci')">Celý rozpis<span class="cl-sip" aria-hidden="true">→</span></button></div>`;
 
   /* Ranní trojice: na mobilu tři karty pod sebou, na desktopu jedna plocha přes celou šířku
@@ -3149,7 +3175,7 @@ function trRenderDen(){
   const d=trDay, x=trInfo(d), z=trDen(d), sl=trSluzba(d);
   // datum nese listování v hlavičce – karta dne říká jen stav, kdo slouží a kdo píše.
   // Návod k psaní je schovaný pod „?" (designérka 28. 10. 2026) – klepnutím, ne najetím: na mobilu hover není.
-  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><div class="tval">Ve službě: <b>${sl.join(', ')||'nikdo'}</b>. Píše <b>${TR_ZAPISUJE[x.dow]}</b>.</div>`
+  let h=`<div class="tile tr-meta"><div class="tr-meta-r"><div class="tval">Sestava: <b>${sl.join(', ')||'nikdo'}</b>. Píše <b>${TR_ZAPISUJE[x.dow]}</b>.</div>`
     +`<span id="tr-stav">${trBdg(trStav(d))}</span><button class="tr-info" onclick="trInfoToggle()" aria-expanded="${trInfoOtevreno}" aria-controls="tr-info-t" aria-label="Jak se třídnice píše">?</button></div>`
     +(trInfoOtevreno?`<div class="tr-info-t" id="tr-info-t" role="note">Ukládá se samo při psaní. Doplnit může kdokoli z týmu, klidně až večer nebo druhý den. Jména dětí sem nepiš – patří do části <a class="tr-inl" href="#tr-kdetem">K dětem</a> pod zápisem, kterou vidí jen tým.</div>`:'')+`</div>`;
   h+=trDenOsa(z);
@@ -3845,42 +3871,46 @@ window.ibUkoncit=()=>{const st=ib(IB_BEZI);st.letos='4. 5. – 3. 6. 2026';const
 <script>
 /* SCREEN: PRUVODCE_PRUVODCI */
 function startMin(d){return serving(d)?(+d.s.split(':')[0])*60+(+d.s.split(':')[1]):9999;}
-/* P6 z testování: rozpis nevyznačoval, kdo neslouží – den bez služby byl jen tečka, k nerozeznání
-   od prázdné buňky, a nepřítomnost s důvodem se kreslila stylem alergie. Teď obojí slovem,
-   tlumeně (stavová paleta), aby služby zůstaly to nejvýraznější v tabulce. */
-function shiftCell(d){
-  if(!d)return '<span class="sh-off">neslouží</span>';
+/* P6 z testování: rozpis nevyznačoval, kdo ve škole není – den bez směny byl jen tečka. Slovo
+   „neslouží" v půlce buněk ale dělalo šum (designérka 30. 10. 2026: „slouží je divný"), takže
+   den bez směny je tlumená pomlčka, důvod nepřítomnosti zůstává slovem. Čas na jeden řádek
+   (7:30–16:00); na úzkém mobilu se sám zalomí za pomlčkou. */
+function shiftCell(d,otevira){
+  if(!d)return '<span class="sh-off" aria-label="není">–</span>';
   if(d.off)return `<span class="sh-off sh-duvod">${d.off}</span>`;
-  // časy aspoň 11,5 px (--text-chip) – čte se venku na slunci; dřív 10–10,5 px (UX revize 28. 10. 2026)
-  return `<div style="line-height:1.25"><div style="color:var(--color-primary);font-weight:600;font-size:var(--text-chip)">${fmt(d.s)}</div><div style="color:var(--color-text-muted);font-size:var(--text-chip)">${fmt(d.e)}</div></div>`;
+  return `<span class="sh-cas">${fmt(d.s)}–${fmt(d.e)}</span>`+(otevira?'<span class="sh-otv">otevírá</span>':'');
 }
+function shiftHlavicka(){
+  const t=SHIFT_TYDNY[shiftT];
+  return `<div class="dfield"><div class="dnav"><button onclick="stepShiftT(-1)" ${shiftT<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`+
+    `<span>${shiftLabel(t)}${shiftT===SHIFT_AKT?' (tento týden)':''}</span>`+
+    `<button onclick="stepShiftT(1)" ${shiftT>=SHIFT_TYDNY.length-1?'disabled':''} aria-label="Další týden">›</button></div></div>`;
+}
+/* Karta „Dnes ve školce" zmizela – zdvojovala dnešní sloupec tabulky i kartu Sestava na přehledu
+   (30. 10. 2026). Dnešek je zvýrazněný celým sloupcem, „otevírá" je v buňce, kdo uspává pod
+   tabulkou. Listování týdny je v hlavičce jako u Docházky. */
 function renderPruvodci(){
   const todays=GUIDESHIFT.map((g,i)=>({g,i})).filter(x=>serving(x.g.days[TODAY]));
   const opener=todays.slice().sort((a,b)=>startMin(a.g.days[TODAY])-startMin(b.g.days[TODAY]))[0];
   if(todays.length&&!todays.some(x=>x.i===uspavaToday))uspavaToday=todays[0].i;
-  let h='';
-  h+=`<div class="tile"><div class="ch">Dnes ve školce · středa</div>`;
-  h+= todays.length? todays.map(x=>{const d=x.g.days[TODAY];return `<div class="np"><span>${x.g.n}${opener&&x.i===opener.i?' · <b style="color:var(--color-primary)">otevírá</b>':''}</span><b>${fmt(d.s)}–${fmt(d.e)}</b></div>`;}).join('') : '<div class="empty">Dnes nikdo nemá službu.</div>';
-  if(todays.length)h+=`<div class="np" style="border-top:1px solid var(--color-border);margin-top:6px;padding-top:9px"><span>Dnes uspává</span><select class="selin" onchange="setUspava(this.value)">`+todays.map(x=>`<option value="${x.i}" ${x.i===uspavaToday?'selected':''}>${x.g.n}</option>`).join('')+`</select></div>`;
-  h+=`</div>`;
   // Týden rozpisu se listuje a je vždycky datovaný – jinak není poznat, na který týden
   // se člověk dívá. Minulé týdny jsou jen ke čtení, stejně jako minulé dny v docházce.
-  const t=SHIFT_TYDNY[shiftT], rows=shiftTyden(shiftT), minuly=shiftT<SHIFT_AKT;
-  h+=`<div class="vhead-row"><div class="vhead">Týden · služby</div><div class="vhead-act">`+
-    `<div class="dnav"><button onclick="stepShiftT(-1)" ${shiftT<=0?'disabled':''} aria-label="Předchozí týden">‹</button>`+
-    `<span>${shiftLabel(t)}${shiftT===SHIFT_AKT?'<i class="dn-cur"> · tento týden</i>':''}</span>`+
-    `<button onclick="stepShiftT(1)" ${shiftT>=SHIFT_TYDNY.length-1?'disabled':''} aria-label="Další týden">›</button></div></div></div>`;
+  const t=SHIFT_TYDNY[shiftT], rows=shiftTyden(shiftT), minuly=shiftT<SHIFT_AKT, akt=shiftT===SHIFT_AKT;
   // wt-sm = tabulka s krátkými jmény → na mobilu užší první sloupec, aby buňky měly 44 px
-  h+=`<div class="weekbox"><table class="wt wt-sm"><thead><tr><th class="who">Průvodce</th>`+
-    DAYS.map((d,j)=>{const den=t.od+j, jeDnes=shiftT===SHIFT_AKT&&j===TODAY;
-      return den>t.do?`<th></th>`:`<th class="${jeDnes?'today':''}">${d} <span class="wt-dt">${den}.</span></th>`;}).join('')+`</tr></thead><tbody>`;
+  let h=`<div class="weekbox wt-sest"><table class="wt wt-sm"><thead><tr><th class="who">Průvodce</th>`+
+    DAYS.map((d,j)=>{const den=t.od+j, jeDnes=akt&&j===TODAY;
+      return den>t.do?`<th></th>`:`<th class="${jeDnes?'today':''}">${d} <span class="wt-dt">${den}.</span>${jeDnes?' <span class="wt-dnes">dnes</span>':''}</th>`;}).join('')+`</tr></thead><tbody>`;
   rows.forEach((g,gi)=>{h+=`<tr><td class="who">${g.n}</td>`+g.days.map((d,di)=>{
-      const jeDnes=shiftT===SHIFT_AKT&&di===TODAY;
+      const jeDnes=akt&&di===TODAY;
       if(t.od+di>t.do)return `<td class="pastc"></td>`;
-      return minuly? `<td class="pastc">${shiftCell(d)}</td>`
-        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})" ${KLAV}>${shiftCell(d)}</td>`;
+      const bunka=shiftCell(d,jeDnes&&opener&&rows===GUIDESHIFT&&gi===opener.i);
+      return minuly? `<td class="pastc">${bunka}</td>`
+        : `<td class="ced${jeDnes?' today':''}" onclick="openShift(${gi},${di})" ${KLAV}>${bunka}</td>`;
     }).join('')+`</tr>`;});
-  h+=`</tbody></table></div><div class="hint">${minuly?'Minulý týden – jen k nahlédnutí.':'Klepni na buňku a uprav službu (příchod, odchod, nebo nepřítomnost).'}</div>`;
+  h+=`</tbody></table></div>`;
+  h+=`<div class="sh-pata">`;
+  if(akt&&todays.length)h+=`<label class="sh-usp"><span>Dnes uspává</span><select class="selin" onchange="setUspava(this.value)">`+todays.map(x=>`<option value="${x.i}" ${x.i===uspavaToday?'selected':''}>${x.g.n}</option>`).join('')+`</select></label>`;
+  h+=`<div class="hint">${minuly?'Minulý týden – jen k nahlédnutí.':'Klepni na buňku a uprav, kdy kdo přijde a odejde, nebo že nepřijde.'}</div></div>`;
   return h;
 }
 window.stepShiftT=d=>{shiftT=Math.max(0,Math.min(SHIFT_TYDNY.length-1,shiftT+d));render();};
@@ -3901,7 +3931,7 @@ function kalUdalosti(d,jeCerven){
 function renderKalendar(){
   const dim=daysInMonth(kalY,kalM), off=firstOffset(kalY,kalM), jeCerven=(kalY===2026&&kalM===5);
   if(kalSel>dim)kalSel=1;
-  let h=`<div class="doch"><div class="gcal-note">Sdílený Google Kalendář školky – vidí ho i rodiče. Akce z Plánu a služby průvodců se do něj propisují. (Simulace; v ostré verzi napojený kalendář školky.)</div>`;
+  let h=`<div class="doch"><div class="gcal-note">Sdílený Google Kalendář školky – vidí ho i rodiče. Akce a sestava průvodců se do něj propisují. (Simulace; v ostré verzi napojený kalendář školky.)</div>`;
   h+=`<div class="gcalwrap kal-wrap"><div class="kal-main">`;
   h+=`<div class="gcalnav"><div class="gstep"><button onclick="kalStep(-1,0)" aria-label="Předchozí měsíc">‹</button><span class="gmo">${MONTHS[kalM]}</span><button onclick="kalStep(1,0)" aria-label="Další měsíc">›</button></div><div class="gstep"><button onclick="kalStep(0,-1)" aria-label="Předchozí rok">‹</button><span class="gyr">${kalY}</span><button onclick="kalStep(0,1)" aria-label="Další rok">›</button></div></div>`;
   h+=`<div class="gcal">`;
@@ -3918,7 +3948,7 @@ function renderKalendar(){
   // rozpis služeb – to rodiče nevidí, průvodce ano
   if(jeCerven&&!we){
     const gws=shiftProDen(kalSel).filter(g=>serving(g.days[wd(kalSel)]));
-    h+=`<div class="gev"><span class="gvbar g-rozvrh"></span><span>${gws.map(g=>g.n).join(', ')||'–'}</span><span class="gevt">slouží</span></div>`;
+    h+=`<div class="gev"><span class="gvbar g-rozvrh"></span><span>${gws.map(g=>g.n).join(', ')||'–'}</span><span class="gevt">sestava</span></div>`;
   }
   h+=`</div></div>`;
   return h+`</div>`;
@@ -4631,8 +4661,8 @@ function akceModalHTML(){
 function shiftModalHTML(){
   const m=shiftM,g=shiftTyden(shiftT)[m.gi];
   return `<div class="modal-scrim" onclick="if(event.target===this)closeShift()"><div class="modal">
-    <h3>Služba – ${g.n}</h3><div class="pl" style="margin-top:-2px">${DOW[m.di]} ${SHIFT_TYDNY[shiftT].od+m.di}. ${SHIFT_TYDNY[shiftT].m}.</div>
-    <div class="mini" style="margin-bottom:6px"><button class="${m.on?'on':''}" onclick="setShiftOn(true)">Slouží</button><button class="${!m.on?'on':''}" onclick="setShiftOn(false)">Neslouží</button></div>
+    <h3>${g.n}</h3><div class="pl" style="margin-top:-2px">${DOW[m.di]} ${SHIFT_TYDNY[shiftT].od+m.di}. ${SHIFT_TYDNY[shiftT].m}.</div>
+    <div class="mini" style="margin-bottom:6px"><button class="${m.on?'on':''}" onclick="setShiftOn(true)">Přijde</button><button class="${!m.on?'on':''}" onclick="setShiftOn(false)">Nepřijde</button></div>
     ${m.on?`<label class="pl">Příchod</label><input class="pin" type="time" value="${m.s}" oninput="setShiftF('s',this.value)"><label class="pl">Odchod</label><input class="pin" type="time" value="${m.e}" oninput="setShiftF('e',this.value)">`
     :`<label class="pl">Důvod (nepovinné)</label><select class="selin" style="width:100%" onchange="setShiftF('reason',this.value)"><option value="">–</option>${OFFREASONS.map(o=>`<option value="${o}" ${m.reason===o?'selected':''}>${o}</option>`).join('')}</select>`}
     <div class="mbtns"><button class="btn-ghost" onclick="closeShift()">Zrušit</button><button class="btn-primary" onclick="saveShift()">Uložit</button></div>
@@ -4719,7 +4749,7 @@ window.saveAkce=()=>{
   modal=null;renderModalRoot();render();showToast('Uloženo ✓');
 };
 window.delAkce=()=>{AKCE=AKCE.filter(x=>x.id!==modal.id);modal=null;renderModalRoot();render();showToast('Akce smazána');};
-// den bez služby (null) se otevírá jako Neslouží – dřív naskočilo Slouží 7:30–16:00
+// den bez směny (null) se otevírá jako Nepřijde – dřív naskočilo Přijde 7:30–16:00
 window.openShift=(gi,di)=>{const d=shiftTyden(shiftT)[gi].days[di];shiftM={gi,di,on:serving(d),s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
 window.closeShift=()=>{shiftM=null;renderModalRoot();};
 window.setShiftOn=b=>{shiftM.on=b;renderModalRoot();};
@@ -4874,6 +4904,7 @@ function render(){
     : section==='tridnice' ? `<h1 class="dh-t">Třídnice</h1>${trHlavicka()}`
     : section==='akce' ? `<h1 class="dh-t">Kalendář a akce</h1>${akceHlavicka()}`
     : section==='priprava' ? `<h1 class="dh-t">Příprava</h1>${temaHlavicka()}`
+    : section==='pruvodci' ? `<h1 class="dh-t">Docházka průvodců</h1>${shiftHlavicka()}`
     // Listování týdny jídelníčku – i do minulosti (svačinářka plánuje z toho, co bylo)
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1>${jidHlavicka()}`
     : `<h1 class="dh-t">${TITLES[section]}</h1>`;

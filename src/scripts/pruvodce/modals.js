@@ -52,8 +52,8 @@ function akceModalHTML(){
 function shiftModalHTML(){
   const m=shiftM,g=shiftTyden(shiftT)[m.gi];
   return `<div class="modal-scrim" onclick="if(event.target===this)closeShift()"><div class="modal">
-    <h3>Služba – ${g.n}</h3><div class="pl" style="margin-top:-2px">${DOW[m.di]} ${SHIFT_TYDNY[shiftT].od+m.di}. ${SHIFT_TYDNY[shiftT].m}.</div>
-    <div class="mini" style="margin-bottom:6px"><button class="${m.on?'on':''}" onclick="setShiftOn(true)">Slouží</button><button class="${!m.on?'on':''}" onclick="setShiftOn(false)">Neslouží</button></div>
+    <h3>${g.n}</h3><div class="pl" style="margin-top:-2px">${DOW[m.di]} ${SHIFT_TYDNY[shiftT].od+m.di}. ${SHIFT_TYDNY[shiftT].m}.</div>
+    <div class="mini" style="margin-bottom:6px"><button class="${m.on?'on':''}" onclick="setShiftOn(true)">Přijde</button><button class="${!m.on?'on':''}" onclick="setShiftOn(false)">Nepřijde</button></div>
     ${m.on?`<label class="pl">Příchod</label><input class="pin" type="time" value="${m.s}" oninput="setShiftF('s',this.value)"><label class="pl">Odchod</label><input class="pin" type="time" value="${m.e}" oninput="setShiftF('e',this.value)">`
     :`<label class="pl">Důvod (nepovinné)</label><select class="selin" style="width:100%" onchange="setShiftF('reason',this.value)"><option value="">–</option>${OFFREASONS.map(o=>`<option value="${o}" ${m.reason===o?'selected':''}>${o}</option>`).join('')}</select>`}
     <div class="mbtns"><button class="btn-ghost" onclick="closeShift()">Zrušit</button><button class="btn-primary" onclick="saveShift()">Uložit</button></div>
@@ -140,7 +140,7 @@ window.saveAkce=()=>{
   modal=null;renderModalRoot();render();showToast('Uloženo ✓');
 };
 window.delAkce=()=>{AKCE=AKCE.filter(x=>x.id!==modal.id);modal=null;renderModalRoot();render();showToast('Akce smazána');};
-// den bez služby (null) se otevírá jako Neslouží – dřív naskočilo Slouží 7:30–16:00
+// den bez směny (null) se otevírá jako Nepřijde – dřív naskočilo Přijde 7:30–16:00
 window.openShift=(gi,di)=>{const d=shiftTyden(shiftT)[gi].days[di];shiftM={gi,di,on:serving(d),s:d&&d.s?d.s:'07:30',e:d&&d.e?d.e:'16:00',reason:d&&d.off?d.off:''};renderModalRoot();};
 window.closeShift=()=>{shiftM=null;renderModalRoot();};
 window.setShiftOn=b=>{shiftM.on=b;renderModalRoot();};
