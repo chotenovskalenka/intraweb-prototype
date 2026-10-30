@@ -29,13 +29,13 @@ let section='prehled', drawerOpen=false, wquery='';
    se třemi stavy, ne tři appky:
      pruvodce    – běžný; minulé dny docházky jsou zamčené
      vedouci     – vedoucí průvodce (Táňa); smí opravit docházku zpětně
-     hospodarka  – hospodářka (Míša); kmenová data dětí a čerpání fondu
+     hospodarka  – hospodářka (bez jména – kdo to je, zatím nevíme); kmenová data dětí a fond
      kuchyn      – kuchyň (Ksenia); přehled porcí a jídelníček (P3 z testování)
    Pro testování se role bere z URL (?role=vedouci) – respondent si ji nemá jak přepnout.
    Bez parametru je štítek v topbaru přepínač, aby šly stavy ukázat při moderaci. */
 const ROLE_LABEL={pruvodce:'Průvodce',vedouci:'Průvodce · vedoucí',hospodarka:'Průvodce · hospodářka',kuchyn:'Kuchyň'};
 /* Role česky pod jménem v patě menu (v horní liště ji designérka zrušila, 28. 10. 2026). */
-const ROLE_POPIS={pruvodce:'průvodce',vedouci:'vedoucí průvodce',hospodarka:'průvodce a hospodářka',kuchyn:'kuchyň'};
+const ROLE_POPIS={pruvodce:'průvodce',vedouci:'vedoucí průvodce',hospodarka:'kmenová data a fond',kuchyn:'kuchyň'};
 const ROLE_URL=(new URLSearchParams(location.search).get('role')||'').toLowerCase();
 const ROLE_PINNED=Object.prototype.hasOwnProperty.call(ROLE_LABEL,ROLE_URL);
 let role=ROLE_PINNED?ROLE_URL:'hospodarka';

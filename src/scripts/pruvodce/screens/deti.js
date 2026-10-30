@@ -150,7 +150,7 @@ window.addRozhovor=i=>{const g=id=>{const t=document.getElementById(id);return t
 window.upravRozhovor=k=>{rozhEdit=k;render();const f=document.getElementById('rozh-form');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});};
 window.zrusUpravuRozh=()=>{rozhEdit=null;render();};
 window.addTymPozn=i=>{const t=document.getElementById('tym-new');const v=t?t.value.trim():'';if(!v){showToast('Napiš poznámku');return;}
-  tymPoznFor(i).unshift({date:'3. 6. 2026',kdo:role==='hospodarka'?'Míša':role==='vedouci'?'Táňa':'Darča',text:v});render();showToast('Poznámka uložena · jen pro tým');};
+  tymPoznFor(i).unshift({date:'3. 6. 2026',kdo:ja().n,text:v});render();showToast('Poznámka uložena · jen pro tým');};
 window.sdilejZaznam=(i,k,ano)=>{const r=zaznamyFor(i)[k];if(!r)return;r.sdileno=ano;render();
   showToast(ano?`${r.nazev} teď uvidí rodiče v aplikaci`:`${r.nazev} už rodiče nevidí`);};
 window.exportDeti=()=>{

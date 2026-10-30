@@ -2334,3 +2334,10 @@ Nadpis karty byl celá věta s tečkou v tučné zelené Alegreya a úryvek pod 
 Nadpisy v seedu (průvodce i rodič) jsou krátké titulky bez tečky („Roupy ve třídě"), v kartě
 průvodce textovým písmem jako jídla a verše na přehledu. Meta řádek bez teček:
 „Táňa, 2. 6. (7:40). Platí do 5. 6."
+
+## Role hospodářky bez jména (30. 10. 2026)
+
+Míša není hospodářka. Kdo hospodářku ve Vhaaji dělá, zatím nevíme, takže `?role=hospodarka`
+přihlašuje „Hospodářku" bez konkrétního člověka (`JA_HOSPODARKA` v mujprofil.js): bez telefonu
+a bez řádku v rozpisu sestavy. Záznamy, které role vytvoří (poznámka k dítěti, omluva), nesou
+„Hospodářka". Výkaz hodin a „tento týden" v Můj profil bez teček.

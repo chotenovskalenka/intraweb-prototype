@@ -270,7 +270,7 @@ window.setStatus=(i,v)=>{if(!smiZapisovat())return;const c=data[i];c.status=v;
 /* Vedoucí uzavírá absenci: důvod → vznikne ruční omluvenka (vždy bez náhrady) a stav omluveno. */
 window.setGuideReason=(i,v)=>{if(!smiZapisovat())return;const c=data[i];
   if(!v){delete c.guideExcuse;c.status='neomluveno';render();return;}
-  c.guideExcuse={by:role==='hospodarka'?'Míša':'Táňa',time:TEDCAS,reason:v,pozn:(c.guideExcuse&&c.guideExcuse.pozn)||''};
+  c.guideExcuse={by:role==='hospodarka'?ja().n:'Táňa',time:TEDCAS,reason:v,pozn:(c.guideExcuse&&c.guideExcuse.pozn)||''};
   c.status='omluveno';render();showToast(`${kratke(c)} → omluveno bez náhrady`);};
 window.setGuidePozn=(i,v)=>{const c=data[i];if(c.guideExcuse)c.guideExcuse.pozn=v;};
 window.onWSearch=v=>{wquery=v;renderKeepFocus();};
