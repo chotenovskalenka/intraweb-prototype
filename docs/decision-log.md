@@ -2382,3 +2382,10 @@ by se opakovaly. Karty mají kresby (akce, jídlo, sestava, básnička) a odkazy
 čarou (Docházka a náhrady, Celý jídelníček, Všechny novinky, Celý kalendář). Texty bez teček:
 „Spinká, uspává Darča", „Táňa (včera 17:30)", „Sraz: místo (čas)", „Jarmark (15:30)",
 „Emil (5 let)", „Faktura po splatnosti: květen"; upozornění na faktury větou, ne verzálkami.
+
+## Kontakty rodiče jako u průvodců (6. 11. 2026)
+
+Desktop tabulka, mobil seznam s větší fotkou a akcemi Zavolat / Napsat pod jménem. Průvodci
+zvlášť (vedoucí první) a zázemí zvlášť s funkcí – vedení, obědy a kuchyň a účetnictví byli dřív
+mezi průvodci. Sloupec „Ve školce" říká, kdo je dnes ve školce a kdy. Pracovní e-maily týmu pryč
+(z dat i z obrazovky), e-mail školky zůstává. Bez teček v kontaktu na školku.

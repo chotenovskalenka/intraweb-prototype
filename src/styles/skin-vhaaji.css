@@ -558,3 +558,5 @@ button.chk.ro{cursor:default}
 }
 /* faktura po splatnosti: věta, ne verzálky (jako popisky na přehledu průvodců) */
 .neuhr .tlab{text-transform:none;letter-spacing:0;font-size:var(--text-body);font-weight:600}
+/* skrytý popisek pro čtečky (rodičovská appka nemá .vh ze screens-pruvodce.css) */
+.kt-tab .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
