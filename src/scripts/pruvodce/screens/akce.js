@@ -28,7 +28,7 @@ function renderAkce(){
   return h+`</div>`;
 }
 function akceCard(a,klik,lbl,plus){
-  const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
+  const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(', ');
   return `<button class="acard" onclick="${klik}"><span class="adate">${(lbl||dayLbl)(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span>${plus?'<span class="aplus">+</span>':''}</button>`;
 }
 /* Tabulka akcí (desktop). Poznámka je poslední, protože jako jediná zalamuje na víc řádků. */

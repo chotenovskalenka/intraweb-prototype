@@ -41,7 +41,7 @@ function kuchynSkolky(){
   return [kuchynVhaaji(),...KUCH_SKOLKY.map(s=>({...s,dop:s.jedi,obed:s.jedi+s.vyzv,odp:s.jedi-s.dopol}))];
 }
 const navic=s=>Math.max(0,s.objednano-s.obed);
-const algTxt=a=>a.length?a.map(([n,c])=>`${n} ${c}`).join(' · '):'<span class="dt-no">–</span>';
+const algTxt=a=>a.length?a.map(([n,c])=>`${n} ${c}`).join(', '):'<span class="dt-no">–</span>';
 
 function renderKuchyn(){
   const sk=kuchynSkolky(), sum=k=>sk.reduce((n,s)=>n+s[k],0);
@@ -49,11 +49,11 @@ function renderKuchyn(){
   let z=TODAYD+1; while(isWE(z)&&z<30)z++;
 
   // ── nahoře: součty za všechny školky – „jen se koukne a ví" ──
-  let h=`<div class="kuch"><div class="kuch-sekce">Dnes · všechny školky</div>`;
+  let h=`<div class="kuch"><div class="kuch-sekce">Dnes ve všech školkách</div>`;
   h+=`<div class="dash-row kuch-row">`
     +`<div class="tile kuch-meal"><div class="ch">Dopolední svačina</div><div class="kuch-num">${sum('dop')}<span>porcí</span></div><div class="kuch-sub">chystá každá školka sama</div></div>`
     +`<div class="tile kuch-meal"><div class="ch">Oběd</div><div class="kuch-num">${sum('obed')}<span>porcí</span></div>`
-      +`<div class="kuch-sub">objednáno ${sumObj}${sumNavic?` · <b class="kuch-navic">${sumNavic} navíc</b>`:''}${sum('vyzv')?` · ${sum('vyzv')} k vyzvednutí`:''}</div></div>`
+      +`<div class="kuch-sub">objednáno ${sumObj}${sumNavic?`, <b class="kuch-navic">${sumNavic} navíc</b>`:''}${sum('vyzv')?`, ${sum('vyzv')} k vyzvednutí`:''}</div></div>`
     +`<div class="tile kuch-meal"><div class="ch">Odpolední svačina</div><div class="kuch-num">${sum('odp')}<span>porcí</span></div><div class="kuch-sub">bez dětí na dopolední docházce</div></div>`
     +`</div>`;
 
@@ -61,7 +61,7 @@ function renderKuchyn(){
   h+=`<div class="tile"><div class="ch">Dnes podle školek</div>`;
   h+=`<div class="kuch-karty">`+sk.map(s=>`<div class="kuch-karta"><div class="kk-h"><b>${s.nazev}</b>${s.zive?'':'<span class="dt-no">souhrn</span>'}</div>`
       +`<div class="np"><span>Dopolední svačina</span><b>${s.dop}</b></div>`
-      +`<div class="np"><span>Oběd</span><b>${s.obed}${navic(s)?` <span class="kuch-navic">· ${navic(s)} navíc</span>`:''}</b></div>`
+      +`<div class="np"><span>Oběd</span><b>${s.obed}${navic(s)?` <span class="kuch-navic">(${navic(s)} navíc)</span>`:''}</b></div>`
       +`<div class="np"><span>Odpolední svačina</span><b>${s.odp}</b></div>`
       +(s.alergie.length?`<div class="np"><span>Alergie</span><b class="kuch-al">${algTxt(s.alergie)}</b></div>`:'')+`</div>`).join('')+`</div>`;
   h+=`<div class="kuch-tabwrap"><table class="dtab kuch-tab"><thead><tr><th><span>Školka</span></th><th><span>Dop. svačina</span></th><th><span>Oběd</span></th><th><span>Objednáno</span></th><th><span>Navíc</span></th><th><span>Odp. svačina</span></th><th><span>Alergie dnes</span></th></tr></thead><tbody>`
@@ -71,15 +71,15 @@ function renderKuchyn(){
   h+=`<div class="note2" style="margin-top:8px">„Navíc" = obědy objednané včera, které dnes nikdo nesní – dítě ráno nedorazilo. Svačiny chystá každá školka sama podle aktuálního čísla, proto u nich nic navíc nevzniká.</div></div>`;
 
   // ── zítřek na objednávku ──
-  h+=`<div class="tile"><div class="ch">Na objednávku · ${DOW[wd(z)]} ${z}. 6.</div>`
-    +sk.map(s=>`<div class="np"><span>${s.nazev}</span><b>${s.zitra.obed} obědů <span class="dt-no">· sv. ${s.zitra.dop} / ${s.zitra.odp}</span></b></div>`).join('')
+  h+=`<div class="tile"><div class="ch">Objednávka na ${DOW[wd(z)]} ${z}. 6.</div>`
+    +sk.map(s=>`<div class="np"><span>${s.nazev}</span><b>${s.zitra.obed} obědů <span class="dt-no">(svačiny ${s.zitra.dop} / ${s.zitra.odp})</span></b></div>`).join('')
     +`<div class="np vyk-suma"><span>Celkem obědů</span><b>${sk.reduce((n,s)=>n+s.zitra.obed,0)}</b></div>`
     +`<div class="note2" style="margin-top:8px">Podle přihlášek k ${TEDCAS}. Omluvy do 20:00 dnes se ještě odečtou; zítřejší ranní omluvy už ne – z nich je pak „navíc".</div></div>`;
 
   // ── detail Vhaaji: co se vaří, porce bez alergenu, oběd k vyzvednutí, alergie na výdej ──
   const p=porceDne(TODAYD), menu=jidelnicekDen(TODAYD);
   const deti={dop:p.jedi,obed:p.jedi,odp:p.odp};
-  h+=`<div class="kuch-sekce">Detail · Vhaaji</div>`;
+  h+=`<div class="kuch-sekce">Vhaaji podrobně</div>`;
   h+=`<div class="dash3 kuch-dole">`+JIDLA_KUCHYNE.map(([nazev,k])=>{
     const jidla=jidlaChodu(menu,k);
     const alg=[...new Map(jidla.flatMap(it=>porceBez(it[2],deti[k]))).entries()];
@@ -94,7 +94,7 @@ function renderKuchyn(){
       :`<div class="empty-l">Dnes si nikdo oběd nevyzvedává.</div>`)
     +`<div class="note2" style="margin-top:8px">Rodič omluveného dítěte si může oběd vyzvednout – odpoledne propadá.</div></div></div>`;
   const al=p.jedi.filter(c=>c.alergie).sort((a,b)=>a.n.localeCompare(b.n,'cs'));
-  h+=`<div class="dcol"><div class="tile"><div class="ch">Alergie na výdej · dnes ve školce</div>`
+  h+=`<div class="dcol"><div class="tile"><div class="ch">Alergie na výdej (dnes ve školce)</div>`
     +(al.length?al.map(c=>`<div class="np"><span>${kratke(c)}</span><b class="kuch-al">${c.alergie}</b></div>`).join('')
       :`<div class="empty-l">Dnes žádné dítě s alergií.</div>`)
     +`<button class="btn-ghost btn-block" style="margin-top:var(--space-sm)" onclick="alergiePDF()">Vytisknout na výdej (PDF)</button></div></div>`;

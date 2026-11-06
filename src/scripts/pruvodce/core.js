@@ -33,7 +33,7 @@ let section='prehled', drawerOpen=false, wquery='';
      kuchyn      – kuchyň (Ksenia); přehled porcí a jídelníček (P3 z testování)
    Pro testování se role bere z URL (?role=vedouci) – respondent si ji nemá jak přepnout.
    Bez parametru je štítek v topbaru přepínač, aby šly stavy ukázat při moderaci. */
-const ROLE_LABEL={pruvodce:'Průvodce',vedouci:'Průvodce · vedoucí',hospodarka:'Průvodce · hospodářka',kuchyn:'Kuchyň'};
+const ROLE_LABEL={pruvodce:'Průvodce',vedouci:'Průvodce (vedoucí)',hospodarka:'Hospodářka',kuchyn:'Kuchyň'};
 /* Role česky pod jménem v patě menu (v horní liště ji designérka zrušila, 28. 10. 2026). */
 const ROLE_POPIS={pruvodce:'průvodce',vedouci:'vedoucí průvodce',hospodarka:'kmenová data a fond',kuchyn:'kuchyň'};
 const ROLE_URL=(new URLSearchParams(location.search).get('role')||'').toLowerCase();

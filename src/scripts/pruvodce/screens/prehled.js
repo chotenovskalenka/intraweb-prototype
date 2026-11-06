@@ -27,10 +27,16 @@ function renderPrehledHead(){
   const vlna1=todays.filter(x=>minOf(x.g.days[TODAY])===prvni).map(x=>x.g.n), dal=todays.filter(x=>minOf(x.g.days[TODAY])!==prvni).map(x=>x.g.n);
   const ryt=RYTMUS[wd(TODAYD)];
   const radky=[];
-  if(todays.length)radky.push(`${vlna1.length>1?'Otevírají':'Otevírá'} ${jmena(vlna1)}${dal.length?`, dál ${jmena(dal)}`:''}`);
+  /* Kuchyň nezajímá, kdo otevírá ani program dne – vidí, co se dnes vaří; počty porcí jsou
+     hned pod tím (designérka 6. 11. 2026: vzhled vedoucí převést na ostatní role). */
+  if(role==='kuchyn'){
+    const den=jidelnicekDen(TODAYD,6)||[], hl=den.find(it=>/hlavní/i.test(it[0]));
+    if(hl&&hl[1])radky.push(`Na oběd: <b>${esc(hl[1])}</b>`);
+  }
+  else if(todays.length)radky.push(`${vlna1.length>1?'Otevírají':'Otevírá'} ${jmena(vlna1)}${dal.length?`, dál ${jmena(dal)}`:''}`);
   else radky.push('Dnes nikdo není v sestavě');
-  if(ryt)radky.push(`Dnes je <b>${ryt.prog}</b>`);
-  if(ryt&&ryt.krouzek)radky.push(esc(ryt.krouzek));
+  if(ryt&&role!=='kuchyn')radky.push(`Dnes je <b>${ryt.prog}</b>`);
+  if(ryt&&ryt.krouzek&&role!=='kuchyn')radky.push(esc(ryt.krouzek));
   return `<div class="dash-head c-head"><h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. 6. 2026</h1>`
     +`<ul class="c-lines">${radky.map(r=>`<li>${kresba('odrazka')}<span>${r}</span></li>`).join('')}</ul>`
     +kresbaPtacek(6,'c-bird')+`</div>`;

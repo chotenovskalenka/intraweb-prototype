@@ -2728,10 +2728,16 @@ function renderPrehledHead(){
   const vlna1=todays.filter(x=>minOf(x.g.days[TODAY])===prvni).map(x=>x.g.n), dal=todays.filter(x=>minOf(x.g.days[TODAY])!==prvni).map(x=>x.g.n);
   const ryt=RYTMUS[wd(TODAYD)];
   const radky=[];
-  if(todays.length)radky.push(`${vlna1.length>1?'Otevírají':'Otevírá'} ${jmena(vlna1)}${dal.length?`, dál ${jmena(dal)}`:''}`);
+  /* Kuchyň nezajímá, kdo otevírá ani program dne – vidí, co se dnes vaří; počty porcí jsou
+     hned pod tím (designérka 6. 11. 2026: vzhled vedoucí převést na ostatní role). */
+  if(role==='kuchyn'){
+    const den=jidelnicekDen(TODAYD,6)||[], hl=den.find(it=>/hlavní/i.test(it[0]));
+    if(hl&&hl[1])radky.push(`Na oběd: <b>${esc(hl[1])}</b>`);
+  }
+  else if(todays.length)radky.push(`${vlna1.length>1?'Otevírají':'Otevírá'} ${jmena(vlna1)}${dal.length?`, dál ${jmena(dal)}`:''}`);
   else radky.push('Dnes nikdo není v sestavě');
-  if(ryt)radky.push(`Dnes je <b>${ryt.prog}</b>`);
-  if(ryt&&ryt.krouzek)radky.push(esc(ryt.krouzek));
+  if(ryt&&role!=='kuchyn')radky.push(`Dnes je <b>${ryt.prog}</b>`);
+  if(ryt&&ryt.krouzek&&role!=='kuchyn')radky.push(esc(ryt.krouzek));
   return `<div class="dash-head c-head"><h1 class="dh-t">${den.charAt(0).toUpperCase()+den.slice(1)} ${TODAYD}. 6. 2026</h1>`
     +`<ul class="c-lines">${radky.map(r=>`<li>${kresba('odrazka')}<span>${r}</span></li>`).join('')}</ul>`
     +kresbaPtacek(6,'c-bird')+`</div>`;
@@ -3623,7 +3629,7 @@ function renderAkce(){
   return h+`</div>`;
 }
 function akceCard(a,klik,lbl,plus){
-  const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(' · ');
+  const m=[a.time,a.place,a.paid?`${a.paid} Kč/dítě`:'',a.note].filter(Boolean).join(', ');
   return `<button class="acard" onclick="${klik}"><span class="adate">${(lbl||dayLbl)(a)}</span><span style="flex:1"><span class="aname">${a.name}</span>${m?`<div class="ameta">${m}</div>`:''}</span>${plus?'<span class="aplus">+</span>':''}</button>`;
 }
 /* Tabulka akcí (desktop). Poznámka je poslední, protože jako jediná zalamuje na víc řádků. */
@@ -4192,7 +4198,7 @@ window.setDopo=(i,v)=>{dopoMap[i]=v;};
 function renderFotky(){
   let h=`<div class="doch"><div class="vhead-row"><div class="vhead-act"><button class="btn-primary" onclick="openGal()">+ Nová galerie</button></div></div>`+
     `<div class="note2">Fotky se nahrávají na Google Drive školky. Rodiče vidí tatáž alba ve své appce.</div><div class="tile">`;
-  h+=FOTO_ALBA.map(a=>`<a class="doc doc-dl" href="${a.url}" target="_blank" rel="noopener"><span>${a.nazev}<span class="dt2"> · ${fmtAlbum(a)}</span></span><span class="drivelink">Otevřít na Drive ↗</span></a>`).join('');
+  h+=FOTO_ALBA.map(a=>`<a class="doc doc-dl" href="${a.url}" target="_blank" rel="noopener"><span>${a.nazev}<span class="dt2"> (${fmtAlbum(a)})</span></span><span class="drivelink">Otevřít na Drive ↗</span></a>`).join('');
   return h+`</div></div>`;
 }
 </script>
@@ -4257,7 +4263,7 @@ function renderFond(){
       list.map(({c,i})=>`<tr onclick="openFondChild(${i})"><td class="nm">${avatar(c,28)}${full(c)}</td>`+
         `<td class="dt-fond" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč</td>`+
         `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
-        `<td>${c.fondLog&&c.fondLog.length?`${c.fondLog.length}× · naposled ${c.fondLog[0].name}`:'<span class="dt-no">zatím nic</span>'}</td></tr>`).join('')+
+        `<td>${c.fondLog&&c.fondLog.length?`${c.fondLog.length}×, naposled ${c.fondLog[0].name}`:'<span class="dt-no">zatím nic</span>'}</td></tr>`).join('')+
       `</tbody></table></div>`;
   }
   if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
@@ -4276,7 +4282,7 @@ function renderFondChild(i){
   // dítěti; hromadné čerpání zůstává ostatním. Smí to průvodce s právy hospodářky.
   h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+
     (c.fondLog&&c.fondLog.length
-      ? c.fondLog.map((l,k)=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b>${jeHospodar()?`<button class="odbtn ghostred fond-undo" onclick="vratitDiteti(${i},${k})" title="Vrátit ${l.amt} Kč zpět na fond">Vrátit</button>`:''}</div>`).join('')
+      ? c.fondLog.map((l,k)=>`<div class="np"><span>${l.name} (${l.date})</span><b style="color:var(--color-danger)">−${l.amt} Kč</b>${jeHospodar()?`<button class="odbtn ghostred fond-undo" onclick="vratitDiteti(${i},${k})" title="Vrátit ${l.amt} Kč zpět na fond">Vrátit</button>`:''}</div>`).join('')
       : `<div class="empty">Zatím se nic nečerpalo.</div>`)+
     (jeHospodar()?`<button class="addbtn" onclick="pridatDiteti(${i})">+ Čerpání jen tomuto dítěti</button>`:`<div class="note2">Opravy provádí průvodce s právy hospodářky.</div>`)+`</div>`;
   h+=`</div>`;
@@ -4287,7 +4293,7 @@ function renderOdecet(){
   const present=isWE(d)?[]:data.map((c,i)=>({c,i})).filter(x=>{const k=getCode(x.c,d);return k&&k!=='OM';});
   let h=`<div class="doch"><button class="back" onclick="cancelOdecet()">← Zpět na fond</button>`;
   h+=`<div class="tile"><div class="ch">Odečet po akci</div><div class="aname" style="font-size:var(--text-title)">${a.name}</div>`+
-    `<div class="ameta">${dayLbl(a)} · ${a.paid} Kč/dítě</div>`+
+    `<div class="ameta">${dayLbl(a)}, ${a.paid} Kč/dítě</div>`+
     `<div class="np" style="border-top:1px solid var(--color-border);margin-top:8px;padding-top:9px"><span>Přítomných ${d}. 6.</span><b>${present.length}</b></div></div>`;
   h+=pickerHTML(present,odecet.sel,odecet.group,'setOdGroup','togOdChild',odQuery,'onOdSearch');
   h+=souhrnHTML(odecet.sel.size,a.paid,'Strhne se celkem',
@@ -4609,7 +4615,7 @@ function kuchynSkolky(){
   return [kuchynVhaaji(),...KUCH_SKOLKY.map(s=>({...s,dop:s.jedi,obed:s.jedi+s.vyzv,odp:s.jedi-s.dopol}))];
 }
 const navic=s=>Math.max(0,s.objednano-s.obed);
-const algTxt=a=>a.length?a.map(([n,c])=>`${n} ${c}`).join(' · '):'<span class="dt-no">–</span>';
+const algTxt=a=>a.length?a.map(([n,c])=>`${n} ${c}`).join(', '):'<span class="dt-no">–</span>';
 
 function renderKuchyn(){
   const sk=kuchynSkolky(), sum=k=>sk.reduce((n,s)=>n+s[k],0);
@@ -4617,11 +4623,11 @@ function renderKuchyn(){
   let z=TODAYD+1; while(isWE(z)&&z<30)z++;
 
   // ── nahoře: součty za všechny školky – „jen se koukne a ví" ──
-  let h=`<div class="kuch"><div class="kuch-sekce">Dnes · všechny školky</div>`;
+  let h=`<div class="kuch"><div class="kuch-sekce">Dnes ve všech školkách</div>`;
   h+=`<div class="dash-row kuch-row">`
     +`<div class="tile kuch-meal"><div class="ch">Dopolední svačina</div><div class="kuch-num">${sum('dop')}<span>porcí</span></div><div class="kuch-sub">chystá každá školka sama</div></div>`
     +`<div class="tile kuch-meal"><div class="ch">Oběd</div><div class="kuch-num">${sum('obed')}<span>porcí</span></div>`
-      +`<div class="kuch-sub">objednáno ${sumObj}${sumNavic?` · <b class="kuch-navic">${sumNavic} navíc</b>`:''}${sum('vyzv')?` · ${sum('vyzv')} k vyzvednutí`:''}</div></div>`
+      +`<div class="kuch-sub">objednáno ${sumObj}${sumNavic?`, <b class="kuch-navic">${sumNavic} navíc</b>`:''}${sum('vyzv')?`, ${sum('vyzv')} k vyzvednutí`:''}</div></div>`
     +`<div class="tile kuch-meal"><div class="ch">Odpolední svačina</div><div class="kuch-num">${sum('odp')}<span>porcí</span></div><div class="kuch-sub">bez dětí na dopolední docházce</div></div>`
     +`</div>`;
 
@@ -4629,7 +4635,7 @@ function renderKuchyn(){
   h+=`<div class="tile"><div class="ch">Dnes podle školek</div>`;
   h+=`<div class="kuch-karty">`+sk.map(s=>`<div class="kuch-karta"><div class="kk-h"><b>${s.nazev}</b>${s.zive?'':'<span class="dt-no">souhrn</span>'}</div>`
       +`<div class="np"><span>Dopolední svačina</span><b>${s.dop}</b></div>`
-      +`<div class="np"><span>Oběd</span><b>${s.obed}${navic(s)?` <span class="kuch-navic">· ${navic(s)} navíc</span>`:''}</b></div>`
+      +`<div class="np"><span>Oběd</span><b>${s.obed}${navic(s)?` <span class="kuch-navic">(${navic(s)} navíc)</span>`:''}</b></div>`
       +`<div class="np"><span>Odpolední svačina</span><b>${s.odp}</b></div>`
       +(s.alergie.length?`<div class="np"><span>Alergie</span><b class="kuch-al">${algTxt(s.alergie)}</b></div>`:'')+`</div>`).join('')+`</div>`;
   h+=`<div class="kuch-tabwrap"><table class="dtab kuch-tab"><thead><tr><th><span>Školka</span></th><th><span>Dop. svačina</span></th><th><span>Oběd</span></th><th><span>Objednáno</span></th><th><span>Navíc</span></th><th><span>Odp. svačina</span></th><th><span>Alergie dnes</span></th></tr></thead><tbody>`
@@ -4639,15 +4645,15 @@ function renderKuchyn(){
   h+=`<div class="note2" style="margin-top:8px">„Navíc" = obědy objednané včera, které dnes nikdo nesní – dítě ráno nedorazilo. Svačiny chystá každá školka sama podle aktuálního čísla, proto u nich nic navíc nevzniká.</div></div>`;
 
   // ── zítřek na objednávku ──
-  h+=`<div class="tile"><div class="ch">Na objednávku · ${DOW[wd(z)]} ${z}. 6.</div>`
-    +sk.map(s=>`<div class="np"><span>${s.nazev}</span><b>${s.zitra.obed} obědů <span class="dt-no">· sv. ${s.zitra.dop} / ${s.zitra.odp}</span></b></div>`).join('')
+  h+=`<div class="tile"><div class="ch">Objednávka na ${DOW[wd(z)]} ${z}. 6.</div>`
+    +sk.map(s=>`<div class="np"><span>${s.nazev}</span><b>${s.zitra.obed} obědů <span class="dt-no">(svačiny ${s.zitra.dop} / ${s.zitra.odp})</span></b></div>`).join('')
     +`<div class="np vyk-suma"><span>Celkem obědů</span><b>${sk.reduce((n,s)=>n+s.zitra.obed,0)}</b></div>`
     +`<div class="note2" style="margin-top:8px">Podle přihlášek k ${TEDCAS}. Omluvy do 20:00 dnes se ještě odečtou; zítřejší ranní omluvy už ne – z nich je pak „navíc".</div></div>`;
 
   // ── detail Vhaaji: co se vaří, porce bez alergenu, oběd k vyzvednutí, alergie na výdej ──
   const p=porceDne(TODAYD), menu=jidelnicekDen(TODAYD);
   const deti={dop:p.jedi,obed:p.jedi,odp:p.odp};
-  h+=`<div class="kuch-sekce">Detail · Vhaaji</div>`;
+  h+=`<div class="kuch-sekce">Vhaaji podrobně</div>`;
   h+=`<div class="dash3 kuch-dole">`+JIDLA_KUCHYNE.map(([nazev,k])=>{
     const jidla=jidlaChodu(menu,k);
     const alg=[...new Map(jidla.flatMap(it=>porceBez(it[2],deti[k]))).entries()];
@@ -4662,7 +4668,7 @@ function renderKuchyn(){
       :`<div class="empty-l">Dnes si nikdo oběd nevyzvedává.</div>`)
     +`<div class="note2" style="margin-top:8px">Rodič omluveného dítěte si může oběd vyzvednout – odpoledne propadá.</div></div></div>`;
   const al=p.jedi.filter(c=>c.alergie).sort((a,b)=>a.n.localeCompare(b.n,'cs'));
-  h+=`<div class="dcol"><div class="tile"><div class="ch">Alergie na výdej · dnes ve školce</div>`
+  h+=`<div class="dcol"><div class="tile"><div class="ch">Alergie na výdej (dnes ve školce)</div>`
     +(al.length?al.map(c=>`<div class="np"><span>${kratke(c)}</span><b class="kuch-al">${c.alergie}</b></div>`).join('')
       :`<div class="empty-l">Dnes žádné dítě s alergií.</div>`)
     +`<button class="btn-ghost btn-block" style="margin-top:var(--space-sm)" onclick="alergiePDF()">Vytisknout na výdej (PDF)</button></div></div>`;
@@ -4705,7 +4711,7 @@ function cellModalHTML(){
     :[['C','Celodenní'],['D','Dopolední'],['O','Odpolední'],['OM','Omluveno'],['','Nepřítomen']];
   const cur=today?c.status:getCode(c,d);
   return `<div class="modal-scrim" onclick="if(event.target===this)closeCell()"><div class="modal">
-    <h3>Docházka – ${c.n}</h3><div class="pl" style="margin-top:-2px">${DOW[wd(d)]} ${d}. 6.${today?' · dnes':''}</div>${d<TODAYD?'<div class="note2 note-info" style="padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--edge-primary)">Zpětná oprava uzavřeného dne – vidí ji vedení.</div>':''}
+    <h3>Docházka – ${c.n}</h3><div class="pl" style="margin-top:-2px">${DOW[wd(d)]} ${d}. 6.${today?' (dnes)':''}</div>${d<TODAYD?'<div class="note2 note-info" style="padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--edge-primary)">Zpětná oprava uzavřeného dne – vidí ji vedení.</div>':''}
     <div class="pchips">${opts.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="setCell('${o[0]}')">${o[1]}</button>`).join('')}</div>
     <div class="mbtns"><button class="btn-ghost" onclick="closeCell()">Zavřít</button></div>
   </div></div>`;
@@ -4918,7 +4924,7 @@ let section='prehled', drawerOpen=false, wquery='';
      kuchyn      – kuchyň (Ksenia); přehled porcí a jídelníček (P3 z testování)
    Pro testování se role bere z URL (?role=vedouci) – respondent si ji nemá jak přepnout.
    Bez parametru je štítek v topbaru přepínač, aby šly stavy ukázat při moderaci. */
-const ROLE_LABEL={pruvodce:'Průvodce',vedouci:'Průvodce · vedoucí',hospodarka:'Průvodce · hospodářka',kuchyn:'Kuchyň'};
+const ROLE_LABEL={pruvodce:'Průvodce',vedouci:'Průvodce (vedoucí)',hospodarka:'Hospodářka',kuchyn:'Kuchyň'};
 /* Role česky pod jménem v patě menu (v horní liště ji designérka zrušila, 28. 10. 2026). */
 const ROLE_POPIS={pruvodce:'průvodce',vedouci:'vedoucí průvodce',hospodarka:'kmenová data a fond',kuchyn:'kuchyň'};
 const ROLE_URL=(new URLSearchParams(location.search).get('role')||'').toLowerCase();

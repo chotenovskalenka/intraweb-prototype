@@ -2350,3 +2350,16 @@ s kartou nesouhlasil (designérka: „modal je divný a UI neodpovídá"). Ve sk
 plochu a zaoblení karet. Detail novinky: nadpis stejně jako v kartě, zavírá se křížkem
 v rohu (nebo klepnutím vedle), jediná akce „Sdílet do WhatsAppu" vpravo pod čarou. Tlačítko
 „Sdílet do WhatsAppu" je v kartě i v detailu pilulka jako ostatní tlačítka skinu.
+
+## Vzhled C i pro ostatní role průvodcovské appky (6. 11. 2026)
+
+Designérka je s vzhledem u vedoucí spokojená, ostatní role (průvodce, hospodářka, kuchyň) se mají
+srovnat. Skin načítají všechny role stejně, rozdíl byl v obrazovkách, které vedoucí nevidí:
+- **Kuchyň – přehled:** úvodní řádky pod datem ukazovaly, kdo otevírá a program dne; kuchyň
+  místo toho vidí „Na oběd: …" (hlavní jídlo). Texty bez teček: „Dnes ve všech školkách",
+  „objednáno 51, 4 navíc, 1 k vyzvednutí", „Oběd 22 (3 navíc)", „Objednávka na Čt 4. 6.",
+  „Vhaaji podrobně", „Alergie na výdej (dnes ve školce)", alergeny čárkou.
+- **Hospodářka – kulturní fond:** „3×, naposled …", čerpání „Divadlo v lese (11. 6.)",
+  akce „11. 6., 120 Kč/dítě".
+- Společné drobnosti bez teček: štítek role „Průvodce (vedoucí)" / „Hospodářka", datum v dialogu
+  docházky „(dnes)", alba fotek „(datum)", meta řádek akcí na mobilu čárkou.

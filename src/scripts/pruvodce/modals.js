@@ -31,7 +31,7 @@ function cellModalHTML(){
     :[['C','Celodenní'],['D','Dopolední'],['O','Odpolední'],['OM','Omluveno'],['','Nepřítomen']];
   const cur=today?c.status:getCode(c,d);
   return `<div class="modal-scrim" onclick="if(event.target===this)closeCell()"><div class="modal">
-    <h3>Docházka – ${c.n}</h3><div class="pl" style="margin-top:-2px">${DOW[wd(d)]} ${d}. 6.${today?' · dnes':''}</div>${d<TODAYD?'<div class="note2 note-info" style="padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--edge-primary)">Zpětná oprava uzavřeného dne – vidí ji vedení.</div>':''}
+    <h3>Docházka – ${c.n}</h3><div class="pl" style="margin-top:-2px">${DOW[wd(d)]} ${d}. 6.${today?' (dnes)':''}</div>${d<TODAYD?'<div class="note2 note-info" style="padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--edge-primary)">Zpětná oprava uzavřeného dne – vidí ji vedení.</div>':''}
     <div class="pchips">${opts.map(o=>`<button class="${cur===o[0]?'on':''}" onclick="setCell('${o[0]}')">${o[1]}</button>`).join('')}</div>
     <div class="mbtns"><button class="btn-ghost" onclick="closeCell()">Zavřít</button></div>
   </div></div>`;

@@ -58,7 +58,7 @@ function renderFond(){
       list.map(({c,i})=>`<tr onclick="openFondChild(${i})"><td class="nm">${avatar(c,28)}${full(c)}</td>`+
         `<td class="dt-fond" style="color:${fondBarva(c)};font-weight:600">${c.fond.toLocaleString('cs-CZ')} Kč</td>`+
         `<td>${c.predskolak?'<span class="bdg pre">ano</span>':'<span class="dt-no">–</span>'}</td>`+
-        `<td>${c.fondLog&&c.fondLog.length?`${c.fondLog.length}× · naposled ${c.fondLog[0].name}`:'<span class="dt-no">zatím nic</span>'}</td></tr>`).join('')+
+        `<td>${c.fondLog&&c.fondLog.length?`${c.fondLog.length}×, naposled ${c.fondLog[0].name}`:'<span class="dt-no">zatím nic</span>'}</td></tr>`).join('')+
       `</tbody></table></div>`;
   }
   if(FONDHIST.length){h+=`<div class="vhead">Historie čerpání</div>`;
@@ -77,7 +77,7 @@ function renderFondChild(i){
   // dítěti; hromadné čerpání zůstává ostatním. Smí to průvodce s právy hospodářky.
   h+=`<div class="tile"><div class="ch">Historie čerpání</div>`+
     (c.fondLog&&c.fondLog.length
-      ? c.fondLog.map((l,k)=>`<div class="np"><span>${l.name} · ${l.date}</span><b style="color:var(--color-danger)">−${l.amt} Kč</b>${jeHospodar()?`<button class="odbtn ghostred fond-undo" onclick="vratitDiteti(${i},${k})" title="Vrátit ${l.amt} Kč zpět na fond">Vrátit</button>`:''}</div>`).join('')
+      ? c.fondLog.map((l,k)=>`<div class="np"><span>${l.name} (${l.date})</span><b style="color:var(--color-danger)">−${l.amt} Kč</b>${jeHospodar()?`<button class="odbtn ghostred fond-undo" onclick="vratitDiteti(${i},${k})" title="Vrátit ${l.amt} Kč zpět na fond">Vrátit</button>`:''}</div>`).join('')
       : `<div class="empty">Zatím se nic nečerpalo.</div>`)+
     (jeHospodar()?`<button class="addbtn" onclick="pridatDiteti(${i})">+ Čerpání jen tomuto dítěti</button>`:`<div class="note2">Opravy provádí průvodce s právy hospodářky.</div>`)+`</div>`;
   h+=`</div>`;
@@ -88,7 +88,7 @@ function renderOdecet(){
   const present=isWE(d)?[]:data.map((c,i)=>({c,i})).filter(x=>{const k=getCode(x.c,d);return k&&k!=='OM';});
   let h=`<div class="doch"><button class="back" onclick="cancelOdecet()">← Zpět na fond</button>`;
   h+=`<div class="tile"><div class="ch">Odečet po akci</div><div class="aname" style="font-size:var(--text-title)">${a.name}</div>`+
-    `<div class="ameta">${dayLbl(a)} · ${a.paid} Kč/dítě</div>`+
+    `<div class="ameta">${dayLbl(a)}, ${a.paid} Kč/dítě</div>`+
     `<div class="np" style="border-top:1px solid var(--color-border);margin-top:8px;padding-top:9px"><span>Přítomných ${d}. 6.</span><b>${present.length}</b></div></div>`;
   h+=pickerHTML(present,odecet.sel,odecet.group,'setOdGroup','togOdChild',odQuery,'onOdSearch');
   h+=souhrnHTML(odecet.sel.size,a.paid,'Strhne se celkem',
