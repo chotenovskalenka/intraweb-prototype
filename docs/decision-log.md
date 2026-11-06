@@ -2363,3 +2363,12 @@ srovnat. Skin načítají všechny role stejně, rozdíl byl v obrazovkách, kte
   akce „11. 6., 120 Kč/dítě".
 - Společné drobnosti bez teček: štítek role „Průvodce (vedoucí)" / „Hospodářka", datum v dialogu
   docházky „(dnes)", alba fotek „(datum)", meta řádek akcí na mobilu čárkou.
+
+## Rodičovská appka dostává skin Vhaaji (6. 11. 2026)
+
+Designérka: „pak další role". První krok: `rodic.html` načítá Alegreya + Lexend a
+`skin-vhaaji.css` (poslední, po watercolor.css) stejně jako průvodcovská appka. Všech deset
+sekcí ověřeno na mobilu i desktopu – bez chyb a přetečení. Obrazovky rodiče zatím nejsou
+přestavěné do rozložení C (přehled bez akvarelové hlavičky a kreseb, kontakty jako karty,
+tečky „·" v textech) – to je další krok po obrazovkách s designérkou. Admin appka skin zatím
+nemá: vidí čtyři školky a skin je jen pro Vhaaji.
