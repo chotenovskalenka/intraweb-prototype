@@ -2389,3 +2389,10 @@ Desktop tabulka, mobil seznam s větší fotkou a akcemi Zavolat / Napsat pod jm
 zvlášť (vedoucí první) a zázemí zvlášť s funkcí – vedení, obědy a kuchyň a účetnictví byli dřív
 mezi průvodci. Sloupec „Ve školce" říká, kdo je dnes ve školce a kdy. Pracovní e-maily týmu pryč
 (z dat i z obrazovky), e-mail školky zůstává. Bez teček v kontaktu na školku.
+
+## Novinky rodiče jako u průvodců (6. 11. 2026)
+
+Krátké titulky bez tečky i u novinek, které má jen rodičovský seed („Nový jídelníček na červen",
+„Sběr papíru: 340 kg", „Od září nový průvodce"…). Nadpis detailu jako nadpisy karet (Alegreya
+500, barva textu), ne tučně zeleně. Oprava seedu: prohlídka zoubků byla „v pátek 6. 6.", což
+je sobota – teď 5. 6.
