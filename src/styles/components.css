@@ -502,3 +502,16 @@ input.pin[type=date],input.pin[type=time]{min-height:44px}
    (na ~1024 px byla tabulka dětí 742 px v obsahu širokém 702 px). */
 .dtab-wrap{overflow-x:auto;min-width:0;-webkit-overflow-scrolling:touch}
 .weekbox{overflow-x:auto}
+
+/* Sloučené pole v hlavičce: přepínač pohledu (Den/Týden…) + listování obdobím v jedné liště.
+   Sdílí průvodce i rodič (přesunuto ze screens-pruvodce.css 6. 11. 2026). */
+.dfield{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.dfield .dsw{margin:0;width:auto;flex:0 0 auto}
+.dfield .dsw button{flex:0 0 auto;padding:10px 18px}
+/* Na mobilu se přepínač (152 px) a datum (199 px) nevešly na jeden řádek – chybělo 18 px,
+   takže se pole zalomilo a hlavička spolkla ~200 px výšky, než se objevilo první dítě.
+   Užší odsazení přepínače je vrátí na jeden řádek; dotykový cíl drží min-height 44 px. */
+@media (max-width:899px){
+  .dfield .dsw button{padding:10px 12px}
+  .dfield{gap:8px}
+}

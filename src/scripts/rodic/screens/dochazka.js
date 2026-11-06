@@ -39,15 +39,14 @@ function bulkControls(){
     h+=`<button class="savebtn${bulkCode?'':' dis'}" ${bulkCode?'':'disabled'} onclick="saveBulk()">Uložit ${selSet.size} ${plural(selSet.size)}</button>`;
   }
   return h+'</div>';}
-function renderDen(){const c=cur();return `<div class="vhead">Denní přehled</div><button class="daycard daycard-btn" onclick="pick(${TODAY})"><div class="dt"><span class="wd">Středa 3. června</span>${chip(code(c,TODAY))}</div><div class="dm-open">Upravit docházku / omluvit ›</div></button>`;}
+function renderDen(){const c=cur();return `<button class="daycard daycard-btn" onclick="pick(${TODAY})"><div class="dt"><span class="wd">Středa 3. června</span>${chip(code(c,TODAY))}</div><div class="dm-open">Upravit docházku / omluvit ›</div></button>`;}
 function renderTyden(){
   const wend=Math.min(weekStart+4,30);
-  let h=`<div class="vhead vhrow"><span>Týdenní přehled</span><div class="dnav"><button onclick="stepWeek(-1)" ${weekStart<=1?'disabled':''} aria-label="Předchozí týden">‹</button><span>${weekStart}.–${wend}. 6.</span><button onclick="stepWeek(1)" ${weekStart+7>30?'disabled':''} aria-label="Další týden">›</button></div></div>`;
-  h+=bulkControls();
+  let h=bulkControls();
   for(let i=0;i<5;i++){const d=weekStart+i;if(d>30)break;const cd=code(cur(),d);const bs=bulk&&selSet.has(d);
     h+=`<div class="wkrow${d===TODAY?' today':''}${!editable(d)?' locked':''}${bs?' bsel':''}"><div class="wkmain" onclick="pick(${d})">`+(bulk?`<span class="bchk ${selSet.has(d)?'on':''}"></span>`:'')+`<span class="d">${DOW[wd(d)]} <span>${d}. 6.</span></span><span class="cur">${!editable(d)?'<span class="lockflag">🔒 uzavřeno</span>':''}${chip(cd)}</span></div></div>`;}
   return h;}
-function renderMesic(){let h=`<div class="vhead vhrow"><span>Měsíční přehled</span><div class="dnav"><button onclick="stepMonth(-1)" aria-label="Předchozí měsíc">‹</button><span>Červen 2026</span><button onclick="stepMonth(1)" aria-label="Další měsíc">›</button></div></div>`+bulkControls()+'<div class="cal">';
+function renderMesic(){let h=bulkControls()+'<div class="cal">';
   DOW.forEach(x=>h+=`<div class="h">${x}</div>`);
   for(let d=1;d<=30;d++){if(isWE(d)){h+=`<div class="cell we"><span class="dnum">${d}</span></div>`;continue;}const cd=code(cur(),d),s=bulk?selSet.has(d):sel===d;
     h+=`<div class="cell${d===TODAY?' today':''}${!editable(d)?' lock':''}${s?' sel':''}" onclick="pick(${d})"><span class="dnum">${d}</span><span class="mk" style="color:${CODES[cd][1]}">${CODES[cd][0].toLowerCase()}</span></div>`;}
@@ -57,7 +56,7 @@ function renderMesic(){let h=`<div class="vhead vhrow"><span>Měsíční přehle
 function renderDayModal(){
   const d=dayModal, c=cur();
   let h=`<div class="modal-scrim" onclick="closeDayModal()"><div class="modal" onclick="event.stopPropagation()">`;
-  h+=`<h3>Docházka a omluva</h3><div class="abs-sub">${c.n} · ${DOWFULL[wd(d)]} ${d}. 6.</div>`;
+  h+=`<h3>Docházka a omluva</h3><div class="abs-sub">${c.n}, ${DOWFULL[wd(d)]} ${d}. 6.</div>`;
   h+=`<div class="dm-editor">${editor(d)}</div>`;
   h+=`<div class="mbtns"><button class="btn-ghost" onclick="closeDayModal()">Zavřít</button></div>`;
   return h+`</div></div>`;}
@@ -80,9 +79,19 @@ function renderOmluvenky(c){
   if(!c.omluvenky.length)return h+'<div class="empty">Zatím žádné omluvenky. Dítě omluvíte výběrem dne v kalendáři.</div></div>';
   c.omluvenky.forEach(o=>{
     const canCancel=o.od>NOW.d&&o.stav!=='zrusena';
-    h+=`<div class="omrow"><div class="omL"><div class="omo">${fmtRange(o.od,o.do)}</div><div class="omv">${DUVODLAB[o.duvod]||o.duvod}${o.pozn?' · '+escTa(o.pozn):''}</div></div><span class="bdg om-${o.stav}">${OMLAB[o.stav]}</span>${canCancel?`<button class="omx" onclick="omCancel('${o.id}')">Zrušit</button>`:''}</div>`;
+    h+=`<div class="omrow"><div class="omL"><div class="omo">${fmtRange(o.od,o.do)}</div><div class="omv">${DUVODLAB[o.duvod]||o.duvod}${o.pozn?': '+escTa(o.pozn):''}</div></div><span class="bdg om-${o.stav}">${OMLAB[o.stav]}</span>${canCancel?`<button class="omx" onclick="omCancel('${o.id}')">Zrušit</button>`:''}</div>`;
   });
   return h+`</div>`;
+}
+/* Přepínač Den / Týden / Měsíc a listování obdobím v hlavičce vedle nadpisu – jako Docházka
+   u průvodců (6. 11. 2026). Dřív byl přepínač i listování v obsahu pod mezinadpisy. */
+function dochHlavicka(){
+  const tog=`<div class="switch dsw">`+[['den','Den'],['tyden','Týden'],['mesic','Měsíc']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setView('${v[0]}')">${v[1]}</button>`).join('')+`</div>`;
+  const wend=Math.min(weekStart+4,30);
+  const nav=view==='tyden'?`<div class="dnav"><button onclick="stepWeek(-1)" ${weekStart<=1?'disabled':''} aria-label="Předchozí týden">‹</button><span>${weekStart}.–${wend}. 6.</span><button onclick="stepWeek(1)" ${weekStart+7>30?'disabled':''} aria-label="Další týden">›</button></div>`
+    :view==='mesic'?`<div class="dnav"><button onclick="stepMonth(-1)" aria-label="Předchozí měsíc">‹</button><span>Červen 2026</span><button onclick="stepMonth(1)" aria-label="Další měsíc">›</button></div>`
+    :`<div class="dnav"><span>St 3. 6. (dnes)</span></div>`;
+  return `<div class="dfield">${tog}${nav}</div>`;
 }
 function renderDochazka(){
   const c=cur();
@@ -90,8 +99,7 @@ function renderDochazka(){
   // Omlouvání probíhá přímo v kalendáři (výběr dne/týdne/měsíce → omluva); samostatné tlačítko zrušeno.
   let h=`<div class="doch">`;
   h+=`<div class="doch-den">`;
-  h+=`<div class="doch-main"><div class="ch">Kalendář docházky</div>`;
-  h+=`<div class="switch">`+[['den','Den'],['tyden','Týden'],['mesic','Měsíc']].map(v=>`<button class="${view===v[0]?'on':''}" onclick="setView('${v[0]}')">${v[1]}</button>`).join('')+`</div>`;
+  h+=`<div class="doch-main">`;
   h+=view==='den'?renderDen():view==='tyden'?renderTyden():renderMesic();
   h+=`</div>`;
   h+=`<aside class="doch-side">${renderNahrady(c)}${renderOmluvenky(c)}</aside>`;
@@ -108,7 +116,7 @@ window.toggleBulk=()=>{bulk=!bulk;selSet.clear();bulkCode=null;sel=-1;render();}
 window.selectAll=()=>{const days=view==='tyden'?[1,2,3,4,5]:[...Array(30)].map((_,i)=>i+1);days.filter(d=>!isWE(d)&&editable(d)).forEach(d=>selSet.add(d));render();};
 window.clearSel=()=>{selSet.clear();bulkCode=null;render();};
 window.pickBulkCode=k=>{bulkCode=(bulkCode===k?null:k);render();};
-window.saveBulk=()=>{if(!bulkCode||!selSet.size)return;const n=selSet.size;selSet.forEach(d=>{cur().att[d]=bulkCode;});selSet.clear();bulkCode=null;render();showToast('Docházka uložena · '+n+' '+plural(n)+' ✓');};
+window.saveBulk=()=>{if(!bulkCode||!selSet.size)return;const n=selSet.size;selSet.forEach(d=>{cur().att[d]=bulkCode;});selSet.clear();bulkCode=null;render();showToast('Docházka uložena ('+n+' '+plural(n)+') ✓');};
 window.draftCode=(d,k)=>{draft[d]={...(draft[d]||{}),code:k};render();};
 window.draftNote=(d,v)=>{draft[d]={...(draft[d]||{}),note:v};};
 window.draftDuvod=(d,v)=>{draft[d]={...(draft[d]||{}),duvod:v};render();};

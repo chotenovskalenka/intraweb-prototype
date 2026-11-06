@@ -2396,3 +2396,11 @@ Krátké titulky bez tečky i u novinek, které má jen rodičovský seed („No
 „Sběr papíru: 340 kg", „Od září nový průvodce"…). Nadpis detailu jako nadpisy karet (Alegreya
 500, barva textu), ne tučně zeleně. Oprava seedu: prohlídka zoubků byla „v pátek 6. 6.", což
 je sobota – teď 5. 6.
+
+## Docházka a náhrady rodiče jako Docházka průvodců (6. 11. 2026)
+
+Přepínač Den / Týden / Měsíc a listování obdobím jsou v hlavičce vedle nadpisu (sloučené pole
+`.dfield`, jeho styl přesunut ze screens-pruvodce.css do components.css, ať ho sdílí obě appky).
+Z obsahu zmizely mezinadpisy „Kalendář docházky", „Denní / Týdenní / Měsíční přehled". Bez teček:
+„Eliška, středa 3. 6." v dialogu, „Rodinné důvody: rodinná oslava" u omluvenky, toast
+„Docházka uložena (3 dny)".
