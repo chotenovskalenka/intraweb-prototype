@@ -92,16 +92,6 @@ The admin app loads its CSS in the order `tokens.css → base.css → layout-adm
 
 **Rule: never edit `dist/` by hand — it is generated. Edit `src/` and run `./build.sh`.**
 
-## Tack (usability measurement) — keep it
-
-[src/pruvodce.html](src/pruvodce.html) carries the Tack measurement tag right before `</body>` (6. 11. 2026, designer: guide app only, for testing the lead-guide role):
-
-```html
-<script src="https://trytack.io/r/v1.js" data-site="pk_PGaWf_p9ToRC5fvx" async></script>
-```
-
-Rules: keep it in every future edit; copy it exactly (don't change the URL or `data-site`, don't turn it into an import, don't minify); include it only once. `build.sh` leaves external scripts as-is, so it ends up in `dist/prototyp_pruvodce.html`. It's the second external dependency besides Google Fonts; offline it just fails silently. The parent, admin and rozcestník pages don't carry it.
-
 ## Load order matters (do not reorder casually)
 
 - **`<script src>` order** (in each `src/*.html`): `shared.js` → `data.js` → `screens/*.js` → `modals.js` → `core.js`. Scripts are classic (not ES modules) and share one global scope; `core.js` is last because it runs the initial `render()` and reads constants/functions defined earlier.
