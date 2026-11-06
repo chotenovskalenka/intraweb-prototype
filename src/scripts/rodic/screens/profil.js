@@ -16,7 +16,7 @@ function renderProfil(){
     ${row('Režim',rezim)}${row('Sourozenci',p.sourozenci)}</div>`;
 
   h+=`<div class="tile"><div class="ch">Rodiče</div>
-    ${row('Matka',ACCOUNT.telMatka+' · '+ACCOUNT.emailMatka)}${row('Otec',ACCOUNT.telOtec+' · '+ACCOUNT.emailOtec)}
+    ${row('Matka',ACCOUNT.telMatka+'<br>'+ACCOUNT.emailMatka)}${row('Otec',ACCOUNT.telOtec+'<br>'+ACCOUNT.emailOtec)}
     <div class="note2">Telefon i e-mail spravujete v Nastavení účtu.</div></div>`;
 
   h+=`<div class="tile"><div class="ch">Zdraví a strava</div>
@@ -40,8 +40,8 @@ function renderProfil(){
   h+=`<div class="tile"><div class="ch">Z rozhovorů s rodiči</div>
     <div class="rozhov"><div class="rd">Doporučení od průvodců – na doma</div>
       ${p.doporuceni.map(d=>`<div class="rec"><span class="recdot"></span>${d}</div>`).join('')}</div>
-    <div class="rozhov"><div class="rd">Jarní konzultace · 16. 4. 2026</div>Velký pokrok v jemné motorice, baví ho práce se dřevem. Na doma: trénovat samostatné oblékání.</div>
-    <div class="rozhov"><div class="rd">Podzimní konzultace · 13. 11. 2025</div>Adaptace v pořádku, dítě se těší. Doma řeší usínání.</div></div>`;
+    <div class="rozhov"><div class="rd">Jarní konzultace (16. 4. 2026)</div>Velký pokrok v jemné motorice, baví ho práce se dřevem. Na doma: trénovat samostatné oblékání.</div>
+    <div class="rozhov"><div class="rd">Podzimní konzultace (13. 11. 2025)</div>Adaptace v pořádku, dítě se těší. Doma řeší usínání.</div></div>`;
 
   h+=`</div><div class="note2">Základní údaje, kontakty a zdraví si spravujete sami – držte je prosím aktuální. Hodnocení a záznamy z konzultací vkládají průvodci – vidíte to, co s vámi sdílejí. Demo hodnoty.</div>`;
   return h+`</div>`;
@@ -62,7 +62,7 @@ function renderProfEdit(){
   const c=cur(), d=pfEdit;
   const inp=(f,ph)=>`<input class="pf-in" value="${esc(d[f])}" placeholder="${ph||''}" oninput="pfSet('${f}',this.value)">`;
   const sel=(f,opts)=>`<select class="pf-in" onchange="pfSet('${f}',this.value);render()">${opts.map(o=>`<option${o===d[f]?' selected':''}>${o}</option>`).join('')}</select>`;
-  let h=`<div class="pf-head"><button class="back" onclick="profCancel()">← Zpět</button><div class="dh-id">${avatar(c,38)}<h1 class="dh-t">Upravit údaje</h1></div><div class="dh-sub">${c.n} · držte prosím informace aktuální</div></div>`;
+  let h=`<div class="pf-head"><button class="back" onclick="profCancel()">← Zpět</button><div class="dh-id">${avatar(c,38)}<h1 class="dh-t">Upravit údaje</h1></div><div class="dh-sub">${c.n}. Držte prosím informace aktuální.</div></div>`;
 
   h+=`<div class="tile"><div class="ch">Základní údaje</div>
     <label class="pf-row"><span class="pf-lbl">Bydliště</span>${inp('adresa','ulice, PSČ, obec')}</label>

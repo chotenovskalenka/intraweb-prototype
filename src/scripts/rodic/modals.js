@@ -116,15 +116,15 @@ window.omSubmit=()=>{
   // na dashboardu přepneme na první omluvený den, ať je nový stav vidět bez hledání
   if(section==='prehled')dashDay=days[0];
   omModal=false;render();
-  showToast(timely.length?`Omluvenka odeslána · připsáno ${fmtHod(pripsano)} náhrad`
-    :'Omluvenka odeslána · náhrada nevznikla (po termínu)');
+  showToast(timely.length?`Omluvenka odeslána. Připsáno ${fmtHod(pripsano)} náhrad.`
+    :'Omluvenka odeslána. Po termínu, náhrada nevznikla.');
 };
 window.omCancel=id=>{
   const c=cur(), om=c.omluvenky.find(o=>o.id===id); if(!om)return;
   om.stav='zrusena';
   for(let d=om.od;d<=om.do;d++){if(c.att[d]==='OM')delete c.att[d];}
   c.nahrady=c.nahrady.filter(n=>!(om.nahradaIds||[]).includes(n.id));
-  render();showToast('Omluvenka zrušena · její hodiny náhrad odečteny');
+  render();showToast('Omluvenka zrušena. Její hodiny náhrad jsou odečtené.');
 };
 
 /* --- Modal: Nahlásit dnešní absenci (po termínu → omluveno, ale bez náhrady) --- */
@@ -148,7 +148,7 @@ function renderAbsModal(){
   const c=cur(), menu=jidelnicekDen(TODAY)||[];
   const obedy=menu.filter(it=>/pol|hlavn/i.test(it[0]));
   let h=`<div class="modal-scrim" onclick="absClose()"><div class="modal" onclick="event.stopPropagation()">`;
-  h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n} · středa 3. 6.</div>`;
+  h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n}, středa 3. 6.</div>`;
   h+=`<div class="abs-warn">⚠ Je po termínu (20:00 včera). ${c.n} bude <b>omluvená</b>, ale <b>náhrada za tento den nevznikne</b>.</div>`;
   h+=`<div class="notelab">Důvod absence</div>${duvodSelect(absModal.duvod,'absDuvod(this.value)')}`;
   h+=`<div class="notelab">Podrobnosti – nepovinné</div><textarea class="note" placeholder="Co mají průvodci vědět" oninput="absPozn(this.value)">${escTa(absModal.pozn)}</textarea>`;
@@ -167,7 +167,7 @@ let zpDraft=null;
 function renderZprava(){
   const c=cur(), p=zpPotrebuje(zpDraft.typ);
   let h=`<div class="modal-scrim" onclick="if(event.target===this)closeZprava()"><div class="modal modal-wide">`;
-  h+=`<h3>Informace pro průvodce</h3><div class="abs-sub">${c.n} · uvidí to průvodci ve službě na svém přehledu dne</div>`;
+  h+=`<h3>Informace pro průvodce</h3><div class="abs-sub">${c.n}. Uvidí to průvodci, kteří jsou ten den ve školce, na svém přehledu.</div>`;
   h+=`<div class="notelab">Čeho se to týká</div><select class="pin" onchange="zpTyp(this.value)">`
     +`<option value=""${zpDraft.typ?'':' selected'}>Vyberte…</option>`
     +ZPRAVA_TYPY.map(([k,l])=>`<option value="${k}"${zpDraft.typ===k?' selected':''}>${l}</option>`).join('')+`</select>`;

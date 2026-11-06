@@ -2718,7 +2718,7 @@ function renderProfil(){
     ${row('Režim',rezim)}${row('Sourozenci',p.sourozenci)}</div>`;
 
   h+=`<div class="tile"><div class="ch">Rodiče</div>
-    ${row('Matka',ACCOUNT.telMatka+' · '+ACCOUNT.emailMatka)}${row('Otec',ACCOUNT.telOtec+' · '+ACCOUNT.emailOtec)}
+    ${row('Matka',ACCOUNT.telMatka+'<br>'+ACCOUNT.emailMatka)}${row('Otec',ACCOUNT.telOtec+'<br>'+ACCOUNT.emailOtec)}
     <div class="note2">Telefon i e-mail spravujete v Nastavení účtu.</div></div>`;
 
   h+=`<div class="tile"><div class="ch">Zdraví a strava</div>
@@ -2742,8 +2742,8 @@ function renderProfil(){
   h+=`<div class="tile"><div class="ch">Z rozhovorů s rodiči</div>
     <div class="rozhov"><div class="rd">Doporučení od průvodců – na doma</div>
       ${p.doporuceni.map(d=>`<div class="rec"><span class="recdot"></span>${d}</div>`).join('')}</div>
-    <div class="rozhov"><div class="rd">Jarní konzultace · 16. 4. 2026</div>Velký pokrok v jemné motorice, baví ho práce se dřevem. Na doma: trénovat samostatné oblékání.</div>
-    <div class="rozhov"><div class="rd">Podzimní konzultace · 13. 11. 2025</div>Adaptace v pořádku, dítě se těší. Doma řeší usínání.</div></div>`;
+    <div class="rozhov"><div class="rd">Jarní konzultace (16. 4. 2026)</div>Velký pokrok v jemné motorice, baví ho práce se dřevem. Na doma: trénovat samostatné oblékání.</div>
+    <div class="rozhov"><div class="rd">Podzimní konzultace (13. 11. 2025)</div>Adaptace v pořádku, dítě se těší. Doma řeší usínání.</div></div>`;
 
   h+=`</div><div class="note2">Základní údaje, kontakty a zdraví si spravujete sami – držte je prosím aktuální. Hodnocení a záznamy z konzultací vkládají průvodci – vidíte to, co s vámi sdílejí. Demo hodnoty.</div>`;
   return h+`</div>`;
@@ -2764,7 +2764,7 @@ function renderProfEdit(){
   const c=cur(), d=pfEdit;
   const inp=(f,ph)=>`<input class="pf-in" value="${esc(d[f])}" placeholder="${ph||''}" oninput="pfSet('${f}',this.value)">`;
   const sel=(f,opts)=>`<select class="pf-in" onchange="pfSet('${f}',this.value);render()">${opts.map(o=>`<option${o===d[f]?' selected':''}>${o}</option>`).join('')}</select>`;
-  let h=`<div class="pf-head"><button class="back" onclick="profCancel()">← Zpět</button><div class="dh-id">${avatar(c,38)}<h1 class="dh-t">Upravit údaje</h1></div><div class="dh-sub">${c.n} · držte prosím informace aktuální</div></div>`;
+  let h=`<div class="pf-head"><button class="back" onclick="profCancel()">← Zpět</button><div class="dh-id">${avatar(c,38)}<h1 class="dh-t">Upravit údaje</h1></div><div class="dh-sub">${c.n}. Držte prosím informace aktuální.</div></div>`;
 
   h+=`<div class="tile"><div class="ch">Základní údaje</div>
     <label class="pf-row"><span class="pf-lbl">Bydliště</span>${inp('adresa','ulice, PSČ, obec')}</label>
@@ -3141,15 +3141,15 @@ window.omSubmit=()=>{
   // na dashboardu přepneme na první omluvený den, ať je nový stav vidět bez hledání
   if(section==='prehled')dashDay=days[0];
   omModal=false;render();
-  showToast(timely.length?`Omluvenka odeslána · připsáno ${fmtHod(pripsano)} náhrad`
-    :'Omluvenka odeslána · náhrada nevznikla (po termínu)');
+  showToast(timely.length?`Omluvenka odeslána. Připsáno ${fmtHod(pripsano)} náhrad.`
+    :'Omluvenka odeslána. Po termínu, náhrada nevznikla.');
 };
 window.omCancel=id=>{
   const c=cur(), om=c.omluvenky.find(o=>o.id===id); if(!om)return;
   om.stav='zrusena';
   for(let d=om.od;d<=om.do;d++){if(c.att[d]==='OM')delete c.att[d];}
   c.nahrady=c.nahrady.filter(n=>!(om.nahradaIds||[]).includes(n.id));
-  render();showToast('Omluvenka zrušena · její hodiny náhrad odečteny');
+  render();showToast('Omluvenka zrušena. Její hodiny náhrad jsou odečtené.');
 };
 
 /* --- Modal: Nahlásit dnešní absenci (po termínu → omluveno, ale bez náhrady) --- */
@@ -3173,7 +3173,7 @@ function renderAbsModal(){
   const c=cur(), menu=jidelnicekDen(TODAY)||[];
   const obedy=menu.filter(it=>/pol|hlavn/i.test(it[0]));
   let h=`<div class="modal-scrim" onclick="absClose()"><div class="modal" onclick="event.stopPropagation()">`;
-  h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n} · středa 3. 6.</div>`;
+  h+=`<h3>Nahlásit dnešní absenci</h3><div class="abs-sub">${c.n}, středa 3. 6.</div>`;
   h+=`<div class="abs-warn">⚠ Je po termínu (20:00 včera). ${c.n} bude <b>omluvená</b>, ale <b>náhrada za tento den nevznikne</b>.</div>`;
   h+=`<div class="notelab">Důvod absence</div>${duvodSelect(absModal.duvod,'absDuvod(this.value)')}`;
   h+=`<div class="notelab">Podrobnosti – nepovinné</div><textarea class="note" placeholder="Co mají průvodci vědět" oninput="absPozn(this.value)">${escTa(absModal.pozn)}</textarea>`;
@@ -3192,7 +3192,7 @@ let zpDraft=null;
 function renderZprava(){
   const c=cur(), p=zpPotrebuje(zpDraft.typ);
   let h=`<div class="modal-scrim" onclick="if(event.target===this)closeZprava()"><div class="modal modal-wide">`;
-  h+=`<h3>Informace pro průvodce</h3><div class="abs-sub">${c.n} · uvidí to průvodci ve službě na svém přehledu dne</div>`;
+  h+=`<h3>Informace pro průvodce</h3><div class="abs-sub">${c.n}. Uvidí to průvodci, kteří jsou ten den ve školce, na svém přehledu.</div>`;
   h+=`<div class="notelab">Čeho se to týká</div><select class="pin" onchange="zpTyp(this.value)">`
     +`<option value=""${zpDraft.typ?'':' selected'}>Vyberte…</option>`
     +ZPRAVA_TYPY.map(([k,l])=>`<option value="${k}"${zpDraft.typ===k?' selected':''}>${l}</option>`).join('')+`</select>`;
@@ -3275,7 +3275,7 @@ function renderHead(){
   dh.innerHTML = overlay ? ''
     : section==='prehled' ? renderDashHead()
     : section==='dochazka' ? `<h1 class="dh-t">Docházka a náhrady</h1>${dochHlavicka()}`
-    : section==='profil'  ? `<h1 class="dh-t">Profil dítěte</h1><button class="dh-edit" onclick="openProfEdit()">Upravit údaje</button>`
+    : section==='profil'  ? `<h1 class="dh-t">Profil dítěte</h1><div class="dfield"><button class="btn-ghost" onclick="openProfEdit()">Upravit údaje</button></div>`
     : section==='plan'    ? `<h1 class="dh-t">Tématický plán</h1><div class="dnav plan-head-nav"><button onclick="stepPlan(-1)" ${planIdx<=0?'disabled':''} aria-label="Předchozí měsíc">‹</button><span>${planLabel()}</span><button onclick="stepPlan(1)" ${planIdx>=TEMA_MESICE.length-1?'disabled':''} aria-label="Další měsíc">›</button></div>`
     : section==='jidelnicek' ? `<h1 class="dh-t">Jídelníček</h1><div class="dnav plan-head-nav"><button onclick="stepJidTyden(-1)" ${jidTyden<=0?'disabled':''} aria-label="Předchozí týden">‹</button><span>${jidLabel()}</span><button onclick="stepJidTyden(1)" ${jidTyden>=JIDELNICEK.length-1?'disabled':''} aria-label="Další týden">›</button></div>`
     : `<h1 class="dh-t">${PAGEH[section]||''}</h1>`;

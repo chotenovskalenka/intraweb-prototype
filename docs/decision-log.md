@@ -2404,3 +2404,11 @@ Přepínač Den / Týden / Měsíc a listování obdobím jsou v hlavičce vedle
 Z obsahu zmizely mezinadpisy „Kalendář docházky", „Denní / Týdenní / Měsíční přehled". Bez teček:
 „Eliška, středa 3. 6." v dialogu, „Rodinné důvody: rodinná oslava" u omluvenky, toast
 „Docházka uložena (3 dny)".
+
+## Profil dítěte rodiče a dialogy bez teček (6. 11. 2026)
+
+„Upravit údaje" v hlavičce jako ostatní akce v hlavičce (pilulka na ploše karty, `.dfield`).
+Kontakt rodičů: telefon a e-mail pod sebou místo „·". Konzultace s datem v závorce. Úprava
+údajů: „Eliška. Držte prosím informace aktuální." Dialogy rodiče: „Eliška, středa 3. 6.",
+informace pro průvodce „Uvidí to průvodci, kteří jsou ten den ve školce, na svém přehledu."
+(bez slova „ve službě"), toasty omluvenky větami („Omluvenka odeslána. Připsáno 1 h náhrad.").
