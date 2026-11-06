@@ -2372,3 +2372,13 @@ sekcí ověřeno na mobilu i desktopu – bez chyb a přetečení. Obrazovky rod
 přestavěné do rozložení C (přehled bez akvarelové hlavičky a kreseb, kontakty jako karty,
 tečky „·" v textech) – to je další krok po obrazovkách s designérkou. Admin appka skin zatím
 nemá: vidí čtyři školky a skin je jen pro Vhaaji.
+
+## Přehled rodiče ve vzhledu C (6. 11. 2026)
+
+Hlavička jako u průvodců: velké datum, kreslené odrážky, sezónní ptáček. Pod datem listování
+dny (‹ dnes ▾ ›, mimo dnešek „jiný den") a na desktopu vedle něj přepínač dětí. Řádky dne: program
+(„Dnes je Pohyb") a akce dne s časem – docházka, spaní a jídlo jsou v kartách pod tím, v hlavičce
+by se opakovaly. Karty mají kresby (akce, jídlo, sestava, básnička) a odkazy jako patičky pod
+čarou (Docházka a náhrady, Celý jídelníček, Všechny novinky, Celý kalendář). Texty bez teček:
+„Spinká, uspává Darča", „Táňa (včera 17:30)", „Sraz: místo (čas)", „Jarmark (15:30)",
+„Emil (5 let)", „Faktura po splatnosti: květen"; upozornění na faktury větou, ne verzálkami.

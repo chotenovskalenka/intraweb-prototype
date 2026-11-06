@@ -527,3 +527,34 @@ button.chk.ro{cursor:default}
 .nd-akce{display:flex;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid var(--color-border)}
 /* „Sdílet do WhatsAppu" v kartě i v detailu jako pilulka – stejný tvar jako ostatní tlačítka skinu */
 .wabtn{border-radius:var(--radius-full);padding:9px 16px;min-height:40px;display:inline-flex;align-items:center}
+/* Přehled rodiče ve vzhledu C (6. 11. 2026): patičky karet a kresby jako u průvodců (.dash3) */
+.dash3 .tile{position:relative}
+.dash3 .tile>.cardlink{display:flex;justify-content:space-between;align-items:center;width:calc(100% + 36px);min-height:52px;
+  margin:16px -18px -16px;padding:14px 18px;border:none;border-top:1px solid var(--color-border);
+  border-radius:0 0 var(--radius-card) var(--radius-card);background:none;text-align:left}
+.dash3 .tile>.cardlink:hover{background:var(--wash-primary)}
+/* listování dny hned u data */
+.p-head .dh-nav{display:inline-flex;align-items:center;gap:4px;margin-top:10px;padding:4px;border-radius:var(--radius-full);
+  background:rgba(249,247,241,.92);box-shadow:var(--shadow-card);position:relative;z-index:2}
+.p-head .dh-step{min-width:44px;min-height:44px;border:none;background:none;border-radius:var(--radius-full);font:inherit;
+  font-size:var(--text-body);color:var(--color-primary-strong);cursor:pointer}
+.p-head .dh-step-dnes{padding:0 14px;font-weight:600}
+.p-head .dh-step:hover{background:var(--wash-primary)}
+@media (max-width:899px){
+  .topbar:has(.p-head){grid-template-columns:auto minmax(0,1fr) auto}
+  .topbar:has(.p-head)>.kidsel{grid-column:3;grid-row:1}
+  .p-head .dh-nav{grid-column:1/-1;grid-row:3;justify-self:start;margin-top:12px}
+  .p-head .c-bird{top:64px}
+}
+@media (min-width:900px){
+  /* datum, pod ním listování dny a přepínač dětí v jednom řádku, pod tím řádky dne */
+  .topbar:has(.p-head){display:grid;grid-template-columns:auto auto minmax(0,1fr);column-gap:12px;align-items:center}
+  .topbar:has(.p-head)>.dashhead,.topbar:has(.p-head) .p-head{display:contents}
+  .topbar:has(.p-head)>.ttl,.topbar:has(.p-head)>.burger{display:none}
+  .p-head .dh-t{grid-column:1/-1;grid-row:1;margin:0}
+  .p-head .dh-nav{grid-column:1;grid-row:2}
+  .topbar:has(.p-head)>.kidsel{grid-column:2;grid-row:2;margin:10px 0 0}
+  .p-head .c-lines{grid-column:1/-1;grid-row:3;margin-top:14px}
+}
+/* faktura po splatnosti: věta, ne verzálky (jako popisky na přehledu průvodců) */
+.neuhr .tlab{text-transform:none;letter-spacing:0;font-size:var(--text-body);font-weight:600}
